@@ -208,14 +208,24 @@ libm3hardware_la_CPPFLAGS =  -I$(rtai_inc) -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_d
 
 
 libm3hardware_la_SOURCES = \
+	actuator_ec.pb.cpp\
+	actuator.pb.cpp\
+	loadx1_ec.pb.cpp\
+	loadx1.pb.cpp\
+	loadx6_ec.pb.cpp\
+	robot_monitor.pb.cpp\
+	loadx6.pb.cpp\
+	ledx2_ec.pb.cpp\
+	async_io.pb.cpp\
 	pwr_ec.pb.cpp\
+	pwr.pb.cpp\
+	tactile_pps22_ec.pb.cpp\
+	joint.pb.cpp\
+	ledx2xn_ec.pb.cpp\
+	led_matrix_ec.pb.cpp\
  	pwr_ec.cpp\
 	pwr.cpp\
 	pwr_virtual.cpp\
-	pwr.pb.cpp\
-	actuator_ec.pb.cpp\
-  	joint.pb.cpp\
-	actuator.pb.cpp\
 	actuator_ec.cpp\
 	actuator.cpp\
 	sensor.cpp\
@@ -226,26 +236,16 @@ libm3hardware_la_SOURCES = \
   	transmission.cpp\
 	factory_proxy.cpp\
 	loadx1_ec.cpp\
-	loadx1_ec.pb.cpp\
 	loadx1.cpp\
-	loadx1.pb.cpp\
 	loadx6_ec.cpp\
-	loadx6_ec.pb.cpp\
 	loadx6.cpp\
 	loadx6_virtual.cpp\
-	loadx6.pb.cpp\
 	tactile_pps22_ec.cpp\
-	tactile_pps22_ec.pb.cpp\
-	ledx2_ec.pb.cpp\
 	ledx2_ec.cpp\
 	motor.cpp\
 	led_matrix_ec.cpp\
-	led_matrix_ec.pb.cpp\
-	ledx2xn_ec.pb.cpp\
 	ledx2xn_ec.cpp\
-	robot_monitor.pb.cpp\
 	robot_monitor.cpp\
-	async_io.pb.cpp\
 	async_io.cpp
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////

@@ -39,9 +39,9 @@ clean-local:
 humanoid.pb.h: humanoid.pb.cpp
 
 humanoid.pb.cpp: humanoid.proto
-	protoc -I$(prefix)/include/m3rt/base  -I$(prefix)/include/m3/toolbox -I../chains -I../hardware -I./ --cpp_out=./ humanoid.proto
+	protoc -I$(prefix)/include/m3rt/base  -I../toolbox -I../chains -I../hardware -I./ --cpp_out=./ humanoid.proto
 	mv humanoid.pb.cc humanoid.pb.cpp
-	protoc -I$(prefix)/include/m3rt/base  -I$(prefix)/include/m3/toolbox -I../chains -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 humanoid.proto	
+	protoc -I$(prefix)/include/m3rt/base  -I../toolbox -I../chains -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 humanoid.proto	
 	
 proto: humanoid.pb.cpp
 

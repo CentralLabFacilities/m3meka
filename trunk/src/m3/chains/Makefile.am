@@ -48,30 +48,30 @@ clean-local:
 joint_array_mode.pb.h: joint_array_mode.pb.cpp
 
 joint_array_mode.pb.cpp: joint_array_mode.proto
-	protoc -I$(prefix)/include/m3rt/base -I$(prefix)/include/m3/toolbox -I../hardware -I./ --cpp_out=./ joint_array_mode.proto
+	protoc -I$(prefix)/include/m3rt/base -I../m3/toolbox -I../hardware -I./ --cpp_out=./ joint_array_mode.proto
 	mv joint_array_mode.pb.cc joint_array_mode.pb.cpp
-	protoc -I$(prefix)/include/m3rt/base -I$(prefix)/include/m3/toolbox -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 joint_array_mode.proto
+	protoc -I$(prefix)/include/m3rt/base -I../m3/toolbox -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 joint_array_mode.proto
 	
 joint_array.pb.h: joint_array.pb.cpp
 
 joint_array.pb.cpp: joint_array.proto
-	protoc -I$(prefix)/include/m3rt/base -I$(prefix)/include/m3/toolbox -I../hardware -I./ --cpp_out=./ joint_array.proto
+	protoc -I$(prefix)/include/m3rt/base -I../toolbox -I../hardware -I./ --cpp_out=./ joint_array.proto
 	mv joint_array.pb.cc joint_array.pb.cpp
-	protoc -I$(prefix)/include/m3rt/base -I$(prefix)/include/m3/toolbox -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 joint_array.proto
+	protoc -I$(prefix)/include/m3rt/base -I../toolbox -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 joint_array.proto
 
 hand_ua.pb.h: hand_ua.pb.cpp
 
 hand_ua.pb.cpp: hand_ua.proto
-	protoc -I$(prefix)/include/m3rt/base -I$(prefix)/include/m3/toolbox -I../hardware -I./ --cpp_out=./ hand_ua.proto
+	protoc -I$(prefix)/include/m3rt/base -I../toolbox -I../hardware -I./ --cpp_out=./ hand_ua.proto
 	mv hand_ua.pb.cc hand_ua.pb.cpp
-	protoc -I$(prefix)/include/m3rt/base -I$(prefix)/include/m3/toolbox -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 hand_ua.proto
+	protoc -I$(prefix)/include/m3rt/base -I../toolbox -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 hand_ua.proto
 
 dynamatics.pb.h: dynamatics.pb.cpp
 
 dynamatics.pb.cpp: dynamatics.proto
-	protoc -I$(prefix)/include/m3rt/base -I$(prefix)/include/m3/toolbox -I../hardware -I./ --cpp_out=./ dynamatics.proto
+	protoc -I$(prefix)/include/m3rt/base -I../m3/toolbox -I../hardware -I./ --cpp_out=./ dynamatics.proto
 	mv dynamatics.pb.cc dynamatics.pb.cpp
-	protoc -I$(prefix)/include/m3rt/base -I$(prefix)/include/m3/toolbox -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 dynamatics.proto
+	protoc -I$(prefix)/include/m3rt/base -I../m3/toolbox -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 dynamatics.proto
 
 
 
@@ -106,16 +106,16 @@ libm3chains_la_CPPFLAGS =   -I../hardware/ -I../toolbox/ -I$(m3_dir) \
 libm3chains_la_SOURCES = \
 	joint_array_mode.pb.cpp\
 	joint_array.pb.cpp\
+	dynamatics.pb.cpp\
+	hand_ua.pb.cpp\
 	joint_array.cpp\
 	joint_chain.cpp\
 	arm.cpp\
 	hand.cpp\
 	hand_ua.cpp\
-	hand_ua.pb.cpp\
 	torso.cpp\
 	gripper.cpp\
 	head.cpp\
 	dynamatics.cpp\
-	dynamatics.pb.cpp\
 	factory_proxy.cpp
 

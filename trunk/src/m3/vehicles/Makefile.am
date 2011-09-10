@@ -21,7 +21,6 @@
 
 m3_dir = $(top_srcdir)/src
 m3rt_dir = $(prefix)/include/m3rt
-eigen_dir = $(top_srcdir)/../eigen
 m3rtb_dir = $(prefix)/include/m3rt/base
 ros_dir = /opt/ros/cturtle/ros
 libm3vehiclesincludedir = $(includedir)/m3/vehicles
