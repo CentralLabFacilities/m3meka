@@ -81,7 +81,8 @@ pkgpython_PYTHON = \
 	m3/m3_actx3_eep.py\
 	m3/m3_actx4_eep.py\
 	m3/m3_bld_eep.py\
-	m3/m3_ledx2_eep.py
+	m3/m3_ledx2_eep.py\
+	m3/trajectory_pb2.py
 
 #	m3/tactile_pps22_ec_pb2.py
 #	m3/tactile_pps22_ec.py

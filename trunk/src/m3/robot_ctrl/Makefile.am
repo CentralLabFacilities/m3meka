@@ -60,7 +60,7 @@ libm3robot_ctrl_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(top_srcdir)/src/m3/robots
 
 libm3robot_ctrl_la_CPPFLAGS =   -I../chains -I../robots -I../toolbox -I../hardware -I$(m3tb_dir) \
-	-I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) -I$(eigen_dir) -ffast-math -pipe  -mhard-float\
+	-I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) -ffast-math -pipe  -mhard-float\
 	-I$(ros_dir)/core/roscpp/include \
 	-I$(top_srcdir)/ros/m3meka_msgs/srv_gen/cpp/include \
 	-I$(top_srcdir)/ros/m3meka_msgs/msg_gen/cpp/include \
