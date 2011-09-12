@@ -23,6 +23,7 @@ AM_CPPFLAGS = -g
 #	src/m3/robots src/m3/robot_ctrl  python
 
 #ros/m3meka_msgs
+#src/m3rt/bootloader 
 
 SUBDIRS =   src/m3/toolbox \
 	src/m3/hardware \
