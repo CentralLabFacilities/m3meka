@@ -85,6 +85,7 @@ pkgpython_PYTHON = \
 	m3/trajectory_pb2.py\
 	m3/toolbox_ctrl.py\
 	m3/toolbox_beh.py\
+	m3/toolbox.py\
 	m3/trajectory.py
 
 #	m3/tactile_pps22_ec_pb2.py
