@@ -23,6 +23,7 @@ enum ACTUATOR_EC_MODE{
 		ACTUATOR_EC_MODE_OFF = 0;
 		ACTUATOR_EC_MODE_PWM = 1;
 		ACTUATOR_EC_MODE_TORQUE = 2;
+		ACTUATOR_EC_MODE_CURRENT = 3;
 }
 
 //Mirrors m3ec_pdo_vX_def.h
@@ -31,6 +32,8 @@ enum ACTUATOR_EC_FLAG{
   ACTUATOR_EC_FLAG_NEG_LIMITSWITCH=2;//Limit switch value neg direction
   ACTUATOR_EC_FLAG_QEI_CALIBRATED=4;//Has limit switch calibration triggered
   ACTUATOR_EC_FLAG_AUX_SWITCH=8;//Auxillary switch input
+  ACTUATOR_EC_FLAG_I_FAULT_CONT=16;//Auxillary switch input
+  ACTUATOR_EC_FLAG_I_FAULT_MOM=32;//Auxillary switch input
 }
 
 //Mirrors m3ec_pdo_vX_def.h
@@ -66,6 +69,7 @@ message M3ActuatorEcStatus{
 	optional int32					adc_ext_b=14;				//Auxillary adc input
 	optional int32					pwm_cmd=15;				//Current PWM command to motor
 	optional int32					flags=16;				//Reserved
+	optional int32					current_ma=17;				//Calibrated on amp (1 mA precision)
 }
 
 message M3ActuatorEcCommand{

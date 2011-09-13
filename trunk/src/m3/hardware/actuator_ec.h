@@ -30,6 +30,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/hardware/m3ec_pdo_v0_def.h"
 #include "m3/hardware/m3ec_pdo_v1_def.h"
 #include "m3/hardware/m3ec_pdo_v2_def.h"
+#include "m3/hardware/m3ec_pdo_v3_def.h"
 
 
 namespace m3{
@@ -49,6 +50,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 			RegisterVersion("default",DEFAULT);		//RBL
 			RegisterVersion("iss",ISS);			//ISS. No change from DEFAULT
 			RegisterVersion("esp",ESP);			//ESP. Moved torque feedforward from DSP to Component 
+			RegisterPdo("actx1_pdo_v3", ACTX1_PDO_V3);	//CRL
 			RegisterPdo("actx1_pdo_v1", ACTX1_PDO_V1);	//RBL 
 			RegisterPdo("actx2_pdo_v1", ACTX2_PDO_V1);	//RBL 
 			RegisterPdo("actx3_pdo_v1", ACTX3_PDO_V1);	//RBL 
@@ -76,8 +78,11 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		bool IsAuxSwitchOn() {return status.flags()&ACTUATOR_EC_FLAG_AUX_SWITCH;}
 		bool IsEncoderCalibrated(){return status.flags()&ACTUATOR_EC_FLAG_QEI_CALIBRATED;}
 		bool UseTorqueFF(){return param.config() & ACTUATOR_EC_CONFIG_TORQUE_FF;}
-		void SetTorqueFF(mReal val){pwm_ff=(int)val;} //Added to DSP PID result (units pwm ticks)
+		void SetTorqueFF(mReal val){pwm_ff=(int)val;} //Added to DSP PID result (units pwm ticks)		
 		void SetPwmMax(int val){pwm_max_ext=val;}
+		bool IsCurrentFaultMom() {return status.flags()&M3ACT_FLAG_I_FAULT_MOM;}
+		bool IsCurrentFaultCont() {return status.flags()&M3ACT_FLAG_I_FAULT_CONT;}
+		
 	protected:
 		bool ReadConfig(const char * filename);
 		M3EtherCATStatus * GetEcStatus(){return status.mutable_ethercat();}
@@ -85,14 +90,17 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		void SetStatusFromPdoV0(unsigned char * data);
 		void SetStatusFromPdoV1(unsigned char * data);
 		void SetStatusFromPdoV2(unsigned char * data);
+		void SetStatusFromPdoV3(unsigned char * data);
 		void SetPdoFromCommand(unsigned char * data);
 		bool LinkDependentComponents();
 		void ResetCommandPdo(unsigned char * pdo);
 		void SetPdoV2FromPdoV1Command(unsigned char * data);
 		void SetPdoV0FromPdoV1Command(unsigned char * data);
+		void StepStatus();
 	protected:
 		enum {GMB_PDO_V0,ACTX1_PDO_V1, ACTX2_PDO_V1, ACTX3_PDO_V1, ACTX4_PDO_V1, TACTX2_PDO_V1,
-		      ACTX1_PDO_V2, ACTX2_PDO_V2, ACTX3_PDO_V2, ACTX4_PDO_V2,SEA_PDO_V0};
+		      ACTX1_PDO_V2, ACTX2_PDO_V2, ACTX3_PDO_V2, ACTX4_PDO_V2,SEA_PDO_V0,
+		      ACTX1_PDO_V3};
 		enum {DEFAULT,ISS, ESP};
 		M3BaseStatus * GetBaseStatus();
 		M3ActuatorEcStatus status;

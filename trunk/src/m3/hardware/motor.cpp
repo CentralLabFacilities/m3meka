@@ -25,6 +25,62 @@ namespace m3{
 using namespace std;
 
 
+void M3MotorModel::ThermalInit()
+{
+
+	mReal C1, C2, tau1, tau2, tau3;
+
+	//Initialize matrices
+	eA2 = VectorXf::Zero(2);	
+	Tprev = VectorXf::Zero(2);	
+	eA1 = MatrixXf::Zero(2,2);
+	
+	tau1 = thermal_time_constant_winding;
+	tau2 = thermal_time_constant_motor;
+	C1 = tau1/thermal_resistance_rotor_housing;
+	C2 = tau2/thermal_resistance_housing_ambient;
+	tau3 =  thermal_resistance_rotor_housing*C2;
+	
+	MatrixXf I=MatrixXf::Zero(2,2);
+	MatrixXf ser=MatrixXf::Zero(2,2);
+	MatrixXf A=MatrixXf::Zero(2,2);
+	VectorXf B=VectorXf::Zero(2);
+	
+	mReal dt = 1./RT_TASK_FREQUENCY;
+	I << 1,0,0,1;
+	
+//	eA1 = exp(-1/tau1/RT_TASK_FREQUENCY);
+//	eA2 = -tau1*(eA1-1)*1/C1;
+	
+	A << -1/tau1, 1/tau1,
+	      1/tau3, -1/tau3-1/tau2;
+	B << 1/C1, 0;
+	
+	
+	ser = I;
+	eA1 = I;
+	for (int i = 1;i<5;i++) {
+	    ser = ser*A*dt/i;
+	    eA1 = eA1 + ser;
+	}
+	eA2 = A.inverse()*(eA1-I)*B;
+	
+	Tprev << 0.,0.;
+	
+	// C1 = tau1/r1, C2 = tau2/r2, tau3 = r1*C2
+	// A = [-1/tau1 1/tau1;1/tau3,-1/tau3-1/tau2]
+	// B = [1/C1;0]
+        //RT_TASK_FREQUENCY
+	// eA1 = eye(2)
+	// ser = eye(2)
+	// for i = 1:5
+	//	ser *= A*dt/i;
+	//	eA1 += ser;
+	// eA2 == inv(A)*(eA1-eye(2))*B
+}
+
+
+
 void M3MotorModel::ReadConfig(const YAML::Node & doc)
 {
 	string t;
@@ -35,6 +91,7 @@ void M3MotorModel::ReadConfig(const YAML::Node & doc)
 		if (t.compare("none")==0){model_type=NONE; return;}
 		if (t.compare("model_v0")==0){model_type=MODEL_V0;}
 		if (t.compare("model_v1")==0){model_type=MODEL_V1;}
+		if (t.compare("model_v2")==0){model_type=MODEL_V2;}
 	} catch(YAML::TypedKeyNotFound<string> e) 
 	{
 		//M3_WARN("Missing version key in config file for motor %s. Defaulting to type MODEL_V0\n",name.c_str());
@@ -54,7 +111,7 @@ void M3MotorModel::ReadConfig(const YAML::Node & doc)
 		//The winding temp will take thermal_time_constant_winding seconds to achieve a steady-state calculated value
 		winding_temp_avg.Resize(1.0/(mReal)RT_TASK_FREQUENCY, thermal_time_constant_winding);
 	}
-	if (model_type==MODEL_V1)
+	if (model_type==MODEL_V1 || model_type==MODEL_V2)
 	{
 		doc["nominal_voltage"] >> nominal_voltage;
 		doc["no_load_speed"] >> no_load_speed;
@@ -81,6 +138,13 @@ void M3MotorModel::ReadConfig(const YAML::Node & doc)
 		doc["max_pwm_duty"] >> max_pwm_duty;
 		safe_pwm_duty=max_pwm_duty;
 		safe_pwm_slew.Reset(max_pwm_duty);
+		try 
+		{
+			doc["alpha_cu"]>>alpha_cu;
+		} catch(YAML::TypedKeyNotFound<string> e) 
+		{
+			alpha_cu=.00393; //copper constant
+		} 
 		try 
 		{
 			doc["safe_thermal_pct"]>>safe_thermal_pct;
@@ -115,8 +179,6 @@ void M3MotorModel::ReadConfig(const YAML::Node & doc)
 		winding_temp_avg.Resize(1.0/(mReal)RT_TASK_FREQUENCY, thermal_time_constant_winding);
 		case_temp_avg.Resize(1.0/(mReal)RT_TASK_FREQUENCY, thermal_time_constant_motor);
 	}
-
-	
 	//1/2 sec for rms current estimates.
 	//5 sec for continuous current estimates
 	int window_us=0.5*1000000;
@@ -130,8 +192,65 @@ void M3MotorModel::ReadConfig(const YAML::Node & doc)
 	downsample = (window_us/RT_TASK_FREQUENCY)/100;
 	tmp_avg.Resize(window_us,downsample);
 	
+	if (model_type==MODEL_V2)
+	{
+	  ThermalInit();
+	}
 }
 
+
+void M3MotorModel::Step(mReal i, mReal pwm, mReal rpm, mReal tmp)
+{
+	if (model_type==NONE)
+	  return;
+	if (model_type==MODEL_V0)
+	  StepModelV0(i, pwm, rpm, tmp);
+	if (model_type==MODEL_V1)
+	  StepModelV1(i, pwm, rpm, tmp);
+	if (model_type==MODEL_V2)
+	  StepModelV2(i, pwm, rpm, tmp);
+}
+
+//Input sensor data of current sensor, amplifier pwm, velocity, and temp sensor
+void M3MotorModel::StepModelV2(mReal i, mReal pwm, mReal rpm, mReal tmp)
+{
+	//Voltage
+	mReal duty=0;
+	v_pwm = 0;
+	v_cemf =0;
+	power_mech=0;
+	power_elec=0;
+	duty=pwm/max_pwm_duty ;
+	v_pwm = ABS(nominal_voltage*pwm/max_pwm_duty);
+	v_cemf = ABS(rpm*gear_ratio/speed_constant);
+	
+	//Current
+	i_rms=min(starting_current*1000.0,sqrt(ABS(curr_avg_rms.Step(i*i)))); //Just filter (Avoid NAN)
+	i_cont=curr_avg_cont.Step(i_rms);
+
+	//Winding resistance
+	mReal hot_resistance = winding_resistance*(1.0+alpha_cu*(winding_temp-25.0));
+	
+	//Power
+	power_mech=(i_rms/1000.0)*v_cemf;
+	power_elec=(i_rms/1000.0)*v_pwm;
+	power_heat=(i_rms/1000.0)*(i_rms/1000.0)*hot_resistance;
+
+	//Temp
+	if (first_wt_step)
+		tmp_avg.Reset(25.0);
+	ambient_temp=tmp_avg.Step(tmp);
+	
+	Tprev = eA1*Tprev+eA2*power_heat;
+	winding_temp=ambient_temp+Tprev(0);
+	case_temp=ambient_temp+Tprev(1);
+
+	first_wt_step=MAX(0,first_wt_step-1);
+	StepVoltageLimit();
+}
+
+
+//////////////////////////////////////////////////////////////////////
 //Using cold resistance
 mReal  M3MotorModel::mNmToPwm(mReal mNm)
 {
@@ -144,23 +263,45 @@ mReal  M3MotorModel::mNmToPwm(mReal mNm)
     return pwm;
 }
 
-//Input sensor data,if present, of current sensor, amplifier pwm, velocity, and temp sensor
-void M3MotorModel::Step(mReal i, mReal pwm, mReal rpm, mReal tmp)
+void M3MotorModel::StepVoltageLimit()
 {
-	if (model_type==NONE)
-	  return;
+	//When the winding is thermal_limit_pct% of over-temp, limit the voltage to the motor
+	//to a value that results in the safe y% of max continuous current
+	//slew to the limit over thermal_time_constant_winding seconds 
+	//restore to max over 5 x thermal_time_constant_winding seconds (allow extra time for motor to cool down)
+	mReal mpa=safe_pwm_pct*max_pwm_duty*nominal_torque/stall_torque;
+	mReal rate_down = (max_pwm_duty-mpa)/MIN(thermal_time_constant_winding,1.0);
+	mReal rate_up = (max_pwm_duty-mpa)/(5*thermal_time_constant_winding);
+	if (winding_temp>safe_thermal_pct*max_winding_temp)
+	{
+		safe_pwm_duty=safe_pwm_slew.Step(mpa,rate_down);
+	}
+	else
+		safe_pwm_duty=safe_pwm_slew.Step(max_pwm_duty,rate_up);
+}
+
+////////////////////////// LEGACY /////////////////////////////////////
+//Keep around older (less accurate) models so thermal safety behavior of 
+//older robots doesn't change
+
+
+//Model V1 generally has an ambient temp sensor near the motor
+//and may or may not have a useful current sensor value
+//If it does not have a current sensor, the current is estimated from the 
+//applied voltage and back-emf. The winding temp is approximated with
+//an exponential filter, but the time constants are approximate
+//Voltage limiting was added to this generation for additional safety.
+void M3MotorModel::StepModelV1(mReal i, mReal pwm, mReal rpm, mReal tmp)
+{
 	/////////////// Voltage terms //////////////////////////////
 	mReal duty=0;
 	v_pwm = 0;
 	v_cemf =0;
 	power_mech=0;
 	power_elec=0;
-	if (model_type==MODEL_V1)
-	{
-		duty=pwm/max_pwm_duty ;
-		v_pwm = ABS(nominal_voltage*pwm/max_pwm_duty);
-		v_cemf = ABS(rpm*gear_ratio/speed_constant);
-	}
+	duty=pwm/max_pwm_duty ;
+	v_pwm = ABS(nominal_voltage*pwm/max_pwm_duty);
+	v_cemf = ABS(rpm*gear_ratio/speed_constant);
 	/////////////// Estimate current ////////////////////////////
 	//Current controlled amplifier, Use the commanded value as the 'sensed' value
 	if (current_sensor_type==CURRENT_CONTROLLED)
@@ -172,15 +313,11 @@ void M3MotorModel::Step(mReal i, mReal pwm, mReal rpm, mReal tmp)
 	//i_cont is longer time scale than i_rms
 	if (current_sensor_type==CURRENT_MEASURED)
 	{
-	  if (model_type==MODEL_V0)
-		i_rms=sqrt(ABS(curr_avg_rms.Step(i*i))); //Just filter (Avoid NAN)
-	  if (model_type==MODEL_V1)
-		i_rms=min(starting_current*1000.0,sqrt(ABS(curr_avg_rms.Step(i*i)))); //Just filter (Avoid NAN)
+	  i_rms=min(starting_current*1000.0,sqrt(ABS(curr_avg_rms.Step(i*i)))); //Just filter (Avoid NAN)
 	  i_cont=curr_avg_cont.Step(i_rms);
 	}
-	
 	//No current sensing available. Estimate it based on the applied voltage and back-EMF
-	if (current_sensor_type==CURRENT_NONE && model_type==MODEL_V1)
+	if (current_sensor_type==CURRENT_NONE)
 	{
 		//Basic motor model with back emf. Estimates current from applied duty cycle and motor velocity.
 		//See paper: "Towards a dynamic actuator model for a hexapod robot"	
@@ -196,12 +333,8 @@ void M3MotorModel::Step(mReal i, mReal pwm, mReal rpm, mReal tmp)
 		//	M3_INFO("i_rms %f x %f I_ma %f v_pwm %f v_cemf %f duty %f\n",i_rms,x,I_ma, v_pwm, v_cemf, duty);
 		i_cont=curr_avg_cont.Step(i_rms);
 	}
-	
-	if (model_type==MODEL_V1 )
-	{
-		power_mech=(i_rms/1000.0)*v_cemf;
-		power_elec=(i_rms/1000.0)*v_pwm;
-	}
+	power_mech=(i_rms/1000.0)*v_cemf;
+	power_elec=(i_rms/1000.0)*v_pwm;
 	
 	/////////////// Estimate winding temp ///////////////////////
 	//Get Case/Ambient temp
@@ -233,7 +366,6 @@ void M3MotorModel::Step(mReal i, mReal pwm, mReal rpm, mReal tmp)
 	}
 	
 	//Estimate winding resistance (from maxon catalog)
-	mReal alpha_cu=.00393; //copper constant
 	mReal hot_resistance = winding_resistance*(1.0+alpha_cu*(winding_temp-25.0));
 	//Estimate winding temp
 	power_heat=(i_rms/1000.0)*(i_rms/1000.0)*hot_resistance;
@@ -245,7 +377,7 @@ void M3MotorModel::Step(mReal i, mReal pwm, mReal rpm, mReal tmp)
 		winding_temp = winding_temp_avg.Step(val);
 	}
 	
-	if ((temp_sensor_type==TEMP_AMBIENT || temp_sensor_type==TEMP_NONE)&& model_type==MODEL_V1)
+	if ((temp_sensor_type==TEMP_AMBIENT || temp_sensor_type==TEMP_NONE))
 	{
 		mReal val_c=ambient_temp+thermal_resistance_rotor_housing*power_heat;
 		mReal val_w=(thermal_resistance_rotor_housing+thermal_resistance_housing_ambient)*power_heat+ambient_temp;
@@ -257,23 +389,78 @@ void M3MotorModel::Step(mReal i, mReal pwm, mReal rpm, mReal tmp)
 		case_temp = case_temp_avg.Step(val_c); //Exponential filter with thermal time constant
 		winding_temp = winding_temp_avg.Step(val_w);//Exponential filter with thermal time constant
 	}
-	
-	//When the winding is thermal_limit_pct% of over-temp, limit the voltage to the motor
-	//to a value that results in the safe 90% of max continuous current
-	//slew to the limit over thermal_time_constant_winding seconds 
-	//restore to max over 5 x thermal_time_constant_winding seconds (allow extra time for motor to cool down)
-	mReal mpa=safe_pwm_pct*max_pwm_duty*nominal_torque/stall_torque;
-	mReal rate_down = (max_pwm_duty-mpa)/MIN(thermal_time_constant_winding,1.0);
-	mReal rate_up = (max_pwm_duty-mpa)/(5*thermal_time_constant_winding);
-	if (winding_temp>safe_thermal_pct*max_winding_temp)
-	{
-		safe_pwm_duty=safe_pwm_slew.Step(mpa,rate_down);
-	}
-	else
-		safe_pwm_duty=safe_pwm_slew.Step(max_pwm_duty,rate_up);
-	
-	first_wt_step=MAX(0,first_wt_step-1);//This resets for first few cycles to ensure start with valid data
+	first_wt_step=MAX(0,first_wt_step-1);//Resets for first few cycles to ensure start with valid data
+	StepVoltageLimit();
 }
+
+//Model V0 generally has a temp sensor on the case of the motor
+//Currents are measured from sensors, although this gen. or robot
+//current sensing may be innacurate.
+//Voltage limiting was added to this generation for additional safety.
+void M3MotorModel::StepModelV0(mReal i, mReal pwm, mReal rpm, mReal tmp)
+{
+	/////////////// Voltage terms //////////////////////////////
+	power_mech=0;
+	power_elec=0;
+	/////////////// Estimate current ////////////////////////////
+	//Current controlled amplifier with no feedback, Use the commanded value as the 'sensed' value
+	if (current_sensor_type==CURRENT_CONTROLLED)
+	{
+		i_rms=i;
+		i_cont=i;
+	}
+	//Current measurement available from the amplifier
+	//i_cont is longer time scale than i_rms
+	if (current_sensor_type==CURRENT_MEASURED)
+	{
+	  i_rms=sqrt(ABS(curr_avg_rms.Step(i*i))); //Just filter (Avoid NAN)
+	  i_cont=curr_avg_cont.Step(i_rms);
+	}
+	
+	/////////////// Estimate winding temp ///////////////////////
+	//Get Case/Ambient temp
+	ambient_temp=25.0; //provide default in case no sensor present
+	case_temp=25.0;
+	winding_temp=25.0;
+
+	if (first_wt_step)
+		tmp_avg.Reset(25.0);
+		
+	//Newer hardware has ambient temp sensors
+	if (temp_sensor_type==TEMP_AMBIENT) 
+	{
+		if (first_wt_step)
+		{
+			tmp_avg.Reset(tmp);
+		}
+		ambient_temp=tmp_avg.Step(tmp);
+	}
+	
+	//Older hardware has case temp sensors
+	if (temp_sensor_type==TEMP_CASE)
+	{
+		if (first_wt_step)
+			tmp_avg.Reset(tmp);
+		case_temp=tmp_avg.Step(tmp);
+		ambient_temp=case_temp; //w/o greater knowledge, assume that internal body temp follows motor case temp
+		
+	}
+	//Estimate winding resistance (from maxon catalog)
+	mReal hot_resistance = winding_resistance*(1.0+alpha_cu*(winding_temp-25.0));
+	//Estimate winding temp
+	power_heat=(i_rms/1000.0)*(i_rms/1000.0)*hot_resistance;
+	if (temp_sensor_type==TEMP_CASE)
+	{
+		mReal val=(thermal_resistance_rotor_housing)*power_heat+case_temp;
+		if (first_wt_step)
+			winding_temp_avg.Reset(val);
+		winding_temp = winding_temp_avg.Step(val);
+	}
+	first_wt_step=MAX(0,first_wt_step-1);//Resets for first few cycles to ensure start with valid data
+	StepVoltageLimit();
+}
+
+
 
 } //namespace
 ///////////////////////////////////////////////////////

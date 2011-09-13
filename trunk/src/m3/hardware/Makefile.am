@@ -22,9 +22,12 @@
 m3_dir = $(top_srcdir)/src
 m3rt_dir = $(prefix)/include/m3rt
 m3rtb_dir = $(prefix)/include/m3rt/base
-rtai_inc = /usr/realtime/include 
-ros_dir = /opt/ros/cturtle/ros
 
+#rtai_inc = /usr/realtime/include 
+#ros_dir = /opt/ros/cturtle/ros
+rtai_inc = $(RTAI_DIR)/include
+rtai_lib = $(RTAI_DIR)/lib
+ros_dir = $(ROS_DIR)
 
 libm3hardwareincludedir = $(includedir)/m3/hardware
 libm3hardwareinclude_HEADERS = \
@@ -190,7 +193,7 @@ proto_install:
 lib_LTLIBRARIES = libm3hardware.la 
 libm3hardware_la_LIBADD = -lprotobuf -lm3toolbox -lorocos-kdl -lyaml-cpp -lm3base -lXmlRpc -lros -lroslib $(EIGEN2_LIBS)
 
-libm3hardware_la_LDFLAGS = -version-info 1:1:0 -module -L/usr/realtime/lib  \
+libm3hardware_la_LDFLAGS = -version-info 1:1:0 -module -L$(rtai_lib)  \
 	-L$(ros_dir)/core/roscpp/lib \
 	-L$(ros_dir)/core/roslib/lib \
 	-L$(ros_dir)/core/rosconsole/lib \

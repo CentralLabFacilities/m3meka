@@ -24,7 +24,9 @@ m3rt_dir = $(prefix)/include/m3rt
 m3rtb_dir = $(prefix)/include/m3rt/base
 m3tb_dir = $(prefix)/include/m3/toolbox
 
-ros_dir = /opt/ros/cturtle/ros
+ros_dir = $(ROS_DIR)
+
+
 libm3chainsincludedir = $(includedir)/m3/chains
 libm3chainsinclude_HEADERS = \
 	joint_array.h\

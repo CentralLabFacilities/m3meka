@@ -29,13 +29,13 @@ USING_PART_OF_NAMESPACE_EIGEN
 namespace m3
 {
 using namespace std;
-	
+
 
 class M3MotorModel 
 {
 	public:
-		M3MotorModel():i_scale(1.0),safe_thermal_pct(1.0),safe_pwm_pct(0.9),starting_current(0),power_elec(0),power_heat(0),power_mech(0),
-		winding_temp(0),case_temp(0),ambient_temp(0),i_rms(0),i_cont(0),v_cemf(0),v_pwm(0),safe_pwm_duty(0),first_wt_step(5),model_type(NONE){}
+	      //EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+	      M3MotorModel():i_scale(1.0),safe_thermal_pct(1.0),safe_pwm_pct(0.9),starting_current(0),power_elec(0),power_heat(0),power_mech(0),winding_temp(0),case_temp(0),ambient_temp(0),i_rms(0),i_cont(0),v_cemf(0),v_pwm(0),safe_pwm_duty(0),first_wt_step(5),model_type(NONE){}
 		//i: current sensor if present (unfiltered, mA)
 		//pwm: current duty cycle to motor (-pwm_max to pwm_max)
 		//rpm: motor velocity
@@ -56,13 +56,18 @@ class M3MotorModel
 		mReal mNmToPwm(mReal mNm);
 		virtual void ReadConfig(const YAML::Node & doc);
 	protected:
+		void ThermalInit();
+		void StepModelV0(mReal i, mReal pwm, mReal rpm, mReal tmp);
+		void StepModelV1(mReal i, mReal pwm, mReal rpm, mReal tmp);
+		void StepModelV2(mReal i, mReal pwm, mReal rpm, mReal tmp);
+		void StepVoltageLimit();
 		string name;
 		//MODEL_V0 is for V0 actuator config files. Full motor parameters not present in config file. (RBL)
 		//MODEL_V1 is for V1 actuator config files. Full motor parameters present
-		enum {NONE, MODEL_V0, MODEL_V1}; //model typels
+		//MODEL_V2 is for V2 actautor config files. Current sensor and ambient temp sensor present.
+		enum {NONE, MODEL_V0, MODEL_V1, MODEL_V2}; //model typels
 		enum {CURRENT_NONE, CURRENT_MEASURED, CURRENT_CONTROLLED};//current sensor types
 		enum {TEMP_NONE, TEMP_CASE, TEMP_AMBIENT};//temp sensor types
-		enum {PWM_TO_VOLTAGE_DIRECT, PWM_TO_VOLTAGE_SI99790};
 		mReal nominal_voltage;//V
 		mReal no_load_speed;//rpm
 		mReal no_load_current;//mA
@@ -87,7 +92,7 @@ class M3MotorModel
 		mReal gear_ratio;//N:1
 		mReal amplifier_resistance;//Ohm
 		mReal max_pwm_duty;
-		
+		mReal alpha_cu;
 		mReal winding_temp;
 		mReal case_temp;
 		mReal ambient_temp;
@@ -113,6 +118,9 @@ class M3MotorModel
 		M3TimeAvg curr_avg_cont;
 		int first_wt_step;
 		int tmp_cnt;
+		
+		MatrixXf eA1;
+		VectorXf eA2, Tprev;
 		
 };
 

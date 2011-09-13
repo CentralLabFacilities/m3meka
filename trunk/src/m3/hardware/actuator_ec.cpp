@@ -44,7 +44,7 @@ void M3ActuatorEc::ResetCommandPdo(unsigned char * pdo)
 		return;
 	}
 	//V1
-	if (IsPdoVersion(ACTX1_PDO_V1))
+	if (IsPdoVersion(ACTX1_PDO_V1) || IsPdoVersion(ACTX1_PDO_V3)) //V3 cmd same as V1
 	{
 		M3ActX1PdoV1Cmd * p = (M3ActX1PdoV1Cmd *) pdo;
 		memset(p,0,sizeof(M3ActX1PdoV1Cmd));	
@@ -123,6 +123,7 @@ void M3ActuatorEc::SetStatusFromPdoV0(unsigned char * data)
 	status.set_adc_current_b(ax->adc_current_b);
 	status.set_pwm_cmd(ax->pwm_cmd);	
 	status.set_flags(ax->flags);
+	status.set_current_ma(0);
     }
 }
 
@@ -251,6 +252,50 @@ void M3ActuatorEc::SetStatusFromPdo(unsigned char * data)
 	IsPdoVersion(ACTX3_PDO_V2) || 
 	IsPdoVersion(ACTX4_PDO_V2))
 	SetStatusFromPdoV2(data);
+    
+    if (IsPdoVersion(ACTX1_PDO_V3))
+	SetStatusFromPdoV3(data);
+}
+
+
+void  M3ActuatorEc::StepStatus()
+{
+  M3ComponentEc::StepStatus();
+  //if (IsPdoVersion(ACTX1_PDO_V3))
+  //{
+    if (IsCurrentFaultCont())
+    {
+      SetStateError();
+      M3_ERR("Amp Continuous OverCurrent Fault (Last instaneous: %f (mA)) for  %s\n",status.current_ma(),GetName().c_str());
+    }
+    if (IsCurrentFaultMom())
+    {
+      SetStateError();
+      M3_ERR("Amp Momentary OverCurrent Fault (Last instaneous: %f (mA)) for  %s\n",status.current_ma(),GetName().c_str());
+    }
+  //}
+}
+
+void M3ActuatorEc::SetStatusFromPdoV3(unsigned char * data)
+{
+    M3ActPdoV3Status * ax;
+    M3ActX1PdoV3Status * ec = (M3ActX1PdoV3Status *) data;
+    status.set_timestamp(ec->timestamp);
+    ax=&(ec->status[chid]);
+    status.set_qei_period(ax->qei_period);
+    status.set_qei_on(ax->qei_on);
+    status.set_qei_rollover(ax->qei_rollover);
+    status.set_debug(ax->debug);
+    status.set_adc_torque(ax->adc_torque);
+    status.set_adc_ext_temp(ax->adc_motor_temp); //Post RBL version renamed PDO motor_temp to ext_temp
+    status.set_adc_ext_a(0);
+    status.set_adc_ext_b(0);
+    status.set_adc_amp_temp(ax->adc_amp_temp);
+    status.set_adc_current_a(ax->adc_current_a);
+    status.set_adc_current_b(ax->adc_current_b);
+    status.set_pwm_cmd(ax->pwm_cmd);	
+    status.set_flags(ax->flags);
+    status.set_current_ma((float)ax->current_ma);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -349,7 +394,7 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	    IsPdoVersion(SEA_PDO_V0))
 	ax=&acc; //Fill in this temporary V1 PDO,then transfer to V0/V2 PDO
 	  
-	if (IsPdoVersion(ACTX1_PDO_V1))
+	if (IsPdoVersion(ACTX1_PDO_V1) || IsPdoVersion(ACTX1_PDO_V3))
 	{
 		M3ActX1PdoV1Cmd* ec = (M3ActX1PdoV1Cmd *) data;
 		ax=&(ec->command[chid]);
@@ -402,6 +447,10 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 			pwm_scale=0;
 		}
 	}
+	
+	if (tmp_cnt++%100==0)
+	  M3_INFO("Pwm slew %f Pwr slew %f Mode %d des %d\n",
+		  pwm_scale,pwr_scale,(int) command.mode(),(int)command.t_desire());
 	
 	ax->config=param.config();
 	if (command.brake_off() && !command.mode()==ACTUATOR_EC_MODE_OFF && pwr->IsMotorPowerOn())
