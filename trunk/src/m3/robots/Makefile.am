@@ -22,7 +22,7 @@
 m3_dir = $(top_srcdir)/src
 m3rt_dir = $(prefix)/include/m3rt
 m3rtb_dir = $(prefix)/include/m3rt/base
-ros_dir = /opt/ros/cturtle/ros
+ros_dir = $(ROS_DIR)
 m3tb_dir = $(prefix)/include/m3/toolbox
 
 libm3robotsincludedir = $(includedir)/m3/robots

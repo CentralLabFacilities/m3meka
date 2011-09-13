@@ -22,8 +22,9 @@
 m3_dir = $(top_srcdir)/src
 m3rt_dir = $(prefix)/include/m3rt
 m3rtb_dir = $(prefix)/include/m3rt/base
-rtai_inc =	/usr/realtime/include 
-ros_dir = /opt/ros/cturtle/ros
+rtai_inc = $(RTAI_DIR)/include
+rtai_lib = $(RTAI_DIR)/lib
+ros_dir = $(ROS_DIR)
 libm3shmincludedir = $(includedir)/m3/shared_mem
 libm3shminclude_HEADERS = \
 	comp_shm.h\
@@ -59,7 +60,7 @@ libm3shm_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(top_srcdir)/src/m3/hardware \
 	-L$(top_srcdir)/src/m3/chains \
 	-L$(top_srcdir)/src/m3/robots \
-	-L/usr/realtime/lib
+	-L$(rtai_lib)
 
 libm3shm_la_CPPFLAGS =   -I../chains -I../robots -I../toolbox -I../hardware -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) $(EIGEN2_CFLAGS) -ffast-math -pipe -mhard-float \
 	-I$(ros_dir)/core/roscpp/include \

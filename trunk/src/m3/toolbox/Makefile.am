@@ -18,8 +18,7 @@
 m3_dir = $(top_srcdir)/src/
 m3rt_dir = $(prefix)/include/m3rt
 m3rtb_dir = $(prefix)/include/m3rt/base
-rtai_inc = /usr/realtime/include 
-ros_dir = /opt/ros/cturtle
+ros_dir = $(ROS_DIR)/..
 
 clean-local:
 	rm -f *.pb.*
