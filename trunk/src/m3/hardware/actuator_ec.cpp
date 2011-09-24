@@ -448,10 +448,8 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 		}
 	}
 	
-	if (tmp_cnt++%100==0)
-	  M3_INFO("Pwm slew %f Pwr slew %f Mode %d des %d\n",
-		  pwm_scale,pwr_scale,(int) command.mode(),(int)command.t_desire());
 	
+	 
 	ax->config=param.config();
 	if (command.brake_off() && !command.mode()==ACTUATOR_EC_MODE_OFF && pwr->IsMotorPowerOn())
 		ax->config=ax->config | ACTUATOR_EC_CONFIG_BRAKE_OFF; //Pass in as config bit for legacy reasons.
@@ -508,6 +506,11 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 		
 	if (IsPdoVersion(SEA_PDO_V0))
 		SetPdoV0FromPdoV1Command(data);
+	
+	if (tmp_cnt++%100==0)
+	M3_INFO("Pwm slew %f Pwr slew %f Mode %d des %d, t_desire %d\n",
+		  pwm_scale,pwr_scale,(int) command.mode(),(int)command.t_desire(), ax->t_desire);
+	
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

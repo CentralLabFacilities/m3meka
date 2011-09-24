@@ -11,7 +11,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
-# 
+# 	
 # You should have received a copy of the GNU Lesser General Public License
 # along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -31,6 +31,11 @@ ros_dir = $(ROS_DIR)
 
 libm3hardwareincludedir = $(includedir)/m3/hardware
 libm3hardwareinclude_HEADERS = \
+	m3ec_pdo_v0_def.h\
+	m3ec_pdo_v1_def.h\
+	m3ec_pdo_v2_def.h\
+	m3ec_pdo_v3_def.h\
+	m3meka_ec_def.h\
 	motor.h\
 	actuator.h\
 	actuator.pb.h\
