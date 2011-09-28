@@ -23,7 +23,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "current.h"
 
 
-//Assuming step is called at 2Khz
+//Assuming step is called at 2kHz
 #define I_RMS_MOM_BUF_SZ 16
 #define I_RMS_MOM_BUF_SHIFT 4
 #define I_RMS_MOM_DS 248 //2000Hz to 8.06Hz, Buff of 16 gives ~2s window size.
@@ -31,7 +31,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 //Assuming step is called at 2kHz
 #define I_RMS_CONT_BUF_SZ 32
 #define I_RMS_CONT_BUF_SHIFT 5
-#define I_RMS_CONT_DS 624 //2000Hz to 3.2Hz. Buff of 32 gives ~10s window size.
+#define I_RMS_CONT_DS 624 //2000Hz to 3.2Hz. Buff of 32 gives ~10S window size.
 
 volatile float i_mA;
 volatile int i_zero_a, i_zero_b;
@@ -91,8 +91,8 @@ void reset_current_buf()
 	i_rms_mom_sum=0;
 	i_rms_mom_sq=0;	
 	i_rms_mom_ds=0;
-  memset((unsigned char *)i_rms_mom_buf,0,sizeof(unsigned long)*I_RMS_MOM_BUF_SZ);
-  memset((unsigned char *)i_rms_cont_buf,0,sizeof(unsigned long)*I_RMS_CONT_BUF_SZ);
+  	memset((unsigned long *)i_rms_mom_buf,0,sizeof(unsigned long)*I_RMS_MOM_BUF_SZ);		//WAS unsigned char, all 4
+  	memset((unsigned long *)i_rms_cont_buf,0,sizeof(unsigned long)*I_RMS_CONT_BUF_SZ);
 }
 
 void step_current()
@@ -119,7 +119,8 @@ if (i_state != CURRENT_STARTUP)
 	//Compute 'instantaneous' current
 	#if defined M3_MAX2_BDC_A2R4
 	  int x=(int)get_avg_adc(ADC_CURRENT_A)-i_zero_a;
-	  i_mA=(int)((float)x * (float)ADC_CURRENT_MA_PER_TICK);
+	  //i_mA=(int)((float)x * (float)ADC_CURRENT_MA_PER_TICK);
+	i_mA = (x * ADC_CURRENT_MA_PER_TICK);	//WAS: New version, int
 	#endif
 
 
@@ -163,10 +164,12 @@ if (i_state != CURRENT_STARTUP)
 			reset_current_buf();//power turns off
 		}
 }
+
 }
 
 void setup_current()
 {
+
   i_mA=0;
   i_zero_a=0;
   i_zero_b=0;
@@ -184,8 +187,9 @@ void setup_current()
   i_rms_mom_sq=0;	
   i_rms_mom_ds=0;
   i_state=CURRENT_STARTUP;
-  memset((unsigned char *)i_rms_mom_buf,0,sizeof(unsigned long)*I_RMS_MOM_BUF_SZ);
-  memset((unsigned char *)i_rms_cont_buf,0,sizeof(unsigned long)*I_RMS_CONT_BUF_SZ);
+  memset((unsigned long *)i_rms_mom_buf,0,sizeof(unsigned long)*I_RMS_MOM_BUF_SZ);
+  memset((unsigned long *)i_rms_cont_buf,0,sizeof(unsigned long)*I_RMS_CONT_BUF_SZ);
+
 }
 
 #endif //USE_CURRENT

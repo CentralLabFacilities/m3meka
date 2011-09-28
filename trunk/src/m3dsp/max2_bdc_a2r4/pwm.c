@@ -60,8 +60,8 @@ int clamp_pwm(int chid, int abs_val)
 void set_pwm(int chid, int val)
 {
 #if defined USE_CURRENT
-      if (get_current_state()!=CURRENT_READY)
-		val=0;
+//     if (get_current_state()!=CURRENT_READY)		//BUG, with it HB doesn't flash
+//		val=0;
 #endif
 	int sign=SIGN(val);
 	val=pwm_deadband(chid,ABS(val));

@@ -74,7 +74,6 @@ int main (void)
 	setup_vertx();
 #endif
 
-
 #ifdef USE_ETHERCAT
 	while (!eeprom_loaded())		//Wait until ESC is ready
 		SetHeartbeatLED;
