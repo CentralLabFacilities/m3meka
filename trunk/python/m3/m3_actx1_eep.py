@@ -17,7 +17,7 @@
 #You should have received a copy of the GNU Lesser General Public License
 #along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import copy
 
 # See the EtherCAT Device Description Documentation for format details
 # ###################################### V1.2 #########################################################
@@ -329,7 +329,9 @@ slave_cfg_dict_v1 = {
                 []],
             'Vendor Specific': 0}]}
 
+slave_cfg_dict_v3=copy.deepcopy(slave_cfg_dict_v1)
+slave_cfg_dict_v3['Version Notes']='V3: Utilizes current sensing PDO'
 # #################################################################################################
 
-slave_cfg_dicts= [slave_cfg_dict_v1,slave_cfg_dict_v2] 
+slave_cfg_dicts= [slave_cfg_dict_v1,slave_cfg_dict_v2, slave_cfg_dict_v3] 
 

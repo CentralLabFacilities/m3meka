@@ -91,6 +91,8 @@ class M3Proc:
 		self.t_desire_b=[0]*len(self.actuator_ec)
 		self.pwm_desire_a=[0]*len(self.actuator_ec)
 		self.pwm_desire_b=[0]*len(self.actuator_ec)
+		self.current_desire_a=[0]*len(self.actuator_ec)
+		self.current_desire_b=[0]*len(self.actuator_ec)
 		self.save=False
 		self.save_last=False
 		self.do_scope_torque=False
@@ -99,12 +101,14 @@ class M3Proc:
 		self.param_dict=self.proxy.get_param_dict()
 		self.gui.add('M3GuiTree',   'Status',    (self,'status_dict'),[],[],m3g.M3GuiRead,column=2)
 		self.gui.add('M3GuiTree',   'Param',   (self,'param_dict'),[],[],m3g.M3GuiWrite,column=3)
-		self.gui.add('M3GuiModes',  'Mode',      (self,'mode'),range(len(self.actuator_ec)),[['Off','Pwm','PID'],1],m3g.M3GuiWrite)
+		self.gui.add('M3GuiModes',  'Mode',      (self,'mode'),range(len(self.actuator_ec)),[['Off','Pwm','PID','CURRENT'],1],m3g.M3GuiWrite)
 		self.gui.add('M3GuiModes',  'Brake',      (self,'brake'),range(1),[['Enabled','Disabled'],1],m3g.M3GuiWrite)
 		self.gui.add('M3GuiSliders','tqDesire',  (self,'t_desire_a'),range(len(self.actuator_ec)),[tl,tu],m3g.M3GuiWrite)
 		self.gui.add('M3GuiSliders','tqDesire',  (self,'t_desire_b'),range(len(self.actuator_ec)),[tl,tu],m3g.M3GuiWrite)
 		self.gui.add('M3GuiSliders','pwmDesireA', (self,'pwm_desire_a'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite) 
-		self.gui.add('M3GuiSliders','pwmDesireB', (self,'pwm_desire_b'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite) 
+		self.gui.add('M3GuiSliders','pwmDesireB', (self,'pwm_desire_b'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite)
+		self.gui.add('M3GuiSliders','currentDesireA', (self,'current_desire_a'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite) 
+		self.gui.add('M3GuiSliders','currentDesireB', (self,'current_desire_b'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite) 
 		self.gui.add('M3GuiSliders','StepPeriod (ms) ', (self,'step_period'),range(len(self.actuator_ec)),[0,4000],m3g.M3GuiWrite) 
 		self.gui.add('M3GuiToggle', 'CyclePwm',      (self,'cycle_pwm'),[],[['On','Off']],m3g.M3GuiWrite)	
 		self.gui.add('M3GuiToggle', 'CycleTq',      (self,'cycle_tq'),[],[['On','Off']],m3g.M3GuiWrite)	
@@ -146,6 +150,7 @@ class M3Proc:
 			self.cycle_last_tq=self.cycle_tq
 			pwm=self.pwm_desire_a[idx]
 			tq=self.t_desire_a[idx]
+			current=self.current_desire_a[idx]
 			if self.cycle_pwm:
 				dt=time.time()-self.step_start
 				if math.fmod(dt,self.step_period[idx]/1000.0)>self.step_period[idx]/2000.0:
@@ -160,6 +165,9 @@ class M3Proc:
 			if self.mode[idx]==mec.ACTUATOR_EC_MODE_TORQUE:
 				c.command.t_desire=int(tq+self.bias[idx]) #Bias slider around 'zero'
 				print 'Desired',c.name,c.command.t_desire
+			if self.mode[idx]==mec.ACTUATOR_EC_MODE_CURRENT:
+				c.command.t_desire=int(current) 
+				print 'Desired',c.name,c.command.t_desire
 				
 			
 			if self.do_scope_torque and self.scope_torque is not None:
@@ -171,9 +179,9 @@ class M3Proc:
 			if (self.save and not self.save_last):
 				c.write_config()
 			c.command.brake_off=int(self.brake[0])
-			
+			print 't_desire:', c.command.t_desire
 		self.save_last=self.save
-
+		
 if __name__ == '__main__':
 	t=M3Proc()
 	try:

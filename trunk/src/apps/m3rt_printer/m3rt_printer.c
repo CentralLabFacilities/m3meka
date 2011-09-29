@@ -34,6 +34,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "ecrt.h"
 	
 #include "pthread.h"
+
 #include "m3/hardware/m3meka_ec_def.h"
 #include "m3rt/base/m3ec_def.h"
 #include "m3/hardware/m3ec_pdo_v0_def.h"
@@ -351,6 +352,23 @@ void M3ActPdoStatusPrettyPrint(M3ActPdoV1Status * d, int sn, int ch)
 	printf("id %d-%d: flags: %d\n",sn,ch,(int) d->flags);
 }
 
+void M3ActPdoV3StatusPrettyPrint(M3ActPdoV3Status * d, int sn, int ch)
+{
+	printf("Printing M3ActPdoV3Status\n");
+	printf("id %d-%d: qei_period: %d\n",sn,ch,(int) d->qei_period);
+	printf("id %d-%d: qei_on: %d\n",sn,ch,(int) d->qei_on);
+	printf("id %d-%d: qei_rollover: %d\n",sn,ch,(int) d->qei_rollover);
+	printf("id %d-%d: debug: %llu\n",sn,ch,(uint64_t) d->debug);
+	printf("id %d-%d: adc_torque: %d\n",sn,ch,(int) d->adc_torque);
+	printf("id %d-%d: adc_motor_temp: %d\n",sn,ch,(int) d->adc_motor_temp);
+	printf("id %d-%d: adc_amp_temp: %d\n",sn,ch,(int) d->adc_amp_temp);
+	printf("id %d-%d: adc_current_a: %d\n",sn,ch,(int) d->adc_current_a);
+	printf("id %d-%d: adc_current_b: %d\n",sn,ch,(int) d->adc_current_b);
+	printf("id %d-%d: pwm_cmd: %d\n",sn,ch,(int) d->pwm_cmd);
+	printf("id %d-%d: flags: %d\n",sn,ch,(int) d->flags);
+	printf("id %d-%d: current_ma: %d\n",sn,ch, (int)d->current_ma);
+}
+
 void M3ActPdoV2StatusPrettyPrint(M3ActPdoV2Status * d, int sn, int ch)
 {
 	int i;
@@ -410,6 +428,12 @@ void M3ActX1PdoV2StatusPrettyPrint(M3ActX1PdoV2Status * d, int sn)
 	printf("----- Status -----\n",0);
 	printf("sn %d: timestamp: %lld\n",sn, (uint64_t)d->timestamp);
 	M3ActPdoV2StatusPrettyPrint(&(d->status[0]),sn,0);
+}
+void M3ActX1PdoV3StatusPrettyPrint(M3ActX1PdoV3Status * d, int sn)
+{
+	printf("----- Status -----\n",0);
+	printf("sn %d: timestamp: %lld\n",sn, (uint64_t)d->timestamp);
+	M3ActPdoV3StatusPrettyPrint(&(d->status[0]),sn,0);
 }
 void M3ActX1PdoCommandPrettyPrint(M3ActX1PdoV1Cmd * d, int sn)
 {
@@ -686,7 +710,8 @@ void SlaveEcShmPrettyPrint(M3EcSlaveShm * shm)
 	  }
 	  else
 	  {
-		  M3ActX1PdoStatusPrettyPrint((M3ActX1PdoV1Status *) shm->status,shm->serial_number);
+		  //M3ActX1PdoStatusPrettyPrint((M3ActX1PdoV1Status *) shm->status,shm->serial_number);
+		  M3ActX1PdoV3StatusPrettyPrint((M3ActX1PdoV3Status *) shm->status,shm->serial_number);
 		  M3ActX1PdoCommandPrettyPrint((M3ActX1PdoV1Cmd *) shm->cmd,shm->serial_number);
 	  }
 	}

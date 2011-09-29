@@ -46,8 +46,8 @@ int ramp_pid_gains_up(int chid,int rate)
 {
 	int done=0;
 
-	M3ActPdoV1Cmd * g = &(gains.command[chid]);
-	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
+	M3ActPdoV3Cmd * g = &(gains.command[chid]);		//WAS 1
+	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);	//WAS 1
 
 	ramp_idx[chid]++;
 	g->k_p_shift=d->k_p_shift;
@@ -92,8 +92,8 @@ int ramp_pid_gains_up(int chid,int rate)
 int ramp_pid_gains_down(int chid,int rate)
 {
 	int done=0;
-	M3ActPdoV1Cmd * g = &(gains.command[chid]);
-	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
+	M3ActPdoV3Cmd * g = &(gains.command[chid]);		//WAS 1
+	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);	//WAS 1
 	ramp_idx[chid]++;
 
 	g->k_p_shift=d->k_p_shift;
@@ -135,7 +135,7 @@ int ramp_pid_gains_down(int chid,int rate)
 
 void setup_pid(int chid)
 {
-	M3ActPdoV1Cmd * g = &(gains.command[chid]);
+	M3ActPdoV3Cmd * g = &(gains.command[chid]);		//WAS 1
 	g->k_p=0;
 	g->k_i=0;
 	g->k_d=0;
@@ -248,8 +248,8 @@ for ( chid=0;chid<NUM_CTRL_CH;chid++)
 
 void step_torque_pid(int chid,int des)
 {
-	M3ActPdoV1Cmd * g = &(gains.command[chid]);
-	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
+	M3ActPdoV3Cmd * g = &(gains.command[chid]);		//WAS 1
+	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);	//WAS 1
 	int ddes = CLAMP(des,d->t_min,d->t_max);
 	int s=0;
 

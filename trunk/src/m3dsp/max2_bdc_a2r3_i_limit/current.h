@@ -40,13 +40,13 @@ enum {
   CURRENT_FAULT_CONT};
   
 // OP-Amp scale: G=0.6428 (5V to 3V3 using 1.5K/2.7K divider)
-// Ticks per mv: S = 4096/3300 = 1.2412...
+// Ticks per mV: S = 4096/3300 = 1.2412...
 // ACS714-30: 1000/ (66.0 mv/A *G * S ) = 18.990 mA/tick
 // ACS714-20: 1000/ (100.0 mv/A *G * S )= 12.523 mA/tick
 // ACS714-5:  1000/ (185.0 mv/A *G * S ) = 6.775 mA/tick
-#define ADC_CURRENT_MA_PER_TICK 12.523
-#define CURRENT_MAX_MOM_RMS_SQ  144000000//12000mA*12000mA, 2s
-#define CURRENT_MAX_CONT_RMS_SQ 64000000 //8000mA*8000mA, 10S
+#define ADC_CURRENT_MA_PER_TICK 13 //12.523 ToDo: was float
+#define CURRENT_MAX_MOM_RMS_SQ  18000000//12000mA*12000mA, 2s	//WAS 144000000
+#define CURRENT_MAX_CONT_RMS_SQ 10000000 //8000mA*8000mA, 10S	//WAS 64000000
 
 #endif
 #endif

@@ -61,7 +61,6 @@ pkgpython_PYTHON = \
 	m3/loadx6_ec.py\
 	m3/loadx6_ec_pb2.py\
 	m3/pwr_pb2.py\
-	m3/component_factory.py\
 	m3/toolbox_ros.py\
 	m3/toolbox_head_s2.py\
 	m3/toolbox_omnibase_b1.py\

@@ -43,8 +43,8 @@ extern int ec_flags[];
 extern  int ec_wd_expired;
 extern long ec_wd_timestamp;
 
-typedef M3ActX1PdoV1Status ec_stat_t;
-typedef M3ActX1PdoV1Cmd ec_cmd_t;
+typedef M3ActX1PdoV3Status ec_stat_t;
+typedef M3ActX1PdoV3Cmd ec_cmd_t;		//WAS 1
 
 #define NUM_DBG_CH 1
 
