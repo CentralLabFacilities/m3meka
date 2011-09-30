@@ -33,7 +33,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define I_RMS_CONT_BUF_SHIFT 5
 #define I_RMS_CONT_DS 624 //2000Hz to 3.2Hz. Buff of 32 gives ~10S window size.
 
-volatile float i_mA;
+volatile int i_mA;
 volatile int i_zero_a, i_zero_b;
 volatile int i_zero_cnt;
 volatile unsigned long i_rms_mom_buf[I_RMS_MOM_BUF_SZ];

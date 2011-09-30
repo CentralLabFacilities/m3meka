@@ -44,7 +44,7 @@ enum {
 // ACS714-30: 1000/ (66.0 mv/A *G * S ) = 18.990 mA/tick
 // ACS714-20: 1000/ (100.0 mv/A *G * S )= 12.523 mA/tick
 // ACS714-5:  1000/ (185.0 mv/A *G * S ) = 6.775 mA/tick
-#define ADC_CURRENT_MA_PER_TICK 13 //12.523 ToDo: was float
+#define ADC_CURRENT_MA_PER_TICK 13 //12.523 WAS float
 #define CURRENT_MAX_MOM_RMS_SQ  18000000//12000mA*12000mA, 2s	//WAS 144000000
 #define CURRENT_MAX_CONT_RMS_SQ 10000000 //8000mA*8000mA, 10S	//WAS 64000000
 

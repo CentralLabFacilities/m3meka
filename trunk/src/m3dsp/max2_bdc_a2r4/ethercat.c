@@ -28,6 +28,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 ec_cmd_t  ec_cmd;
 ec_stat_t   ec_stat;
 
+int test = 10;
+
 unsigned char pdo_cmd[PDO_COMMAND_SIZE];
 unsigned char pdo_stat[PDO_STATUS_SIZE];
 
@@ -103,8 +105,8 @@ void isr_update_input_pdo(void)
 	ec_stat.status[0].pwm_cmd=pwm_cmd(0);
 #endif
 #ifdef USE_CURRENT
-	ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag();		//BUG, with it HB doesn't flash
-	ec_stat.status[0].current_ma = 666; //= get_current_ma();											//BUG, with it HB doesn't flash
+	ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag();
+	ec_stat.status[0].current_ma = get_current_ma(); //test++; ToDo
 #endif
 	ec_stat.status[0].debug=ec_debug[0];
 	ec_stat.status[0].flags=ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.

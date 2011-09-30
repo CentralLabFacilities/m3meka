@@ -266,10 +266,12 @@ void step_torque_pid(int chid,int des)
 	int ddes = CLAMP(des,d->t_min,d->t_max);
 	int s=0;
 
+	#ifdef USE_ENCODER_VERTX
 	if (d->config&M3ACT_CONFIG_TORQUE_SMOOTH)
 		s=get_avg_vertx(VERTX_CH_SEAS);
 	else
 		s=vertx_pos(VERTX_CH_SEAS);
+	#endif
 
 	t_error = (ddes-s);
 	
