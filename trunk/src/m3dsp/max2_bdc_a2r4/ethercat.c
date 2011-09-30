@@ -28,7 +28,10 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 ec_cmd_t  ec_cmd;
 ec_stat_t   ec_stat;
 
-int test = 10;
+//ToDo Remove, test only
+extern volatile unsigned int i_zero_a, i_zero_b;
+int test = 0;
+extern volatile unsigned int i_zero_sum_a, i_zero_sum_b;
 
 unsigned char pdo_cmd[PDO_COMMAND_SIZE];
 unsigned char pdo_stat[PDO_STATUS_SIZE];
@@ -98,8 +101,8 @@ void isr_update_input_pdo(void)
 #ifdef USE_ADC
 	ec_stat.status[0].adc_motor_temp=get_avg_adc(ADC_MOTOR_TEMP);
 	ec_stat.status[0].adc_amp_temp=get_avg_adc(ADC_AMP_TEMP);
-	ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT_A); 
-	ec_stat.status[0].adc_current_b=get_avg_adc(ADC_CURRENT_B);
+	ec_stat.status[0].adc_current_a = i_zero_a; //WAS get_avg_adc(ADC_CURRENT_A); 
+	ec_stat.status[0].adc_current_b= (int) i_zero_sum_a; //WAS get_avg_adc(ADC_CURRENT_B);
 #endif
 #ifdef USE_PWM
 	ec_stat.status[0].pwm_cmd=pwm_cmd(0);

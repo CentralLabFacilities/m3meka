@@ -21,6 +21,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "setup.h"
 #include "current.h"
+extern int test;
 
 
 //Assuming step is called at 2kHz
@@ -34,11 +35,11 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define I_RMS_CONT_DS 624 //2000Hz to 3.2Hz. Buff of 32 gives ~10S window size.
 
 volatile int i_mA;
-volatile int i_zero_a, i_zero_b;
+volatile unsigned int i_zero_a, i_zero_b;
 volatile int i_zero_cnt;
 volatile unsigned long i_rms_mom_buf[I_RMS_MOM_BUF_SZ];
 volatile unsigned long i_rms_cont_buf[I_RMS_CONT_BUF_SZ];
-volatile long i_zero_sum_a, i_zero_sum_b;
+volatile unsigned int i_zero_sum_a, i_zero_sum_b;
 volatile long i_rms_cont_sq, i_rms_mom_sq, i_fault_val; //squared value
 volatile int i_rms_mom_ds,i_rms_cont_ds;
 volatile unsigned long i_rms_mom_sum, i_rms_cont_sum;
@@ -98,16 +99,16 @@ void reset_current_buf()
 void step_current()
 {
   //Measure zero sensor reading at startup
-  if (i_zero_cnt<17 && i_zero_cnt>0)
+  if (i_zero_cnt<5 && i_zero_cnt>0)
   {
 #if defined M3_MAX2_BDC_A2R4
-      i_zero_sum_a=i_zero_sum_a+(int)get_avg_adc(ADC_CURRENT_A);
-      i_zero_sum_b=i_zero_sum_b+(int)get_avg_adc(ADC_CURRENT_B);
-      if (i_zero_cnt==1)
+      i_zero_sum_a = i_zero_sum_a + get_avg_adc(ADC_CURRENT_A);
+      i_zero_sum_b = i_zero_sum_b + get_avg_adc(ADC_CURRENT_B);
+      if (i_zero_cnt ==1 )
       {
-		i_zero_a=(int)(i_zero_sum_a>>4);
-		i_zero_b=(int)(i_zero_sum_b>>4);
-		i_state=CURRENT_READY;
+		i_zero_a = (i_zero_sum_a >> 2);
+		i_zero_b = (i_zero_sum_b >> 2);
+		i_state = CURRENT_READY;
       }
 #endif
   }
@@ -118,12 +119,12 @@ if (i_state != CURRENT_STARTUP)
 {
 	//Compute 'instantaneous' current
 	#if defined M3_MAX2_BDC_A2R4
-	  int x=(int)get_avg_adc(ADC_CURRENT_A)-i_zero_a;
+	  int x =(int)get_avg_adc(ADC_CURRENT_A) - (int)i_zero_a;
 	  //i_mA=(int)((float)x * (float)ADC_CURRENT_MA_PER_TICK);
 	i_mA = (x * ADC_CURRENT_MA_PER_TICK);	//WAS: New version, int
 	#endif
 
-
+/*
 	  //Now compute the momentary RMS value
 	  i_rms_mom_ds=INC_MOD(i_rms_mom_ds,I_RMS_MOM_DS);
 	  if (i_rms_mom_ds==0)
@@ -162,34 +163,34 @@ if (i_state != CURRENT_STARTUP)
 			i_state=CURRENT_FAULT_CONT;
 			i_fault_cont=1;
 			reset_current_buf();//power turns off
+
 		}
-}
+*/
+	}
 
 }
 
 void setup_current()
 {
-
-  i_mA=0;
-  i_zero_a=0;
-  i_zero_b=0;
-  i_zero_cnt=200;
-  i_zero_sum_a=0;
-  i_zero_sum_b=0;
+  	i_mA=0;
+  	i_zero_a=0;
+  	i_zero_b=0;
+  	i_zero_cnt=200;
+  	i_zero_sum_a=0;
+  	i_zero_sum_b=0;
  	i_rms_cont_idx=0;
  	i_rms_cont_sum=0;
  	i_rms_cont_sq=0;	
  	i_rms_cont_ds=0;
 	i_fault_cont=0;
 	i_fault_mom=0;
-  i_rms_mom_idx=0;
-  i_rms_mom_sum=0;
-  i_rms_mom_sq=0;	
-  i_rms_mom_ds=0;
-  i_state=CURRENT_STARTUP;
-  memset((unsigned long *)i_rms_mom_buf,0,sizeof(unsigned long)*I_RMS_MOM_BUF_SZ);
-  memset((unsigned long *)i_rms_cont_buf,0,sizeof(unsigned long)*I_RMS_CONT_BUF_SZ);
-
+  	i_rms_mom_idx=0;
+  	i_rms_mom_sum=0;
+  	i_rms_mom_sq=0;	
+  	i_rms_mom_ds=0;
+  	i_state=CURRENT_STARTUP;
+  	memset((unsigned long *)i_rms_mom_buf,0,sizeof(unsigned long)*I_RMS_MOM_BUF_SZ);
+  	memset((unsigned long *)i_rms_cont_buf,0,sizeof(unsigned long)*I_RMS_CONT_BUF_SZ);
 }
 
 #endif //USE_CURRENT
