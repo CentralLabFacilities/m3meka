@@ -21,7 +21,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "setup.h"
 #include "current.h"
-extern int test;
+extern int test; //Test
 
 
 //Assuming step is called at 2kHz
@@ -99,16 +99,30 @@ void reset_current_buf()
 void step_current()
 {
   //Measure zero sensor reading at startup
-  if (i_zero_cnt<5 && i_zero_cnt>0)
+  if (i_zero_cnt<17 && i_zero_cnt>0)
   {
 #if defined M3_MAX2_BDC_A2R4
       i_zero_sum_a = i_zero_sum_a + get_avg_adc(ADC_CURRENT_A);
       i_zero_sum_b = i_zero_sum_b + get_avg_adc(ADC_CURRENT_B);
-      if (i_zero_cnt ==1 )
+      if (i_zero_cnt ==1)
       {
-		i_zero_a = (i_zero_sum_a >> 2);
-		i_zero_b = (i_zero_sum_b >> 2);
-		i_state = CURRENT_READY;
+		i_zero_a = (i_zero_sum_a >> 4);
+		i_zero_b = (i_zero_sum_b >> 4);
+		
+		//Make sure that the zero is valid
+		if((i_zero_a > 1794) && (i_zero_a < 2193))
+		{
+			//Value in the range (+-10%), we use it
+			i_state = CURRENT_READY;
+		}
+		else
+		{
+			//Try again...
+			i_state = CURRENT_STARTUP;
+			i_zero_sum_a = 0;
+			i_zero_sum_b = 0;
+			i_zero_cnt = 100;	
+		}
       }
 #endif
   }
@@ -124,7 +138,7 @@ if (i_state != CURRENT_STARTUP)
 	i_mA = (x * ADC_CURRENT_MA_PER_TICK);	//WAS: New version, int
 	#endif
 
-/*
+
 	  //Now compute the momentary RMS value
 	  i_rms_mom_ds=INC_MOD(i_rms_mom_ds,I_RMS_MOM_DS);
 	  if (i_rms_mom_ds==0)
@@ -165,7 +179,7 @@ if (i_state != CURRENT_STARTUP)
 			reset_current_buf();//power turns off
 
 		}
-*/
+
 	}
 
 }
@@ -173,9 +187,9 @@ if (i_state != CURRENT_STARTUP)
 void setup_current()
 {
   	i_mA=0;
-  	i_zero_a=0;
+  	i_zero_a=1915;
   	i_zero_b=0;
-  	i_zero_cnt=200;
+  	i_zero_cnt=250;
   	i_zero_sum_a=0;
   	i_zero_sum_b=0;
  	i_rms_cont_idx=0;
