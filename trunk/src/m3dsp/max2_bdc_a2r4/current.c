@@ -37,12 +37,12 @@ extern int test; //Test
 volatile int i_mA;
 volatile unsigned int i_zero_a, i_zero_b;
 volatile int i_zero_cnt;
-volatile unsigned long i_rms_mom_buf[I_RMS_MOM_BUF_SZ];
-volatile unsigned long i_rms_cont_buf[I_RMS_CONT_BUF_SZ];
+volatile long i_rms_mom_buf[I_RMS_MOM_BUF_SZ];
+volatile long i_rms_cont_buf[I_RMS_CONT_BUF_SZ];
 volatile unsigned int i_zero_sum_a, i_zero_sum_b;
 volatile long i_rms_cont_sq, i_rms_mom_sq, i_fault_val; //squared value
 volatile int i_rms_mom_ds,i_rms_cont_ds;
-volatile unsigned long i_rms_mom_sum, i_rms_cont_sum;
+volatile long i_rms_mom_sum, i_rms_cont_sum;
 volatile int i_rms_mom_idx,i_rms_cont_idx;
 volatile int i_state,i_fault_cont,i_fault_mom;
 
@@ -92,14 +92,14 @@ void reset_current_buf()
 	i_rms_mom_sum=0;
 	i_rms_mom_sq=0;	
 	i_rms_mom_ds=0;
-  	memset((unsigned long *)i_rms_mom_buf,0,sizeof(unsigned long)*I_RMS_MOM_BUF_SZ);		//WAS unsigned char, all 4
-  	memset((unsigned long *)i_rms_cont_buf,0,sizeof(unsigned long)*I_RMS_CONT_BUF_SZ);
+  	memset((long *)i_rms_mom_buf,0,sizeof(long)*I_RMS_MOM_BUF_SZ);		//WAS unsigned char, all 4
+  	memset((long *)i_rms_cont_buf,0,sizeof(long)*I_RMS_CONT_BUF_SZ);
 }
 
 void step_current()
 {
   //Measure zero sensor reading at startup
-  if (i_zero_cnt<17 && i_zero_cnt>0)
+  if (i_zero_cnt<17 && i_zero_cnt>0 && i_state == CURRENT_STARTUP)
   {
 #if defined M3_MAX2_BDC_A2R4
       i_zero_sum_a = i_zero_sum_a + get_avg_adc(ADC_CURRENT_A);
@@ -143,22 +143,24 @@ if (i_state != CURRENT_STARTUP)
 	  i_rms_mom_ds=INC_MOD(i_rms_mom_ds,I_RMS_MOM_DS);
 	  if (i_rms_mom_ds==0)
 	  {
-	    i_rms_mom_sum=i_rms_mom_sum-i_rms_mom_buf[i_rms_mom_idx];
-	    i_rms_mom_buf[i_rms_mom_idx]=(long)i_mA*(long)i_mA;
-	    i_rms_mom_sum=i_rms_mom_sum+i_rms_mom_buf[i_rms_mom_idx];
-	    i_rms_mom_sq=i_rms_mom_sum>>I_RMS_MOM_BUF_SHIFT;
-	    i_rms_mom_idx=INC_MOD(i_rms_mom_idx,I_RMS_MOM_BUF_SZ);
+	    	i_rms_mom_sum=i_rms_mom_sum-i_rms_mom_buf[i_rms_mom_idx];
+	    	i_rms_mom_buf[i_rms_mom_idx]=(long)i_mA*(long)i_mA;
+	    	i_rms_mom_sum=i_rms_mom_sum+i_rms_mom_buf[i_rms_mom_idx];
+	    	i_rms_mom_sq=i_rms_mom_sum>>I_RMS_MOM_BUF_SHIFT;
+	    	i_rms_mom_idx=INC_MOD(i_rms_mom_idx,I_RMS_MOM_BUF_SZ);
+	    
+		    if (!i_fault_mom && i_rms_mom_sq>CURRENT_MAX_MOM_RMS_SQ)
+			{
+				//if (i_state==CURRENT_READY)
+				//	i_fault_val=i_rms_mom_sq;
+				i_state = CURRENT_FAULT_MOM;
+				i_fault_mom = 1;
+				reset_current_buf();//power turns off
+			}
 	  }
 
-	   	if (!i_fault_mom && i_rms_mom_sq>CURRENT_MAX_MOM_RMS_SQ)
-		{
-			//if (i_state==CURRENT_READY)
-			//	i_fault_val=i_rms_mom_sq;
-			i_state=CURRENT_FAULT_MOM;
-			i_fault_mom=1;
-			reset_current_buf();//power turns off
-		}
 
+/*
 		 //Now compute the continuous RMS value
 		 i_rms_cont_ds=INC_MOD(i_rms_cont_ds,I_RMS_CONT_DS);
 		  if (i_rms_cont_ds==0)
@@ -179,6 +181,7 @@ if (i_state != CURRENT_STARTUP)
 			reset_current_buf();//power turns off
 
 		}
+		*/
 
 	}
 
@@ -203,8 +206,8 @@ void setup_current()
   	i_rms_mom_sq=0;	
   	i_rms_mom_ds=0;
   	i_state=CURRENT_STARTUP;
-  	memset((unsigned long *)i_rms_mom_buf,0,sizeof(unsigned long)*I_RMS_MOM_BUF_SZ);
-  	memset((unsigned long *)i_rms_cont_buf,0,sizeof(unsigned long)*I_RMS_CONT_BUF_SZ);
+  	memset((long *)i_rms_mom_buf,0,sizeof(long)*I_RMS_MOM_BUF_SZ);
+  	memset((long *)i_rms_cont_buf,0,sizeof(long)*I_RMS_CONT_BUF_SZ);
 }
 
 #endif //USE_CURRENT
