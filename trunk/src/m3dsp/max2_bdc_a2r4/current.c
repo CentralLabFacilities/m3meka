@@ -104,7 +104,7 @@ void reset_current_buf()
 	i_rms_mom_sum=0;
 	i_rms_mom_sq=0;	
 	i_rms_mom_ds=0;
-  	memset((long *)i_rms_mom_buf,0,sizeof(long)*I_RMS_MOM_BUF_SZ);		//WAS unsigned char, all 4
+  	memset((long *)i_rms_mom_buf,0,sizeof(long)*I_RMS_MOM_BUF_SZ);
   	memset((long *)i_rms_cont_buf,0,sizeof(long)*I_RMS_CONT_BUF_SZ);
 }
 
@@ -157,7 +157,7 @@ if (i_state != CURRENT_STARTUP)
 	#ifdef USE_MAX2_0_2
 	  	int x =(int)get_avg_adc(ADC_CURRENT_A) - (int)i_zero_a;
 	  	//i_mA=(int)((float)x * (float)ADC_CURRENT_MA_PER_TICK);
-		i_mA = (x * ADC_CURRENT_MA_PER_TICK);	//WAS: New version, int
+		i_mA = (x * ADC_CURRENT_MA_PER_TICK);	//WAS float: New version, int
 	#endif
 	
 	//Shunt sensor, we use the absolute value

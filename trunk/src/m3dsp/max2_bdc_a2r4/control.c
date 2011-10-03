@@ -50,8 +50,8 @@ int ramp_pid_gains_up(int chid,int rate)
 {
 	int done=0;
 
-	M3ActPdoV3Cmd * g = &(gains.command[chid]);		//WAS 1
-	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);	//WAS 1
+	M3ActPdoV3Cmd * g = &(gains.command[chid]);
+	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
 
 	ramp_idx[chid]++;
 	g->k_p_shift=d->k_p_shift;
@@ -96,8 +96,8 @@ int ramp_pid_gains_up(int chid,int rate)
 int ramp_pid_gains_down(int chid,int rate)
 {
 	int done=0;
-	M3ActPdoV3Cmd * g = &(gains.command[chid]);		//WAS 1
-	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);	//WAS 1
+	M3ActPdoV3Cmd * g = &(gains.command[chid]);
+	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
 	ramp_idx[chid]++;
 
 	g->k_p_shift=d->k_p_shift;
@@ -139,7 +139,7 @@ int ramp_pid_gains_down(int chid,int rate)
 
 void setup_pid(int chid)
 {
-	M3ActPdoV3Cmd * g = &(gains.command[chid]);		//WAS 1
+	M3ActPdoV3Cmd * g = &(gains.command[chid]);
 	g->k_p=0;
 	g->k_i=0;
 	g->k_d=0;
@@ -200,6 +200,7 @@ for ( chid=0;chid<NUM_CTRL_CH;chid++)
 				fsa_state[chid]=CTRL_OFF_TO_PID;
 				setup_pid(chid);
 			}
+			break;
 		case CTRL_PWM:
 			step_amp_out(chid,des);
 			if (mode!=MODE_PWM)
@@ -261,8 +262,8 @@ for ( chid=0;chid<NUM_CTRL_CH;chid++)
 
 void step_torque_pid(int chid,int des)
 {
-	M3ActPdoV3Cmd * g = &(gains.command[chid]);		//WAS 1
-	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);	//WAS 1
+	M3ActPdoV3Cmd * g = &(gains.command[chid]);
+	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
 	int ddes = CLAMP(des,d->t_min,d->t_max);
 	int s=0;
 

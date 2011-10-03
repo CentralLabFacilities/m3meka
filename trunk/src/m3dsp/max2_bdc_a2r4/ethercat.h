@@ -44,7 +44,7 @@ extern  int ec_wd_expired;
 extern long ec_wd_timestamp;
 
 typedef M3ActX1PdoV3Status ec_stat_t;
-typedef M3ActX1PdoV3Cmd ec_cmd_t;		//WAS 1
+typedef M3ActX1PdoV3Cmd ec_cmd_t;
 
 #define NUM_DBG_CH 1
 
