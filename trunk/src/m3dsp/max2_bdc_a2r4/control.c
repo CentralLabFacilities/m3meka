@@ -309,14 +309,16 @@ void step_torque_pid(int chid,int des)
 //Current control
 void step_current_pid(int chid,int des)
 {
+#ifdef USE_CURRENT
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
 	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
 	int ddes = CLAMP(des,d->t_min,d->t_max);
 	int s=0;
 
-//	s = get_current_ma();
+	s = get_current_ma();
 
 	//ToDo...
+#endif
 }
 
 

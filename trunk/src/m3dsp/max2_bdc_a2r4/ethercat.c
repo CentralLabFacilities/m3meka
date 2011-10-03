@@ -113,7 +113,7 @@ void isr_update_input_pdo(void)
 
 #ifdef USE_CURRENT
 	ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag()|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.;
-	ec_stat.status[0].current_ma = abs(get_current_ma());
+	ec_stat.status[0].current_ma = ABS(get_current_ma());
 #else
 	ec_stat.status[0].flags=ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.
 #endif

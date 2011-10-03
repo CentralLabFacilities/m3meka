@@ -34,6 +34,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 //#define USE_DIO
 //#define USE_SYNC0					//Use Sync0 EtherCAT IRQ
 //#define USE_TIMESTAMP_DC			//Use DC CLOCK Timestamp from LATCH
+//#define USE_MAX2_0_2				//Choose the right MAX2 version
+//#define USE_MAX2_0_3
 
 #include "p33Fxxxx.h"
 #include "inttypes.h"

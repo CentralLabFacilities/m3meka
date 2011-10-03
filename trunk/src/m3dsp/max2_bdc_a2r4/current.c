@@ -23,6 +23,18 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "current.h"
 extern int test; //Test
 
+//MAX2 version reminder
+#ifndef USE_MAX2_0_2 
+#ifndef USE_MAX2_0_3
+#warning "Please specify your MAX2 version!"
+#endif
+#endif
+#ifdef USE_MAX2_0_2
+#warning "Compiled for MAX2 v0.2."
+#endif
+#ifdef USE_MAX2_0_3
+#warning "Compiled for MAX2 v0.3."
+#endif
 
 //Assuming step is called at 2kHz
 #define I_RMS_MOM_BUF_SZ 16
@@ -135,9 +147,20 @@ if (i_state != CURRENT_STARTUP)
 {
 	//Compute 'instantaneous' current
 	#if defined M3_MAX2_BDC_A2R4
-	  int x =(int)get_avg_adc(ADC_CURRENT_A) - (int)i_zero_a;
-	  //i_mA=(int)((float)x * (float)ADC_CURRENT_MA_PER_TICK);
-	i_mA = (x * ADC_CURRENT_MA_PER_TICK);	//WAS: New version, int
+	
+	//Hall effect sensor
+	#ifdef USE_MAX2_0_2
+	  	int x =(int)get_avg_adc(ADC_CURRENT_A) - (int)i_zero_a;
+	  	//i_mA=(int)((float)x * (float)ADC_CURRENT_MA_PER_TICK);
+		i_mA = (x * ADC_CURRENT_MA_PER_TICK);	//WAS: New version, int
+	#endif
+	
+	//Shunt sensor, we use the absolute value
+	#ifdef USE_MAX2_0_3
+	  	int x =(int)get_avg_adc(ADC_CURRENT_B) - (int)i_zero_b;
+		i_mA = ((x * 5) >> 6);
+	#endif
+	
 	#endif
 
 
