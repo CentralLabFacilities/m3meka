@@ -112,36 +112,41 @@ void step_current()
 {
 	unsigned int z = 0;
 	
-  //Measure zero sensor reading at startup
-  if (i_zero_cnt<17 && i_zero_cnt>0 && i_state == CURRENT_STARTUP)
-  {
-#if defined M3_MAX2_BDC_A2R4
-      i_zero_sum_a = i_zero_sum_a + get_avg_adc(ADC_CURRENT_A);
-      i_zero_sum_b = i_zero_sum_b + get_avg_adc(ADC_CURRENT_B);
-      if (i_zero_cnt ==1)
-      {
-		i_zero_a = (i_zero_sum_a >> 4);
-		i_zero_b = (i_zero_sum_b >> 4);
+  	//Measure zero sensor reading at startup
+  	if (i_zero_cnt<17 && i_zero_cnt>0 && i_state == CURRENT_STARTUP)
+  	{
+		#if defined M3_MAX2_BDC_A2R4
+      	i_zero_sum_a = i_zero_sum_a + get_avg_adc(ADC_CURRENT_A);
+      	i_zero_sum_b = i_zero_sum_b + get_avg_adc(ADC_CURRENT_B);
+      	if (i_zero_cnt ==1)
+      	{
+			i_zero_a = (i_zero_sum_a >> 4);
+			i_zero_b = (i_zero_sum_b >> 4);
 		
-		//Make sure that the zero is valid
-		if((i_zero_a > 1794) && (i_zero_a < 2193))
-		{
-			//Value in the range (+-10%), we use it
-			i_state = CURRENT_READY;
-		}
-		else
-		{
-			//Try again...
-			i_state = CURRENT_STARTUP;
-			i_zero_sum_a = 0;
-			i_zero_sum_b = 0;
-			i_zero_cnt = 100;	
-		}
-      }
-#endif
-  }
+			//Make sure that the zero is valid
+			#ifdef USE_MAX2_0_2	
+			if((i_zero_a > 1794) && (i_zero_a < 2193))
+			#endif
+			#ifdef USE_MAX2_0_3	
+			if(i_zero_b < 25) 
+			#endif
+			{
+				//Value in the range (+-10% for ACS, close to 0 for shunt), we use it
+				i_state = CURRENT_READY;
+			}
+			else
+			{
+				//Try again...
+				i_state = CURRENT_STARTUP;
+				i_zero_sum_a = 0;
+				i_zero_sum_b = 0;
+				i_zero_cnt = 100;	
+			}
+      	}
+  	}
 
-  i_zero_cnt=MAX(0,i_zero_cnt-1);
+  	i_zero_cnt=MAX(0,i_zero_cnt-1);
+	#endif
 
 if (i_state != CURRENT_STARTUP)
 {
@@ -158,7 +163,7 @@ if (i_state != CURRENT_STARTUP)
 	//Shunt sensor, we use the absolute value
 	#ifdef USE_MAX2_0_3
 	  	int x =(int)get_avg_adc(ADC_CURRENT_B) - (int)i_zero_b;
-		i_mA = ((x * 5) >> 6);
+		i_mA = (x * 7);
 	#endif
 	
 	#endif
