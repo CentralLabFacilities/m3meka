@@ -83,7 +83,7 @@ int get_current_state()
 
 void reset_current_buf()
 {
-  	i_mA=0;
+  	//i_mA=0;
  	i_rms_cont_idx=0;
  	i_rms_cont_sum=0;
  	i_rms_cont_sq=0;	
@@ -98,6 +98,8 @@ void reset_current_buf()
 
 void step_current()
 {
+	unsigned int z = 0;
+	
   //Measure zero sensor reading at startup
   if (i_zero_cnt<17 && i_zero_cnt>0 && i_state == CURRENT_STARTUP)
   {
@@ -143,34 +145,44 @@ if (i_state != CURRENT_STARTUP)
 	  i_rms_mom_ds=INC_MOD(i_rms_mom_ds,I_RMS_MOM_DS);
 	  if (i_rms_mom_ds==0)
 	  {
-	    	i_rms_mom_sum=i_rms_mom_sum-i_rms_mom_buf[i_rms_mom_idx];
-	    	i_rms_mom_buf[i_rms_mom_idx]=(long)i_mA*(long)i_mA;
-	    	i_rms_mom_sum=i_rms_mom_sum+i_rms_mom_buf[i_rms_mom_idx];
+			i_rms_mom_idx=INC_MOD(i_rms_mom_idx,I_RMS_MOM_BUF_SZ);	
+			i_rms_mom_buf[i_rms_mom_idx]=(long)i_mA*(long)i_mA;		//RMS
+				
+			i_rms_mom_sum = 0;	
+			for(z = 0; z < I_RMS_MOM_BUF_SZ; z++)
+	    	{
+		    	//Sum all values
+				i_rms_mom_sum += i_rms_mom_buf[z];
+			}
 	    	i_rms_mom_sq=i_rms_mom_sum>>I_RMS_MOM_BUF_SHIFT;
-	    	i_rms_mom_idx=INC_MOD(i_rms_mom_idx,I_RMS_MOM_BUF_SZ);
 	    
-		    if (!i_fault_mom && i_rms_mom_sq>CURRENT_MAX_MOM_RMS_SQ)
+		    if ((!i_fault_mom) && (i_rms_mom_sq > CURRENT_MAX_MOM_RMS_SQ))
 			{
-				//if (i_state==CURRENT_READY)
-				//	i_fault_val=i_rms_mom_sq;
-				i_state = CURRENT_FAULT_MOM;
-				i_fault_mom = 1;
-				reset_current_buf();//power turns off
+				if((i_mA > MAX_MOM_CURRENT) || (i_mA < -MAX_MOM_CURRENT))
+				{
+					//if (i_state==CURRENT_READY)
+					//	i_fault_val=i_rms_mom_sq;
+					i_state = CURRENT_FAULT_MOM;
+					i_fault_mom = 1;
+					reset_current_buf();//power turns off
+				}
 			}
 	  }
 
 
-/*
 		 //Now compute the continuous RMS value
 		 i_rms_cont_ds=INC_MOD(i_rms_cont_ds,I_RMS_CONT_DS);
 		  if (i_rms_cont_ds==0)
-		  {
-			
-		    i_rms_cont_sum-=i_rms_cont_buf[i_rms_cont_idx];
-		    i_rms_cont_buf[i_rms_cont_idx]=i_rms_mom_sq;
-		    i_rms_cont_sum+=i_rms_mom_sq;
-			i_rms_cont_sq=i_rms_cont_sum>>I_RMS_CONT_BUF_SHIFT;
-		    i_rms_cont_idx=INC_MOD(i_rms_cont_idx,I_RMS_CONT_BUF_SZ);
+		  {			
+			i_rms_cont_idx=INC_MOD(i_rms_cont_idx,I_RMS_CONT_BUF_SZ);
+			i_rms_cont_buf[i_rms_cont_idx]=(long)i_mA*(long)i_mA;
+				
+			i_rms_cont_sum = 0;	
+			for(z = 0; z < I_RMS_CONT_BUF_SZ; z++)
+	    	{
+				i_rms_cont_sum += i_rms_cont_buf[z];
+			}
+	    	i_rms_cont_sq=i_rms_cont_sum >> I_RMS_CONT_BUF_SHIFT;
 		  }
  		if (!i_fault_cont && i_rms_cont_sq>CURRENT_MAX_CONT_RMS_SQ)
 		{
@@ -179,12 +191,8 @@ if (i_state != CURRENT_STARTUP)
 			i_state=CURRENT_FAULT_CONT;
 			i_fault_cont=1;
 			reset_current_buf();//power turns off
-
 		}
-		*/
-
 	}
-
 }
 
 void setup_current()

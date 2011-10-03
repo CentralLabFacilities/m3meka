@@ -101,10 +101,10 @@ void isr_update_input_pdo(void)
 #endif
 
 #ifdef USE_ADC
-	ec_stat.status[0].adc_motor_temp=get_avg_adc(ADC_MOTOR_TEMP);
-	ec_stat.status[0].adc_amp_temp=get_avg_adc(ADC_AMP_TEMP);
+	ec_stat.status[0].adc_motor_temp = get_avg_adc(ADC_MOTOR_TEMP);
+	ec_stat.status[0].adc_amp_temp = get_avg_adc(ADC_AMP_TEMP);
 	ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT_A); 
-	ec_stat.status[0].adc_current_b= i_fault_mom; //(i_rms_mom_sq >> 6);//get_avg_adc(ADC_CURRENT_B); //(int) i_zero_sum_a; //WAS get_avg_adc(ADC_CURRENT_B);
+	ec_stat.status[0].adc_current_b = get_avg_adc(ADC_CURRENT_B);
 #endif
 
 #ifdef USE_PWM
@@ -113,13 +113,12 @@ void isr_update_input_pdo(void)
 
 #ifdef USE_CURRENT
 	ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag()|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.;
-	ec_stat.status[0].current_ma = get_current_ma(); //test++; ToDo
+	ec_stat.status[0].current_ma = abs(get_current_ma());
 #else
 	ec_stat.status[0].flags=ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.
 #endif
 	ec_stat.status[0].debug=ec_debug[0];
 
-ec_stat.status[0].flags=ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.
 }
 
 /////////////////////////////////////////////////////////////
