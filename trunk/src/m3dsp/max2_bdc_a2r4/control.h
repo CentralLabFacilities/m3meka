@@ -31,6 +31,7 @@ void step_control();
 #define MODE_OFF 0
 #define MODE_PWM 1
 #define MODE_PID 2
+#define MODE_CURRENT 3
 
 //FSA states
 #define CTRL_OFF 0

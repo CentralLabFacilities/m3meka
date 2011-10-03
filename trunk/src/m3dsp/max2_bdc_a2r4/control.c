@@ -200,6 +200,11 @@ for ( chid=0;chid<NUM_CTRL_CH;chid++)
 				fsa_state[chid]=CTRL_OFF_TO_PID;
 				setup_pid(chid);
 			}
+			if (mode==MODE_CURRENT)
+			{
+				fsa_state[chid]=CTRL_CURRENT;
+				setup_pid(chid);
+			}
 			break;
 		case CTRL_PWM:
 			step_amp_out(chid,des);
@@ -242,15 +247,15 @@ for ( chid=0;chid<NUM_CTRL_CH;chid++)
 				fsa_state[chid]=CTRL_OFF;
 #endif
 			break;
-//		case CTRL_CURRENT:		//ToDo: Recently added, to confirm
-//			if (mode!=MODE_PID )
-//			{
-//				fsa_state[chid]=CTRL_PID_TO_OFF;
-//				break;
-//			}
-//			ramp_pid_gains_up(chid,RAMP_UPDATE_RATE);
-//			step_current_pid(chid,des);
-//			break;
+		case CTRL_CURRENT:		//ToDo: Recently added, to confirm
+			if (mode!=MODE_CURRENT)
+			{
+				fsa_state[chid] = CTRL_OFF;
+				break;
+			}
+			ramp_pid_gains_up(chid,RAMP_UPDATE_RATE);
+			step_current_pid(chid,des);
+			break;
 		default:
 			step_amp_out(chid,0);
 			break;
@@ -308,6 +313,7 @@ void step_torque_pid(int chid,int des)
 }
 
 //Current control
+//Note: same gains and same code as the torque PID
 void step_current_pid(int chid,int des)
 {
 #ifdef USE_CURRENT
@@ -317,8 +323,38 @@ void step_current_pid(int chid,int des)
 	int s=0;
 
 	s = get_current_ma();
+	t_error = (ddes-s);
+	
+	//Proportional term
+	p_term[chid] = ((long)((long)g->k_p * (t_error>>g->k_p_shift)));//(t_error&(~mask))))>>gains.k_p_shift;   
+	
+	//Integral term
+	t_error_sum[chid] += t_error;
+	t_error_sum[chid]=CLAMP(t_error_sum[chid], -g->k_i_limit, g->k_i_limit);
+	i_term[chid] = g->k_i * (t_error_sum[chid]>>g->k_i_shift);
 
-	//ToDo...
+	//Derivative term
+	//Note: should actually normalize for time, but discretization is an issue...
+	int tdi=td_idx[chid];
+	torque_dot[chid]= torque_dot[chid] - torque_delta[chid][tdi];
+	torque_delta[chid][tdi] = s-torque_prev[chid];
+	torque_prev[chid] = s;
+	torque_dot[chid]=torque_dot[chid]+torque_delta[chid][tdi];
+	td_idx[chid]=INC_MOD(tdi,NUM_TORQUE_DOT_SAMPLES);
+	d_term[chid] = ((long)(g->k_d * torque_dot[chid]))>>g->k_d_shift;  
+	//ec_debug[chid]=(int)d_term[chid];
+
+	//ec_debug[chid]=d_term[chid];
+	//Feedforward term
+	ff_term[chid]=0;
+	//Newer boards get FeedForward term from host
+	if (d->config&M3ACT_CONFIG_TORQUE_FF)
+	  ff_term[chid] = g->k_ff;
+
+	result=p_term[chid]+i_term[chid]+d_term[chid]+ff_term[chid];
+	result=CLAMP(result,-PWM_MAX_DUTY,PWM_MAX_DUTY);
+	step_amp_out(chid,(int)result);	
+	
 #endif
 }
 
