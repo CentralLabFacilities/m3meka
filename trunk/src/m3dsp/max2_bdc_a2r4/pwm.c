@@ -174,6 +174,9 @@ void setup_pwm(void) {
 void __attribute__ ((interrupt, no_auto_psv)) _MPWM1Interrupt(void)
 {
 	_PWM1IF=0;	//Clear flag
+	
+	//ToDo: Debug only:
+	LATBbits.LATB6 = 1;
 
 	//Set channel?
 	AD1CON1bits.ASAM = 1;			// Start the ADC process

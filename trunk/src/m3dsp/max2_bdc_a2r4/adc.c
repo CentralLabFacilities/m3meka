@@ -102,8 +102,11 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 */
 
 	_AD1IF = 0;		//Clear the flag
+	
+	//ToDo: Debug only:
+	LATBbits.LATB6 = 0;
 
-	AD1CON1bits.ADON = 0;			// Turn on ADC
+	AD1CON1bits.ADON = 0;			// Turn off ADC
 	AD1CON1bits.ASAM = 0;
 
 	if (AD1CON2bits.BUFS==0) //ADC module filling lower group, read from upper
