@@ -162,7 +162,7 @@ if (i_state != CURRENT_STARTUP)
 	
 	//Shunt sensor, we use the absolute value
 	#ifdef USE_MAX2_0_3
-	  	int x =(int)get_avg_adc(ADC_CURRENT_B) - (int)i_zero_b;
+	  	int x =(int)get_avg_adc(ADC_CURRENT_B);	//ToDo Zero? - (int)i_zero_b;
 		i_mA = (x * 7);
 	#endif
 	
