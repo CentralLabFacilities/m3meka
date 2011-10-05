@@ -87,7 +87,7 @@ void setup_adc(void) {
 
 void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 {
-/*
+
 	int t1_adj;
 	int ph,pt;
 	//Set the next conversion trigger
@@ -99,7 +99,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 		t1_adj=ph-pt;
 	TMR1=PWM_TIMEBASE_CYC-t1_adj;//set to expire on middle of next pwm_duty
 	t1_irq_idx=0;
-*/
+
 
 	_AD1IF = 0;		//Clear the flag
 	
