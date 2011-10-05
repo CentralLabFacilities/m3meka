@@ -40,6 +40,7 @@ void setup_interrupt_priorities(void)
 	_AD1IP=6;	//ADC conversion done 
 	_T3IP=5;	//Timer3 
 	_T1IP=3;	//Timer3 
+	_PWM1IP = 7;	//ADC trigger
 }
 
 

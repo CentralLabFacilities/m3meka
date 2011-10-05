@@ -154,7 +154,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 
 	}	
 
-	INTERRUPT_PROTECT_DISABLE;	
+	INTERRUPT_PROTECT_DISABLE;
 }
 
 #ifdef USE_SYNC0
