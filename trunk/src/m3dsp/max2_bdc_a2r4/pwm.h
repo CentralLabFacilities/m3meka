@@ -44,7 +44,7 @@ int pwm_cmd(int chid);
 #define PWM_DEAD_CYC_A  6	//200
 #define PWM_DEAD_CYC_B  6	//200
 #define NUM_PWM_CH 1
-#define PWM_4Q
+#define PWM_4Q	//Needs to be 4Q
 
 #endif
 #endif
