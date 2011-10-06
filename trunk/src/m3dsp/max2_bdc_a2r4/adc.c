@@ -73,7 +73,7 @@ void setup_adc(void) {
 	AD1PCFGLbits.PCFG1 = 0;
 	AD1PCFGLbits.PCFG2 = 0;
 	AD1PCFGLbits.PCFG3 = 0;
-	AD1PCFGLbits.PCFG4 = 1;			// ToDo: was 0
+	AD1PCFGLbits.PCFG4 = 1;	
 	AD1PCFGLbits.PCFG5 = 1;
 	AD1PCFGLbits.PCFG6 = 1;
 	AD1PCFGLbits.PCFG7 = 1;
@@ -87,7 +87,7 @@ void setup_adc(void) {
 
 void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 {
-
+#ifdef USE_TIMER1
 	int t1_adj;
 	int ph,pt;
 	//Set the next conversion trigger
@@ -99,7 +99,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 		t1_adj=ph-pt;
 	TMR1=PWM_TIMEBASE_CYC-t1_adj;//set to expire on middle of next pwm_duty
 	t1_irq_idx=0;
-
+#endif
 
 	_AD1IF = 0;		//Clear the flag
 	

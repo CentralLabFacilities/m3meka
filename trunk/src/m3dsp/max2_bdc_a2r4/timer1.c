@@ -48,18 +48,16 @@ void setup_timer1(void)
 
 void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt(void) 
 {
-	static unsigned int flag = 0;
-	
 	_T1IF = 0;
 	//AD1CON1bits.SAMP=0; //Start conversion		//ToDo: useful?
 	if (t1_irq_idx==0) //Set current sense conversion point
 	{
-		//ToDo: Debug only:
-		LATBbits.LATB6 = 1;
-	
-		//Set channel?
-		AD1CON1bits.ASAM = 1;			// Start the ADC process
-		AD1CON1bits.ADON = 1;			// Turn on ADC
+//		//ToDo: Debug only:
+//		LATBbits.LATB6 = 1;
+//	
+//		//Set channel?
+//		AD1CON1bits.ASAM = 1;			// Start the ADC process
+//		AD1CON1bits.ADON = 1;			// Turn on ADC
 	}
 	else
 	{
