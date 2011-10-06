@@ -29,6 +29,13 @@ void setup_interrupt_priorities(void);
 
 void setup_interrupt_priorities(void)
 {
+	#ifndef USE_TIMER3
+	_T3IF = 0;
+	_T3IE = 0;
+	_T3IP = 0;	//Timer3 
+	#endif
+	
+
 	//Higher number = Higher priority
 
 	//Ethercat Master AL interrupt on INT0
@@ -37,10 +44,9 @@ void setup_interrupt_priorities(void)
 	_INT0IP=3;	//Ethercat Interrupt
 	_INT2IP=2;	//SYNC0 Interrupt
 	//ADC timing not critical
-	_AD1IP=6;	//ADC conversion done 
-	_T3IP=5;	//Timer3 
-	_T1IP=7;	//Timer1 	//ADC trigger	WAS 3
-	_PWM1IP = 3;	//ADC trigger			WAS 7
+	_AD1IP = 7;	//ADC conversion done 	
+	_T1IF = 0;
+	_T1IP = 3;	//Timer1 	//ADC trigger	WA
 }
 
 

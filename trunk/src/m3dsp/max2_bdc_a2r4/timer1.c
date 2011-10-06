@@ -53,7 +53,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt(void)
 	if (t1_irq_idx==0) //Set current sense conversion point
 	{
 		//ToDo: Debug only:
-		LATBbits.LATB6 = 1;	//DEBUG THIS!
+//		LATBbits.LATB6 = 1;	//DEBUG THIS!
 //	
 //		//Set channel?
 //		AD1CON1bits.ASAM = 1;			// Start the ADC process
