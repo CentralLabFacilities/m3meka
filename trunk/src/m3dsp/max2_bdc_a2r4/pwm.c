@@ -165,7 +165,7 @@ void setup_pwm(void) {
 	//Disable faults
 	FLTACON = 0;
 	_PWM1IF = 0;
-	_PWM1IE = 1;	//Enable interrupts
+	_PWM1IE = 0;	//Enable interrupts		//WAS 1
 	PTCONbits.PTEN = 1;  // PWM enable
 }
 #endif 
@@ -176,7 +176,7 @@ void __attribute__ ((interrupt, no_auto_psv)) _MPWM1Interrupt(void)
 	_PWM1IF=0;	//Clear flag
 /*	
 	//ToDo: Debug only:
-	LATBbits.LATB6 = 1;
+	//LATBbits.LATB6 = 1;
 
 	//Set channel?
 	AD1CON1bits.ASAM = 1;			// Start the ADC process

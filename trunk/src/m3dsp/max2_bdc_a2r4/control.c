@@ -352,7 +352,7 @@ void step_current_pid(int chid,int des)
 	  ff_term[chid] = g->k_ff;
 
 	result=p_term[chid]+i_term[chid]+d_term[chid]+ff_term[chid];
-	result=CLAMP(result,-PWM_MAX_DUTY,PWM_MAX_DUTY);
+	result=CLAMP(result,0,PWM_MAX_DUTY);	//Modified to 0 - Unipolar
 	step_amp_out(chid,(int)result);	
 	
 #endif

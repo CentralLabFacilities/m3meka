@@ -34,6 +34,7 @@ int test = 0;
 extern volatile unsigned int i_zero_sum_a, i_zero_sum_b;
 extern volatile long i_rms_cont_sq, i_rms_mom_sq;
 extern volatile int i_state,i_fault_cont,i_fault_mom;
+extern int t_error;
 
 unsigned char pdo_cmd[PDO_COMMAND_SIZE];
 unsigned char pdo_stat[PDO_STATUS_SIZE];
@@ -101,7 +102,7 @@ void isr_update_input_pdo(void)
 #endif
 
 #ifdef USE_ADC
-	ec_stat.status[0].adc_motor_temp = get_avg_adc(ADC_MOTOR_TEMP);
+	ec_stat.status[0].adc_motor_temp = t_error; //get_avg_adc(ADC_MOTOR_TEMP);	//ToDo Debug only
 	ec_stat.status[0].adc_amp_temp = get_avg_adc(ADC_AMP_TEMP);
 	ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT_A); 
 	ec_stat.status[0].adc_current_b = get_avg_adc(ADC_CURRENT_B);
@@ -113,7 +114,7 @@ void isr_update_input_pdo(void)
 
 #ifdef USE_CURRENT
 	//ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag()|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.; ToDo: Enable!
-	ec_stat.status[0].flags=ec_flags[0]|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.;
+	ec_stat.status[0].flags=ec_flags[0]|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.; Remove
 	ec_stat.status[0].current_ma = ABS(get_current_ma());
 #else
 	ec_stat.status[0].flags=ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.
