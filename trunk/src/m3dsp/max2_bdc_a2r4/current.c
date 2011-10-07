@@ -95,6 +95,7 @@ int get_current_state()
   return i_state;
 }
 
+/*
 //Calculates an average cycle current based on a single peak current measurement
 unsigned int correct_mA(unsigned int pwm, unsigned int max_pwm, unsigned int current)
 {
@@ -106,6 +107,7 @@ unsigned int correct_mA(unsigned int pwm, unsigned int max_pwm, unsigned int cur
 	
 	return (unsigned int) result;
 }
+*/
 
 void reset_current_buf()
 {

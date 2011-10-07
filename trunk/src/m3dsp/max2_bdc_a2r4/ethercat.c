@@ -102,7 +102,7 @@ void isr_update_input_pdo(void)
 #endif
 
 #ifdef USE_ADC
-	ec_stat.status[0].adc_motor_temp = i_zero_b; //get_avg_adc(ADC_MOTOR_TEMP);	//ToDo Debug only
+	ec_stat.status[0].adc_motor_temp = P1SECMPbits.SEVTCMP; //get_avg_adc(ADC_MOTOR_TEMP);	//ToDo Debug only
 	ec_stat.status[0].adc_amp_temp = get_avg_adc(ADC_AMP_TEMP);
 	ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT_A); 
 	ec_stat.status[0].adc_current_b = get_avg_adc(ADC_CURRENT_B);

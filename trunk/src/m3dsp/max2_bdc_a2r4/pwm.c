@@ -73,6 +73,9 @@ void set_pwm(int chid, int val)
 	#ifdef USE_CURRENT
 	actual_pwm = val;
 	#endif
+	
+	//ADC trigger at the middle of a pulse
+	P1SECMPbits.SEVTCMP = val >> 1;
 
 #ifdef PWM_4Q
 	/*
@@ -146,6 +149,8 @@ void setup_pwm(void) {
 	PWMCON2bits.IUE=1;		//Immediate update of duty cycle
 
 	P1SECMPbits.SEVTCMP = PWM_ADC_SYNC_TICKS;	//ADC trigger - specifiy the phase realtive to PWM
+	//Note: see current.c, this value is changing at runtime
+	
 	//Set PWM dead time
 	DTCON1 = 0;					//Deadtime clock base is 1:1 TCY for Unit A, Unit B
 	DTCON1bits.DTA = PWM_DEAD_CYC_A;
