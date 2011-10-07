@@ -25,7 +25,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 int tmp_cnt;
 int irq_cnt;
 
-
 void setup_timer3(void)
 {
 	// ToDo: Setup timer3 for Ethercat distributed clock jitter calculation
@@ -42,27 +41,29 @@ void setup_timer3(void)
 	return;
 }
 
-//Every X us
-void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void) {
+//ToDo Every X us
+void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void) 
+{
 	_T3IF = 0;
 
-//Latch encoder timestamp on Rising edge.
-#ifdef USE_TIMESTAMP_DC
+	//Latch encoder timestamp on Rising edge.
+	#ifdef USE_TIMESTAMP_DC
 	SetTimestampLatch;
 	ClrTimestampLatch;
-#endif
+	#endif
 
-#if defined USE_ENCODER_VERTX
+	#if defined USE_ENCODER_VERTX
 	step_vertx();
-#endif
+	#endif
 
-#ifdef USE_CURRENT
+	#ifdef USE_CURRENT
 	step_current();
-#endif
+	#endif
 
-#ifdef USE_CONTROL	
+	#ifdef USE_CONTROL	
 	step_control();
-#endif
+	#endif
+	
 	irq_cnt++;
 }
 

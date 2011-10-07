@@ -23,12 +23,9 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "setup.h"
 
 unsigned int actual_pwm = 0;
-
-
 int pwm_cmd_buf[NUM_PWM_CH];
 int pwm_duty_buf[NUM_PWM_CH];
 int pwm_cmd(int chid){return pwm_cmd_buf[chid];}
-
 
 int pwm_deadband(int chid, int abs_val)
 {
@@ -43,7 +40,6 @@ int pwm_deadband(int chid, int abs_val)
 		abs_val=abs_val+ec_cmd.command[chid].pwm_db;
 	return abs_val;
 }
-
 
 //In: 0<=PWM_MIN_DUTY<=val<=ec_cmd.command[chid].pwm_max<=PWM_MAX_DUTY
 //Out: Inverted clamped version
@@ -61,10 +57,11 @@ int clamp_pwm(int chid, int abs_val)
 
 void set_pwm(int chid, int val)
 {
-#if defined USE_CURRENT
-//     if (get_current_state()!=CURRENT_READY)		//BUG, with it HB doesn't flash
-//		val=0;
-#endif
+	#if defined USE_CURRENT
+	//     if (get_current_state()!=CURRENT_READY)		//BUG, with it HB doesn't flash ToDo test this
+	//		val=0;
+	#endif
+	
 	int sign=SIGN(val);
 	val=pwm_deadband(chid,ABS(val));
 	pwm_cmd_buf[chid]=SIGN(val)*CLAMP(ABS(val),0,ec_cmd.command[chid].pwm_max); //Send back commanded value before gets inverted, deadband, etc
@@ -77,7 +74,7 @@ void set_pwm(int chid, int val)
 	//ADC trigger at the middle of a pulse
 	P1SECMPbits.SEVTCMP = val >> 1;
 
-#ifdef PWM_4Q
+	#ifdef PWM_4Q
 	/*
 	X X POVD3H POVD3L   POVD2H POVD2L POVD1H POVD1L   X X POUT3H POUT3L   POUT2H POUT2L POUT1H POUT1L 
 	X X   Q5     Q6       Q3     Q4      Q1    Q2     X X   Q5     Q6       Q3    Q4      Q1    Q2
@@ -98,10 +95,8 @@ void set_pwm(int chid, int val)
 			OVDCON=0x0C02;
 			P1DC2 = pwm_duty_buf[0];
 	}
-#endif//4Q
+	#endif//4Q
 }
-
-
 
 void setup_pwm(void) {
 	int i;
@@ -111,7 +106,7 @@ void setup_pwm(void) {
 		pwm_duty_buf[i]=0;
 	}
 
-	PTCONbits.PTEN = 0;  // PWM disable
+	PTCONbits.PTEN = 0;  		// PWM disable
 	//Set time base
 	PTCON  = 0;
 	PTCONbits.PTOPS=0;			// PWM 1:1 postcale
@@ -121,29 +116,29 @@ void setup_pwm(void) {
 	PTMR = 0;					// Reset counter
 	PWMCON1 = 0;				// reset condition specified in CONFIG BITS FPOR
 
-#ifdef PWM_4Q
-	PWMCON1bits.PMOD1=0;	//PWM1H1,PWM1L1 is complimentary pair
-	PWMCON1bits.PMOD2=0;	//PWM1H2,PWM1L2 is complimentary pair
-	PWMCON1bits.PMOD3=0;	//PWM1H3,PWM1L3 is complimentary pair
-	PWMCON1bits.PEN1H = 1;	//Enable PWM1H1
-	PWMCON1bits.PEN1L = 1;	//Enable PWM1L1
-	PWMCON1bits.PEN2H = 1;	//Enable PWM1H2
-	PWMCON1bits.PEN2L = 1;	//Enable PWM1L2
-#endif
-#ifdef PWM_2Q
-	PWMCON1bits.PMOD1=1;	//PWM1H1,PWM1L1 is independent pair
-	PWMCON1bits.PMOD2=1;	//PWM1H2,PWM1L2 is independent pair
-	PWMCON1bits.PMOD3=1;	//PWM1H3,PWM1L3 is independent pair
-	PWMCON1bits.PEN1H = 1;	//Enable PWM1H1
-	PWMCON1bits.PEN1L = 1;	//Enable PWM1L1
-	PWMCON1bits.PEN2H = 1;	//Enable PWM1H2
-	PWMCON1bits.PEN2L = 1;	//Enable PWM1L2
-#endif
+	#ifdef PWM_4Q
+	PWMCON1bits.PMOD1=0;		//PWM1H1,PWM1L1 is complimentary pair
+	PWMCON1bits.PMOD2=0;		//PWM1H2,PWM1L2 is complimentary pair
+	PWMCON1bits.PMOD3=0;		//PWM1H3,PWM1L3 is complimentary pair
+	PWMCON1bits.PEN1H = 1;		//Enable PWM1H1
+	PWMCON1bits.PEN1L = 1;		//Enable PWM1L1
+	PWMCON1bits.PEN2H = 1;		//Enable PWM1H2
+	PWMCON1bits.PEN2L = 1;		//Enable PWM1L2
+	#endif
+	
+	#ifdef PWM_2Q
+	PWMCON1bits.PMOD1=1;		//PWM1H1,PWM1L1 is independent pair
+	PWMCON1bits.PMOD2=1;		//PWM1H2,PWM1L2 is independent pair
+	PWMCON1bits.PMOD3=1;		//PWM1H3,PWM1L3 is independent pair
+	PWMCON1bits.PEN1H = 1;		//Enable PWM1H1
+	PWMCON1bits.PEN1L = 1;		//Enable PWM1L1
+	PWMCON1bits.PEN2H = 1;		//Enable PWM1H2
+	PWMCON1bits.PEN2L = 1;		//Enable PWM1L2
+	#endif
 
 	//Synchronize ADC to PWM
 	PWMCON2 = 0;			
-	PWMCON2bits.SEVOPS = 0;	// Special event 1:1 post scale
-	
+	PWMCON2bits.SEVOPS = 0;	// Special event 1:1 post scale	
 
 	//PWMCON2bits.IUE=0;	//Update of duty cycle sync to PWM time base (default)
 	PWMCON2bits.IUE=1;		//Immediate update of duty cycle
@@ -163,22 +158,22 @@ void setup_pwm(void) {
 	PDC1 = 0;
 	PDC2 = 0;
 
-	DTCON2bits.DTS3A = 0;	//Deadtime for PWM1H3/PWM1L3 going active from Unit A
-	DTCON2bits.DTS3I = 1;	//Deadtime for PWM1H3/PWM1L3 going inactive from Unit B
+	DTCON2bits.DTS3A = 0;		//Deadtime for PWM1H3/PWM1L3 going active from Unit A
+	DTCON2bits.DTS3I = 1;		//Deadtime for PWM1H3/PWM1L3 going inactive from Unit B
 	PDC3 = 0;
-	//OVDCON=0;				//Allow control PWM1H/L1-3 using OVD. Set in bldc.c instead...
-	PWMCON2bits.OSYNC=0;	//OVDCON overrides are on next Tcy boundary
-	//PWMCON2bits.OSYNC=1;	//OVDCON overrides synchronized to PWM time base
+	//OVDCON=0;					//Allow control PWM1H/L1-3 using OVD. Set in bldc.c instead...
+	PWMCON2bits.OSYNC=0;		//OVDCON overrides are on next Tcy boundary
+	//PWMCON2bits.OSYNC=1;		//OVDCON overrides synchronized to PWM time base
 
-#ifdef USE_TIMER1
-	T1CONbits.TON = 1;    //Start Timer 1 for ADC Sync functionality
-#endif
+	#ifdef USE_TIMER1
+	T1CONbits.TON = 1;   	 	//Start Timer 1 for ADC Sync functionality
+	#endif
 	
 	//Disable faults
 	FLTACON = 0;
 	_PWM1IF = 0;
-	_PWM1IE = 0;	//Enable interrupts		//WAS 1
-	PTCONbits.PTEN = 1;  // PWM enable
+	_PWM1IE = 0;				//Disable interrupts	
+	PTCONbits.PTEN = 1;  		// PWM enable
 }
 #endif 
 
@@ -186,12 +181,5 @@ void setup_pwm(void) {
 void __attribute__ ((interrupt, no_auto_psv)) _MPWM1Interrupt(void)
 {
 	_PWM1IF=0;	//Clear flag
-/*	
-	//ToDo: Debug only:
-	//LATBbits.LATB6 = 1;
-
-	//Set channel?
-	AD1CON1bits.ASAM = 1;			// Start the ADC process
-	AD1CON1bits.ADON = 1;			// Turn on ADC
-*/
+	//Interrupt disabled, should never be called
 }

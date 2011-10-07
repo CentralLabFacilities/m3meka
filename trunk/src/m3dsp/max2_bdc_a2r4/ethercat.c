@@ -28,14 +28,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 ec_cmd_t  ec_cmd;
 ec_stat_t   ec_stat;
 
-//ToDo Remove, test only
-extern volatile unsigned int i_zero_a, i_zero_b;
-int test = 0;
-extern volatile unsigned int i_zero_sum_a, i_zero_sum_b;
-extern volatile long i_rms_cont_sq, i_rms_mom_sq;
-extern volatile int i_state,i_fault_cont,i_fault_mom;
-extern int t_error;
-
 unsigned char pdo_cmd[PDO_COMMAND_SIZE];
 unsigned char pdo_stat[PDO_STATUS_SIZE];
 
@@ -43,8 +35,6 @@ int eeprom_loaded(void){return EEPROM_LOADED;}
 
 int ec_wd_expired;
 long ec_wd_timestamp;
-
-
 int ec_debug[NUM_DBG_CH];
 int ec_flags[NUM_DBG_CH];
 
@@ -56,11 +46,13 @@ int step_ethercat(void)
 	ECAT_Main();		/* check if masked interrupts were received */
 	return 0;
 }
+
 /////////////////////////////////////////////////////////////
 void isr_reset_outputs(void)
 {
 }
 /////////////////////////////////////////////////////////////
+
 void isr_update_outputs(void)
 {
 	if ( EscAlEvent.Byte[1] & (PROCESS_OUTPUT_EVENT>>8) )	/* check if the watchdog should be reset */
@@ -79,14 +71,16 @@ void isr_update_outputs(void)
 void isr_update_inputs(void)
 {
 	unsigned long long dc_timestamp;
-#ifndef USE_SYNC0
+	
+	#ifndef USE_SYNC0
 	isr_update_input_pdo();
-#endif
+	#endif
 
-#ifdef USE_TIMESTAMP_DC
+	#ifdef USE_TIMESTAMP_DC
 	ISR_EscReadAccess((unsigned char*)&dc_timestamp, (unsigned int)EC_LATCH1_POS_EDG_ADDR, (unsigned int)8 );
 	ec_stat.timestamp=dc_timestamp;
-#endif
+	#endif
+	
 	memcpy(pdo_stat,(unsigned char *)&ec_stat,sizeof(ec_stat_t));
 	ISR_EscWriteAccess( (UINT8 *) pdo_stat, nEscAddrInputData, nPdInputSize );
 	return;
@@ -94,33 +88,32 @@ void isr_update_inputs(void)
 
 void isr_update_input_pdo(void)
 {
-#if defined USE_ENCODER_VERTX 
+	#if defined USE_ENCODER_VERTX 
 	ec_stat.status[0].qei_rollover=vertx_error(VERTX_CH_ENC);
 	ec_stat.status[0].qei_on=get_avg_vertx(VERTX_CH_ENC);//vertx_pos(VERTX_CH_ENC);
 	ec_stat.status[0].adc_torque=get_avg_vertx(VERTX_CH_SEAS);//vertx_pos(VERTX_CH_SEAS);
 	ec_stat.status[0].qei_period=vertx_error(VERTX_CH_SEAS);
-#endif
+	#endif
 
-#ifdef USE_ADC
-	ec_stat.status[0].adc_motor_temp = P1SECMPbits.SEVTCMP; //get_avg_adc(ADC_MOTOR_TEMP);	//ToDo Debug only
+	#ifdef USE_ADC
+	ec_stat.status[0].adc_motor_temp = get_avg_adc(ADC_MOTOR_TEMP);
 	ec_stat.status[0].adc_amp_temp = get_avg_adc(ADC_AMP_TEMP);
 	ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT_A); 
 	ec_stat.status[0].adc_current_b = get_avg_adc(ADC_CURRENT_B);
-#endif
+	#endif
 
-#ifdef USE_PWM
+	#ifdef USE_PWM
 	ec_stat.status[0].pwm_cmd=pwm_cmd(0);
-#endif
+	#endif
 
-#ifdef USE_CURRENT
-	//ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag()|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.; ToDo: Enable!
-	ec_stat.status[0].flags=ec_flags[0]|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.; Remove
+	#ifdef USE_CURRENT
+	ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag()|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.;
 	ec_stat.status[0].current_ma = ABS(get_current_ma());
-#else
+	#else
 	ec_stat.status[0].flags=ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.
-#endif
+	#endif
+	
 	ec_stat.status[0].debug=ec_debug[0];
-
 }
 
 /////////////////////////////////////////////////////////////
@@ -140,10 +133,11 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 	ACK_ESC_INT;						/* reset the interrupt flag */
 	
 	ISR_GetInterruptRegister();			/* get the AL event in EscAlEvent */
-#if DC_SUPPORTED 
+	#if DC_SUPPORTED 
 	if ( bDcSyncActive )				/* read the sync 0 status to acknowledge the SYNC interrupt */
 		ISR_EscReadAccess( dummy, ESC_ADDR_SYNC_STATUS, 2);
-#endif
+	#endif
+	
 	if (bSynchronMode)						/* Application is synchronized to DC-, SM2- or SM3-event */
 	{		
 		if ( bEcatOutputUpdateRunning )		// Get Process Outputs
@@ -170,7 +164,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT2Interrupt(void)
 //	if ( bDcSyncActive )				/* read the sync 0 status to acknowledge the SYNC interrupt */
 //		ISR_EscReadAccess( dummy, ESC_ADDR_SYNC_STATUS, 2);
 
-if (bSynchronMode)						/* Application is synchronized to DC-, SM2- or SM3-event */
+	if (bSynchronMode)						/* Application is synchronized to DC-, SM2- or SM3-event */
 	{	
 		if ( bEcatInputUpdateRunning )		//Update PDO datastructure for INT0
 			isr_update_input_pdo();				/* EtherCAT slave is at least in SAFE-OPERATIONAL, update inputs */   
@@ -214,35 +208,39 @@ void setup_ethercat(void)
 
 
 	ACK_ESC_INT;				/* reset ESC interrupt */
-#ifdef USE_SYNC0
+	
+	#ifdef USE_SYNC0
 	ACK_SYNC_INT;  				/* RJK: reset INT2 for SYNC0 */
-#endif
-#if DC_SUPPORTED
+	#endif
+	
+	#if DC_SUPPORTED
 	ACK_ECAT_TIMER_INT;
 	DISABLE_ECAT_TIMER_INT;
-#endif
-#if DC_SUPPORTED
-//	ECAT_CAPTURE_CONFIG_REG = ESC_CAPTURE;
-#endif
+	#endif
+	
+	#if DC_SUPPORTED
+	//	ECAT_CAPTURE_CONFIG_REG = ESC_CAPTURE;
+	#endif
+	
 	//Make sure the ESC is booted completely
 	do
 	{
 		//Note: If PDI Type is SPI, DPRAM size could be changed in future (ASIC)
 		HW_EscReadAccess( (UINT8 *)(&u8PDICtrl), ESC_ADDR_PDICTRL, 1 );
 		//ToggleHeartbeatLED();
-	} while (u8PDICtrl != 5);
+	}while (u8PDICtrl != 5);
 	
 	HW_EscReadAccess(&nMaxSyncMan, ESC_ADDR_SYNCMANCHANNELS, 1 );
 
 	HW_ResetIntMask(0);
 
 
-#if AL_EVENT_ENABLED
+	#if AL_EVENT_ENABLED
 	ENABLE_ESC_INT;
-#ifdef USE_SYNC0
+	#ifdef USE_SYNC0
 	ENABLE_SYNC_INT;   /* RJK: Enable INT2 for SYNC0  */
-#endif
-#endif	
+	#endif
+	#endif	
 
 	///////////////////////////////////////////////////
 	//Prepare to run 
@@ -251,7 +249,7 @@ void setup_ethercat(void)
 
 void setup_spi(void)
 {
-		/*	
+	/*	
 	Initialize and enable the SPI as: 
 	* SPI-Master with clock Fosc/4=10Mhz
 	* High level of clock as idle state
@@ -259,7 +257,7 @@ void setup_spi(void)
 	* LATE_SAMPLE = FALSE
 	* Save input data at middle of data output time
 	* Data transmitting on rising edge of SC 
-*/
+	*/
 
 	//The ET1200 should be configured to SPI Mode 3
 	//SPI_CLK is then max 50ns, or 20Mhz 

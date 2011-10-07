@@ -26,7 +26,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SetHeartbeatLED	LATAbits.LATA4=1
 #define ClrHeartbeatLED	LATAbits.LATA4=0
-#define PinHeartbeatLED PORTAbits.RA4
+#define PinHeartbeatLED LATAbits.LATA4
 void ToggleHeartbeatLED(void);
 
 #define SetTimestampLatch LATCbits.LATC3 = 1

@@ -38,9 +38,9 @@ UINT8			EscMbxReadEcatCtrl;
 /////////////////////////////////////////////////////////////////////////////
 void GetInterruptRegister( )
 {
-#if AL_EVENT_ENABLED
+	#if AL_EVENT_ENABLED
 	DISABLE_AL_EVENT_INT;
-#endif
+	#endif
 
 	/* select the SPI */
 	SPI_SEL = SPI_ACTIVE;
@@ -87,9 +87,10 @@ void GetInterruptRegister( )
 	   before the SPI_SEL signal shall be 1 */
 
 	SPI_SEL = SPI_DEACTIVE;
-#if AL_EVENT_ENABLED
+	
+	#if AL_EVENT_ENABLED
 	ENABLE_AL_EVENT_INT;
-#endif
+	#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -301,7 +302,7 @@ void HW_Main(void)
 	//Handle Watchdog
 	if (u16WdValue != 0 && bEcatOutputUpdateRunning && bEcatFirstOutputsReceived)
 	{
-#ifdef EC_USE_WATCHDOG
+		#ifdef EC_USE_WATCHDOG
 		//check the watchdog only in OP
 		//generate the ms-timer 
 		long ts=get_timestamp_us();
@@ -312,7 +313,7 @@ void HW_Main(void)
 			nAlStatusCode = ALSTATUSCODE_SMWATCHDOG;
 			AL_ControlInd(STATE_SAFEOP);
 		}
-#endif
+		#endif
 	}
 
 	// check AL_CONTROL event first
@@ -327,14 +328,14 @@ void HW_Main(void)
 		AL_ControlInd(EscAlControl.Byte[0]);
 	}
 
-#if SM_CHANGE_SUPPORTED
+	#if SM_CHANGE_SUPPORTED
 	if ( EscAlEvent.Byte[0] & SM_CHANGE_EVENT )
 	{
 		// call AL_Control with status unchanged
 		AL_ControlInd(nAlStatus & STATE_MASK);
 		EscAlEvent.Byte[0] &= ~((UINT8) SM_CHANGE_EVENT);
 	}
-#endif
+	#endif
 }
 /////////////////////////////////////////////////////////////////////////////
 void HW_EscReadAccess( UINT8 *pData, UINT16 Address, UINT16 Len )
@@ -360,14 +361,14 @@ void HW_EscReadAccess( UINT8 *pData, UINT16 Address, UINT16 Len )
 
 	while ( i-- > 0 )						/* loop for all bytes to be read */
 	{
-#if AL_EVENT_ENABLED
+		#if AL_EVENT_ENABLED
 		/* the reading of data from the ESC can be interrupted by the 
 		   AL Event ISR, in that case the address has to be reinitialized, 
 		   in that case the status flag will indicate an error because 
 		   the reading operation was interrupted without setting the last
 		   sent byte to 0xFF */
 		DISABLE_AL_EVENT_INT;
-#endif
+		#endif
 
 		AddressingEsc( Address, ESC_RD );
 		/* start transmission */
@@ -436,19 +437,21 @@ void 	HW_ResetIntMask(UINT16 intMask)
 	UINT16 mask;
 	HW_EscReadAccess( (UINT8 *)(&mask), ESC_ADDR_ALEVENTMASK, 2 );
 	mask &= intMask;
-#if AL_EVENT_ENABLED
+	
+	#if AL_EVENT_ENABLED
 	DISABLE_AL_EVENT_INT;
 	if ( mask == 0 )
 	{
 		bAlEventEnabled = FALSE;
 		START_TIMER;
 	}
-#endif
+	#endif
+	
 	HW_EscWriteAccess( (UINT8 *)(&mask), ESC_ADDR_ALEVENTMASK, 2 );
 
-#if AL_EVENT_ENABLED
+	#if AL_EVENT_ENABLED
 	ENABLE_AL_EVENT_INT;
-#endif
+	#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -463,16 +466,19 @@ void 	HW_SetIntMask(UINT16 intMask)
 	UINT16 mask;
 	HW_EscReadAccess( (UINT8 *)(&mask), ESC_ADDR_ALEVENTMASK, 2 );
 	mask |= intMask;
-#if AL_EVENT_ENABLED
+	
+	#if AL_EVENT_ENABLED
 	DISABLE_AL_EVENT_INT;
 	STOP_TIMER;
 	ACK_TIMER_INT;
 	bAlEventEnabled = TRUE;
-#endif
+	#endif
+	
 	HW_EscWriteAccess( (UINT8 *)(&mask), ESC_ADDR_ALEVENTMASK, 2 );
-#if AL_EVENT_ENABLED
+	
+	#if AL_EVENT_ENABLED
 	ENABLE_AL_EVENT_INT;
-#endif
+	#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

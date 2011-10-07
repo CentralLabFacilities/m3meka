@@ -21,13 +21,22 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "p33fxxxx.h"
 #include "setup.h"
 
+//---------------------------------------------------------------
+//                  Timing Information
+//---------------------------------------------------------------
+/*
+=> PWM Frequency: 25kHz
+=> The PWM Special Event trigger is used to start an ADC conversion
+=> ADC ISR: 1 interrupt each 4 PWM cycles (25kHz/4 = 6.25kHz)
+=> The ADC ISR calls many functions: control loops, Vertex Encoder, etc.
+	=> Most of them run at 2.08kHz (6.25kHz/3)
+*/
 
 //---------------------------------------------------------------
 //                  CONFIG
 //---------------------------------------------------------------
-//New config set
-//Refer to p33FJ32MC204.h for the details
-_FWDT(FWDTEN_OFF & WINDIS_OFF & WDTPRE_PR128 & WDTPOST_PS32768);					/* Turn off the Watch-Dog Timer.  */
+//New config set, refer to p33FJ32MC204.h for the details
+_FWDT(FWDTEN_OFF & WINDIS_OFF & WDTPRE_PR128 & WDTPOST_PS32768);		// Turn off the Watch-Dog Timer.
 _FPOR(FPWRT_PWR1 & ALTI2C_ON & HPOL_ON & LPOL_ON & PWMPIN_ON);			// Turn off the power-up timers, ALTI2C = 0: I2C mapped to ASDA1/ASCL1
 _FOSCSEL(FNOSC_PRIPLL & IESO_ON);	// Auto switch to the EC+PLL clock
 //Clock switching+monitor disabled, OSC2 is clock O/P, External clock, allow lock/unlock of peripheral-pin-select
@@ -49,39 +58,55 @@ int main (void)
 	setup_peripheral_pin_select();
 	setup_interrupt_priorities();
 
-#ifdef USE_DIO
+	//Blinking HB LED and Timestamp
+	#ifdef USE_DIO
 	setup_dio();
-#endif
-#ifdef USE_TIMER1 
+	#endif
+	
+	//ToDo Used?
+	#ifdef USE_TIMER1 
 	setup_timer1(); //do before setup_pwm
-#ifdef USE_PWM
+	#endif	//ToDo: there was a missing #endif, maybe that's why disabling Timer1 was breaking the code!
+	
+	//Motor control PWM
+	#ifdef USE_PWM
 	setup_pwm();
-#endif
-#ifdef USE_CONTROL
+	#endif
+	
+	//Torque PID and Current PID
+	#ifdef USE_CONTROL
 	setup_control();
-#endif
-#ifdef USE_ADC
+	#endif
+	
+	//Analog to Digital
+	#ifdef USE_ADC
 	setup_adc();
-#endif
-#ifdef USE_CURRENT
+	#endif
+	
+	//Current measurment, control and limitation
+	#ifdef USE_CURRENT
 	setup_current();
-#endif
-#ifdef USE_TIMER3
+	#endif
+	
+	//ToDo: Remvove?
+	#ifdef USE_TIMER3
 	setup_timer3();
-#endif
-#endif
-#ifdef USE_ENCODER_VERTX
+	#endif
+	
+	//VerteX SPI Encoder
+	#ifdef USE_ENCODER_VERTX
 	setup_vertx();
-#endif
+	#endif
 
-#ifdef USE_ETHERCAT
-	while (!eeprom_loaded())		//Wait until ESC is ready
+	//EtherCAT Communication
+	#ifdef USE_ETHERCAT
+	while (!eeprom_loaded())	//Wait until ESC is ready
 		SetHeartbeatLED;
 	setup_ethercat();
 	ClrHeartbeatLED;
-#endif
+	#endif
 
-setup_interrupt_priorities();
+	setup_interrupt_priorities();
 
 	while(1)
 	{
@@ -89,8 +114,8 @@ setup_interrupt_priorities();
 		{
 			ToggleHeartbeatLED();
 		}
-#if defined USE_ETHERCAT 
+		#if defined USE_ETHERCAT 
 		step_ethercat();
-#endif
+		#endif
 	}
 }

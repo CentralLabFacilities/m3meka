@@ -3,6 +3,8 @@
 */
 
 OUTPUT_ARCH("33FJ32MC204")
+CRT0_STARTUP(crt0_standard.o)
+CRT1_STARTUP(crt1_standard.o)
 EXTERN(__resetPRI)
 EXTERN(__resetALT)
 

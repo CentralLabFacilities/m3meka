@@ -23,9 +23,9 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef USE_ADC
 
-#define ADC_NUM_SMOOTH	32 //Must be even
-#define ADC_SHIFT_SMOOTH 5 //2^ADC_SHIFT_SMOOTH
-#define ADC_NUM_SMOOTH_FAST	16 //Must be even
+#define ADC_NUM_SMOOTH	32 		//Must be even
+#define ADC_SHIFT_SMOOTH 5 		//2^ADC_SHIFT_SMOOTH
+#define ADC_NUM_SMOOTH_FAST	16 	//Must be even
 #define ADC_SHIFT_SMOOTH_FAST 4 //2^ADC_SHIFT_SMOOTH_FAST
 #define ADC_NUM_CH 4 
 #define ADC_CURRENT_A 0
@@ -36,7 +36,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 void setup_adc(void);
 unsigned int get_avg_adc(int idx);
 extern unsigned int adc_raw[];
-
 
 #endif
 #endif

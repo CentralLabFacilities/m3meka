@@ -1,5 +1,5 @@
  /*
-Copyright � 2010, Meka Robotics
+Copyright (c) 2010, Meka Robotics
 All rights reserved.
 http://mekabot.com
 
@@ -56,9 +56,9 @@ void setup_adc(void) {
 	AD1CON3bits.ADCS = 1;						
 	AD1CON2bits.VCFG = 0;           // Vref AVdd/AVss
 	AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
-	AD1CON1bits.SSRC = 0b011;		// Manual StartOfConversion 0b000 //PWM: 0b011;		//WAS 111
+	AD1CON1bits.SSRC = 0b011;		// Manual StartOfConversion 0b000 //PWM: 0b011;
 	AD1CON2bits.CHPS = 0;			// Only convert CH0	in 12-bit mode
-	AD1CON1bits.ASAM = 1;				// Sampling begins immediately after conversion is done		//WAS 0
+	AD1CON1bits.ASAM = 1;			// Sampling begins immediately after conversion is done
 	AD1CON1bits.AD12B = 1;			// 12-bit ADC operation
 	AD1CON2bits.BUFM = 1;			// Use 2x8-word buffer for conversion sequences
 	AD1CON1bits.SIMSAM = 0;			// No simultaneous sample for 1CH
@@ -87,22 +87,6 @@ void setup_adc(void) {
 
 void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 {
-/*	
-#ifdef USE_TIMER1
-	int t1_adj;
-	int ph,pt;
-	//Set the next conversion trigger
-	pt=P1TMR;	
-	ph=pwm_cmd(0)>>2; //cycles between conversion: NOTE: handle inverted pwm
-	if (pt>ph) //last conversion, schedule next at t=0 + ph of next duty cycle
-		t1_adj=(PWM_TIMEBASE_CYC-pt)+ph;
-	else
-		t1_adj=ph-pt;
-	TMR1=PWM_TIMEBASE_CYC-t1_adj;//set to expire on middle of next pwm_duty
-	t1_irq_idx=0;
-#endif
-*/
-
 	_AD1IF = 0;		//Clear the flag
 	
 	//ToDo: Debug only:
@@ -110,9 +94,6 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	Nop(); Nop(); Nop();
 	LATBbits.LATB6 = 0;
 
-//	AD1CON1bits.ADON = 0;			// Turn off ADC
-//	AD1CON1bits.ASAM = 0;
-//
 	if (AD1CON2bits.BUFS==0) //ADC module filling lower group, read from upper
 	{
 		adc_raw[0]=ADC1BUF8;

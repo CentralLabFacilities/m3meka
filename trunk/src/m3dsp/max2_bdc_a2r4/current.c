@@ -63,36 +63,36 @@ volatile int i_state,i_fault_cont,i_fault_mom;
 
 int current_fault_mom_flag()
 {
-   if (i_fault_mom)
-     return M3ACT_FLAG_I_FAULT_MOM;
+   if(i_fault_mom)
+     	return M3ACT_FLAG_I_FAULT_MOM;
    else
-     return 0;
+     	return 0;
 }
 
 int current_fault_cont_flag()
 {
      if (i_fault_cont)
-     return M3ACT_FLAG_I_FAULT_CONT;
+     	return M3ACT_FLAG_I_FAULT_CONT;
    else
-     return 0;
+     	return 0;
 }
 
 int get_current_ma()
 {
-  return i_mA;
+  	return i_mA;
 }
 
 long get_current_rms_mom_sq_ma()
 {
-  return i_rms_mom_sq;
+  	return i_rms_mom_sq;
 }
 long get_current_rms_cont_sq_ma()
 {
-  return i_rms_cont_sq;
+  	return i_rms_cont_sq;
 }
 int get_current_state()
 {
-  return i_state;
+  	return i_state;
 }
 
 /*
@@ -129,9 +129,8 @@ void step_current()
 	unsigned int z = 0;
 	
   	//Measure zero sensor reading at startup
-  	if (i_zero_cnt<17 && i_zero_cnt>0 && i_state == CURRENT_STARTUP)
+	if (i_zero_cnt<17 && i_zero_cnt>0 && i_state == CURRENT_STARTUP)
   	{
-		#if defined M3_MAX2_BDC_A2R4
       	i_zero_sum_a = i_zero_sum_a + get_avg_adc(ADC_CURRENT_A);
       	i_zero_sum_b = i_zero_sum_b + get_avg_adc(ADC_CURRENT_B);
       	if (i_zero_cnt ==1)
@@ -160,48 +159,41 @@ void step_current()
 			}
       	}
   	}
-
   	i_zero_cnt=MAX(0,i_zero_cnt-1);
-	#endif
 
-if (i_state != CURRENT_STARTUP)
-{
-	//Compute 'instantaneous' current
-	#if defined M3_MAX2_BDC_A2R4
-	
-	//Hall effect sensor
-	#ifdef USE_MAX2_0_2
-	  	int x =(int)get_avg_adc(ADC_CURRENT_A) - (int)i_zero_a;
-	  	//i_mA=(int)((float)x * (float)ADC_CURRENT_MA_PER_TICK);
-		i_mA = (x * ADC_CURRENT_MA_PER_TICK);	//WAS float: New version, int
-	#endif
-	
-	//Shunt sensor, we use the absolute value
-	#ifdef USE_MAX2_0_3
-	  	int x =(int)get_avg_adc(ADC_CURRENT_B) - (int)i_zero_b;
-	  	//x = CLAMP(x,0,5000) * 7;
-		i_mA = x * 7; //correct_mA(actual_pwm, PWM_MAX_DUTY, x);
-	#endif
-	
-	#endif
+	if (i_state != CURRENT_STARTUP)
+	{
+		//Compute 'instantaneous' current
+		
+		//Hall effect sensor
+		#ifdef USE_MAX2_0_2
+		  	int x =(int)get_avg_adc(ADC_CURRENT_A) - (int)i_zero_a;
+			i_mA = (x * ADC_CURRENT_MA_PER_TICK);
+		#endif
+		
+		//Shunt sensor, we use the absolute value
+		#ifdef USE_MAX2_0_3
+		  	int x =(int)get_avg_adc(ADC_CURRENT_B) - (int)i_zero_b;
+		  	//x = CLAMP(x,0,5000) * 7;
+			i_mA = x * 7; //correct_mA(actual_pwm, PWM_MAX_DUTY, x);
+		#endif
 
-
-	  //Now compute the momentary RMS value
-	  i_rms_mom_ds=INC_MOD(i_rms_mom_ds,I_RMS_MOM_DS);
-	  if (i_rms_mom_ds==0)
-	  {
+		//Now compute the momentary RMS value
+		i_rms_mom_ds=INC_MOD(i_rms_mom_ds,I_RMS_MOM_DS);
+		if (i_rms_mom_ds==0)
+		{
 			i_rms_mom_idx=INC_MOD(i_rms_mom_idx,I_RMS_MOM_BUF_SZ);	
 			i_rms_mom_buf[i_rms_mom_idx]=(long)i_mA*(long)i_mA;		//RMS
-				
+					
 			i_rms_mom_sum = 0;	
 			for(z = 0; z < I_RMS_MOM_BUF_SZ; z++)
-	    	{
-		    	//Sum all values
+		    {
+			   	//Sum all values
 				i_rms_mom_sum += i_rms_mom_buf[z];
 			}
-	    	i_rms_mom_sq=i_rms_mom_sum>>I_RMS_MOM_BUF_SHIFT;
-	    
-		    if ((!i_fault_mom) && (i_rms_mom_sq > CURRENT_MAX_MOM_RMS_SQ))
+		    i_rms_mom_sq=i_rms_mom_sum>>I_RMS_MOM_BUF_SHIFT;
+		    
+			if ((!i_fault_mom) && (i_rms_mom_sq > CURRENT_MAX_MOM_RMS_SQ))
 			{
 				if((i_mA > MAX_MOM_CURRENT) || (i_mA < -MAX_MOM_CURRENT))
 				{
@@ -212,13 +204,13 @@ if (i_state != CURRENT_STARTUP)
 					reset_current_buf();//power turns off
 				}
 			}
-	  }
+		}
 
 
-		 //Now compute the continuous RMS value
-		 i_rms_cont_ds=INC_MOD(i_rms_cont_ds,I_RMS_CONT_DS);
-		  if (i_rms_cont_ds==0)
-		  {			
+		//Now compute the continuous RMS value
+		i_rms_cont_ds=INC_MOD(i_rms_cont_ds,I_RMS_CONT_DS);
+		if (i_rms_cont_ds==0)
+		{			
 			i_rms_cont_idx=INC_MOD(i_rms_cont_idx,I_RMS_CONT_BUF_SZ);
 			i_rms_cont_buf[i_rms_cont_idx]=(long)i_mA*(long)i_mA;
 				
@@ -228,7 +220,7 @@ if (i_state != CURRENT_STARTUP)
 				i_rms_cont_sum += i_rms_cont_buf[z];
 			}
 	    	i_rms_cont_sq=i_rms_cont_sum >> I_RMS_CONT_BUF_SHIFT;
-		  }
+		}
  		if (!i_fault_cont && i_rms_cont_sq>CURRENT_MAX_CONT_RMS_SQ)
 		{
 		//	if (i_state==CURRENT_READY)

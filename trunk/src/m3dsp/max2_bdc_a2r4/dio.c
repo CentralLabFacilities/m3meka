@@ -22,16 +22,18 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "setup.h"
 #include "dio.h"
 
-
 void setup_dio(void) 
 {
 }
 
 inline void ToggleHeartbeatLED(void)
 {
+	/* Legacy:
 	if (PinHeartbeatLED==1)
 		ClrHeartbeatLED;
 	else
 		SetHeartbeatLED;
+	*/
+	PinHeartbeatLED ^= 1;
 }
 #endif

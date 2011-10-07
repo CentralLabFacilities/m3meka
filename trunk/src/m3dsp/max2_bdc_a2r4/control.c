@@ -19,7 +19,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef USE_CONTROL
 
-
 #include "setup.h"
 #include "control.h"
 
@@ -136,7 +135,6 @@ int ramp_pid_gains_down(int chid,int rate)
 	return done;
 }
 
-
 void setup_pid(int chid)
 {
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
@@ -176,94 +174,96 @@ void step_amp_out(int chid, int des)
 
 void step_control()
 {
-int chid;
+	int chid;
 
-for ( chid=0;chid<NUM_CTRL_CH;chid++)
-{
-
-#ifdef EC_USE_WATCHDOG
-	if (ec_watchdog_expired)
-		fsa_state[chid]=CTRL_ABORT;
-#endif
-
-	int mode = ec_cmd.command[chid].mode;
-	int des = ec_cmd.command[chid].t_desire;
-
-	switch (fsa_state[chid])
+	for ( chid=0;chid<NUM_CTRL_CH;chid++)
 	{
-		case CTRL_OFF:
-			step_amp_out(chid,0);
-			if (mode==MODE_PWM)
-				fsa_state[chid]=CTRL_PWM;
-			if (mode==MODE_PID)
-			{
-				fsa_state[chid]=CTRL_OFF_TO_PID;
-				setup_pid(chid);
-			}
-			if (mode==MODE_CURRENT)
-			{
-				fsa_state[chid]=CTRL_CURRENT;
-				setup_pid(chid);
-			}
-			break;
-		case CTRL_PWM:
-			step_amp_out(chid,des);
-			if (mode!=MODE_PWM)
-			{
-				fsa_state[chid]=CTRL_OFF;
-			}
-			break;
-
-		case CTRL_OFF_TO_PID:
-			if (mode!=MODE_PID)
-			{
-				fsa_state[chid]=CTRL_OFF;
-				break;
-			}
-			if (ramp_pid_gains_up(chid,RAMP_UPDATE_RATE))
-					fsa_state[chid]=CTRL_PID;
-			step_torque_pid(chid,des);
-			break;
-
-		case CTRL_PID:
-			if (mode!=MODE_PID )
-			{
-				fsa_state[chid]=CTRL_PID_TO_OFF;
-				break;
-			}
-			ramp_pid_gains_up(chid,RAMP_UPDATE_RATE);
-			step_torque_pid(chid,des);
-			break;
+		#ifdef EC_USE_WATCHDOG
+		if (ec_watchdog_expired)
+			fsa_state[chid]=CTRL_ABORT;
+		#endif
 	
-		case CTRL_PID_TO_OFF:
-			if (ramp_pid_gains_down(chid,RAMP_UPDATE_RATE))
-			{
-				fsa_state[chid]=CTRL_OFF;
-			}
-			step_amp_out(chid,0);
-			break;;
-#ifdef EC_USE_WATCHDOG
-			if (!ec_wd_expired)
-				fsa_state[chid]=CTRL_OFF;
-#endif
-			break;
-		case CTRL_CURRENT:		//ToDo: Recently added, to confirm
-			if (mode!=MODE_CURRENT)
-			{
-				fsa_state[chid] = CTRL_OFF;
+		int mode = ec_cmd.command[chid].mode;
+		int des = ec_cmd.command[chid].t_desire;
+	
+		switch (fsa_state[chid])
+		{
+			case CTRL_OFF:
+				step_amp_out(chid,0);
+				if (mode==MODE_PWM)
+					fsa_state[chid]=CTRL_PWM;
+				if (mode==MODE_PID)
+				{
+					fsa_state[chid]=CTRL_OFF_TO_PID;
+					setup_pid(chid);
+				}
+				if (mode==MODE_CURRENT)
+				{
+					fsa_state[chid]=CTRL_CURRENT;
+					setup_pid(chid);
+				}
 				break;
-			}
-			ramp_pid_gains_up(chid,RAMP_UPDATE_RATE);
-			step_current_pid(chid,des);
-			break;
-		default:
-			step_amp_out(chid,0);
-			break;
-	};
+				
+			case CTRL_PWM:
+				step_amp_out(chid,des);
+				if (mode!=MODE_PWM)
+				{
+					fsa_state[chid]=CTRL_OFF;
+				}
+				break;
+	
+			case CTRL_OFF_TO_PID:
+				if (mode!=MODE_PID)
+				{
+					fsa_state[chid]=CTRL_OFF;
+					break;
+				}
+				if (ramp_pid_gains_up(chid,RAMP_UPDATE_RATE))
+						fsa_state[chid]=CTRL_PID;
+				step_torque_pid(chid,des);
+				break;
+	
+			case CTRL_PID:
+				if (mode!=MODE_PID )
+				{
+					fsa_state[chid]=CTRL_PID_TO_OFF;
+					break;
+				}
+				ramp_pid_gains_up(chid,RAMP_UPDATE_RATE);
+				step_torque_pid(chid,des);
+				break;
+		
+			case CTRL_PID_TO_OFF:
+				if (ramp_pid_gains_down(chid,RAMP_UPDATE_RATE))
+				{
+					fsa_state[chid]=CTRL_OFF;
+				}
+				step_amp_out(chid,0);
+				break;								//BUG Double break...
+				
+				#ifdef EC_USE_WATCHDOG			
+				if (!ec_wd_expired)
+					fsa_state[chid]=CTRL_OFF;
+				#endif
+				break;								//BUG Double break...
+				
+			case CTRL_CURRENT:
+				if (mode!=MODE_CURRENT)
+				{
+					//ToDo: Should we provide exit-states like for the PID?
+					fsa_state[chid] = CTRL_OFF;
+					break;
+				}
+				ramp_pid_gains_up(chid,RAMP_UPDATE_RATE);
+				step_current_pid(chid,des);
+				break;
+				
+			default:
+				step_amp_out(chid,0);
+				break;
+		};
 	}
 }
-
-
 
 void step_torque_pid(int chid,int des)
 {
@@ -314,9 +314,12 @@ void step_torque_pid(int chid,int des)
 
 //Current control
 //Note: same gains and same code as the torque PID
+//Note: for the moment, this function is unipolar
+//		(PWM saturation from 0 to +MAX)
 void step_current_pid(int chid,int des)
 {
-#ifdef USE_CURRENT
+	#ifdef USE_CURRENT
+	
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
 	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
 	int ddes = CLAMP(des,d->t_min,d->t_max);
@@ -355,8 +358,7 @@ void step_current_pid(int chid,int des)
 	result=CLAMP(result,0,PWM_MAX_DUTY);	//Modified to 0 - Unipolar
 	step_amp_out(chid,(int)result);	
 	
-#endif
+	#endif
 }
-
 
 #endif //USE_CONTROL

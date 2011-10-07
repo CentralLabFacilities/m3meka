@@ -26,29 +26,25 @@ void setup_ports(void);
 void setup_peripheral_pin_select(void);
 void setup_interrupt_priorities(void);
 
-
 void setup_interrupt_priorities(void)
 {
 	#ifndef USE_TIMER3
 	_T3IF = 0;
 	_T3IE = 0;
 	_T3IP = 0;	//Timer3 
-	#endif
-	
+	#endif	
 
-	//Higher number = Higher priority
+	//Higher number = Higher priority, from 1 to 7
 
 	//Ethercat Master AL interrupt on INT0
 	//Apps inherit Bootloader settings so need set here for Bootloader too.
 	//ToDo:FIX!
 	_INT0IP=3;	//Ethercat Interrupt
 	_INT2IP=2;	//SYNC0 Interrupt
-	//ADC timing not critical
 	_AD1IP = 7;	//ADC conversion done 	
 	_T1IF = 0;
-	_T1IP = 3;	//Timer1 
+	_T1IP = 3;	//Timer1 ToDo Remove?
 }
-
 
 void setup_oscillator(void)
 {
@@ -71,7 +67,6 @@ void setup_oscillator(void)
 
 void setup_ports(void)
 {
-
 	// Clear All Ports Prior to defining I/O
 	PORTA=0;
 	PORTB=0;
@@ -170,8 +165,6 @@ void setup_ports(void)
 	TRISBbits.TRISB15=0;	//RB15	OUTPUT	PIN15	RP15_PWM	(Pwm)
 }
 
-
-
 //Note: If using bootloader, only the first call (Bootloader) works
 //Second call by app doesn't work. So for now, bootloader peripheral config.
 //must support all devices.
@@ -195,17 +188,18 @@ void setup_peripheral_pin_select(void)
 	//SHOULD BE DISABLED AND MAPPED TO THIS PIN
 	//ALL UNUSED OUTPUTS GET MAPPED TO VSS
 	
-#ifdef USE_ETHERCAT
+	#ifdef USE_ETHERCAT
 	////// Inputs  /////
 	//RPINR0bits.INT1R=19;	//(SYNC1) INT1 ON RP19 :					RPINR0
 	RPINR1bits.INT2R=20;	//(SYNC0) INT2 ON RP20 :					RPINR1	
 	RPINR20bits.SDI1R=25;	//SPI DATA IN ON RP25 :						RPINR20	
 	////// Outputs /////
-	RPOR11bits.RP22R = 0b01001;  //SPI SLAVE SELECT OUT ON RP22 :			RPOR11
-	RPOR11bits.RP23R = 0b01000; //SPI CLOCK OUT ON RP23 :					RPOR11	
-	RPOR12bits.RP24R = 0b00111; //SPI DATA OUT ON RP24  :					RPOR12	
+	RPOR11bits.RP22R = 0b01001;  //SPI SLAVE SELECT OUT ON RP22 :		RPOR11
+	RPOR11bits.RP23R = 0b01000; //SPI CLOCK OUT ON RP23 :				RPOR11	
+	RPOR12bits.RP24R = 0b00111; //SPI DATA OUT ON RP24  :				RPOR12	
 
-#endif
+	#endif
+	
 	//Lock ala datasheet
 	asm volatile (	"mov #0x742, w1 \n"
 				"mov #0x46, w2 \n"
@@ -216,22 +210,30 @@ void setup_peripheral_pin_select(void)
 	return;
 }
 
-void us_delay(int n) {
-  int i,j;
-  for (i=0;i<n;i++) {
-    for(j=0;j<US_DELAY_CONST;j++) ;
-  }
-}
-void ms_delay(int n) {
-  int i,j;
-  for (i=0;i<n;i++) {
-    for(j=0;j<MS_DELAY_CONST;j++) ;
-  }
+//Beware, timings affected by the ISRs!
+void us_delay(int n) 
+{
+  	int i,j;
+  	for (i=0;i<n;i++) 
+	{
+    	for(j=0;j<US_DELAY_CONST;j++);
+  	}
 }
 
-void us100_delay(int n) {
-  int i,j;
-  for (i=0;i<n;i++) {
-    for(j=0;j<US100_DELAY_CONST;j++) ;
-  }
+void ms_delay(int n) 
+{
+  	int i,j;
+  	for (i=0;i<n;i++) 
+	{
+    	for(j=0;j<MS_DELAY_CONST;j++);
+  	}
+}
+
+void us100_delay(int n) 
+{
+  	int i,j;
+  	for (i=0;i<n;i++) 
+	{
+    	for(j=0;j<US100_DELAY_CONST;j++);
+  	}
 }

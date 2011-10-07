@@ -16,6 +16,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #ifdef USE_ENCODER_VERTX
 
 #include "setup.h"
@@ -41,12 +42,10 @@ unsigned int get_avg_vertx(int ch)
 	return (unsigned int)(v>>VERTX_SHIFT_SMOOTH);
 }
 
-//Unclear why, very occaisional peg to max. Filter condition for now.
+//Unclear why, very occasionnal peg to max. Filter condition for now.
 //Need to understand.
 void vertx_error_filter(int ch,unsigned int val)
 {
-	
-
 	/*if (val&&0x0003 !=0x0003)
 	{
 		vertx_error_buffer[ch]=val;
@@ -58,13 +57,13 @@ void vertx_error_filter(int ch,unsigned int val)
 	//has been observerd.
 	//Assume chid=0 for all VERTX enabled systems
 
-int chid=0; //For dual encoder actuators, use only chid=0 for the config flag
+	int chid=0; //For dual encoder actuators, use only chid=0 for the config flag
 
-//	if ((val&(unsigned int)0x0003)!=1 || (val>>2)>16350 || (val>>2)>ec_cmd.command[chid].qei_max)
-//#else
+	//	if ((val&(unsigned int)0x0003)!=1 || (val>>2)>16350 || (val>>2)>ec_cmd.command[chid].qei_max)
+	//#else
 	ec_debug[chid]=(val>>2);
 	if ((val&(unsigned int)0x0003)!=1 || (val>>2)>16350)
-//#endif
+	//#endif
 	{		
 		if (ec_cmd.command[chid].config&M3ACT_CONFIG_VERTX_FILTER_OFF)
 		{
@@ -101,7 +100,6 @@ unsigned int vertx_pos(int chid)
 
 void step_vertx()
 {
-
 //Handle both channel in parallel
 	unsigned int x,y;
 
