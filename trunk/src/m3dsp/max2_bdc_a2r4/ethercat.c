@@ -102,7 +102,7 @@ void isr_update_input_pdo(void)
 #endif
 
 #ifdef USE_ADC
-	ec_stat.status[0].adc_motor_temp = t_error; //get_avg_adc(ADC_MOTOR_TEMP);	//ToDo Debug only
+	ec_stat.status[0].adc_motor_temp = i_zero_b; //get_avg_adc(ADC_MOTOR_TEMP);	//ToDo Debug only
 	ec_stat.status[0].adc_amp_temp = get_avg_adc(ADC_AMP_TEMP);
 	ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT_A); 
 	ec_stat.status[0].adc_current_b = get_avg_adc(ADC_CURRENT_B);
@@ -135,7 +135,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 	the TIMER3 timing with VertX. Disabling it doesn't seem to affect performance.*/
 
 
-	INTERRUPT_PROTECT_ENABLE; //For Elmo board which has QEI but no VertX encoder, disable interrupts to make timestamp copy atomic.
+//	INTERRUPT_PROTECT_ENABLE; //For Elmo board which has QEI but no VertX encoder, disable interrupts to make timestamp copy atomic.	//WAS
 	SPI_SEL = SPI_DEACTIVE;				/* SPI should be deactivated to interrupt a possible transmission */
 	ACK_ESC_INT;						/* reset the interrupt flag */
 	
@@ -155,7 +155,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 
 	}	
 
-	INTERRUPT_PROTECT_DISABLE;
+//	INTERRUPT_PROTECT_DISABLE;		//WAS
 }
 
 #ifdef USE_SYNC0

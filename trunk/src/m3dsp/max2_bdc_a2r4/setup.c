@@ -46,7 +46,7 @@ void setup_interrupt_priorities(void)
 	//ADC timing not critical
 	_AD1IP = 7;	//ADC conversion done 	
 	_T1IF = 0;
-	_T1IP = 3;	//Timer1 	//ADC trigger	WA
+	_T1IP = 3;	//Timer1 
 }
 
 

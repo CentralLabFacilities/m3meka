@@ -22,6 +22,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "pwm.h"
 #include "setup.h"
 
+unsigned int actual_pwm = 0;
+
 
 int pwm_cmd_buf[NUM_PWM_CH];
 int pwm_duty_buf[NUM_PWM_CH];
@@ -66,6 +68,11 @@ void set_pwm(int chid, int val)
 	int sign=SIGN(val);
 	val=pwm_deadband(chid,ABS(val));
 	pwm_cmd_buf[chid]=SIGN(val)*CLAMP(ABS(val),0,ec_cmd.command[chid].pwm_max); //Send back commanded value before gets inverted, deadband, etc
+	
+	//Used by correct_ma
+	#ifdef USE_CURRENT
+	actual_pwm = val;
+	#endif
 
 #ifdef PWM_4Q
 	/*

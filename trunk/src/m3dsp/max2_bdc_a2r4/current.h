@@ -32,6 +32,7 @@ long get_current_rms_cont_sq_ma();
 int current_fault_mom_flag();
 int current_fault_cont_flag();
 void reset_current_buf();
+unsigned int correct_mA(unsigned int pwm, unsigned int max_pwm, unsigned int current);
 
 enum {
   CURRENT_STARTUP,

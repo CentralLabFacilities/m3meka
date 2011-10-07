@@ -23,6 +23,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "current.h"
 extern int test; //Test
 
+extern unsigned int actual_pwm;	//pwm.c
+
 //MAX2 version reminder
 #ifndef USE_MAX2_0_2 
 #ifndef USE_MAX2_0_3
@@ -91,6 +93,18 @@ long get_current_rms_cont_sq_ma()
 int get_current_state()
 {
   return i_state;
+}
+
+//Calculates an average cycle current based on a single peak current measurement
+unsigned int correct_mA(unsigned int pwm, unsigned int max_pwm, unsigned int current)
+{
+	unsigned long result = 0;
+	unsigned int ratio = (pwm << 3) / max_pwm;
+	
+	result = ((unsigned long)current * (unsigned long)ratio);
+	result = result >> 3;
+	
+	return (unsigned int) result;
 }
 
 void reset_current_buf()
@@ -162,8 +176,9 @@ if (i_state != CURRENT_STARTUP)
 	
 	//Shunt sensor, we use the absolute value
 	#ifdef USE_MAX2_0_3
-	  	int x =(int)get_avg_adc(ADC_CURRENT_B);	//ToDo Zero? - (int)i_zero_b;
-		i_mA = (x * 7);
+	  	int x =(int)get_avg_adc(ADC_CURRENT_B) - (int)i_zero_b;
+	  	//x = CLAMP(x,0,5000) * 7;
+		i_mA = x * 7; //correct_mA(actual_pwm, PWM_MAX_DUTY, x);
 	#endif
 	
 	#endif
