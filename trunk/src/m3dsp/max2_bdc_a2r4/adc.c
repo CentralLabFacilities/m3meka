@@ -114,27 +114,28 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	adc_buffer[ADC_CURRENT_B][adc_idx]=adc_raw[ADC_CURRENT_B];
 	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
 	
-	//Timed actions 
+	//Timed actions - 2kHz
 	//Originaly in timer3 ISR
 	//======================
 	
 	//Latch encoder timestamp on Rising edge.
-#ifdef USE_TIMESTAMP_DC
+	#ifdef USE_TIMESTAMP_DC
 	SetTimestampLatch;
 	ClrTimestampLatch;
-#endif
+	#endif
 
-#if defined USE_ENCODER_VERTX
+	#if defined USE_ENCODER_VERTX
 	step_vertx();
-#endif
+	#endif
 
-#ifdef USE_CURRENT
+	#ifdef USE_CURRENT
 	step_current();
-#endif
+	#endif
 
-#ifdef USE_CONTROL	
+	#ifdef USE_CONTROL	
 	step_control();
-#endif
+	#endif
+	
 	irq_cnt++;
 }
 
