@@ -316,14 +316,15 @@ void step_torque_pid(int chid,int des)
 //Note: same gains and same code as the torque PID
 //Note: for the moment, this function is unipolar
 //		(PWM saturation from 0 to +MAX)
-void step_current_pid(int chid,int des)
+void step_current_pid(int chid, int des)
 {
 	#ifdef USE_CURRENT
 	
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
 	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
-	int ddes = CLAMP(des,d->t_min,d->t_max);
+	int ddes = ABS(CLAMP(des,d->t_min,d->t_max));
 	int s=0;
+	int sign = SIGN(des);
 
 	s = get_current_ma();
 	t_error = (ddes-s);
@@ -356,7 +357,7 @@ void step_current_pid(int chid,int des)
 
 	result=p_term[chid]+i_term[chid]+d_term[chid]+ff_term[chid];
 	result=CLAMP(result,0,PWM_MAX_DUTY);	//Modified to 0 - Unipolar
-	step_amp_out(chid,(int)result);	
+	step_amp_out(chid,(int)result*sign);	
 	
 	#endif
 }
