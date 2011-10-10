@@ -72,7 +72,7 @@ void set_pwm(int chid, int val)
 	#endif
 	
 	//ADC trigger at the middle of a pulse
-	P1SECMPbits.SEVTCMP = val >> 1;
+	P1SECMPbits.SEVTCMP = MAX(val-10,10);	//WAS Enabled
 
 	#ifdef PWM_4Q
 	/*
