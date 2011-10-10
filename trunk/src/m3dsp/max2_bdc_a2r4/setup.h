@@ -29,7 +29,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 //#define USE_CONTROL
 //#define USE_CURRENT
 //#define USE_ETHERCAT
-//#define USE_TIMER3
 //#define USE_TIMER1
 //#define USE_DIO
 //#define USE_SYNC0					//Use Sync0 EtherCAT IRQ
@@ -45,13 +44,13 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "dio.h"
 #include "ethercat.h"
-#include "timer3.h"
 #include "timer1.h"
 #include "encoder_vertx.h"
 #include "pwm.h"
 #include "control.h"
 #include "adc.h"
 #include "current.h"
+#include "timer3.h"
 
 //#define EC_USE_WATCHDOG
 

@@ -31,14 +31,13 @@ void setup_interrupt_priorities(void)
 	#ifndef USE_TIMER3
 	_T3IF = 0;
 	_T3IE = 0;
-	_T3IP = 0;	//Timer3 
 	#endif	
 
 	//Higher number = Higher priority, from 1 to 7
 
 	//Ethercat Master AL interrupt on INT0
 	//Apps inherit Bootloader settings so need set here for Bootloader too.
-	//ToDo:FIX!
+	//ToDo:FIX! (Will node more details if I want to fix this!)
 	_INT0IP=3;	//Ethercat Interrupt
 	_INT2IP=2;	//SYNC0 Interrupt
 	_AD1IP = 7;	//ADC conversion done 	
