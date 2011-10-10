@@ -87,6 +87,8 @@ void setup_adc(void) {
 
 void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 {
+	static unsigned int count = 0;
+	
 	_AD1IF = 0;		//Clear the flag
 	
 	//ToDo: Debug only:
@@ -118,25 +120,29 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	//Originaly in timer3 ISR
 	//======================
 	
-	//Latch encoder timestamp on Rising edge.
-	#ifdef USE_TIMESTAMP_DC
-	SetTimestampLatch;
-	ClrTimestampLatch;
-	#endif
-
-	#if defined USE_ENCODER_VERTX
-	step_vertx();
-	#endif
-
-	#ifdef USE_CURRENT
-	step_current();
-	#endif
-
-	#ifdef USE_CONTROL	
-	step_control();
-	#endif
+	count = INC_MOD(count,4);		
+	if(count == 0)
+	{
+		//Latch encoder timestamp on Rising edge.
+		#ifdef USE_TIMESTAMP_DC
+		SetTimestampLatch;
+		ClrTimestampLatch;
+		#endif
 	
-	irq_cnt++;
+		#if defined USE_ENCODER_VERTX
+		step_vertx();
+		#endif
+	
+		#ifdef USE_CURRENT
+		step_current();
+		#endif
+	
+		#ifdef USE_CONTROL	
+		step_control();
+		#endif
+		
+		irq_cnt++;
+	}
 }
 
 #endif
