@@ -91,11 +91,6 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	
 	_AD1IF = 0;		//Clear the flag
 	
-	//ToDo: Debug only:
-	LATBbits.LATB6 = 1;
-	Nop(); Nop(); Nop();
-	LATBbits.LATB6 = 0;
-
 	if (AD1CON2bits.BUFS==0) //ADC module filling lower group, read from upper
 	{
 		adc_raw[0]=ADC1BUF8;
@@ -120,7 +115,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	//Originaly in timer3 ISR
 	//======================
 	
-	count = INC_MOD(count,4);		
+	count = INC_MOD(count,5);		
 	if(count == 0)
 	{
 		//Latch encoder timestamp on Rising edge.

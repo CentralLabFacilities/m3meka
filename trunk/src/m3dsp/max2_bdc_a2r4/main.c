@@ -25,11 +25,11 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 //                  Timing Information
 //---------------------------------------------------------------
 /*
-=> PWM Frequency: 25kHz
+=> PWM Frequency: 40kHz
 => The PWM Special Event trigger is used to start an ADC conversion
-=> ADC ISR: 1 interrupt each 4 PWM cycles (25kHz/4 = 6.25kHz)
+=> ADC ISR: 1 interrupt each 4 PWM cycles (40kHz/4 = 10kHz)
 => The ADC ISR calls many functions: control loops, Vertex Encoder, etc.
-	=> Most of them run at 2.08kHz (6.25kHz/3)
+	=> Most of them run at 2kHz (10kHz/5)
 */
 
 //---------------------------------------------------------------

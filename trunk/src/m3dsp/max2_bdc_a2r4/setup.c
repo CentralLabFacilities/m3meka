@@ -38,11 +38,11 @@ void setup_interrupt_priorities(void)
 	//Ethercat Master AL interrupt on INT0
 	//Apps inherit Bootloader settings so need set here for Bootloader too.
 	//ToDo:FIX! (Will node more details if I want to fix this!)
-	_INT0IP=3;	//Ethercat Interrupt
-	_INT2IP=2;	//SYNC0 Interrupt
-	_AD1IP = 7;	//ADC conversion done 	
+	_INT0IP = 3;	//Ethercat Interrupt
+	_INT2IP = 2;	//SYNC0 Interrupt
+	_AD1IP = 7;		//ADC conversion done 	
 	_T1IF = 0;
-	_T1IP = 3;	//Timer1 ToDo Remove?
+	_T1IP = 3;		//Timer1 ToDo Remove?
 }
 
 void setup_oscillator(void)
@@ -148,7 +148,7 @@ void setup_ports(void)
 	TRISCbits.TRISC2=0;		//RC2	OUTPUT	PIN27	SPI_SS_SEAS/
 	TRISCbits.TRISC0=0;		//RC0	OUTPUT	PIN25	SPI_CLK_SEAS
 
-	TRISBbits.TRISB6=0;		//RB6	INPUT	PIN42	SPI_DIO_ENC		//ToDo/WAS Input
+	TRISBbits.TRISB6=1;		//RB6	INPUT	PIN42	SPI_DIO_ENC	
 	TRISBbits.TRISB3=0;		//RB3	OUTPUT	PIN24	SPI_SS_ENC/
 	TRISCbits.TRISC1=0;		//RC1	OUTPUT	PIN26	SPI_CLK_ENC
 
