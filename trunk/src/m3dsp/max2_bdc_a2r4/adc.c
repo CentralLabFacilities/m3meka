@@ -119,24 +119,26 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	if(count == 0)
 	{
 		//Latch encoder timestamp on Rising edge.
-		#ifdef USE_TIMESTAMP_DC
-		SetTimestampLatch;
+		#ifdef USE_TIMESTAMP_DC			//Takes 0.05us to execute
+		SetTimestampLatch;	
 		ClrTimestampLatch;
 		#endif
 	
-		#if defined USE_ENCODER_VERTX
-		step_vertx();
+		#if defined USE_ENCODER_VERTX	//Takes 122us to execute
+		step_vertx();					
 		#endif
 	
-		#ifdef USE_CURRENT
+		#ifdef USE_CURRENT				//Takes 0.475us to execute
 		step_current();
 		#endif
 	
-		#ifdef USE_CONTROL	
-		step_control();
+		#ifdef USE_CONTROL				//Takes 2.3us to execute
+		step_control();					//(will probably increase in PID mode...)
 		#endif
 		
 		irq_cnt++;
+		
+		//Sum = 125us, 25% of this time slice
 	}
 }
 
