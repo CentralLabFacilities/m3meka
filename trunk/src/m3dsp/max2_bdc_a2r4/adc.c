@@ -32,6 +32,7 @@ int adc_idx;
 unsigned int adc_raw[ADC_NUM_CH];
 unsigned int volatile adc_buffer[ADC_NUM_CH][ADC_NUM_SMOOTH];
 int irq_cnt; 
+unsigned int wd_cnt = 0, last_status = 0, watchdog_expired;	//Watchdog
 
 unsigned int get_avg_adc(int ch)
 {
@@ -137,6 +138,20 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 		#endif
 		
 		irq_cnt++;
+		
+		
+		#ifdef USE_WATCHDOG
+		wd_cnt++;
+		if (ec_cmd.status != last_status)		// if the status changes, everything is cool
+		{
+			wd_cnt = 0;
+			last_status = ec_cmd.status;
+		}
+		else if (wd_cnt > 50)					// if the status doesn't change for some cycles, we're hosed
+		{
+			watchdog_expired = 1;
+		}	
+		#endif
 		
 		//Sum = 125us, 25% of this time slice
 	}

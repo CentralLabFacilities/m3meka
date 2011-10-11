@@ -39,6 +39,8 @@ long i_term[NUM_CTRL_CH];
 long d_term[NUM_CTRL_CH];
 long ff_term[NUM_CTRL_CH];
 
+extern unsigned int watchdog_expired;
+
 //Prototypes:
 void step_torque_pid(int chid,int des);
 void step_current_pid(int chid,int des);
@@ -178,9 +180,9 @@ void step_control()
 
 	for ( chid=0;chid<NUM_CTRL_CH;chid++)
 	{
-		#ifdef EC_USE_WATCHDOG
-		if (ec_watchdog_expired)
-			fsa_state[chid]=CTRL_ABORT;
+		#ifdef USE_WATCHDOG
+		if (watchdog_expired)
+			fsa_state[chid]=CTRL_OFF;
 		#endif
 	
 		int mode = ec_cmd.command[chid].mode;
