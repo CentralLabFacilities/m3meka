@@ -74,28 +74,24 @@ void set_pwm(int chid, int val)
 	//ADC trigger at the middle of a pulse
 	P1SECMPbits.SEVTCMP = val >> 2; //MAX(val-10,10);	//WAS
 
-	#ifdef PWM_4Q
-	/*
-	X X POVD3H POVD3L   POVD2H POVD2L POVD1H POVD1L   X X POUT3H POUT3L   POUT2H POUT2L POUT1H POUT1L 
-	X X   Q5     Q6       Q3     Q4      Q1    Q2     X X   Q5     Q6       Q3    Q4      Q1    Q2
-	POVDXX=1: PWM
-	POVDXX=0: POUT
-	Forward: Q1=On, Q4=PWM	 =	0000 1100 0000 0010 = 0x0C02
-	Reverse: Q3=On, Q2=PWM	 =	0000 0011 0000 1000 = 0x0308
-	*/
-	pwm_duty_buf[chid]=invert_and_clamp_pwm(chid,val); //Invert as switching on low-leg
-	if (sign >= 0) 
-	{
-			P1DC1 = pwm_duty_buf[0];
-			//P1DC2 = 0;
-			OVDCON=0x0308;
-	} else 
-	{
-			//P1DC1 = 0;
-			OVDCON=0x0C02;
-			P1DC2 = pwm_duty_buf[0];
-	}
-	#endif//4Q
+//Run 
+#if defined PWM_4Q 
+		pwm_duty_buf[chid]=invert_and_clamp_pwm(chid,val); //Invert as switching on low-leg
+		P1DC1=pwm_duty_buf[chid];
+		P1DC2=pwm_duty_buf[chid];
+		P1DC3=pwm_duty_buf[chid];
+#endif
+#if defined PWM_2Q
+		pwm_duty_buf[chid]=clamp_pwm(chid,val); //Invert as switching on low-leg
+		P1DC1=pwm_duty_buf[chid];
+		P1DC2=pwm_duty_buf[chid];
+		P1DC3=pwm_duty_buf[chid];
+#endif
+
+#ifdef USE_BLDC
+		if (sign<=0) set_bldc_dir(0); else set_bldc_dir(1);
+#endif
+
 }
 
 void setup_pwm(void) {
@@ -158,8 +154,18 @@ void setup_pwm(void) {
 	PDC1 = 0;
 	PDC2 = 0;
 
-	DTCON2bits.DTS3A = 0;		//Deadtime for PWM1H3/PWM1L3 going active from Unit A
-	DTCON2bits.DTS3I = 1;		//Deadtime for PWM1H3/PWM1L3 going inactive from Unit B
+#ifdef PWM_4Q
+	PWMCON1bits.PMOD3=0;	//PWM1H3,PWM1L3 is complimentary pair
+	PWMCON1bits.PEN3H = 1;	//Enable PWM1H3
+	PWMCON1bits.PEN3L = 1;	//Enable PWM1L3
+#endif
+#ifdef PWM_2Q
+	PWMCON1bits.PMOD3=1;	//PWM1H3,PWM1L3 is independent pair
+	PWMCON1bits.PEN3H = 1;	//Enable PWM1H3
+	PWMCON1bits.PEN3L = 1;	//Enable PWM1L3
+#endif
+	DTCON2bits.DTS3A = 0;	//Deadtime for PWM1H3/PWM1L3 going active from Unit A
+	DTCON2bits.DTS3I = 1;	//Deadtime for PWM1H3/PWM1L3 going inactive from Unit B
 	PDC3 = 0;
 	//OVDCON=0;					//Allow control PWM1H/L1-3 using OVD. Set in bldc.c instead...
 	PWMCON2bits.OSYNC=0;		//OVDCON overrides are on next Tcy boundary
