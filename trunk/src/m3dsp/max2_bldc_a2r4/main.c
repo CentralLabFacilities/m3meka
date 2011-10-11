@@ -73,6 +73,11 @@ int main (void)
 	setup_pwm();
 	#endif
 	
+	//Brushless motor
+	#ifdef USE_BLDC
+	setup_bldc();
+	#endif
+		
 	//Torque PID and Current PID
 	#ifdef USE_CONTROL
 	setup_control();
