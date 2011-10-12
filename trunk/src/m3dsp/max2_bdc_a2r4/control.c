@@ -319,8 +319,8 @@ void step_torque_pid(int chid,int des)
 
 //Current control
 //Note: same gains and same code as the torque PID
-//Note: for the moment, this function is unipolar
-//		(PWM saturation from 0 to +MAX)
+//Note: this function is unipolar (PWM saturation from 0 to +MAX)
+//		the sign is added at the end
 void step_current_pid(int chid, int des)
 {
 	#ifdef USE_CURRENT
