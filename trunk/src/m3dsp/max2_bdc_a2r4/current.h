@@ -24,7 +24,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 void setup_current();
 void step_current();
-//int step_current_pid();
 int get_current_state();
 int get_current_ma();
 long get_current_rms_mom_sq_ma();
@@ -49,10 +48,10 @@ enum
 // ACS714-20: 1000/ (100.0 mv/A *G * S )= 12.523 mA/tick
 // ACS714-5:  1000/ (185.0 mv/A *G * S ) = 6.775 mA/tick
 #define ADC_CURRENT_MA_PER_TICK 13 			//12.523 is the exact value for the ACS711
-#define MAX_MOM_CURRENT	20000				//20A
-#define MAX_CONT_CURRENT 10000				//10A
-#define CURRENT_MAX_MOM_RMS_SQ  400000000	//MAX_MOM_CURRENT*MAX_MOM_CURRENT
-#define CURRENT_MAX_CONT_RMS_SQ 100000000	//MAX_CONT_CURRENT*MAX_CONT_CURRENT
+#define MAX_MOM_CURRENT	15000				//15A
+#define MAX_CONT_CURRENT 7000				//7A
+#define CURRENT_MAX_MOM_RMS_SQ  225000000	//MAX_MOM_CURRENT*MAX_MOM_CURRENT
+#define CURRENT_MAX_CONT_RMS_SQ 49000000	//MAX_CONT_CURRENT*MAX_CONT_CURRENT
 
 #endif
 #endif
