@@ -29,6 +29,7 @@ ec_cmd_t  ec_cmd;
 ec_stat_t   ec_stat;
 
 extern unsigned int bldc_hall_val; //ToDo Remove
+extern int pwm_duty_buf[0];
 
 unsigned char pdo_cmd[PDO_COMMAND_SIZE];
 unsigned char pdo_stat[PDO_STATUS_SIZE];

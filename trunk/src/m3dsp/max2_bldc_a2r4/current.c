@@ -23,6 +23,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "current.h"
 extern int test; //Test
 
+extern int fsa_state[1];
+
 extern unsigned int actual_pwm;	//pwm.c
 
 //MAX2 version reminder
@@ -176,6 +178,9 @@ void step_current()
 		  	int x =(int)get_avg_adc(ADC_CURRENT_B) - (int)i_zero_b;
 		  	//x = CLAMP(x,0,5000) * 7;
 			i_mA = x * 7; //correct_mA(actual_pwm, PWM_MAX_DUTY, x);
+			
+			if(fsa_state[0] == 0 || fsa_state[0] == 5)
+				i_mA = 0;
 		#endif
 
 		//Now compute the momentary RMS value

@@ -19,7 +19,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef USE_CONTROL
 
-
 #include "setup.h"
 #include "control.h"
 
@@ -186,7 +185,7 @@ void step_control()
 			fsa_state[chid]=CTRL_OFF;
 		#endif
 	
-		int mode = ec_cmd.command[chid].mode;
+		int mode = (ec_cmd.command[chid].mode & 0x00FF);	//This mask is needed when M3 is using the watchdog
 		int des = ec_cmd.command[chid].t_desire;
 	
 		switch (fsa_state[chid])
@@ -257,8 +256,11 @@ void step_control()
 					fsa_state[chid] = CTRL_OFF;
 					break;
 				}
+				/* Disabled for now, we send 0 PWM
 				ramp_pid_gains_up(chid,RAMP_UPDATE_RATE);
 				step_current_pid(chid,des);
+				*/
+				step_current_pid(chid,0);	//Remove when you enable current control
 				break;
 				
 			default:

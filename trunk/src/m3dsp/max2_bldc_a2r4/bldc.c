@@ -27,7 +27,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "dio.h"
 #include "pwm.h"
 
-unsigned int bldc_fwd;
+volatile unsigned int bldc_fwd;
 unsigned int bldc_hall_val;
 
 
@@ -68,6 +68,7 @@ Code: 6 : Q5=On, Q2=PWM  =	0000 0001 0010 0000 = 0x0120
 */
 
 //Pwm low leg
+
 #ifdef PWM_4Q
 unsigned int StateTableFwd[] = {0x0000, 0x3002, 0x0308, 0x3008,
 									0x0C20, 0x0C02, 0x0320, 0x0000};
@@ -82,15 +83,23 @@ unsigned int StateTableRev[] = {0x0000, 0x0120, 0x0402, 0x0420,
 								0x1008, 0x0108, 0x1002, 0x0000};
 #endif
 
+/*
+//ARM-H Commutation table:
+unsigned int StateTableFwd[] = {0x0000, 0x2001, 0x0204, 0x2004,
+									0x0810, 0x0801, 0x0210, 0x0000};
+unsigned int StateTableRev[] = {0x0000, 0x0210, 0x0801, 0x0810,
+								0x2004, 0x0204, 0x2001, 0x0000};
+*/
+
 void set_bldc_dir(unsigned int fwd)
 {
 	bldc_fwd=fwd;
 	bldc_hall_val = BLDC_HALL_STATE; 
 	ec_debug[0]=bldc_hall_val;
 	if (bldc_fwd)
-		OVDCON = StateTableFwd[bldc_hall_val];
+		P1OVDCON = StateTableFwd[bldc_hall_val];
 	else
-		OVDCON = StateTableRev[bldc_hall_val];
+		P1OVDCON = StateTableRev[bldc_hall_val];
 }
 
 void __attribute__((__interrupt__, no_auto_psv)) _CNInterrupt(void)
