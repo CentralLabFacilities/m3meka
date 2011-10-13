@@ -72,9 +72,27 @@ void set_pwm(int chid, int val)
 	actual_pwm = val;
 	#endif
 	
-	//ADC trigger at the middle of a pulse
-	P1SECMPbits.SEVTCMP = val >> 2; //MAX(val-10,10);	//WAS
+	//ADC trigger at the middle of a PWM pulse
+	P1SECMPbits.SEVTCMP = val >> 2;
 
+	#ifdef USE_BLDC
+	#if defined PWM_4Q 
+		pwm_duty_buf[chid]=invert_and_clamp_pwm(chid,val); //Invert as switching on low-leg
+		P1DC1=pwm_duty_buf[chid];
+		P1DC2=pwm_duty_buf[chid];
+		P1DC3=pwm_duty_buf[chid];
+	#endif
+	#if defined PWM_2Q
+		pwm_duty_buf[chid]=clamp_pwm(chid,val); //Invert as switching on low-leg
+		P1DC1=pwm_duty_buf[chid];
+		P1DC2=pwm_duty_buf[chid];
+		P1DC3=pwm_duty_buf[chid];
+	#endif
+
+
+		if (sign<=0) set_bldc_dir(0); else set_bldc_dir(1);
+
+	#else	//BLDC or not
 	#ifdef PWM_4Q
 	/*
 	X X POVD3H POVD3L   POVD2H POVD2L POVD1H POVD1L   X X POUT3H POUT3L   POUT2H POUT2L POUT1H POUT1L 
@@ -97,6 +115,7 @@ void set_pwm(int chid, int val)
 			P1DC2 = pwm_duty_buf[0];
 	}
 	#endif//4Q
+	#endif //#ifdef USE_BLDC
 }
 
 void setup_pwm(void) {
@@ -159,8 +178,25 @@ void setup_pwm(void) {
 	PDC1 = 0;
 	PDC2 = 0;
 
+	#ifdef USE_BLDC
+
+	#ifdef PWM_4Q
+	PWMCON1bits.PMOD3=0;	//PWM1H3,PWM1L3 is complimentary pair
+	PWMCON1bits.PEN3H = 1;	//Enable PWM1H3
+	PWMCON1bits.PEN3L = 1;	//Enable PWM1L3
+	#endif
+	#ifdef PWM_2Q
+	PWMCON1bits.PMOD3=1;	//PWM1H3,PWM1L3 is independent pair
+	PWMCON1bits.PEN3H = 1;	//Enable PWM1H3
+	PWMCON1bits.PEN3L = 1;	//Enable PWM1L3
+	#endif
+	DTCON2bits.DTS3A = 0;	//Deadtime for PWM1H3/PWM1L3 going active from Unit A
+	DTCON2bits.DTS3I = 1;	//Deadtime for PWM1H3/PWM1L3 going inactive from Unit B
+	
+	#else
 	DTCON2bits.DTS3A = 0;		//Deadtime for PWM1H3/PWM1L3 going active from Unit A
 	DTCON2bits.DTS3I = 1;		//Deadtime for PWM1H3/PWM1L3 going inactive from Unit B
+	#endif	//#ifdef USE_BLDC
 	PDC3 = 0;
 	//OVDCON=0;					//Allow control PWM1H/L1-3 using OVD. Set in bldc.c instead...
 	PWMCON2bits.OSYNC=0;		//OVDCON overrides are on next Tcy boundary
@@ -178,11 +214,11 @@ void setup_pwm(void) {
 }
 #endif 
 
-/*
+
 //PWM1 Interrupt - Trig on Match
 void __attribute__ ((interrupt, no_auto_psv)) _MPWM1Interrupt(void)
 {
-	//_PWM1IF = 0;	//Clear flag
+	_PWM1IF = 0;	//Clear flag
 	//Interrupt disabled, should never be called
 }
-*/
+

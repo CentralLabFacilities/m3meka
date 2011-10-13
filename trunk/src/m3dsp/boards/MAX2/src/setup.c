@@ -43,6 +43,10 @@ void setup_interrupt_priorities(void)
 	_AD1IP = 7;		//ADC conversion done 	
 	_T1IF = 0;
 	_T1IP = 3;		//Timer1 ToDo Remove?
+	
+	#ifdef USE_BLDC
+	_CNIP = 7; //Change notification for Hall 1-3
+	#endif	//#ifdef USE_BLDC
 }
 
 void setup_oscillator(void)
