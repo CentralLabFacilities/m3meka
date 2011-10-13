@@ -166,6 +166,10 @@ void setup_ports(void)
 	TRISBbits.TRISB13=0;	//RB13	OUTPUT	PIN11	RP13_PWM	(Pwm)
 	TRISBbits.TRISB14=0;	//RB14	OUTPUT	PIN14	RP14_PWM	(Pwm)
 	TRISBbits.TRISB15=0;	//RB15	OUTPUT	PIN15	RP15_PWM	(Pwm)
+	
+	#if defined MAX2_BLDC_0_3_T2R2
+	TRISCbits.TRISC0 = 1;	//RC0	INPUT	PIN25	AN6	 //NO SEAS encoder but TMP on AN6 (ToDo Note! for the moment it's not an analog pin!)
+	#endif
 }
 
 //Note: If using bootloader, only the first call (Bootloader) works

@@ -29,8 +29,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 
 int adc_idx;
+int adc_idx_fast;
+
 unsigned int adc_raw[ADC_NUM_CH];
 unsigned int volatile adc_buffer[ADC_NUM_CH][ADC_NUM_SMOOTH];
+unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
 int irq_cnt; 
 unsigned int wd_cnt = 0, last_status = 0, watchdog_expired;	//Watchdog
 
@@ -41,11 +44,24 @@ unsigned int get_avg_adc(int ch)
 	v=0;
 	for (i=0;i<ADC_NUM_SMOOTH;i++)
 		v=v+adc_buffer[ch][i];
+		
 	return (unsigned int)(v>>ADC_SHIFT_SMOOTH);
 }
 
-void setup_adc(void) {
+unsigned int get_avg_adc_torque()
+{
+	int i;
+	long v=0;
+	for (i=0;i<ADC_NUM_SMOOTH_FAST;i++)
+		v=v+adc_buffer_fast[i];
+		
+	return (unsigned int)(v>>ADC_SHIFT_SMOOTH_FAST);
+}
+
+void setup_adc(void) 
+{
 	adc_idx=0;
+	adc_idx_fast=0;
 
 	//Setup for current sensing
 	// System clock divider TAD=(ADCS+1)*TCY==50ns (As fast as works...)
@@ -53,7 +69,7 @@ void setup_adc(void) {
 
 	AD1CON1bits.ADON = 0;			//Turn off ADC
 
-	AD1CON3bits.SAMC = 5; 				
+	AD1CON3bits.SAMC = 5; 			// Change to 10?	
 	AD1CON3bits.ADCS = 1;						
 	AD1CON2bits.VCFG = 0;           // Vref AVdd/AVss
 	AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
@@ -80,6 +96,7 @@ void setup_adc(void) {
 	AD1PCFGLbits.PCFG7 = 1;
 	AD1PCFGLbits.PCFG8 = 1;
 	AD1CON1bits.FORM = 0;			// Select results format Integer Output Format (0B 0000 dddd dddd dddd )
+	
 	AD1CON1bits.ADON = 1;			// Turn on ADC
 	_AD1IF = 0;						// Enable interrupt
 	_AD1IE = 1;
@@ -106,11 +123,24 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 		adc_raw[2]=ADC1BUF2;
 		adc_raw[3]=ADC1BUF3;
 	}
+	
+	#if defined MAX2_BDC_0_3_A2R2 || defined MAX2_BLDC_0_3_A2R2
 	adc_buffer[ADC_MOTOR_TEMP][adc_idx]=adc_raw[ADC_MOTOR_TEMP];
 	adc_buffer[ADC_AMP_TEMP][adc_idx]=adc_raw[ADC_AMP_TEMP];
 	adc_buffer[ADC_CURRENT_A][adc_idx]=adc_raw[ADC_CURRENT_A];
 	adc_buffer[ADC_CURRENT_B][adc_idx]=adc_raw[ADC_CURRENT_B];
 	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
+	#endif //#if defined MAX2_BDC_0_3_A2R2 || defined MAX2_BLDC_0_3_A2R2
+	
+	#if defined M3_MAX2_BLDC_0_3_T2R2 || defined M3_MAX2_BDC_0_3_T2R2 
+	adc_buffer[ADC_EXT][adc_idx]=adc_raw[ADC_EXT];
+	adc_buffer[ADC_AMP_TEMP][adc_idx]=adc_raw[ADC_AMP_TEMP];
+	adc_buffer[ADC_CURRENT_A][adc_idx]=adc_raw[ADC_CURRENT_A];
+	adc_buffer[ADC_CURRENT_B][adc_idx]=adc_raw[ADC_CURRENT_B];
+	adc_buffer_fast[adc_idx_fast]=adc_raw[ADC_EXT];
+	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
+	adc_idx_fast=INC_MOD(adc_idx_fast,ADC_NUM_SMOOTH_FAST);
+	#endif	//#if defined M3_MAX2_BLDC_0_3_T2R2 || defined M3_MAX2_BDC_0_3_T2R2 
 	
 	//Timed actions - 2kHz
 	//Originaly in timer3 ISR

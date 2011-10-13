@@ -283,6 +283,14 @@ void step_torque_pid(int chid,int des)
 	else
 		s=vertx_pos(VERTX_CH_SEAS);
 	#endif
+	
+	#if defined MAX2_BDC_0_3_T2R2 || defined MAX2_BLDC_0_3_T2R2
+	if (d->config&M3ACT_CONFIG_TORQUE_SMOOTH)
+		s=get_avg_adc_torque();
+	else
+		s=adc_raw[ADC_EXT];
+	#endif
+
 
 	t_error = (ddes-s);
 	

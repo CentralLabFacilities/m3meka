@@ -52,6 +52,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "current.h"
 #include "timer3.h"
 #include "bldc.h"
+#include "brake.h"
 #include "warning.h"
 
 //#define EC_USE_WATCHDOG

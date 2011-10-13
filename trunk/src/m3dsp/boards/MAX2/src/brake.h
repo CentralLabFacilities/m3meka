@@ -17,27 +17,27 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __ADC_H__
-#define __ADC_H__ 
-#include "setup.h"
+#ifndef __BRAKE_H__
+#define __BRAKE_H__ 
 
-#ifdef USE_ADC
+#ifdef USE_BRAKE
 
-#define ADC_NUM_SMOOTH	32 		//Must be even
-#define ADC_SHIFT_SMOOTH 5 		//2^ADC_SHIFT_SMOOTH
-#define ADC_NUM_SMOOTH_FAST	16 	//Must be even
-#define ADC_SHIFT_SMOOTH_FAST 4 //2^ADC_SHIFT_SMOOTH_FAST
-#define ADC_NUM_CH 4 
-#define ADC_CURRENT_A 0
-#define ADC_CURRENT_B 1
-#define ADC_AMP_TEMP 2
-#define ADC_MOTOR_TEMP 3
-#define ADC_EXT 3			//SEAX2-1.2 is configured to take load-cell on the motor temp connector
+void setup_brake();
+//Off: brake is disabled and motor can turn
+//On: brake is enabled, motor is locked
+void step_brake(int off);
+void force_brake_on();
+void reset_force_brake_on();
 
-void setup_adc(void);
-unsigned int get_avg_adc(int idx);
-extern unsigned int adc_raw[];
-unsigned int get_avg_adc_torque();
+#if defined MAX2_BDC_0_3_T2R2
+#define SetBrakeOff 	LATCbits.LATC0 = 1; //RC0	OUTPUT	PIN25	Brake enable
+#define SetBrakeOn		LATCbits.LATC0 = 0;
+#endif
+
+#if defined MAX2_BDC_0_3_T2R3
+#define SetBrakeOff 	LATBbits.LATB1=1; //RB1	OUTPUT	PIN22	Brake enable
+#define SetBrakeOn		LATBbits.LATB1=0;
+#endif
 
 #endif
 #endif

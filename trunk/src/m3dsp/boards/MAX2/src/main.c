@@ -102,6 +102,11 @@ int main (void)
 	#ifdef USE_ENCODER_VERTX
 	setup_vertx();
 	#endif
+	
+	//Torso motor brake
+	#ifdef USE_BRAKE
+	setup_brake();
+	#endif
 
 	//EtherCAT Communication
 	#ifdef USE_ETHERCAT
