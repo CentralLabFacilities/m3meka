@@ -27,19 +27,6 @@ extern int fsa_state[1];
 
 extern unsigned int actual_pwm;	//pwm.c
 
-//MAX2 version reminder
-#ifndef USE_MAX2_0_2 
-#ifndef USE_MAX2_0_3
-#warning "Please specify your MAX2 version!"
-#endif
-#endif
-#ifdef USE_MAX2_0_2
-#warning "Compiled for MAX2 v0.2."
-#endif
-#ifdef USE_MAX2_0_3
-#warning "Compiled for MAX2 v0.3."
-#endif
-
 //Assuming step is called at 2kHz
 #define I_RMS_MOM_BUF_SZ 16
 #define I_RMS_MOM_BUF_SHIFT 4

@@ -51,6 +51,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "adc.h"
 #include "current.h"
 #include "timer3.h"
+#include "warning.h"
 
 //#define EC_USE_WATCHDOG
 
