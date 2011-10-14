@@ -261,18 +261,30 @@ void M3ActuatorEc::SetStatusFromPdo(unsigned char * data)
 void  M3ActuatorEc::StepStatus()
 {
   M3ComponentEc::StepStatus();
+  
   //if (IsPdoVersion(ACTX1_PDO_V3))
   //{
+    
     if (IsCurrentFaultCont())
-    {
-      SetStateError();
-      M3_ERR("Amp Continuous OverCurrent Fault (Last instaneous: %f (mA)) for  %s\n",status.current_ma(),GetName().c_str());
+    {      
+      if (!error_printed)
+      {
+	SetStateError();
+	M3_ERR("Amp Continuous OverCurrent Fault (Last instaneous: %d (mA)) for  %s\n",status.current_ma(),GetName().c_str());      
+	error_printed = true;
+      }
+      
     }
     if (IsCurrentFaultMom())
-    {
-      SetStateError();
-      M3_ERR("Amp Momentary OverCurrent Fault (Last instaneous: %f (mA)) for  %s\n",status.current_ma(),GetName().c_str());
+    {      
+      if (!error_printed)
+      {
+	SetStateError();
+	M3_ERR("Amp Momentary OverCurrent Fault (Last instaneous: %d (mA)) for  %s\n",status.current_ma(),GetName().c_str());      
+	error_printed = true;
+      }
     }
+    
   //}
 }
 
@@ -498,6 +510,16 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	else
 		ax->mode=(int)command.mode();
 	
+	if (toggle == 0)
+	{
+	  toggle = 0x8000;
+	}
+	else if (toggle != 0)
+	{
+	  ax->mode = ax->mode | toggle;
+	  toggle = 0;
+	}
+	
 	if (IsPdoVersion(ACTX1_PDO_V2) || 
 	    IsPdoVersion(ACTX2_PDO_V2) || 
 	    IsPdoVersion(ACTX3_PDO_V2) || 
@@ -507,9 +529,9 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	if (IsPdoVersion(SEA_PDO_V0))
 		SetPdoV0FromPdoV1Command(data);
 	
-	if (tmp_cnt++%100==0)
-	M3_INFO("Pwm slew %f Pwr slew %f Mode %d des %d, t_desire %d\n",
-		  pwm_scale,pwr_scale,(int) command.mode(),(int)command.t_desire(), ax->t_desire);
+	//if (tmp_cnt++%100==0)
+	//M3_INFO("Pwm slew %f Pwr slew %f Mode %d des %d, t_desire %d\n",
+	//	  pwm_scale,pwr_scale,(int) command.mode(),(int)command.t_desire(), ax->t_desire);
 	
 }
 
