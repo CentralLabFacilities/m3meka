@@ -510,15 +510,20 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	else
 		ax->mode=(int)command.mode();
 	
-	if (toggle == 0)
+	
+	if (IsPdoVersion(ACTX1_PDO_V3))
 	{
-	  toggle = 0x8000;
+	  if (toggle == 0)
+	  {
+	    toggle = 0x8000;
+	  }
+	  else if (toggle != 0)
+	  {
+	    ax->mode = ax->mode | toggle;
+	    toggle = 0;
+	  }
 	}
-	else if (toggle != 0)
-	{
-	  ax->mode = ax->mode | toggle;
-	  toggle = 0;
-	}
+	
 	
 	if (IsPdoVersion(ACTX1_PDO_V2) || 
 	    IsPdoVersion(ACTX2_PDO_V2) || 
