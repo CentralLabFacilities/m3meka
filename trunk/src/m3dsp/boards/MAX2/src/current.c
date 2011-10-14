@@ -158,6 +158,9 @@ void step_current()
 		#ifdef USE_MAX2_0_2
 		  	int x =(int)get_avg_adc(ADC_CURRENT_A) - (int)i_zero_a;
 			i_mA = (x * ADC_CURRENT_MA_PER_TICK);
+			
+			if(fsa_state[0] == 0 || fsa_state[0] == 5)
+				i_mA = 0;
 		#endif
 		
 		//Shunt sensor, we use the absolute value
@@ -227,7 +230,7 @@ void step_current()
 void setup_current()
 {
   	i_mA=0;
-  	i_zero_a=1915;
+  	i_zero_a=0;
   	i_zero_b=0;
   	i_zero_cnt=250;
   	i_zero_sum_a=0;

@@ -1,25 +1,25 @@
-Microchip Technology Inc, vv3_30 (B) ?
+Microchip Technology Inc, vv3_30 (B) >
 
 Tool Name:
-  c:\program files (x86)\microchip\mplabc30\v3.30c\bin\bin\..\bin/pic30-coff-ld.exe
+  c:\program files\microchip\mplabc30\v3.30c\bin\bin\..\bin/pic30-coff-ld.exe
 
 Command:
   -p33FJ32MC204 \
   -ooutput\max2_bldc_0_3_t2r2.cof \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/.. \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib/PIC24E \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../support/PIC24E/gld \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib/PIC24F \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../support/PIC24F/gld \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib/PIC24H \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../support/PIC24H/gld \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib/dsPIC30F \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../support/dsPIC30F/gld \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib/dsPIC33E \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../support/dsPIC33E/gld \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib/dsPIC33F \
-  -Lc:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../support/dsPIC33F/gld \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/.. \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib/PIC24E \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../support/PIC24E/gld \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib/PIC24F \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../support/PIC24F/gld \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib/PIC24H \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../support/PIC24H/gld \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib/dsPIC30F \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../support/dsPIC30F/gld \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib/dsPIC33E \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../support/dsPIC33E/gld \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib/dsPIC33F \
+  -Lc:/program files/microchip/mplabc30/v3.30c/bin/bin/../../support/dsPIC33F/gld \
   temp\adc.o \
   temp\bldc.o \
   temp\brake.o \
@@ -48,13 +48,13 @@ Command:
 
 Archive member included because of file (symbol)
 
-c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
+c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
                               (_resetPRI)
-c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
-                              c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o) (_data_init_standard)
-c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libm-coff.a(udivsi3.o)
+c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
+                              c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o) (_data_init_standard)
+c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libm-coff.a(udivsi3.o)
                               temp\ethercat_slave_fsm.o (__udivsi3)
-c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libc-coff.a(memset.XXo)
+c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libc-coff.a(memset.XXo)
                               temp\control.o (memset)
 
 
@@ -547,21 +547,21 @@ LOAD temp\timer3.o
 
 .text             0x001800       0x3cfa
  *(.init)
- .init            0x001800         0x32 c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
+ .init            0x001800         0x32 c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
                   0x001800                  _resetPRI
                   0x001800                  _reset
                   0x001822                  _psv_init
- .init            0x001832         0x5e c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
+ .init            0x001832         0x5e c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
                   0x001832                  _data_init_standard
                   0x001832                  _data_init
  *(.handle)
  *(.libc)
  *(.libm)
- .libm            0x001890         0x20 c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libm-coff.a(udivsi3.o)
+ .libm            0x001890         0x20 c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libm-coff.a(udivsi3.o)
                   0x001890                  __udivsi3
  *(.libdsp)
  *(.lib*)
- .libc.memset     0x0018b0          0xe c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libc-coff.a(memset.XXo)
+ .libc.memset     0x0018b0          0xe c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libc-coff.a(memset.XXo)
                   0x0018b0                  memset
  *(.text)
  .text            0x0018be        0x14e temp\adc.o
@@ -1647,9 +1647,9 @@ __FUID3
                     0x0220                  _UART1 = 0x220
                     0x0001                  __MPLAB_BUILD = 0x1
 START GROUP
-LOAD c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a
-LOAD c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libm-coff.a
-LOAD c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libc-coff.a
+LOAD c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a
+LOAD c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libm-coff.a
+LOAD c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libc-coff.a
 END GROUP
 OUTPUT(output\max2_bldc_0_3_t2r2.cof coff-pic30)
 LOAD FGS
@@ -1691,13 +1691,13 @@ __c30_signature
  __c30_signature
                   0x00005a          0x6 temp\timer3.o
  __c30_signature
-                  0x000060          0x6 c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
+                  0x000060          0x6 c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(crt0_standard.o)
  __c30_signature
-                  0x000066          0x6 c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
+                  0x000066          0x6 c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libpic30-coff.a(data_init_standard.o)
  __c30_signature
-                  0x00006c          0x6 c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libm-coff.a(udivsi3.o)
+                  0x00006c          0x6 c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libm-coff.a(udivsi3.o)
  __c30_signature
-                  0x000072          0x6 c:/program files (x86)/microchip/mplabc30/v3.30c/bin/bin/../../lib\libc-coff.a(memset.XXo)
+                  0x000072          0x6 c:/program files/microchip/mplabc30/v3.30c/bin/bin/../../lib\libc-coff.a(memset.XXo)
 
 .nbss               0x0800        0x374
  .nbss              0x0800        0x132 temp\adc.o
