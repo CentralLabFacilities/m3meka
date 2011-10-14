@@ -113,8 +113,10 @@ void isr_update_input_pdo(void)
 	#endif
 	*/
 	
+	#if defined USE_ADC_SPI
 	#if defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
 	ec_stat.status[0].adc_torque=get_adc_spi(0); 
+	#endif
 	#endif
 	
 	#if defined MAX2_BDC_0_3_T2R2 || defined MAX2_BLDC_0_3_T2R2

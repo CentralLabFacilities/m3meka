@@ -175,6 +175,10 @@ void setup_ports(void)
 	TRISCbits.TRISC0=0;		//RC0	OUTPUT	PIN25	//Brake enable
 	#endif
 	
+	#if defined MAX2_BDC_0_2_T2R3
+	TRISBbits.TRISB1=0;		//RB1	OUTPUT	PIN22	//Brake enable
+	#endif
+	
 	#if defined MAX2_BLDC_0_2_T2R3  || defined MAX2_BDC_0_2_T2R3 //SPI ADC
 	TRISBbits.TRISB6=1;		//RB6	INPUT	PIN42	SPI_DI_ADC
 	ODCBbits.ODCB6=0;		//non open collector

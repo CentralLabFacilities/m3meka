@@ -297,11 +297,13 @@ void step_torque_pid(int chid,int des)
 		s=adc_raw[ADC_EXT];
 	#endif
 	
+	#if defined USE_ADC_SPI
 	#if defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
 	if (d->config&M3ACT_CONFIG_TORQUE_SMOOTH)
 		s=get_avg_adc_spi(0);
 	else
 		s=get_adc_spi(0);
+	#endif
 	#endif
 
 

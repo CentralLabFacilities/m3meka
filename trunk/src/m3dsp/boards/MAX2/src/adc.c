@@ -83,8 +83,10 @@ void setup_adc(void)
 	AD1CON2bits.SMPI = 3;			// Select 4 conversions between interrupts 
 	AD1CSSLbits.CSS0 = 1;
 	AD1CSSLbits.CSS1 = 1;				
-	AD1CSSLbits.CSS2 = 1;		
+	AD1CSSLbits.CSS2 = 1;
+	#if !(defined MAX2_BDC_0_2_T2R3)		
 	AD1CSSLbits.CSS3 = 1;
+	#endif
 	ADPCFG = 0; 
 	AD1PCFGLbits.PCFG0 = 0;
 	AD1PCFGLbits.PCFG1 = 0;
