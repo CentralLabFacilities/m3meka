@@ -89,10 +89,36 @@ void isr_update_inputs(void)
 void isr_update_input_pdo(void)
 {
 	#if defined USE_ENCODER_VERTX 
+	
 	ec_stat.status[0].qei_rollover=vertx_error(VERTX_CH_ENC);
-	ec_stat.status[0].qei_on=get_avg_vertx(VERTX_CH_ENC);//vertx_pos(VERTX_CH_ENC);
-	ec_stat.status[0].adc_torque=get_avg_vertx(VERTX_CH_SEAS);//vertx_pos(VERTX_CH_SEAS);
+	ec_stat.status[0].qei_on=get_avg_vertx(VERTX_CH_ENC);
+	
+	#if !(defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3 || defined MAX2_BDC_0_3_T2R2 \
+	|| defined MAX2_BLDC_0_3_T2R2)
+	ec_stat.status[0].adc_torque=get_avg_vertx(VERTX_CH_SEAS);
 	ec_stat.status[0].qei_period=vertx_error(VERTX_CH_SEAS);
+	#endif
+	
+	#endif
+	
+	//Not included in the actual PDO v3
+	/*
+	#if defined MAX2_BLDC_0_3_A2R2 || defined MAX2_BDC_0_3_A2R2 || defined MAX2_BDC_0_2_A2R3 \
+	|| defined MAX2_BLDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3 
+	ec_stat.status[0].adc_ext_a=0;
+	ec_stat.status[0].adc_ext_b=0;
+	#else	
+	ec_stat.status[0].adc_ext_a=get_avg_adc(ADC_EXT);
+	ec_stat.status[0].adc_ext_b=0;
+	#endif
+	*/
+	
+	#if defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	ec_stat.status[0].adc_torque=get_adc_spi(0); 
+	#endif
+	
+	#if defined MAX2_BDC_0_3_T2R2 || defined MAX2_BLDC_0_3_T2R2
+	ec_stat.status[0].adc_torque=get_avg_adc_torque();
 	#endif
 
 	#ifdef USE_ADC

@@ -39,9 +39,23 @@ void step_vertx();
 #define VERTX_CH_A 0
 #define VERTX_CH_B 1
 
+#if defined MAX2_BLDC_0_3_T2R2 || defined  MAX2_BDC_0_3_T2R2
+
+#define VERTX_CH_ENC VERTX_CH_B
+#define VERTX_CH_B_ONLY
+
+#elif defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+
+#define VERTX_CH_ENC VERTX_CH_A
+#define VERTX_CH_A_ONLY
+
+#else
+
 #define VERTX_CH_SEAS VERTX_CH_A
 #define VERTX_CH_ENC VERTX_CH_B
 #define VERTX_BOTH
+
+#endif
 
 #define	BB_SPI_SS_A					LATCbits.LATC2		//RC2	OUTPUT	PIN27	SPI_SS_SEAS/
 #define	BB_SPI_SS_B					LATBbits.LATB3		//RB3	OUTPUT	PIN24	SPI_SS_ENC/

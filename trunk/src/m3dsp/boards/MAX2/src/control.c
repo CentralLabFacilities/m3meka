@@ -22,6 +22,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "setup.h"
 #include "control.h"
 #include "brake.h"
+#include "adc_spi.h"
 
 int t_error;
 volatile long result;
@@ -282,7 +283,7 @@ void step_torque_pid(int chid,int des)
 	int ddes = CLAMP(des,d->t_min,d->t_max);
 	int s=0;
 
-	#ifdef USE_ENCODER_VERTX
+	#if defined USE_ENCODER_VERTX && defined VERTX_CH_SEAS
 	if (d->config&M3ACT_CONFIG_TORQUE_SMOOTH)
 		s=get_avg_vertx(VERTX_CH_SEAS);
 	else
@@ -294,6 +295,13 @@ void step_torque_pid(int chid,int des)
 		s=get_avg_adc_torque();
 	else
 		s=adc_raw[ADC_EXT];
+	#endif
+	
+	#if defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	if (d->config&M3ACT_CONFIG_TORQUE_SMOOTH)
+		s=get_avg_adc_spi(0);
+	else
+		s=get_adc_spi(0);
 	#endif
 
 
@@ -323,8 +331,13 @@ void step_torque_pid(int chid,int des)
 	ff_term[chid]=0;
 	//Newer boards get FeedForward term from host
 	if (d->config&M3ACT_CONFIG_TORQUE_FF)
-	  ff_term[chid] = g->k_ff;
-
+		ff_term[chid] = g->k_ff;
+	#if !(defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3 || defined MAX2_BDC_0_2_A2R3 \
+	|| defined MAX2_BLDC_0_2_A2R3)
+	else
+		ff_term[chid] = g->k_ff*((ddes-g->k_ff_zero)>>g->k_ff_shift);
+	#endif
+	
 	result=p_term[chid]+i_term[chid]+d_term[chid]+ff_term[chid];
 	result=CLAMP(result,-PWM_MAX_DUTY,PWM_MAX_DUTY);
 	step_amp_out(chid,(int)result);

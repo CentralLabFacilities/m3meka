@@ -124,7 +124,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 		adc_raw[3]=ADC1BUF3;
 	}
 	
-	#if defined MAX2_BDC_0_3_A2R2 || defined MAX2_BLDC_0_3_A2R2
+	#if defined MAX2_BDC_0_3_A2R2 || defined MAX2_BLDC_0_3_A2R2 || defined MAX2_BDC_0_2_A2R3 \
+	|| defined  MAX2_BLDC_0_2_A2R3
 	adc_buffer[ADC_MOTOR_TEMP][adc_idx]=adc_raw[ADC_MOTOR_TEMP];
 	adc_buffer[ADC_AMP_TEMP][adc_idx]=adc_raw[ADC_AMP_TEMP];
 	adc_buffer[ADC_CURRENT_A][adc_idx]=adc_raw[ADC_CURRENT_A];
@@ -140,7 +141,26 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	adc_buffer_fast[adc_idx_fast]=adc_raw[ADC_EXT];
 	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
 	adc_idx_fast=INC_MOD(adc_idx_fast,ADC_NUM_SMOOTH_FAST);
-	#endif	//#if defined M3_MAX2_BLDC_0_3_T2R2 || defined M3_MAX2_BDC_0_3_T2R2 
+	#endif	//#if defined MAX2_BLDC_0_3_T2R2 || defined MAX2_BDC_0_3_T2R2
+	
+	#if defined MAX2_BLDC_0_2_T2R3
+	adc_buffer[ADC_MOTOR_TEMP][adc_idx]=adc_raw[ADC_MOTOR_TEMP];
+	adc_buffer[ADC_AMP_TEMP][adc_idx]=adc_raw[ADC_AMP_TEMP];
+	adc_buffer[ADC_CURRENT_A][adc_idx]=adc_raw[ADC_CURRENT_A];
+	adc_buffer[ADC_CURRENT_B][adc_idx]=adc_raw[ADC_CURRENT_B];
+	//adc_buffer_fast[adc_idx_fast]=adc_raw[ADC_EXT];
+	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
+	adc_idx_fast=INC_MOD(adc_idx_fast,ADC_NUM_SMOOTH_FAST);
+	#endif	
+	
+	#if defined MAX2_BDC_0_2_T2R3
+	adc_buffer[ADC_AMP_TEMP][adc_idx]=adc_raw[ADC_AMP_TEMP];
+	adc_buffer[ADC_CURRENT_A][adc_idx]=adc_raw[ADC_CURRENT_A];
+	adc_buffer[ADC_CURRENT_B][adc_idx]=adc_raw[ADC_CURRENT_B];
+	//adc_buffer_fast[adc_idx_fast]=adc_raw[ADC_EXT];
+	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
+	adc_idx_fast=INC_MOD(adc_idx_fast,ADC_NUM_SMOOTH_FAST);
+	#endif
 	
 	//Timed actions - 2kHz
 	//Originaly in timer3 ISR

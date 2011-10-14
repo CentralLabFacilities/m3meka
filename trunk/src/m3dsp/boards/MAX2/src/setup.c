@@ -174,6 +174,13 @@ void setup_ports(void)
 	#if defined MAX2_BDC_0_3_T2R2 
 	TRISCbits.TRISC0=0;		//RC0	OUTPUT	PIN25	//Brake enable
 	#endif
+	
+	#if defined MAX2_BLDC_0_2_T2R3  || defined MAX2_BDC_0_2_T2R3 //SPI ADC
+	TRISBbits.TRISB6=1;		//RB6	INPUT	PIN42	SPI_DI_ADC
+	ODCBbits.ODCB6=0;		//non open collector
+	TRISCbits.TRISC1=0;		//RC1	OUTPUT	PIN26	SPI_CLK_ADC
+	TRISBbits.TRISB3=0;		//RB3	OUTPUT	PIN24	SPI_SS_ADC/
+	#endif
 }
 
 //Note: If using bootloader, only the first call (Bootloader) works

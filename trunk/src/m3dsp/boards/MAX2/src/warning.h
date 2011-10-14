@@ -10,6 +10,14 @@
 	#warning "Project: MAX2_BDC_0_3_T2R2"
 #elif defined MAX2_BLDC_0_3_T2R2
 	#warning "Project: MAX2_BLDC_0_3_T2R2"
+#elif defined MAX2_BDC_0_2_A2R3
+	#warning "Project: MAX2_BDC_0_2_A2R3"
+#elif defined MAX2_BLDC_0_2_A2R3
+	#warning "Project: MAX2_BLDC_0_2_A2R3"
+#elif defined MAX2_BDC_0_2_T2R3
+	#warning "Project: MAX2_BDC_0_2_T2R3"
+#elif defined MAX2_BLDC_0_2_T2R3
+	#warning "Project: MAX2_BLDC_0_2_T2R3"
 #else
 	#warning "How do you expect it to work if you don't specify what robot?"
 #endif

@@ -88,6 +88,11 @@ int main (void)
 	setup_adc();
 	#endif
 	
+	//Torso external ADC
+	#ifdef USE_ADC_SPI
+	setup_adc_spi();
+	#endif
+	
 	//Current measurment, control and limitation
 	#ifdef USE_CURRENT
 	setup_current();
