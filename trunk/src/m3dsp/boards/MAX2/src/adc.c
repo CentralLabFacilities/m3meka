@@ -132,7 +132,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
 	#endif //#if defined MAX2_BDC_0_3_A2R2 || defined MAX2_BLDC_0_3_A2R2
 	
-	#if defined M3_MAX2_BLDC_0_3_T2R2 || defined M3_MAX2_BDC_0_3_T2R2 
+	#if defined MAX2_BLDC_0_3_T2R2 || defined MAX2_BDC_0_3_T2R2 
 	adc_buffer[ADC_EXT][adc_idx]=adc_raw[ADC_EXT];
 	adc_buffer[ADC_AMP_TEMP][adc_idx]=adc_raw[ADC_AMP_TEMP];
 	adc_buffer[ADC_CURRENT_A][adc_idx]=adc_raw[ADC_CURRENT_A];
