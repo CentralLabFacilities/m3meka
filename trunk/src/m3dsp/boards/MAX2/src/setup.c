@@ -170,6 +170,10 @@ void setup_ports(void)
 	#if defined MAX2_BLDC_0_3_T2R2
 	TRISCbits.TRISC0 = 1;	//RC0	INPUT	PIN25	AN6	 //NO SEAS encoder but TMP on AN6 (ToDo Note! for the moment it's not an analog pin!)
 	#endif
+	
+	#if defined MAX2_BDC_0_3_T2R2 
+	TRISCbits.TRISC0=0;		//RC0	OUTPUT	PIN25	//Brake enable
+	#endif
 }
 
 //Note: If using bootloader, only the first call (Bootloader) works

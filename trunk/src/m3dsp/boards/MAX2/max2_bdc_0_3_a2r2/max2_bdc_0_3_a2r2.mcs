@@ -11,7 +11,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File001]
@@ -24,7 +24,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File002]
@@ -37,7 +37,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File003]
@@ -50,7 +50,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File004]
@@ -63,7 +63,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File005]
@@ -76,7 +76,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File006]
@@ -89,7 +89,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File007]
@@ -102,7 +102,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File008]
@@ -115,7 +115,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File009]
@@ -128,7 +128,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File010]
@@ -141,7 +141,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File011]
@@ -154,7 +154,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File012]
@@ -167,7 +167,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File013]
@@ -180,7 +180,7 @@ LanguageToolLocation=C:\Program Files (x86)\Microchip\mplabc30\v3.30c\bin\pic30-
 PPAD=$(BINDIR)|output||$(TMPDIR)|temp||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|..\src\adc.c|..\src\control.c|..\src\current.c|..\src\dio.c|..\src\encoder_vertx.c|..\src\ethercat.c|..\src\ethercat_appl.c|..\src\ethercat_hw.c|..\src\ethercat_slave_fsm.c|..\src\main.c|..\src\pwm.c|..\src\setup.c|..\src\timer1.c|..\src\timer3.c||<obj>||<lib>||<lkr>|..\misc\p33FJ32MC204_APP.gld||
 SuiteArgsString=
-ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_CURRENT -DUSE_MAX2_0_3 -DUSE_CONTROL -DUSE_ENCODER_VERTX -DUSE_WATCHDOG -DMAX2_BDC_0_3_A2R2 -O3
+ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC -DUSE_PWM -DUSE_CONTROL -DUSE_TIMESTAMP_DC -DUSE_ENCODER_VERTX -DUSE_CURRENT -DUSE_MAX2_0_3 -DMAX2_BDC_0_3_A2R2 -O3
 TraceCmdString=
 DebugOptions=-D__DEBUG
 [File014]

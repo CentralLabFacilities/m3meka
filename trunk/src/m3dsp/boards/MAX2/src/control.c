@@ -21,6 +21,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "setup.h"
 #include "control.h"
+#include "brake.h"
 
 int t_error;
 volatile long result;
@@ -187,6 +188,10 @@ void step_control()
 	
 		int mode = (ec_cmd.command[chid].mode & 0x00FF);	//This mask is needed when M3 is using the watchdog
 		int des = ec_cmd.command[chid].t_desire;
+		
+		#ifdef USE_BRAKE
+		step_brake(ec_cmd.command[chid].config&M3ACT_CONFIG_BRAKE_OFF);
+		#endif
 	
 		switch (fsa_state[chid])
 		{
