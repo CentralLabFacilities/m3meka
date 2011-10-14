@@ -189,6 +189,11 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 		step_control();					//(will probably increase in PID mode...)
 		#endif
 		
+		//Torso external ADC
+		#ifdef USE_ADC_SPI
+		step_adc_spi();
+		#endif
+		
 		irq_cnt++;
 		
 		
