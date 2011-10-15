@@ -52,6 +52,7 @@ void setup_adc_spi(void)
 	}
 }
 
+
 unsigned int get_adc_spi(int chid)
 {
 	return adc_spi_val[chid];
@@ -61,7 +62,8 @@ unsigned int get_adc_spi(int chid)
 void step_adc_spi()
 {
 	//Handle bit-bang SPI
-	unsigned int x;
+	unsigned int x = 0;
+
 
 	BB_ASPI_SS_CLR
 	BB_ASPI_CLK_CLR
@@ -110,6 +112,7 @@ void step_adc_spi()
 	adc_spi_val[0]=x; //
 	adc_spi_buffer[0][adc_spi_idx]=x;//vertx_val[0];
 	adc_spi_idx=INC_MOD(adc_spi_idx,ADC_SPI_NUM_SMOOTH);
-
 }
+
+
 #endif

@@ -30,6 +30,7 @@ void step_adc_spi();
 
 
 unsigned int get_avg_adc_spi(int chid);
+void setup_adc_spi(void);
 unsigned int get_adc_spi(int chid);
 
 #if defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
@@ -64,5 +65,6 @@ unsigned int get_adc_spi(int chid);
 							DELAY_500NS\
 							}
 #endif
+
 #endif
 #endif

@@ -352,6 +352,7 @@ void step_torque_pid(int chid,int des)
 void step_current_pid(int chid, int des)
 {
 	#ifdef USE_CURRENT
+/* Not used for the moment
 	
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
 	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
@@ -392,6 +393,7 @@ void step_current_pid(int chid, int des)
 	result=CLAMP(result,0,PWM_MAX_DUTY);	//Modified to 0 - Unipolar
 	step_amp_out(chid,(int)result*sign);	
 	
+*/
 	#endif
 }
 

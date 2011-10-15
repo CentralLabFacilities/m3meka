@@ -58,10 +58,10 @@ void isr_update_outputs(void)
 	if ( EscAlEvent.Byte[1] & (PROCESS_OUTPUT_EVENT>>8) )	/* check if the watchdog should be reset */
 	{
 		bEcatFirstOutputsReceived = 1;						/* reset watchdog */
-#ifdef EC_USE_WATCHDOG
+		#ifdef EC_USE_WATCHDOG
 		ec_wd_timestamp = 0;//ECAT_TIMER_REG;
 		ec_wd=0;
-#endif
+		#endif
 		ISR_EscReadAccess( (unsigned char *) pdo_cmd, nEscAddrOutputData, nPdOutputSize );
 		memcpy((unsigned char *)&ec_cmd,pdo_cmd,sizeof(ec_cmd_t));
 	}
