@@ -73,6 +73,7 @@ libm3hardwareinclude_HEADERS = \
 	robot_monitor.h\
 	robot_monitor.pb.h\
 	async_io.h\
+	actuator_ec.proto\
 	async_io.pb.h
 	
 clean-local:
