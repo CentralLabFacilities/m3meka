@@ -61,7 +61,7 @@ bool M3Actuator::ReadConfig(const char * filename)
 		return false;
 	GetYamlDoc(filename, doc);
 	
-	if (IsVersion(ISS))
+	if (IsVersion(ISS)|| IsVersion(UTA))
 	{
 		ex_sense.ReadConfig(doc["calib"]["ext_temp"]);
 	}
@@ -71,7 +71,7 @@ bool M3Actuator::ReadConfig(const char * filename)
 		doc["param"]["max_current"] >> max_current;
 		ex_sense.ReadConfig(doc["calib"]["motor_temp"]); //motor_temp renamed ext_temp
 	}
-	if (IsVersion(DEFAULT) || IsVersion(ISS))
+	if (IsVersion(DEFAULT) || IsVersion(ISS) || IsVersion(UTA))
 	{
 		doc["ec_component"] >> ecc_name;
 		doc["ignore_bounds"] >> val;
@@ -114,11 +114,33 @@ bool M3Actuator::ReadConfig(const char * filename)
 			encoder_calib_req=0;
 		} 
 	}
-	if (IsVersion(ISS))
+	if (IsVersion(ISS)||IsVersion(UTA))
 	{
 		doc["param"]["max_amp_current"] >> mval;
 		param.set_max_amp_current(mval);
 		
+	}
+	if (IsVersion(UTA))
+	{
+		//Trajectory
+		doc["param"]["tq_traj"]["freq"] >> mval;
+		ParamTorqueTraj()->set_freq(mval);
+		doc["param"]["tq_traj"]["amp"] >> mval;
+		ParamTorqueTraj()->set_amp(mval);
+		doc["param"]["tq_traj"]["zero"] >> mval;
+		ParamTorqueTraj()->set_zero(mval);
+		
+		//Torque IFF Gains
+		doc["param"]["pid_tq_iff"]["k_p"] >> val;
+		ParamPidTorqueIFF()->set_k_p(val);
+		doc["param"]["pid_tq_iff"]["k_i"] >> val;
+		ParamPidTorqueIFF()->set_k_i(val);
+		doc["param"]["pid_tq_iff"]["k_d"] >> val;
+		ParamPidTorqueIFF()->set_k_d(val);
+		doc["param"]["pid_tq_iff"]["k_i_limit"] >> val;
+		ParamPidTorqueIFF()->set_k_i_limit(val);
+		doc["param"]["pid_tq_iff"]["k_i_range"] >> val;
+		ParamPidTorqueIFF()->set_k_i_range(val);
 	}
 	return true;
 }
@@ -137,12 +159,23 @@ bool M3Actuator::LinkDependentComponents()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+//When a QEI encoder is used, unpack the raw data into a tick count
+int M3Actuator::GetTicksQEI()
+{
+		  if (!GetActuatorEc()) return 0;
+		    unsigned int low=(unsigned short)((M3ActuatorEcStatus*)ecc->GetStatus())->qei_on();
+		    unsigned int high=((unsigned short)((M3ActuatorEcStatus*)ecc->GetStatus())->qei_rollover()<<16);
+		    int ticks = high|low;
+		    return ticks;
+		
+}
+
 void M3Actuator::StepStatus()
 {
 	if (IsStateError())
 		return;
 	 
-	if (IsVersion(DEFAULT) || IsVersion(ISS))
+	if (IsVersion(DEFAULT) || IsVersion(ISS) || IsVersion(UTA))
 	{
 		M3ActuatorEcStatus * ecs = (M3ActuatorEcStatus * )(ecc->GetStatus());
 		
@@ -183,8 +216,12 @@ void M3Actuator::StepStatus()
 		status.set_torque(tq_sense.GetTorque_mNm());
 		status.set_torquedot(torquedot_df.Step(status.torque()));
 		
+		//Peak To Peak measurement
+		tq_p2p.Step(GetTorque(),ParamTorqueTraj()->zero());
+		status.set_tq_p2p(tq_p2p.GetP2P());
+	
+
 		//Current and Temp
-		
 		ex_sense.Step(ecs->adc_ext_temp()); //was motor_temp
 		at_sense.Step(ecs->adc_amp_temp());
 		i_sense.Step(ecs->adc_current_a(),ecs->adc_current_b());
@@ -207,7 +244,6 @@ void M3Actuator::StepStatus()
 		    ecc->SetPwmMax(motor.GetSafePwmDuty());
 		}
 			
-		
 		//Update status data
 		status.set_flags(ecs->flags());
 		status.set_pwm_cmd(ecs->pwm_cmd());
@@ -234,7 +270,7 @@ void M3Actuator::StepOverloadDetect()
 			overload_cnt++;
 	}
 	
-	if (IsVersion(ISS))
+	if (IsVersion(ISS) || IsVersion(UTA))
 	{
 		if (!ignore_bounds&& motor.GetWindingTemp()>(motor.GetMaxWindingTemp()))
 			overload_cnt++;
@@ -258,7 +294,7 @@ void M3Actuator::StepOverloadDetect()
 			M3_ERR("Motor temp %f (C) | Threshold of %f (C) \n",GetMotorTemp(),max_motor_temp);
 			M3_ERR("Motor winding temp %f (C) | Threshold of %f \n",motor.GetWindingTemp(),motor.GetMaxWindingTemp());
 		}
-		if (IsVersion(ISS))
+		if (IsVersion(ISS) || IsVersion(UTA))
 		{
 			M3_ERR("Motor winding temp %f (C) | Threshold of %f (C)\n",motor.GetWindingTemp(),motor.GetMaxWindingTemp());
 			M3_ERR("Amplifier current %f |Threshold of %f (mA)\n",motor.GetCurrentContinuous(),param.max_amp_current());
@@ -266,6 +302,8 @@ void M3Actuator::StepOverloadDetect()
 		M3_ERR("------------------------------------------------------\n");
 	}
 }
+
+
 void M3Actuator::StepCommand()
 {
 	status.set_torque_error(0);
@@ -282,6 +320,42 @@ void M3Actuator::StepCommand()
 		return;
 	}
 	
+	//Inner control loop setpoints
+	mReal tq_desired=command.tq_desired();
+
+	if (IsVersion(UTA))
+	{
+	    //Trajectories
+	    mReal tj_dt=GetTimestamp()/1000000.0;//seconds
+	    mReal tj_tq=sin(2*M_PI*tj_dt*ParamTorqueTraj()->freq());
+	    
+	    switch(command.traj_mode())
+	    {
+	      case TRAJ_TORQUE_SQUARE:
+	      {
+
+		if (tj_tq>0)
+		  tq_desired=ParamTorqueTraj()->zero()+ParamTorqueTraj()->amp();
+		else
+		  tq_desired=ParamTorqueTraj()->zero()-ParamTorqueTraj()->amp();
+		break;
+	      }
+	      case TRAJ_TORQUE_SINE:
+	      {
+		tq_desired=ParamTorqueTraj()->zero()+ParamTorqueTraj()->amp()*tj_tq;
+		break;
+	      }
+	      case TRAJ_OFF:
+	      default:
+		break;
+	    };
+	}
+	
+	//Reset
+	status.set_torque_error(0);
+	status.set_i_cmd(0);
+	status.set_tq_cmd(0);
+
 	switch(command.ctrl_mode())
 	{
 		case ACTUATOR_MODE_OFF:
@@ -291,9 +365,14 @@ void M3Actuator::StepCommand()
 			ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
 			ec_command->set_t_desire(pwm_dither.Step(command.pwm_desired()));
 			break;
+		case ACTUATOR_MODE_CURRENT:
+			ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
+			ec_command->set_t_desire(command.i_desired());
+			status.set_i_cmd(command.i_desired());
+			break;
 		case ACTUATOR_MODE_TORQUE:		
 		{
-			mReal tq_mNm=command.tq_desired();
+			mReal tq_mNm=tq_desired;
 			if (tq_sense.IsFFCurrentCtrl())
 			{
 			  ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
@@ -313,16 +392,40 @@ void M3Actuator::StepCommand()
 			  ec_param->set_t_max(raw_t_max);
 			  ec_param->set_t_min(raw_t_min);			  
 			  tq_mNm=CLAMP(tq_mNm,param.min_tq(),param.max_tq()); //Clamped on DSP as well...
-			  status.set_torque_error(tq_mNm-status.torque());
+			  status.set_torque_error(tq_des_last-GetTorque());
+			  tq_des_last=tq_mNm;
 			  ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm));
 			  if (ecc->UseTorqueFF())
 			      ecc->SetTorqueFF(motor.mNmToPwm(tq_mNm));
-			      
-			  //if (tmp_cnt++%100==0)
-			  //	M3_INFO("tmax %d tmin %d des %d\n",(int)ec_param->t_max(),
-			  //		(int)ec_param->t_min(),
-			  //		 (int)ec_command->t_desire());
 			}
+			break;
+		}
+		case ACTUATOR_MODE_TORQUE_IFF:		
+		{
+		  if (IsVersion(UTA))
+		  {
+			mReal tq_mNm=CLAMP(tq_desired,param.min_tq(),param.max_tq()); 
+			mReal i_des_ff=ActuatorTorqueToMotorCurrent(tq_mNm);
+			mReal i_des_pid =pid_tq_iff.Step(GetTorque(),
+						GetTorqueDot(),
+						tq_mNm,
+						ParamPidTorqueIFF()->k_p(), 
+						ParamPidTorqueIFF()->k_i(),
+						ParamPidTorqueIFF()->k_d(), 
+						ParamPidTorqueIFF()->k_i_limit(),
+						ParamPidTorqueIFF()->k_i_range());
+			status.set_torque_error(tq_des_last-GetTorque());
+			tq_des_last=tq_mNm;
+			ec_command->set_t_desire((int)(i_des_pid+i_des_ff));
+			ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT); 
+			status.set_i_cmd(i_des_pid+i_des_ff);
+			status.set_tq_cmd(tq_mNm);
+		  }
+		  else
+		  {
+		    ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+		  }
+		
 			break;
 		}
 		default:

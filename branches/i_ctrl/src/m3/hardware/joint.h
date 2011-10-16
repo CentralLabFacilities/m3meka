@@ -87,7 +87,7 @@ class M3Joint: public m3rt::M3Component
 		int GetFlags(){return status.flags();}
 		int64_t GetTimestamp(){return status.base().timestamp();}
 		M3Joint * GetCoupledJoint(){return cpj;}
-		int GetTicks(){return act->GetTicks();}		
+		int GetTicksQEI(){return act->GetTicksQEI();}		
 		virtual bool IsMotorPowerOn(){return act->IsMotorPowerOn();}
 		virtual bool IsLimitSwitchPosOn() {return act->IsLimitSwitchPosOn();}
 		virtual bool IsLimitSwitchNegOn() {return act->IsLimitSwitchNegOn();}

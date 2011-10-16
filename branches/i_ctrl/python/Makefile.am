@@ -97,6 +97,7 @@ pkgpython_PYTHON = \
 
 dist_bin_SCRIPTS = \
 	scripts/dev/m3dev_actuator_ec_tuning.py\
+	scripts/dev/m3dev_actuator_tuning.py\
 	scripts/dev/m3dev_joint_tuning.py\
 	scripts/dev/m3dev_humanoid_tuning.py\
 	scripts/dev/m3dev_chain_tuning.py\

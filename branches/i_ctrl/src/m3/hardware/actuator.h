@@ -38,20 +38,28 @@ namespace m3
 class M3Actuator : public m3rt::M3Component
 {
 	public:
-		M3Actuator(): m3rt::M3Component(CALIB_PRIORITY),ecc(NULL),ignore_bounds(false),overload_cnt(0),old_ts(0),encoder_calib_req(1),old_ts_rtai(0),old_ticks(0),old_is_calibrated(false)
+		M3Actuator(): m3rt::M3Component(CALIB_PRIORITY),ecc(NULL),tq_des_last(0),ignore_bounds(false),overload_cnt(0),old_ts(0),encoder_calib_req(1),old_ts_rtai(0),old_ticks(0),old_is_calibrated(false)
 		{
 			RegisterVersion("default",DEFAULT);	//RBL
 			RegisterVersion("iss",ISS);		//ISS. Updated safety thresholds to use motor model.
+			RegisterVersion("uta",UTA);		//UTA. Updated to use current controllers and thermal models
 			
 		}
 		google::protobuf::Message * GetCommand(){return &command;}
 		google::protobuf::Message * GetStatus(){return &status;}
 		google::protobuf::Message * GetParam(){return &param;}
 	public:
+		//API
+		
+		//Setpoints
 		void SetDesiredPwm(int val){command.set_pwm_desired(val);}
 		void SetDesiredControlMode(ACTUATOR_MODE val){command.set_ctrl_mode(val);}
+		void SetDesiredTrajectoryMode(ACTUATOR_TRAJ_MODE val){command.set_traj_mode(val);}
 		void SetDesiredTorque(mReal val){ command.set_tq_desired(val);}
+		void SetDesiredCurrent(mReal val){ command.set_i_desired(val);}
 		void SetBrakeOff(bool off){command.set_brake_off(off);}
+		
+		//Status
 		mReal GetDesiredTorque(){return command.tq_desired();}
 		mReal GetMotorTemp(){return status.motor_temp();}
 		mReal GetAmpTemp(){return status.amp_temp();}
@@ -70,28 +78,35 @@ class M3Actuator : public m3rt::M3Component
 		mReal GetTorque(){return status.torque();}
 		mReal GetTorqueDot(){return status.torquedot();}
 		int GetPwmCmd(){return status.pwm_cmd();}
+		mReal GetCurrentCmd(){return status.i_cmd();}
+		mReal GetTorqueCmd(){return status.tq_cmd();}
 		int GetFlags(){return status.flags();}
-		virtual int GetTicks(){
-		  if (!GetActuatorEc()) return 0;
-		    unsigned int low=(unsigned short)((M3ActuatorEcStatus*)ecc->GetStatus())->qei_on();
-		    unsigned int high=((unsigned short)((M3ActuatorEcStatus*)ecc->GetStatus())->qei_rollover()<<16);
-		    int ticks = high|low;
-		    return ticks;
-		}
+		virtual bool IsMotorPowerOn()     {if (!GetActuatorEc()) return false; return ecc->IsMotorPowerOn();}
 		
+		
+		//Conversions
+		int mNmToTicks(mReal x){return tq_sense.mNmToTicks(x);}
+		mReal ActuatorTorqueToMotorCurrent(mReal mNm){return MotorTorqueToMotorCurrent(ActuatorTorqueToMotorTorque(mNm));}
+		mReal ActuatorTorqueToMotorTorque(mReal mNm){return mNm/motor.GetGearRatio();}
+		mReal MotorTorqueToMotorCurrent(mReal mNm){return 1000*mNm/motor.GetTorqueConstant();} //mNm/A;
+		
+		//Encoder and Limits
+		virtual int GetTicksQEI();
 		virtual void SetZeroEncoder(){if (GetActuatorEc()) ecc->SetZeroEncoder();}
 		virtual void ClrZeroEncoder(){if (GetActuatorEc()) ecc->ClrZeroEncoder();}
-		
 		virtual void SetLimitSwitchNegZeroEncoder(){if (GetActuatorEc()) ecc->SetLimitSwitchNegZeroEncoder();}
 		virtual void ClrLimitSwitchNegZeroEncoder(){if (GetActuatorEc()) ecc->ClrLimitSwitchNegZeroEncoder();}
-		virtual bool IsMotorPowerOn()     {if (!GetActuatorEc()) return false; return ecc->IsMotorPowerOn();}
 		virtual bool IsLimitSwitchPosOn() {if (!GetActuatorEc()) return false; return ecc->IsLimitSwitchPosOn();}
 		virtual bool IsLimitSwitchNegOn() {if (!GetActuatorEc()) return false; return ecc->IsLimitSwitchNegOn();}
 		virtual bool IsEncoderCalibrated(){if (!encoder_calib_req) return true; if (!GetActuatorEc()) return false; return ecc->IsEncoderCalibrated();}		
-		int mNmToTicks(mReal x){return tq_sense.mNmToTicks(x);}
+		
+		//Misc
 		M3ActuatorEc * GetActuatorEc(){return ecc;}
+		M3ActuatorTrajectoryParam * 	ParamTorqueTraj(){return param.mutable_tq_traj();}
+		M3ActuatorPIDParam * 	ParamPidTorqueIFF(){return param.mutable_pid_tq_iff();}
+		
 	protected:
-		enum {DEFAULT, ISS};		
+		enum {DEFAULT, ISS,UTA};		
 		M3AngleSensor q_sense;
 		M3TorqueSensor tq_sense;
 		M3TempSensor ex_sense;
@@ -102,6 +117,8 @@ class M3Actuator : public m3rt::M3Component
 		M3JointFilter angle_df;
 		M3DFilter torquedot_df;
 		M3DitherToInt pwm_dither;
+		M3PeakToPeak tq_p2p;
+		M3PID2	     pid_tq_iff;
 		
 		bool ReadConfig(const char * filename);
 		void Startup();
@@ -123,6 +140,7 @@ class M3Actuator : public m3rt::M3Component
 		int overload_cnt;
 		mReal max_motor_temp; //V-DEFAULT
 		mReal max_current;//V-DEFAULT
+		mReal tq_des_last;
 		unsigned long long old_ts;
 		long long old_ts_rtai;
 		int old_ticks;
