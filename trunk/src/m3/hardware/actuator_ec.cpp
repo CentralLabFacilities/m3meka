@@ -510,20 +510,16 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	else
 		ax->mode=(int)command.mode();
 	
-	
-	if (IsPdoVersion(ACTX1_PDO_V3))
+	if (use_ec_wd) //toggle bit to give DSP a heartbeat signal
 	{
 	  if (toggle == 0)
-	  {
-	    toggle = 0x8000;
-	  }
+	    toggle =ACTUATOR_EC_MODE_WD_FLAG;//0x8000
 	  else if (toggle != 0)
 	  {
 	    ax->mode = ax->mode | toggle;
 	    toggle = 0;
 	  }
 	}
-	
 	
 	if (IsPdoVersion(ACTX1_PDO_V2) || 
 	    IsPdoVersion(ACTX2_PDO_V2) || 
@@ -567,6 +563,13 @@ bool M3ActuatorEc::ReadConfig(const char * filename)
 	} catch(YAML::TypedKeyNotFound<string> e) 
 	{
 		ignore_pwm_slew=0;
+	}
+	try
+	{
+		doc["use_ec_wd"] >>use_ec_wd;
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		use_ec_wd=0;
 	}
 	const YAML::Node& ymlparam = doc["param"];
 	int val;

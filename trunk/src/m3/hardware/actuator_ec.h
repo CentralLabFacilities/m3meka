@@ -39,7 +39,7 @@ using namespace std;
 
 class M3ActuatorEc : public  m3rt::M3ComponentEc{
 	public:
-		M3ActuatorEc():ignore_pwm_slew(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),pwm_ff(0),pwm_max_ext(0),error_printed(false),m3rt::M3ComponentEc()
+		M3ActuatorEc():ignore_pwm_slew(0),use_ec_wd(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),pwm_ff(0),pwm_max_ext(0),error_printed(false),m3rt::M3ComponentEc()
 		{
 			memset(&exs,0,sizeof(M3ActPdoV2StatusExt));
 			memset(&exc,0,sizeof(M3ActPdoV2CmdExt));
@@ -101,7 +101,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		enum {GMB_PDO_V0,ACTX1_PDO_V1, ACTX2_PDO_V1, ACTX3_PDO_V1, ACTX4_PDO_V1, TACTX2_PDO_V1,
 		      ACTX1_PDO_V2, ACTX2_PDO_V2, ACTX3_PDO_V2, ACTX4_PDO_V2,SEA_PDO_V0,
 		      ACTX1_PDO_V3};
-		enum {DEFAULT,ISS, ESP};
+		enum {DEFAULT,ISS, ESP,UTA_R2};
 		M3BaseStatus * GetBaseStatus();
 		M3ActuatorEcStatus status;
 		M3ActuatorEcCommand command;
@@ -117,6 +117,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		int chid;
 		int pwm_max_ext;
 		int ignore_pwm_slew;
+		int use_ec_wd;
 		M3ActPdoV2StatusExt exs;
 		M3ActPdoV2Cmd    axc;
 		M3ActPdoV2CmdExt exc;

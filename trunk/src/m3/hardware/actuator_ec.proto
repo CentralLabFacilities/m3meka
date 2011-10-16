@@ -24,6 +24,7 @@ enum ACTUATOR_EC_MODE{
 		ACTUATOR_EC_MODE_PWM = 1;
 		ACTUATOR_EC_MODE_TORQUE = 2;
 		ACTUATOR_EC_MODE_CURRENT = 3;
+		ACTUATOR_EC_MODE_WD_FLAG=32768; //Top bit reserved for watchdog heartbeat
 }
 
 //Mirrors m3ec_pdo_vX_def.h
