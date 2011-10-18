@@ -33,6 +33,8 @@ message M3TorqueShmBaseStatus
 
 message M3TorqueShmBaseCommand{	
 	repeated double		tq_desired = 1;				//Desired torque (mNm)
+	repeated double		q_desired = 2;				//Desired theta (deg)
+	repeated double		slew_rate_q_desired = 3;				//Desired theta (deg)
 }
 
 message M3TorqueShmStatus
@@ -41,7 +43,8 @@ message M3TorqueShmStatus
 	optional M3TorqueShmBaseStatus	right_arm=2;
 	optional M3TorqueShmBaseStatus	left_arm=3;
 	optional M3TorqueShmBaseStatus	torso=4;
-	optional M3TorqueShmBaseStatus	head=5;    
+	optional M3TorqueShmBaseStatus	head=5;
+	optional M3TorqueShmBaseStatus	right_hand=6;    
 }
 
 message M3TorqueShmCommand{
@@ -49,7 +52,8 @@ message M3TorqueShmCommand{
 	optional M3TorqueShmBaseCommand	right_arm=2;
 	optional M3TorqueShmBaseCommand	left_arm=3;
 	optional M3TorqueShmBaseCommand	torso=4;
-	optional M3TorqueShmBaseCommand	head=5;    
+	optional M3TorqueShmBaseCommand	head=5;
+	optional M3TorqueShmBaseCommand	right_hand=6;    
 }
 
 message M3TorqueShmParam{
