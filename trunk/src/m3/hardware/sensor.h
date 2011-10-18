@@ -83,18 +83,19 @@ class M3TempSensor
 	USE adc_poly for ad-hoc calibration
 	USE adc_linear_5V for a 0-5V range sensor converted to 0-3.3V
 	USE adc_linear_5V_NS for 0-5V range sensor not scaled to 0-3.3V
+	USE dsp_calib if current_ma from DSP is valid
 */
 class M3CurrentSensor
 {
 	public:
 		M3CurrentSensor():val(0){}
-		virtual void Step(mReal ticks_a, mReal ticks_b);
+		virtual void Step(mReal ticks_a, mReal ticks_b, mReal current_ma);
 		virtual mReal GetCurrent_mA(){return val;}
 		virtual void ReadConfig(const YAML::Node& doc);
 		virtual int mAtoTicks(mReal milliamps);
 		virtual void SetZero(){val=0.0;}
 	protected:
-		enum {NONE,  ADC_POLY, ADC_LINEAR_5V,ADC_LINEAR_5V_NS,LINEAR_AMP_VIA_DAC,ADC_POLY_SINGLE};
+		enum {NONE,  ADC_POLY, ADC_LINEAR_5V,ADC_LINEAR_5V_NS,LINEAR_AMP_VIA_DAC,ADC_POLY_SINGLE,DSP_CALIB};
 		mReal val;
 		vector<mReal> cb_current_a, cb_current_b;
 		int type;

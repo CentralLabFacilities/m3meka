@@ -136,6 +136,7 @@ void M3CurrentSensor::ReadConfig(const YAML::Node & doc)
 	if (t.compare("adc_linear_5V")==0){type=ADC_LINEAR_5V;}
 	if (t.compare("adc_linear_5V_ns")==0){type=ADC_LINEAR_5V_NS;}
 	if (t.compare("linear_amp_via_dac")==0){type=LINEAR_AMP_VIA_DAC;}
+	if (t.compare("dsp_calib")==0){type=DSP_CALIB;}
 	doc["cb_scale"]>>cb_scale;
 	doc["cb_bias"]>>cb_bias;
 	if (type==ADC_POLY)
@@ -169,7 +170,7 @@ int M3CurrentSensor::mAtoTicks(mReal milliamps)
     return 0;
 }
 
-void M3CurrentSensor::Step(mReal ticks_a, mReal ticks_b)
+void M3CurrentSensor::Step(mReal ticks_a, mReal ticks_b, mReal current_ma)
 {
 	if (type==ADC_POLY)
 	{
@@ -204,6 +205,10 @@ void M3CurrentSensor::Step(mReal ticks_a, mReal ticks_b)
 		mReal i_b = 1000.0*mV_b/cb_mV_per_A;
 		mReal s=MAX(ABS(i_a), ABS(i_b));
 		val= MAX(0,s*cb_scale+cb_bias);
+	}
+	if (type==DSP_CALIB)
+	{
+		val= current_ma*cb_scale+cb_bias;
 	}
 	if (type==NONE) val=0.0;
 }

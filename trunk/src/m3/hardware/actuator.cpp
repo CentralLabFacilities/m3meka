@@ -187,7 +187,7 @@ void M3Actuator::StepStatus()
 		
 		ex_sense.Step(ecs->adc_ext_temp()); //was motor_temp
 		at_sense.Step(ecs->adc_amp_temp());
-		i_sense.Step(ecs->adc_current_a(),ecs->adc_current_b());
+		i_sense.Step(ecs->adc_current_a(),ecs->adc_current_b(),ecs->current_ma());
 		if (!ecc->IsMotorPowerOn()) //Force zero-reading when off to ignore small bias errors.
 		  i_sense.SetZero();
 		motor.Step(i_sense.GetCurrent_mA(), GetPwmCmd(), GetThetaDotDeg()*60.0/360.0, ex_sense.GetTempC());//Compute motor 

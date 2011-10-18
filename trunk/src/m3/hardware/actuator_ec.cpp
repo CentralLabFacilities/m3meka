@@ -307,7 +307,7 @@ void M3ActuatorEc::SetStatusFromPdoV3(unsigned char * data)
     status.set_adc_current_b(ax->adc_current_b);
     status.set_pwm_cmd(ax->pwm_cmd);	
     status.set_flags(ax->flags);
-    status.set_current_ma((float)ax->current_ma);
+    status.set_current_ma(ax->current_ma);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

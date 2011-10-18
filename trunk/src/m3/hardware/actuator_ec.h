@@ -101,7 +101,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		enum {GMB_PDO_V0,ACTX1_PDO_V1, ACTX2_PDO_V1, ACTX3_PDO_V1, ACTX4_PDO_V1, TACTX2_PDO_V1,
 		      ACTX1_PDO_V2, ACTX2_PDO_V2, ACTX3_PDO_V2, ACTX4_PDO_V2,SEA_PDO_V0,
 		      ACTX1_PDO_V3};
-		enum {DEFAULT,ISS, ESP,UTA_R2};
+		enum {DEFAULT,ISS, ESP};
 		M3BaseStatus * GetBaseStatus();
 		M3ActuatorEcStatus status;
 		M3ActuatorEcCommand command;

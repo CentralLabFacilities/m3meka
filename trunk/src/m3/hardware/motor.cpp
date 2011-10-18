@@ -20,6 +20,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/hardware/motor.h"
 #include "math.h"
 #include <cmath>
+#include <Eigen/LU>
+
 namespace m3{
 	
 using namespace std;

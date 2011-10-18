@@ -118,11 +118,11 @@ void M3Pwr::StepStatus()
 	}
 	M3PwrEcStatus * ec_status = (M3PwrEcStatus * )ecc->GetStatus();
 	v_sense.Step(ec_status->adc_bus_voltage());
-	i_sense.Step(ec_status->adc_current_digital(),ec_status->adc_current_digital());
+	i_sense.Step(ec_status->adc_current_digital(),ec_status->adc_current_digital(),0);
 	
 	if (IsVersion(ISS_BASE))
 	{
-	   bus_i_sense.Step(ec_status->adc_ext_0(),0);
+	   bus_i_sense.Step(ec_status->adc_ext_0(),0,0);
 	   status.set_bus_current(bus_current_avg.Step(bus_i_sense.GetCurrent_mA()));
 	}
 	else
