@@ -39,7 +39,7 @@ using namespace std;
 
 class M3ActuatorEc : public  m3rt::M3ComponentEc{
 	public:
-		M3ActuatorEc():ignore_pwm_slew(0),use_ec_wd(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),pwm_ff(0),pwm_max_ext(0),error_printed(false),m3rt::M3ComponentEc()
+		M3ActuatorEc():ignore_pwm_slew(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),pwm_ff(0),pwm_max_ext(0),error_printed(false),m3rt::M3ComponentEc()
 		{
 			memset(&exs,0,sizeof(M3ActPdoV2StatusExt));
 			memset(&exc,0,sizeof(M3ActPdoV2CmdExt));
@@ -117,7 +117,6 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		int chid;
 		int pwm_max_ext;
 		int ignore_pwm_slew;
-		int use_ec_wd;
 		M3ActPdoV2StatusExt exs;
 		M3ActPdoV2Cmd    axc;
 		M3ActPdoV2CmdExt exc;
