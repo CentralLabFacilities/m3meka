@@ -73,7 +73,7 @@ class M3Humanoid : public M3Robot
 	public:
 		/// Create an M3Humanoid
 		M3Humanoid() : m3::M3Robot(), head(NULL), torso(NULL), right_arm(NULL), left_arm(NULL), force_shm_r_arm(false), 
-		  force_shm_l_arm(false), force_shm_torso(false), enable_shm_r_arm(false), enable_shm_l_arm(false), enable_shm_torso(false),
+		  force_shm_l_arm(false), force_shm_torso(false), force_shm_head(false), enable_shm_r_arm(false), enable_shm_l_arm(false), enable_shm_torso(false), enable_shm_head(false),
 		    startup_motor_pwr_on(false)
 		{
 		  head_base_2_world_frame=Frame::Identity();
@@ -218,6 +218,13 @@ class M3Humanoid : public M3Robot
 		*/
 		void SetModeTorque(M3Chain chain,unsigned int  idx);
 		
+		/** \brief Sets joint controller mode for chain and joint index to torque control with gravity compensation.
+		* \param chain desired joint group (RIGHT_ARM, LEFT_ARM, TORSO, or HEAD)
+		* \param idx an integer specifying which joint command to modify
+		*		
+		*/
+		void SetModeTorqueGc(M3Chain chain,unsigned int  idx);
+		
 		/** \brief Sets joint controller mode for chain and joint index to joint angle control with gravity compensation.
 		* \param chain desired joint group (RIGHT_ARM, LEFT_ARM, TORSO, or HEAD)
 		* \param idx an integer specifying which joint command to modify
@@ -317,14 +324,16 @@ class M3Humanoid : public M3Robot
 		* \return an 64-bit integer equal to the number of ns defined by ethercat timestamp.
 		*/
 		long long GetTimestamp(){return GetBaseStatus()->timestamp();}
-		
+		void SetThetaSharedMem_Deg(M3Chain chain,unsigned int idx, mReal theta);
+		void SetSlewRateSharedMem_Deg(M3Chain chain,unsigned int idx, mReal theta);
 		void DisableTorqueShmRightArm(){enable_shm_r_arm = false;}
 		void EnableTorqueShmRightArm(){enable_shm_r_arm = true;}
 		void DisableTorqueShmLeftArm(){enable_shm_l_arm = false;}
 		void EnableTorqueShmLeftArm(){enable_shm_l_arm = true;}
 		void DisableTorqueShmTorso(){enable_shm_torso = false;}
 		void EnableTorqueShmTorso(){enable_shm_torso = true;}
-						
+		void DisableAngleShmHead(){enable_shm_head = false;}
+		void EnableAngleShmHead(){enable_shm_head = true;}
 		
 		google::protobuf::Message * GetCommand(){return &command;}
 		google::protobuf::Message * GetStatus(){return &status;}
@@ -352,8 +361,8 @@ class M3Humanoid : public M3Robot
 		M3HumanoidStatus status;
 		M3HumanoidCommand command;
 		M3HumanoidParam param;
-	private:
 		void TestAPI();
+		Vector grav_end_torso;
 		Frame torso_end_frame;
 		Frame right_arm_end_frame;
 		Frame left_arm_end_frame;	
@@ -387,14 +396,17 @@ class M3Humanoid : public M3Robot
 		JntArray torque_shm_right_arm;
 		JntArray torque_shm_left_arm;
 		JntArray torque_shm_torso;
-		JntArray torque_shm_head;
+		JntArray angle_shm_head;
+		JntArray slew_rate_shm_head;
 		int tmp_cnt;
 		bool force_shm_r_arm;
 		bool force_shm_l_arm;
 		bool force_shm_torso;
+		bool force_shm_head;
 		bool enable_shm_r_arm;
 		bool enable_shm_l_arm;
 		bool enable_shm_torso;
+		bool enable_shm_head;
 		bool startup_motor_pwr_on;
 };
 

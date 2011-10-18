@@ -315,7 +315,8 @@ void M3Humanoid::Startup()
 		}
 		left_eye_offset = head->GetLeftEyeOffset();
 		right_eye_offset = head->GetRightEyeOffset();
-		torque_shm_head.resize(head->GetNumDof());
+		angle_shm_head.resize(head->GetNumDof());
+		slew_rate_shm_head.resize(head->GetNumDof());
 	}
 
 	if(startup_motor_pwr_on)
@@ -376,12 +377,26 @@ void M3Humanoid::StepCommand()
 	{
 		for (int i=0; i<head->GetNumDof(); i++)
 		{
-		    ((M3JointArrayCommand*)head->GetCommand())->set_tq_desired(i, command.head().tq_desired(i));						
-		    ((M3JointArrayCommand*)head->GetCommand())->set_ctrl_mode(i, command.head().ctrl_mode(i));						   
-		    ((M3JointArrayCommand*)head->GetCommand())->set_q_stiffness(i, command.head().q_stiffness(i));		    
-		    ((M3JointArrayCommand*)head->GetCommand())->set_q_desired(i, command.head().q_desired(i));
-		    ((M3JointArrayCommand*)head->GetCommand())->set_qdot_desired(i, command.head().qdot_desired(i));
-		    ((M3JointArrayCommand*)head->GetCommand())->set_q_slew_rate(i, command.head().q_slew_rate(i));
+		    if (command.head().ctrl_mode(i) == JOINT_ARRAY_MODE_ANGLE_SHM || force_shm_head)
+		    {
+		       if (enable_shm_head)
+		       {
+			((M3JointArrayCommand*)head->GetCommand())->set_q_desired(i, angle_shm_head(i));
+			((M3JointArrayCommand*)head->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_THETA);	
+			((M3JointArrayCommand*)head->GetCommand())->set_q_slew_rate(i, slew_rate_shm_head(i));		
+		       } else {
+			 //((M3JointArrayCommand*)head->GetCommand())->set_q_desired(i, 0);
+			 //((M3JointArrayCommand*)head->GetCommand())->set_q_slew_rate(i, command.head().q_slew_rate(i));
+			 ((M3JointArrayCommand*)head->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);	
+		       }
+		     } else {		       
+			((M3JointArrayCommand*)head->GetCommand())->set_q_desired(i, command.head().q_desired(i));			((M3JointArrayCommand*)head->GetCommand())->set_q_slew_rate(i, command.head().q_slew_rate(i));			
+			((M3JointArrayCommand*)head->GetCommand())->set_ctrl_mode(i, command.head().ctrl_mode(i));	
+		     }		
+		  		  
+		    ((M3JointArrayCommand*)head->GetCommand())->set_tq_desired(i, command.head().tq_desired(i));		    
+		    ((M3JointArrayCommand*)head->GetCommand())->set_q_stiffness(i, command.head().q_stiffness(i));
+		    ((M3JointArrayCommand*)head->GetCommand())->set_qdot_desired(i, command.head().qdot_desired(i));		    
 		    ((M3JointArrayCommand*)head->GetCommand())->set_pwm_desired(i, command.head().pwm_desired(i));
 		}
 		for (int i=0;i<command.head().vias_size();i++)
@@ -433,7 +448,7 @@ void M3Humanoid::StepCommand()
 		{
 		    if (command.left_arm().ctrl_mode(i) == JOINT_ARRAY_MODE_TORQUE_SHM || force_shm_l_arm)
 		    {
-		      if (enable_shm_r_arm)
+		      if (enable_shm_l_arm)
 			{
 			  ((M3JointArrayCommand*)left_arm->GetCommand())->set_tq_desired(i, torque_shm_left_arm(i));	
 			  ((M3JointArrayCommand*)left_arm->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);	
@@ -467,7 +482,9 @@ void M3Humanoid::StepStatus()
 	if (IsStateError())
 		return;		
 
-	Vector grav_end_torso;
+	grav_end_torso[0] = 0;
+	grav_end_torso[1] = 0;
+	grav_end_torso[2] = 0;
 	
 ////////////////////////////////////////////////////////
 ////  1> Copy status from chains and dynamatics to humanoid status
@@ -919,6 +936,11 @@ bool M3Humanoid::ReadConfig(const char * filename)
 		(*h_node)["chain_component"] >> head_name;
 		h_rot = YamlReadVectorM((*h_node)["base_rotation_in_parent"]);
 		h_trans = YamlReadVectorM((*h_node)["base_translation_in_parent"]);
+		try {
+		  (*t_node)["force_shm_mode"] >>force_shm_head;
+		} catch(YAML::KeyNotFound& e) {		
+			force_shm_head = false;
+		}
 	}
 	
 	try{
@@ -1467,6 +1489,28 @@ void M3Humanoid::SetTorque_mNm(M3Chain chain,unsigned int idx, mReal torque)
      cmd->set_tq_desired(idx, torque);
 }
 
+void M3Humanoid::SetThetaSharedMem_Deg(M3Chain chain,unsigned int idx, mReal theta)
+{
+  switch (chain)
+  {    
+    case HEAD:
+      if (idx < angle_shm_head.rows())
+	angle_shm_head(idx) = theta; 
+      break;
+  }
+}
+
+void M3Humanoid::SetSlewRateSharedMem_Deg(M3Chain chain,unsigned int idx, mReal theta)
+{
+  switch (chain)
+  {    
+    case HEAD:
+      if (idx < angle_shm_head.rows())
+	slew_rate_shm_head(idx) = theta; 
+      break;
+  }
+}
+
 void M3Humanoid::SetTorqueSharedMem_mNm(M3Chain chain,unsigned int idx, mReal torque)
 {
   switch (chain)
@@ -1482,11 +1526,7 @@ void M3Humanoid::SetTorqueSharedMem_mNm(M3Chain chain,unsigned int idx, mReal to
     case TORSO:
       if (idx < torque_shm_torso.rows())
 	torque_shm_torso(idx) = torque;
-      break;
-    case HEAD:
-      if (idx < torque_shm_head.rows())
-	torque_shm_head(idx) = torque; 
-      break;
+      break;    
   }
 }
 
@@ -1561,6 +1601,15 @@ void M3Humanoid::SetModeTorque(M3Chain chain,unsigned int  idx)
      return;
    if (idx < cmd->ctrl_mode_size())
      cmd->set_ctrl_mode(idx, JOINT_ARRAY_MODE_TORQUE);
+}
+
+void M3Humanoid::SetModeTorqueGc(M3Chain chain,unsigned int  idx)
+{
+  M3BaseHumanoidCommand * cmd = GetCmd(chain);
+   if (cmd == NULL)
+     return;
+   if (idx < cmd->ctrl_mode_size())
+     cmd->set_ctrl_mode(idx, JOINT_ARRAY_MODE_TORQUE_GC);
 }
 
 void M3Humanoid::SetModeThetaGcMj(M3Chain chain,unsigned int  idx)
