@@ -266,7 +266,7 @@ void step_control()
 				ramp_pid_gains_up(chid,RAMP_UPDATE_RATE);
 				step_current_pid(chid,des);
 				*/
-				step_current_pid(chid,0);	//Remove when you enable current control
+				step_amp_out(chid,0);	//Remove when you enable current control
 				break;
 				
 			default:

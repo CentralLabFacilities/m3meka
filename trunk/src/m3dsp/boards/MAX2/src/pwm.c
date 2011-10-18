@@ -58,14 +58,15 @@ int clamp_pwm(int chid, int abs_val)
 
 void set_pwm(int chid, int val)
 {
+	//pwm_cmd_buf[chid]=val;
 	#if defined USE_CURRENT
 	     if (get_current_state()!=CURRENT_READY)
 			val=0;
 	#endif
 	
-	int sign=SIGN(val);
-	val=pwm_deadband(chid,ABS(val));
-	pwm_cmd_buf[chid]=SIGN(val)*CLAMP(ABS(val),0,ec_cmd.command[chid].pwm_max); //Send back commanded value before gets inverted, deadband, etc
+	int sign=SIGN(val);	
+	pwm_cmd_buf[chid]=sign*CLAMP(ABS(val),0,ec_cmd.command[chid].pwm_max); //Send back commanded value before gets inverted, deadband, etc
+	val = pwm_deadband(chid,ABS(val));
 	
 	//Used by correct_ma
 	#ifdef USE_CURRENT
@@ -73,7 +74,7 @@ void set_pwm(int chid, int val)
 	#endif
 	
 	//ADC trigger at the middle of a PWM pulse
-	P1SECMPbits.SEVTCMP = val >> 2;
+	P1SECMPbits.SEVTCMP = MAX(val >> 2, 50); //MAX(val - 50, 20);	//Fixed value
 
 	#ifdef USE_BLDC
 	#if defined PWM_4Q 

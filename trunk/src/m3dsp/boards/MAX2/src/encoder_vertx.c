@@ -61,7 +61,7 @@ void vertx_error_filter(int ch,unsigned int val)
 
 	//	if ((val&(unsigned int)0x0003)!=1 || (val>>2)>16350 || (val>>2)>ec_cmd.command[chid].qei_max)
 	//#else
-	ec_debug[chid]=(val>>2);
+	//ec_debug[chid]=(val>>2);
 	if ((val&(unsigned int)0x0003)!=1 || (val>>2)>16350)
 	//#endif
 	{		

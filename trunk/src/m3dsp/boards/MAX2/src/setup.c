@@ -173,6 +173,7 @@ void setup_ports(void)
 	
 	#if defined MAX2_BDC_0_3_T2R2 
 	TRISCbits.TRISC0=0;		//RC0	OUTPUT	PIN25	//Brake enable
+	TRISCbits.TRISC2=0;		
 	#endif
 	
 	#if defined MAX2_BDC_0_2_T2R3

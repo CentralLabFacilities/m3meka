@@ -84,14 +84,17 @@ void setup_adc(void)
 	AD1CSSLbits.CSS0 = 1;
 	AD1CSSLbits.CSS1 = 1;				
 	AD1CSSLbits.CSS2 = 1;
-	#if !(defined MAX2_BDC_0_2_T2R3)		
+	#if defined MAX2_BDC_0_2_T2R3		
+	AD1CSSLbits.CSS3 = 0;
+	AD1PCFGLbits.PCFG3 = 1;
+	#else
 	AD1CSSLbits.CSS3 = 1;
+	AD1PCFGLbits.PCFG3 = 0;
 	#endif
 	ADPCFG = 0; 
 	AD1PCFGLbits.PCFG0 = 0;
 	AD1PCFGLbits.PCFG1 = 0;
 	AD1PCFGLbits.PCFG2 = 0;
-	AD1PCFGLbits.PCFG3 = 0;
 	AD1PCFGLbits.PCFG4 = 1;	
 	AD1PCFGLbits.PCFG5 = 1;
 	AD1PCFGLbits.PCFG6 = 1;

@@ -71,6 +71,67 @@ void step_vertx();
 #define BB_SPI_SET_MOSI_B	TRISBbits.TRISB6=0; ODCBbits.ODCB6=1; //Make pin output, open collector
 #define BB_SPI_SET_MISO_B	TRISBbits.TRISB6=1; ODCBbits.ODCB6=0; //Make pin input, non open collector
 
+#if defined VERTX_CH_A_ONLY
+
+#define BB_SPI_SS_SET				BB_SPI_SS_A=1; 
+#define BB_SPI_SS_CLR				BB_SPI_SS_A=0; 
+#define BB_SPI_CLK_SET				BB_SPI_CLK_A=1; 
+#define BB_SPI_CLK_CLR				BB_SPI_CLK_A=0; 
+#define BB_SPI_DIO_SET				BB_SPI_DIO_A=1; 
+#define BB_SPI_DIO_CLR				BB_SPI_DIO_A=0; 
+#define BB_SPI_SET_MOSI		BB_SPI_SET_MOSI_A 
+#define BB_SPI_SET_MISO		BB_SPI_SET_MISO_A 
+
+//Takes ~2500NS
+#define BB_SPI_BIT_OUT(x,y) {				\
+							BB_SPI_CLK_SET\
+							BB_SPI_DIO_A=x;	\
+							DELAY_1200NS\
+							BB_SPI_CLK_CLR\
+							DELAY_1200NS\
+							}
+
+#define BB_SPI_BIT_IN(x,y) {				\
+							BB_SPI_CLK_SET\
+							DELAY_1200NS\
+							BB_SPI_CLK_CLR\
+							x=x|BB_PIN_SPI_DIO_A;	\
+							y=0;	\
+							DELAY_1200NS\
+							}
+#endif
+
+#if defined VERTX_CH_B_ONLY
+
+#define BB_SPI_SS_SET				BB_SPI_SS_B=1; 
+#define BB_SPI_SS_CLR				BB_SPI_SS_B=0; 
+#define BB_SPI_CLK_SET				BB_SPI_CLK_B=1; 
+#define BB_SPI_CLK_CLR				BB_SPI_CLK_B=0; 
+#define BB_SPI_DIO_SET				BB_SPI_DIO_B=1; 
+#define BB_SPI_DIO_CLR				BB_SPI_DIO_B=0; 
+#define BB_SPI_SET_MOSI		BB_SPI_SET_MOSI_B 
+#define BB_SPI_SET_MISO		BB_SPI_SET_MISO_B 
+
+//Takes ~2500NS
+#define BB_SPI_BIT_OUT(x,y) {				\
+							BB_SPI_CLK_SET\
+							BB_SPI_DIO_B=x;	\
+							DELAY_1200NS\
+							BB_SPI_CLK_CLR\
+							DELAY_1200NS\
+							}
+
+#define BB_SPI_BIT_IN(x,y) {				\
+							BB_SPI_CLK_SET\
+							DELAY_1200NS\
+							BB_SPI_CLK_CLR\
+							x=x|BB_PIN_SPI_DIO_B;	\
+							y=0;	\
+							DELAY_1200NS\
+							}
+#endif
+
+#if defined VERTX_BOTH
 
 #define BB_SPI_SS_SET				BB_SPI_SS_A=1; BB_SPI_SS_B=1; 
 #define BB_SPI_SS_CLR				BB_SPI_SS_A=0; BB_SPI_SS_B=0; 
@@ -99,6 +160,9 @@ void step_vertx();
 							y=y|BB_PIN_SPI_DIO_B;	\
 							DELAY_1200NS\
 							}
+#endif
+
+
 
 #endif
 #endif

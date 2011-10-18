@@ -21,6 +21,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "setup.h"
 #include "current.h"
+#include "control.h"
+#include "pwm.h"
 extern int test; //Test
 
 extern int fsa_state[1];
@@ -84,19 +86,24 @@ int get_current_state()
   	return i_state;
 }
 
-/*
+
 //Calculates an average cycle current based on a single peak current measurement
 unsigned int correct_mA(unsigned int pwm, unsigned int max_pwm, unsigned int current)
 {
 	unsigned long result = 0;
-	unsigned int ratio = (pwm << 3) / max_pwm;
+	unsigned int ratio = 0;
+	
+	if(pwm <= 0)
+		return 0;
+		
+	ratio = (max_pwm << 3) / pwm;
 	
 	result = ((unsigned long)current * (unsigned long)ratio);
 	result = result >> 3;
 	
 	return (unsigned int) result;
 }
-*/
+
 
 void reset_current_buf()
 {
@@ -116,27 +123,29 @@ void reset_current_buf()
 void step_current()
 {
 	unsigned int z = 0;
+	static unsigned int zero_done = 0;
 	
   	//Measure zero sensor reading at startup
-	if (i_zero_cnt<17 && i_zero_cnt>0 && i_state == CURRENT_STARTUP)
+	if (i_zero_cnt < 17 && i_zero_cnt > 0 && i_state == CURRENT_STARTUP)
   	{
       	i_zero_sum_a = i_zero_sum_a + get_avg_adc(ADC_CURRENT_A);
       	i_zero_sum_b = i_zero_sum_b + get_avg_adc(ADC_CURRENT_B);
-      	if (i_zero_cnt ==1)
+      	if (i_zero_cnt == 1)
       	{
 			i_zero_a = (i_zero_sum_a >> 4);
 			i_zero_b = (i_zero_sum_b >> 4);
 		
 			//Make sure that the zero is valid
 			#ifdef USE_MAX2_0_2	
-			if((i_zero_a > 1794) && (i_zero_a < 2193))
+			if((i_zero_a > MAX2_0_2_AMP_MIN) && (i_zero_a < MAX2_0_2_AMP_MAX))
 			#endif
 			#ifdef USE_MAX2_0_3	
-			if(i_zero_b < 25) 
+			if(i_zero_b < MAX2_0_3_AMP_MIN) 
 			#endif
 			{
 				//Value in the range (+-10% for ACS, close to 0 for shunt), we use it
 				i_state = CURRENT_READY;
+				zero_done = 1;
 			}
 			else
 			{
@@ -149,8 +158,36 @@ void step_current()
       	}
   	}
   	i_zero_cnt=MAX(0,i_zero_cnt-1);
+	
+	//Avoid false readings at power-up (ex.: after e-stop is released)
+	if((fsa_state[0] == CTRL_OFF || fsa_state[0] == CTRL_ABORT) && zero_done)
+		i_state = CURRENT_HOLD;
+	
+	if (i_state == CURRENT_HOLD)
+	{
+		i_zero_a = get_avg_adc(ADC_CURRENT_A);
+		i_zero_b = get_avg_adc(ADC_CURRENT_B);
+		
+		//Make sure that the value is in the range (the 5VM bus is on)
+		#ifdef USE_MAX2_0_2	
+		if((i_zero_a > MAX2_0_2_AMP_MIN) && (i_zero_a < MAX2_0_2_AMP_MAX))
+		#endif
+		#ifdef USE_MAX2_0_3	
+		if(i_zero_b < MAX2_0_3_AMP_MIN) 
+		#endif
+		{
+			//Value in the range (+-10% for ACS, close to 0 for shunt), we use it
+			i_state = CURRENT_READY;
+		}
+		else
+		{
+			//Try again...
+			i_state = CURRENT_HOLD;
+		}
+	}
+	
 
-	if (i_state != CURRENT_STARTUP)
+	if (i_state == CURRENT_READY)
 	{
 		//Compute 'instantaneous' current
 		
@@ -159,17 +196,23 @@ void step_current()
 		  	int x =(int)get_avg_adc(ADC_CURRENT_A) - (int)i_zero_a;
 			i_mA = (x * ADC_CURRENT_MA_PER_TICK);
 			
-			if(fsa_state[0] == 0 || fsa_state[0] == 5)
+			//Return 0 if CTRL_OFF or CTRL_ABORT
+			if(fsa_state[0] == CTRL_OFF || fsa_state[0] == CTRL_ABORT)
 				i_mA = 0;
 		#endif
 		
 		//Shunt sensor, we use the absolute value
 		#ifdef USE_MAX2_0_3
-		  	int x =(int)get_avg_adc(ADC_CURRENT_B) - (int)i_zero_b;
-		  	//x = CLAMP(x,0,5000) * 7;
-			i_mA = x * 7; //correct_mA(actual_pwm, PWM_MAX_DUTY, x);
+		  	int x =(int)get_avg_adc(ADC_CURRENT_B);
+		  	if(x > (int)i_zero_b)
+		  		x = x - (int)i_zero_b;
+		  	else
+		  		x = 0;
+		  	x = x * MAX2_0_3_CURRRENT_GAIN;
+			i_mA = correct_mA(actual_pwm, 2000, x);//correct_mA(actual_pwm, PWM_MAX_DUTY, x);
 			
-			if(fsa_state[0] == 0 || fsa_state[0] == 5)
+			//Return 0 if CTRL_OFF or CTRL_ABORT
+			if(fsa_state[0] == CTRL_OFF || fsa_state[0] == CTRL_ABORT)
 				i_mA = 0;
 		#endif
 
