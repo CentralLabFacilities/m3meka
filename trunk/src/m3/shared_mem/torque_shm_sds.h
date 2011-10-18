@@ -38,6 +38,9 @@ typedef struct
 typedef struct 
 {
 	mReal			tq_desired[MAX_NDOF];			
+	mReal			q_desired[MAX_NDOF];
+	mReal			slew_rate_q_desired[MAX_NDOF];
+	mReal			q_stiffness[MAX_NDOF];
 }M3TorqueShmSdsBaseCommand;
 
 typedef struct
@@ -47,6 +50,7 @@ typedef struct
     M3TorqueShmSdsBaseStatus left_arm;
     M3TorqueShmSdsBaseStatus torso;
     M3TorqueShmSdsBaseStatus head;
+    M3TorqueShmSdsBaseStatus right_hand;
 }M3TorqueShmSdsStatus;
 
 typedef struct
@@ -56,6 +60,7 @@ typedef struct
     M3TorqueShmSdsBaseCommand left_arm;
     M3TorqueShmSdsBaseCommand torso;
     M3TorqueShmSdsBaseCommand head;
+    M3TorqueShmSdsBaseCommand right_hand;
 }M3TorqueShmSdsCommand;
 
 #endif

@@ -30,6 +30,7 @@ libm3shminclude_HEADERS = \
 	comp_shm.h\
 	torque_shm.h\
 	torque_shm.pb.h\
+	torque_shm.proto\
 	torque_shm_sds.h
 	
 clean-local:
