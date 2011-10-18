@@ -12,4 +12,5 @@ enum JOINT_ARRAY_MODE{
 		JOINT_ARRAY_MODE_SPLINED_TRAJ = 8;				//Splined traj. with THETA jont mode
 		JOINT_ARRAY_MODE_SPLINED_TRAJ_GC=9;				//Splined traj. with THETA_GC joint mode
 		JOINT_ARRAY_MODE_TORQUE_SHM=10;					//External torque command via shared memory
+		JOINT_ARRAY_MODE_ANGLE_SHM=11;					//External angle command via shared memory
 }
