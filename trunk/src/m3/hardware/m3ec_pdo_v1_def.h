@@ -44,6 +44,9 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define M3ACT_CONFIG_CALIB_QEI_LIMITSWITCH_NEG 2048 //zero encoder on low-to-high transition of -limitswitch
 #define M3ACT_CONFIG_TORQUE_FF 4096 //Incorporate torque feed-forward term into the DSP PID Controller
 #define M3ACT_CONFIG_CALIB_QEI_MANUAL 8192 //Zero encoder on low to high transition
+#define M3ACT_CONFIG_EC_WD 16384 //Toggle this bit for EtherCAT heartbeat/watchdog
+
+
 
 typedef struct 
 {
