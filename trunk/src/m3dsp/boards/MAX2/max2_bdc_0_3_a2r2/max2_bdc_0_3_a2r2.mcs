@@ -2,7 +2,7 @@
 MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
 Version=1.0
 [File000]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\adc.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\adc.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -15,7 +15,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File001]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\control.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\control.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -28,7 +28,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File002]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\current.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\current.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -41,7 +41,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File003]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\dio.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\dio.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -54,7 +54,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File004]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\encoder_vertx.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\encoder_vertx.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -67,7 +67,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File005]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\ethercat.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\ethercat.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -80,7 +80,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File006]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\ethercat_appl.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\ethercat_appl.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -93,7 +93,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File007]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\ethercat_hw.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\ethercat_hw.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -106,7 +106,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File008]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\ethercat_slave_fsm.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\ethercat_slave_fsm.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -119,7 +119,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File009]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\main.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\main.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -132,7 +132,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File010]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\pwm.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\pwm.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -145,7 +145,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File011]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\setup.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\setup.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -158,7 +158,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File012]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\timer1.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\timer1.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -171,7 +171,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File013]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\timer3.o
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\temp\timer3.o
 Folder=Intermediary
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -184,7 +184,7 @@ ToolArgsString=-g -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DM3_MAX2 -DUSE_ADC 
 TraceCmdString=
 DebugOptions=
 [File014]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\output\max2_bdc_0_3_a2r2.cof
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\output\max2_bdc_0_3_a2r2.cof
 Folder=Output
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
@@ -197,7 +197,7 @@ ToolArgsString=-o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)" -Map="$(BINDIR_)$(TAR
 TraceCmdString=
 DebugOptions=
 [File015]
-Location=Z:\JFDuval\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\output\max2_bdc_0_3_a2r2.hex
+Location=C:\meka_local\projects\m3meka\trunk\src\m3dsp\boards\MAX2\max2_bdc_0_3_a2r2\output\max2_bdc_0_3_a2r2.hex
 Folder=Output
 DeviceName=dsPIC33FJ32MC204
 LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}

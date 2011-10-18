@@ -187,7 +187,7 @@ void step_control()
 			fsa_state[chid]=CTRL_OFF;
 		#endif
 	
-		int mode = (ec_cmd.command[chid].mode & 0x00FF);	//This mask is needed when M3 is using the watchdog
+		int mode = (ec_cmd.command[chid].mode & 0x00FF);	//This mask is needed when M3 is using the old watchdog, can be removed later
 		int des = ec_cmd.command[chid].t_desire;
 		
 		#ifdef USE_BRAKE

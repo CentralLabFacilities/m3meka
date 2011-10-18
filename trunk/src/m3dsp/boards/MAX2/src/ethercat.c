@@ -92,6 +92,7 @@ void isr_update_input_pdo(void)
 	
 	ec_stat.status[0].qei_rollover=vertx_error(VERTX_CH_ENC);
 	#if defined MAX2_BLDC_0_3_T2R2 || defined  MAX2_BDC_0_3_T2R2
+	//Note: should use VERTX_CH_ENC, but the value is in A instead of B
 	ec_stat.status[0].qei_on=get_avg_vertx(VERTX_CH_A);
 	#else
 	ec_stat.status[0].qei_on=get_avg_vertx(VERTX_CH_ENC);

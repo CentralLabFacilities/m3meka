@@ -202,16 +202,16 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 		
 		#ifdef USE_WATCHDOG
 		wd_cnt++;
-		if (ec_cmd.command[0].mode != last_status)		// if the status changes, everything is cool
+		if ((ec_cmd.command[0].config & 0x4000) != last_status)		// if the WD bit changes, everything is cool
 		{
 			wd_cnt = 0;
 			watchdog_expired = 0;
 		}
-		else if (wd_cnt > 500)					// if the status doesn't change in 250ms, we're hosed
+		else if (wd_cnt > 500)					// if the status doesn't change in 250ms, problem
 		{
 			watchdog_expired = 1;
 		}	
-		last_status = ec_cmd.command[0].mode;
+		last_status = (ec_cmd.command[0].config & 0x4000);
 		#endif
 		
 		//Sum = 125us, 25% of this time slice
