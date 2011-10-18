@@ -91,7 +91,12 @@ void isr_update_input_pdo(void)
 	#if defined USE_ENCODER_VERTX 
 	
 	ec_stat.status[0].qei_rollover=vertx_error(VERTX_CH_ENC);
+	#if defined MAX2_BLDC_0_3_T2R2 || defined  MAX2_BDC_0_3_T2R2
+	ec_stat.status[0].qei_on=get_avg_vertx(VERTX_CH_A);
+	#else
 	ec_stat.status[0].qei_on=get_avg_vertx(VERTX_CH_ENC);
+	#endif
+	
 	
 	#if !(defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3 || defined MAX2_BDC_0_3_T2R2 \
 	|| defined MAX2_BLDC_0_3_T2R2)
