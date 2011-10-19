@@ -161,7 +161,7 @@ void setup_ports(void)
 	TRISCbits.TRISC1=1;		//RC1	INPUT	PIN26	AN7
 	TRISCbits.TRISC2=1;		//RC2	INPUT	PIN27	AN8*/
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_PWR_0_5		
+#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 	TRISAbits.TRISA0=1;		//RA0	INPUT	PIN19	AN0
 	TRISAbits.TRISA1=1;		//RA1	INPUT	PIN20	AN1
 #if defined USE_ADC_SPI
@@ -183,7 +183,7 @@ void setup_ports(void)
 #endif
 //testing current sensing with UART before including in Ethercat loop ****
 	
-#if defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 	TRISBbits.TRISB13=0;	//RB13	OUTPUT	PIN11	RP13_PWM (status led)
 #endif
 	ODCBbits.ODCB12=1;		//enable_motor: set to open-collector for 5V I/O
@@ -236,7 +236,7 @@ void setup_peripheral_pin_select(void)
 	RPINR18bits.U1RXR=11;			//U1RX ON RP11 :			RPINR18	
 	RPOR5bits.RP10R = 0b00011;		//U1TX ON RP10 :			RPOR5	
 #endif
-#if defined M3_PWR_0_5 //testing current sensing before including in the ethercat loop
+#if defined PWR_0_5 //testing current sensing before including in the ethercat loop
 	RPINR18bits.U1RXR=11;			//U1RX ON RP11 :			RPINR18	
 	RPOR5bits.RP10R = 0b00011;		//U1TX ON RP10 :			RPOR5	
 #endif

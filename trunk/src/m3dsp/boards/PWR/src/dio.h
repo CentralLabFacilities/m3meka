@@ -32,12 +32,12 @@ void ToggleHeartbeatLED(void);
 #define SetTimestampLatch LATCbits.LATC3 = 1
 #define ClrTimestampLatch LATCbits.LATC3 = 0
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 #define SetEnableMotor	LATBbits.LATB12=1
 #define ClrEnableMotor	LATBbits.LATB12=0
 #define PinModeRemote	PORTBbits.RB5
 #define PinMotorEnabled PORTBbits.RB6
-#if defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 #define SetPwrStatusLED LATBbits.LATB13=1
 #define ClrPwrStatusLED LATBbits.LATB13=0
 #define PinPwrStatusLED PORTBbits.RB13
@@ -45,7 +45,7 @@ void TogglePwrStatusLED(void);
 int GetMotorEnabledFiltered(); //Power supply issue, causes spurious disable
 #endif
 
-#if defined M3_PWR_0_5 && defined USE_BUZZER
+#if defined PWR_0_5 && defined USE_BUZZER
 #define	BUZZER					LATBbits.LATB11		//RB11	OUTPUT	PIN9	BUZZER
 #define BUZZER_SET				BUZZER=1; 
 #define BUZZER_CLR				BUZZER=0; 

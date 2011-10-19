@@ -106,7 +106,7 @@ void isr_update_input_pdo(void)
 {
 //////////////////////////////////// POWER /////////////////////////////////////////////////
 
-#if defined M3_PWR_0_2 
+#if defined PWR_0_2
 	ec_stat.adc_bus_voltage=get_avg_adc(ADC_BUS_VOLTAGE);
 	ec_stat.adc_current_digital=get_avg_adc(ADC_CURRENT_DIGITAL);
 	ec_stat.adc_ext=get_avg_adc(ADC_EXT);
@@ -115,7 +115,7 @@ void isr_update_input_pdo(void)
 	ec_stat.flags=ec_flags[0];
 #endif
 
-#if defined M3_PWR_0_3 
+#if defined PWR_0_3
 	ec_stat.adc_bus_voltage=get_avg_adc(ADC_BUS_VOLTAGE);
 	ec_stat.adc_current_digital=get_avg_adc(ADC_CURRENT_DIGITAL);
 	ec_stat.adc_ext=get_avg_adc(ADC_EXT);
@@ -124,7 +124,7 @@ void isr_update_input_pdo(void)
 	ec_stat.flags=ec_flags[0];
 #endif
 
-#if defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_4 || defined PWR_0_5
 	ec_stat.adc_bus_voltage=get_avg_adc(ADC_BUS_VOLTAGE);
 	ec_stat.adc_current_digital=get_avg_adc(ADC_CURRENT_DIGITAL);
 #if defined USE_ADC_SPI

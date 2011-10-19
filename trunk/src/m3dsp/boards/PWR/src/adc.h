@@ -24,7 +24,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef USE_ADC
 
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 //Can afford heavy smoothing
 #define ADC_NUM_SMOOTH	32 //Must be even
 #define ADC_SHIFT_SMOOTH 5 //2^ADC_SHIFT_SMOOTH

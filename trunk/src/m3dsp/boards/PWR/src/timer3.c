@@ -66,8 +66,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void) {
 #endif
 #endif
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 || \
-	defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_2 || defined PWR_0_3 || \
+	defined PWR_0_4 || defined PWR_0_5
 #ifdef USE_CONTROL	
 	step_control();
 #endif

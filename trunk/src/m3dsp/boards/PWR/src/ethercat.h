@@ -45,7 +45,7 @@ extern long ec_wd_timestamp;
 
 //Move ActX1 to PDOV2 (smaller packet size)
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 
+#if defined PWR_0_2 || defined PWR_0_3
 typedef M3PwrPdoV1Cmd ec_cmd_t;
 typedef M3PwrPdoV1Status ec_stat_t;
 #define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2
@@ -53,7 +53,7 @@ typedef M3PwrPdoV1Status ec_stat_t;
 #define NUM_DBG_CH 1
 #endif 
 
-#if defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_4 || defined PWR_0_5
 typedef M3PwrPdoV2Cmd ec_cmd_t;
 typedef M3PwrPdoV2Status ec_stat_t;
 #define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2

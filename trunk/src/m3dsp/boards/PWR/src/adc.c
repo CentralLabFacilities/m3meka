@@ -67,7 +67,7 @@ void setup_adc(void) {
 	AD1CON3bits.ADRC=0;				// ADC Clock is derived from Systems Clock
 
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 	AD1CON3bits.SAMC=10; 			// SLOW: Auto Sample Time = 3*Tad		
 	AD1CON3bits.ADCS=40;			// SLOW: System clock divider TAD=(ADCS+1)*TCY=5*=50ns (As fast as works...)
 #endif
@@ -81,7 +81,7 @@ void setup_adc(void) {
 
 
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 	AD1CON1bits.SSRC = 0b111;		// Auto StartOfConversion
 	AD1CON2bits.BUFM=1;				// Use 2x8-word buffer for conversion sequences
 	AD1CSSLbits.CSS0=1;
@@ -107,7 +107,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 
 
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_DAC_0_1 || defined M3_ELMO_RNA_R0 || defined M3_PWR_0_5
+#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined M3_DAC_0_1 || defined M3_ELMO_RNA_R0 || defined PWR_0_5
 	if (AD1CON2bits.BUFS==0) //ADC module filling lower group, read from upper
 	{
 		adc_raw[0]=ADC1BUF8;
@@ -124,7 +124,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 
 
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 		adc_buffer[ADC_BUS_VOLTAGE][adc_idx]=adc_raw[ADC_BUS_VOLTAGE];
 		adc_buffer[ADC_CURRENT_DIGITAL][adc_idx]=adc_raw[ADC_CURRENT_DIGITAL];
 		adc_buffer[ADC_EXT][adc_idx]=adc_raw[ADC_EXT];

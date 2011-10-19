@@ -89,7 +89,7 @@ int main (void)
 #endif
 
 
-#if defined M3_PWR_0_2 || defined M3_PWR_0_3 || defined M3_PWR_0_4 || defined M3_PWR_0_5
+#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 	ClrEnableMotor;
 #endif
 

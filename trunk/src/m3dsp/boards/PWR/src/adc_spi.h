@@ -32,7 +32,7 @@ void step_adc_spi();
 unsigned int get_avg_adc_spi(int chid);
 unsigned int get_adc_spi(int chid);
 
-#if defined M3_PWR_0_5
+#if defined PWR_0_5
 
 #define ADC_SPI_NUM_CH 1
 #define ADC_SPI_NUM_SMOOTH	2 //Must be even
