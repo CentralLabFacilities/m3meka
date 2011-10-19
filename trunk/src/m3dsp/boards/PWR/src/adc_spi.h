@@ -32,39 +32,6 @@ void step_adc_spi();
 unsigned int get_avg_adc_spi(int chid);
 unsigned int get_adc_spi(int chid);
 
-#if defined M3_MAX2_BDC_T2R3 || defined M3_MAX2_BLDC_T2R3
-
-#define ADC_SPI_NUM_CH 1
-#define ADC_SPI_NUM_SMOOTH	2 //Must be even
-#define ADC_SPI_SHIFT_SMOOTH 1 //2^ADC_SHIFT_SMOOTH
-//Define Bit-bang pins for XYZ SPI ADC unit
-
-#define	BB_ASPI_SS				LATBbits.LATB3		//RB3	OUTPUT	PIN24	SPI_SS_ADC/
-#define	BB_ASPI_CLK				LATCbits.LATC1		//RC1	OUTPUT	PIN26	SPI_CLK_ADC
-#define BB_PIN_ASPI_DI			PORTBbits.RB6		//RB6	INPUT	PIN42	SPI_DI_ADC
-
-#define BB_ASPI_SS_SET			BB_ASPI_SS=1; 
-#define BB_ASPI_SS_CLR			BB_ASPI_SS=0; 
-#define BB_ASPI_CLK_SET			BB_ASPI_CLK=1; 
-#define BB_ASPI_CLK_CLR			BB_ASPI_CLK=0; 
-
-
-////Unlike the Vert-X encoder, the MCP3201 outputs dat on the FALLING EDGDE of CLK. But the CLK should still be initialized at 0.
-////The Bit-bang sequence below is "time optimized" and reads the sensor ADC value during the low level of CLK 
-
-//Max CLK is 0.8MHz (period of 1250NS, so half period of 625NS)
-//Also, minimum 200NS between falling edge of CLK and valid output of the ADC sensor
-//The specs below should respect those criterias
-#define BB_ASPI_BIT_IN(x)	{				\
-							BB_ASPI_CLK_SET\
-							DELAY_700NS\
-							BB_ASPI_CLK_CLR\
-							DELAY_225NS\
-							x=x|BB_PIN_ASPI_DI;	\
-							DELAY_500NS\
-							}
-#endif
-
 #if defined M3_PWR_0_5
 
 #define ADC_SPI_NUM_CH 1

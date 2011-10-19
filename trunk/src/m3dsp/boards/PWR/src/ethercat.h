@@ -43,42 +43,7 @@ extern  int ec_wd_expired;
 extern long ec_wd_timestamp;
 
 
-#ifdef M3_BLD
-typedef M3BldPdoV1Cmd ec_cmd_t;
-typedef M3BldPdoV1Status ec_stat_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
-int get_configured_station_alias();
-#endif
-
 //Move ActX1 to PDOV2 (smaller packet size)
-
-
-#if defined M3_BMA_A1R1 || defined M3_WMA_0_1 || defined M3_DAC_0_1 || defined M3_MAX2 \
-	|| defined M3_BMW_A2R1 || defined M3_BMW_A2R2 || defined M3_ELMO_RNA_R0 || \
-	defined M3_ELMO_B1R1 || defined M3_ELMO_Z1R1 || defined M3_BMW_A2R3
-typedef M3ActX1PdoV1Cmd ec_cmd_t;
-typedef M3ActX1PdoV1Status ec_stat_t;
-#define NUM_DBG_CH 1
-
-#if defined USE_ACTX1_PDO_V2 
-
-typedef M3ActX1PdoV2Cmd ec_cmd_in_t;
-typedef M3ActX1PdoV2Status ec_stat_out_t;
-typedef M3ActPdoV2StatusExt ec_stat_ext_t;
-typedef M3ActPdoV2CmdExt ec_cmd_ext_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*1
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*1
-
-#else
-
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
-
-#endif
-#endif 
-
- 
 
 #if defined M3_PWR_0_2 || defined M3_PWR_0_3 
 typedef M3PwrPdoV1Cmd ec_cmd_t;
@@ -95,79 +60,6 @@ typedef M3PwrPdoV2Status ec_stat_t;
 #define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
 #define NUM_DBG_CH 1
 #endif 
-
-#if defined M3_LOADX6_A2R1 || defined M3_LOADX6_A2R2 || defined M3_LOADX6_A2R3	
-typedef M3LoadX6PdoV1Cmd ec_cmd_t;
-typedef M3LoadX6PdoV1Status ec_stat_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
-#define NUM_DBG_CH 1
-#endif 
-
-#if defined M3_HMB_H1R1  || defined M3_HEX2_S1R1 || defined M3_HB2_H2R1_J0J1 || defined M3_HB2_H2R2_J0J1 || defined M3_HEX4_S2R1 \
-|| defined M3_HB2_H2R3_J0J1 
-typedef M3ActX2PdoV1Cmd ec_cmd_t;
-typedef M3ActX2PdoV1Status ec_stat_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*3
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
-#define NUM_DBG_CH 2
-#endif 
-
-#if defined M3_HB2_H2R1_J2J3J4 || defined M3_HB2_H2R2_J2J3J4 || defined M3_HB2_H2R3_J2J3J4
-typedef M3ActX3PdoV1Cmd ec_cmd_t;
-typedef M3ActX3PdoV1Status ec_stat_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*4
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*3
-#define NUM_DBG_CH 3
-#endif 
-
-#ifdef M3_GMB_G1R1
-#ifdef USE_TACTILE_PPS
-typedef M3TactX2PdoV1Cmd ec_cmd_t;
-typedef M3TactX2PdoV1Status ec_stat_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*3
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*5
-#define NUM_DBG_CH 2
-#else
-typedef M3ActX2PdoV1Cmd ec_cmd_t;
-typedef M3ActX2PdoV1Status ec_stat_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*3
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
-#define NUM_DBG_CH 2
-#endif
-#endif 
-
-#ifdef M3_LEDX2_S1R1
-typedef M3LedX2PdoV1Cmd ec_cmd_t;
-typedef M3LedX2PdoV1Status ec_stat_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
-#define NUM_DBG_CH 1
-#endif 
-
-#ifdef M3_LEDX2XN_S2R1
-typedef M3LedX2XNPdoV1Cmd ec_cmd_t;
-typedef M3LedX2XNPdoV1Status ec_stat_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
-#define NUM_DBG_CH 1
-#endif 
-
-#ifdef M3_LEDMDRV_S2R1
-typedef M3LedMatrixPdoV1Cmd ec_cmd_t;
-typedef M3LedMatrixPdoV1Status ec_stat_t;
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
-#define NUM_DBG_CH 1
-#endif 
-
-#ifdef M3_FB_DEV_0_0
-typedef M3ActX1PdoV1Cmd ec_cmd_t;
-typedef M3ActX1PdoV1Status ec_stat_t;
-#define NUM_DBG_CH 1
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2
-#define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
-#endif
 
 //typedef M3AhFingerX1PdoV0Cmd ec_cmd_t;
 //typedef M3AhFingerX1PdoV0Status ec_stat_t;

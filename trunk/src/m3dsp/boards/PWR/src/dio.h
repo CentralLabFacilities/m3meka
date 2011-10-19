@@ -53,43 +53,6 @@ int GetMotorEnabledFiltered(); //Power supply issue, causes spurious disable
 
 #endif
 
-#if defined  M3_MAX2_BDC_ARMH
-#define PinFwd	!(PORTCbits.RC0) //RC0	INPUT	PIN25	SPI_CLK_SEAS/FWD
-#define PinRev	!(PORTCbits.RC2) //RC2	INPUT	PIN27	SPI_SS_SEAS/REV
-#define PinZero	!(PORTBbits.RB5) //RB5	INPUT	PIN41	SPI_DIO_SEAS/ZERO	
-#endif
-
-#if defined M3_DAC_0_1
-#define SetEnableAmp	LATBbits.LATB6=0
-#define ClrEnableAmp	LATBbits.LATB6=1
-#endif
-
-#if defined M3_ELMO_RNA_R0 || defined M3_ELMO_B1R1 || defined M3_ELMO_Z1R1
-#define SetEnableAmp	LATBbits.LATB12=1
-#define ClrEnableAmp	LATBbits.LATB12=0
-#endif
-
-#if defined M3_ELMO_B1R1 || defined M3_ELMO_Z1R1 || defined M3_DAC_0_1
-#define PinLimitSwitch	PORTBbits.RB5
-int limit_switch_pos_flag();
-int limit_switch_neg_flag();
-#endif
-
-//ZTB Z AXIS TRIGGER BOARD
-#if defined M3_ELMO_Z1R1
-#define PinZTB	PORTCbits.RC1
-int aux_switch_flag();
-#endif
-
-#if defined M3_LOADX6_A2R1 || defined M3_LOADX6_A2R2 || defined M3_LOADX6_A2R3	
-#define PinDigExt0		PORTBbits.RB5
-#endif
-
-#ifdef M3_DEV
-#define PinDigExt0		PORTBbits.RB5
-#endif
-
-
 void setup_dio(void);
 
 #endif

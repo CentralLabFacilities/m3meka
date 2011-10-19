@@ -60,9 +60,7 @@ int main (void)
 #ifdef USE_DIO
 	setup_dio();
 #endif
-#ifdef USE_PWM
-	setup_pwm();
-#endif
+
 #ifdef USE_CONTROL
 	setup_control();
 #endif
@@ -71,72 +69,23 @@ int main (void)
 	setup_adc_spi();
 #endif
 
-#ifdef USE_ENCODER_MA3
-	setup_ma3();
-#endif
-#ifdef USE_ENCODER_QEI
-	setup_qei();
-#endif
 #ifdef USE_ADC
 	setup_adc();
 #endif
 #ifdef USE_TIMER3
 	setup_timer3();
 #endif
-#ifdef USE_BLDC
-	setup_bldc();
-#endif
-#ifdef USE_ENCODER_VERTX
-	setup_vertx();
-#endif
-#ifdef USE_DAC
-	setup_dac();
-#endif
-#ifdef USE_TACTILE_PPS
-	setup_pps();
-#endif
-#ifdef USE_LED_RGB
- setup_led_rgb();
-#endif
-#ifdef USE_LED_MDRV
- setup_led_mdrv();
-#endif
-#ifdef USE_BRAKE
- setup_brake();
-#endif
-#ifdef USE_AS5510
- setup_as5510();
-#endif
-
 
 #ifdef USE_UART
 	setup_uart();
-#ifdef M3_DEV
-	sprintf(uart_str,"Starting M3EC %s %s\n\n\r",__DATE__, __TIME__);
-	PUTS(uart_str);
 #endif
-#endif
-
-
-
-//#ifdef USE_ETHERCAT
-//	while (!eeprom_loaded())		//Wait until ESC is ready
-//		//ToggleHeartbeatLED();				//Success
-//		SetHeartbeatLED;
-//	setup_ethercat();
-//	ClrHeartbeatLED;
-//#endif
 
 #ifdef USE_ETHERCAT
-//#ifdef M3_FB_DEV_0_0
-//	setup_ethercat();
-//#else
 	while (!eeprom_loaded())		//Wait until ESC is ready
 		//ToggleHeartbeatLED();				//Success
 		SetHeartbeatLED;
 	setup_ethercat();
 	ClrHeartbeatLED;
-//#endif
 #endif
 
 
@@ -150,63 +99,13 @@ dummy = U1RXREG;
 
 	while(1){
 
-#ifdef M3_FB_DEV_0_0
-if(ready_for_sending_flag==1)
-	{
-	serial_eth_refresh();
-	serial_eth_send(); //Sending data to the ARMH slave
-	//ms_delay(1);
-	ready_for_sending_flag=0;
-	}
-#endif	
-
-
-#if defined USE_LED_MDRV
-	//step_led_mdrv();
-	//ToggleHeartbeatLED();
-	if (i++%20==0)
-	{
-		//ToggleHeartbeatLED();
-		step_ethercat();
-	}
-#else
 		if (i++%20001==0)
 		{
 			ToggleHeartbeatLED();
-			
-			//Temporary code
-			//Testing current sensing on PWR_0_5 via UART
-			//#ifdef M3_PWR_0_5
-			//temp_current_val=get_adc_spi(0);
-			//sprintf(uart_str,"ADC: %i n\r",temp_current_val);
-			//PUTS(uart_str);
-			//TXREG='x';
-			//puts1(uart_str);
-			//puts1("hello");
-			//PORTBBBBBbits.RB10^=1;
-			//#endif
 		}
-#if defined USE_ETHERCAT //&& ! defined M3_MAX2_BDC_ARMH
+#if defined USE_ETHERCAT
 		step_ethercat();
 #endif
-#endif
-		
-
-#if defined USE_TACTILE_PPS && defined USE_TIMER3
-#ifdef M3_GMB_G1R1
-	if (pps_trigger)
-	{
-		pps_trigger=0;
-		step_pps(0);
-		step_pps(1);
-	}
-#endif
-#endif
-//#ifdef USE_AS5510
-//	step_as5510();
-//	ms_delay(1);
-//#endif
-
 
 	} 
 }

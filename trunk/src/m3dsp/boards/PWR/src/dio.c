@@ -51,36 +51,7 @@ inline void TogglePwrStatusLED(void)
 }
 #endif
 
-#if defined M3_ELMO_B1R1 || defined M3_ELMO_Z1R1 || defined M3_DAC_0_1
-int limit_switch_neg_flag()
-{
-	if (!PinLimitSwitch) //inverted 
-		return (int)M3ACT_FLAG_NEG_LIMITSWITCH;
-	else
-		return 0;
-}
-int limit_switch_pos_flag()
-{
-	return 0; //neg only for this board
-}
-#endif
 
-//ZTB Z AXIS TRIGGER BOARD
-#if defined M3_ELMO_Z1R1
-int get_aux_switch()
-{
-	return PinZTB;
-}
-int aux_switch_flag()
-{
-	if (PinZTB) 
-	{	SetHeartbeatLED;
-		return (int)M3ACT_FLAG_AUX_SWITCH;
-	}
-	else
-		return 0;
-}
-#endif
 
 
 
@@ -96,12 +67,6 @@ void setup_dio(void)
 #define BUZZER_CLR;
 #endif
 
-#endif
-#if defined M3_DAC_0_1 || defined M3_ELMO_RNA_R0 || defined M3_ELMO_B1R1 || defined M3_ELMO_Z1R1
-	ClrEnableAmp;
-#endif
-#if defined M3_ELMO_Z1R1
-	AD1PCFGLbits.PCFG7=1;// Use AN7 as a digital input for M3_ZTB board (Z-Axis trigger board)
 #endif
 }
 

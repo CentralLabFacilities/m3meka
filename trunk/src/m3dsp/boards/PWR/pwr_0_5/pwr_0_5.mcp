@@ -50,7 +50,6 @@ file_022=.
 file_023=.
 file_024=.
 file_025=.
-file_026=.
 [GENERATED_FILES]
 file_000=no
 file_001=no
@@ -78,7 +77,6 @@ file_022=no
 file_023=no
 file_024=no
 file_025=no
-file_026=no
 [OTHER_FILES]
 file_000=no
 file_001=no
@@ -106,7 +104,6 @@ file_022=no
 file_023=no
 file_024=no
 file_025=no
-file_026=no
 [FILE_INFO]
 file_000=..\src\adc.c
 file_001=..\src\adc_spi.c
@@ -133,8 +130,7 @@ file_021=..\src\p33FJ32MC204.h
 file_022=..\src\setup.h
 file_023=..\src\timer3.h
 file_024=..\src\warning.h
-file_025=..\src\inttypes.h
-file_026=..\misc\p33FJ32MC204_APP.gld
+file_025=..\misc\p33FJ32MC204_APP.gld
 [SUITE_INFO]
 suite_guid={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 suite_state=

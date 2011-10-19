@@ -121,7 +121,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include "p33Fxxxx.h"
-//#include "..\..\..\..\m3\hardware\m3meka_ec_def.h"
+#include "..\..\..\..\m3\hardware\m3ec_def.h"
 #include "..\..\..\..\m3\hardware\m3ec_pdo_v1_def.h"
 #include "..\..\..\..\m3\hardware\m3ec_pdo_v2_def.h"
 #include "..\..\..\..\m3\hardware\m3ec_pdo_v0_def.h" //needed for M3_FB_DEV_0_0 ??
