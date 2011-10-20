@@ -109,8 +109,7 @@ void isr_update_input_pdo(void)
 	
 	//Not included in the actual PDO v3
 	/*
-	#if defined MAX2_BLDC_0_3_A2R2 || defined MAX2_BDC_0_3_A2R2 || defined MAX2_BDC_0_2_A2R3 \
-	|| defined MAX2_BLDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3 
+	#if defined MAX2_BLDC_0_3_A2R2 || defined MAX2_BDC_0_3_A2R2	
 	ec_stat.status[0].adc_ext_a=0;
 	ec_stat.status[0].adc_ext_b=0;
 	#else	
@@ -119,10 +118,15 @@ void isr_update_input_pdo(void)
 	#endif
 	*/
 	
-	#if defined USE_ADC_SPI
+	//PDOv1
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BLDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 \
+	|| defined MAX2_BLDC_0_2_T2R3 
+	ec_stat.status[0].adc_ext_a=0;
+	ec_stat.status[0].adc_ext_b=0;
+	#endif
+		
 	#if defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
 	ec_stat.status[0].adc_torque=get_adc_spi(0); 
-	#endif
 	#endif
 	
 	#if defined MAX2_BDC_0_3_T2R2 || defined MAX2_BLDC_0_3_T2R2
@@ -142,7 +146,10 @@ void isr_update_input_pdo(void)
 
 	#ifdef USE_CURRENT
 	ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag()|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.;
+	#if !(defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3)
 	ec_stat.status[0].current_ma = ABS(get_current_ma());
+	#endif
+	
 	#else
 	ec_stat.status[0].flags=ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.
 	#endif

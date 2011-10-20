@@ -43,8 +43,13 @@ extern int ec_flags[];
 extern  int ec_wd_expired;
 extern long ec_wd_timestamp;
 
+#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+typedef M3ActX1PdoV1Status ec_stat_t;
+typedef M3ActX1PdoV1Cmd ec_cmd_t;
+#else
 typedef M3ActX1PdoV3Status ec_stat_t;
 typedef M3ActX1PdoV3Cmd ec_cmd_t;
+#endif
 
 #define NUM_DBG_CH 1
 

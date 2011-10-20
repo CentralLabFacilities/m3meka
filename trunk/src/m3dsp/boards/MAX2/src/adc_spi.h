@@ -24,7 +24,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 //Setup for use with XYZ SPI ADC unit
 
-
 void setup_adc_spi(void);
 void step_adc_spi();
 

@@ -53,8 +53,13 @@ int ramp_pid_gains_up(int chid,int rate)
 {
 	int done=0;
 
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	M3ActPdoV1Cmd * g = &(gains.command[chid]);
+	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
+	#else
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
 	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
+	#endif
 
 	ramp_idx[chid]++;
 	g->k_p_shift=d->k_p_shift;
@@ -99,8 +104,16 @@ int ramp_pid_gains_up(int chid,int rate)
 int ramp_pid_gains_down(int chid,int rate)
 {
 	int done=0;
+	
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	M3ActPdoV1Cmd * g = &(gains.command[chid]);
+	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
+	#else
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
 	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
+	#endif
+	
+	
 	ramp_idx[chid]++;
 
 	g->k_p_shift=d->k_p_shift;
@@ -141,7 +154,12 @@ int ramp_pid_gains_down(int chid,int rate)
 
 void setup_pid(int chid)
 {
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	M3ActPdoV1Cmd * g = &(gains.command[chid]);
+	#else
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
+	#endif
+	
 	g->k_p=0;
 	g->k_i=0;
 	g->k_d=0;
@@ -278,8 +296,14 @@ void step_control()
 
 void step_torque_pid(int chid,int des)
 {
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	M3ActPdoV1Cmd * g = &(gains.command[chid]);
+	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
+	#else
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
 	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
+	#endif
+	
 	int ddes = CLAMP(des,d->t_min,d->t_max);
 	int s=0;
 
@@ -297,13 +321,11 @@ void step_torque_pid(int chid,int des)
 		s=adc_raw[ADC_EXT];
 	#endif
 	
-	#if defined USE_ADC_SPI
 	#if defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
 	if (d->config&M3ACT_CONFIG_TORQUE_SMOOTH)
 		s=get_avg_adc_spi(0);
 	else
 		s=get_adc_spi(0);
-	#endif
 	#endif
 
 
@@ -354,8 +376,14 @@ void step_current_pid(int chid, int des)
 	#ifdef USE_CURRENT
 /* Not used for the moment
 	
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	M3ActPdoV1Cmd * g = &(gains.command[chid]);
+	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
+	#else
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
 	M3ActPdoV3Cmd * d = &(ec_cmd.command[chid]);
+	#endif
+	
 	int ddes = ABS(CLAMP(des,d->t_min,d->t_max));
 	int s=0;
 	int sign = SIGN(des);
