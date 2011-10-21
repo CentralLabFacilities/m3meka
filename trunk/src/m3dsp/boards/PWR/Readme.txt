@@ -1,22 +1,16 @@
 Naming convention:
 ==================
 
-PCB_MotorType_VersionOfThePCB_Robot
+PCB_VersionOfThePCB_Robot
 
-BDC: Brushed DC Motor
-BLDC: Brushless DC Motor
-0_3: MAX2 v0.3 Motor driver (w/ big inline connectors)
-0_2: MAX2 v0.2 Motor driver (the original one)
+0_5: PWR v0.5 (corrected some minor PCB mistakes from v0.4)
+0_4: PWR v0.4 
 
 UTA Robot:
 ===========
-MAX2_BDC_0_3_A2R2
-MAX2_BLDC_0_3_A2R2
-MAX2_BDC_0_3_T2R2
-MAX2_BLDC_0_3_T2R2
+PWR_0_5
+
 
 Singapore Robot:
 =================
-MAX2_BDC_0_2_A2R3
-MAX2_BDC_0_2_T2R3
-MAX2_BLDC_0_2_T2R3
+PWR_0_5

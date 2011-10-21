@@ -30,6 +30,10 @@ ec_stat_t   ec_stat;
 unsigned char pdo_cmd[PDO_COMMAND_SIZE];
 unsigned char pdo_stat[PDO_STATUS_SIZE];
 
+void ISR_EscReadAccess( UINT8 *pData, UINT16 Address, UINT16 Len );
+void ISR_EscWriteAccess( UINT8 *pData, UINT16 Address, UINT16 Len );
+void isr_update_input_pdo(void);
+
 int eeprom_loaded(void){return EEPROM_LOADED;}
 
 int ec_wd_expired;
@@ -141,8 +145,6 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 {
 	//Interrupt service routine for the interrupts from the EtherCAT Slave Controller
 	//Do the processing of PDOs here
-	UINT8 dummy[2];
-
 
 	/* INTERRUPT_PROTECT_ENABLE acts as an atomic lock on the data. This can protect
 	against mode change blips, etc. However it causes priority issues, in particular it affects
@@ -195,7 +197,6 @@ if (bSynchronMode)						/* Application is synchronized to DC-, SM2- or SM3-event
 
 void setup_ethercat(void)
 {  
-	unsigned char tmp;
 	int i;
 	UINT8 u8PDICtrl = 0;
 

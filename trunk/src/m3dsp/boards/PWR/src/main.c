@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+#include "warning.h"
 #include "p33fxxxx.h"
 #include "setup.h"
 
@@ -38,9 +38,6 @@ _FICD(ICS_PGD2 & JTAGEN_OFF);
 //---------------------------------------------------------------------------------
 //                     MAIN
 //---------------------------------------------------------------------------------
-
-extern ready_for_sending_flag; 	//This variable comes from m3serial.c (for FB_DEV board), and allows the data sending to be done in the main, but only after a reception of data from the slave
-									//It helps symchronizing the communication, while freeing the UART interruption while sending data (since the sending process is done in the main
 
 int main (void)
 {
