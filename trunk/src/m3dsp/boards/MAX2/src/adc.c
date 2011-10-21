@@ -212,7 +212,10 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 			watchdog_expired = 1;
 		}	
 		last_status = (ec_cmd.command[0].config & 0x4000);
+		#else
+		watchdog_expired = 0;	//Always off
 		#endif
+
 		
 		//Sum = 125us, 25% of this time slice
 	}
