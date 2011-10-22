@@ -10,4 +10,10 @@
 	#warning "How do you expect it to work if you don't specify what robot?"
 #endif
 
+#ifdef USE_WATCHDOG
+	#warning "WATCHDOG ENABLED"
+#else
+	#warning "WATCHDOG DISABLED"
+#endif
+
 #endif

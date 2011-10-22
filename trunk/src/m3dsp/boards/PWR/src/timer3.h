@@ -21,6 +21,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _TIMER3_H
 #define _TIMER3_H
 
+
 #ifdef USE_TIMER3
 
 #if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5 //100hz

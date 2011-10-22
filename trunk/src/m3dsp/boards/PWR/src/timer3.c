@@ -24,7 +24,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 int tmp_cnt;
 int irq_cnt;
-
+unsigned int wd_cnt = 0, last_status = 0, watchdog_expired;	//Watchdog
 
 void setup_timer3(void)
 {
@@ -46,6 +46,23 @@ void setup_timer3(void)
 void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void) {
 	_T3IF = 0;
 
+#ifdef USE_WATCHDOG
+	wd_cnt++;
+//	if ((ec_cmd.command[0].config & 0x4000) != last_status)		// if the WD bit changes, everything is cool
+	if ((ec_cmd.config & 0x4000) != last_status)		// if the WD bit changes, everything is cool
+	{
+		wd_cnt = 0;
+		watchdog_expired = 0;
+	}
+	else if (wd_cnt > 500)					// if the status doesn't change in 250ms, problem
+	{
+		watchdog_expired = 1;
+	}	
+//	last_status = (ec_cmd.command[0].config & 0x4000);
+	last_status = (ec_cmd.config & 0x4000);
+#else
+	watchdog_expired = 0;	//Always off
+#endif
 
 //Latch encoder timestamp on Rising edge.
 #ifdef USE_TIMESTAMP_DC

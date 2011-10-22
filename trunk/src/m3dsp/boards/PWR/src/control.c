@@ -19,6 +19,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef USE_CONTROL
 
+extern unsigned int watchdog_expired;
 
 #include "setup.h"
 #include "control.h"
@@ -37,10 +38,19 @@ void setup_control()
 }
 void step_control()
 {
+
+	#ifdef USE_WATCHDOG	
+	if (ec_cmd.enable_motor && !watchdog_expired)
+		SetEnableMotor;
+	else
+		ClrEnableMotor;
+	#else
 	if (ec_cmd.enable_motor)
 		SetEnableMotor;
 	else
 		ClrEnableMotor;
+	#endif
+	
 #if defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
 
 	if (PinMotorEnabled)
