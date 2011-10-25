@@ -136,7 +136,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	adc_buffer[ADC_CURRENT_A][adc_idx]=adc_raw[ADC_CURRENT_A];
 	adc_buffer[ADC_CURRENT_B][adc_idx]=adc_raw[ADC_CURRENT_B];
 	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
-	#endif //#if defined MAX2_BDC_0_3_A2R2 || defined MAX2_BLDC_0_3_A2R2
+	#endif
 	
 	#if defined MAX2_BLDC_0_3_T2R2 || defined MAX2_BDC_0_3_T2R2 
 	adc_buffer[ADC_EXT][adc_idx]=adc_raw[ADC_EXT];
@@ -146,7 +146,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	adc_buffer_fast[adc_idx_fast]=adc_raw[ADC_EXT];
 	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
 	adc_idx_fast=INC_MOD(adc_idx_fast,ADC_NUM_SMOOTH_FAST);
-	#endif	//#if defined MAX2_BLDC_0_3_T2R2 || defined MAX2_BDC_0_3_T2R2
+	#endif
 	
 	#if defined MAX2_BLDC_0_2_T2R3
 	adc_buffer[ADC_MOTOR_TEMP][adc_idx]=adc_raw[ADC_MOTOR_TEMP];

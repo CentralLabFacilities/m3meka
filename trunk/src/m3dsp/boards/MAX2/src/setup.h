@@ -55,7 +55,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "bldc.h"
 #include "brake.h"
 #include "adc_spi.h"
-#include "warning.h"
 
 //#define EC_USE_WATCHDOG
 

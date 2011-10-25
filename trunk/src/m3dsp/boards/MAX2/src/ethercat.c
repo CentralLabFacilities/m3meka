@@ -146,7 +146,7 @@ void isr_update_input_pdo(void)
 
 	#ifdef USE_CURRENT
 	ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag()|M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.;
-	#if !(defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3)
+	#if !(defined MAX2_BDC_0_2_A2R3 || defined MAX2_BLDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3)
 	ec_stat.status[0].current_ma = ABS(get_current_ma());
 	#endif
 	

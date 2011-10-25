@@ -53,7 +53,7 @@ int ramp_pid_gains_up(int chid,int rate)
 {
 	int done=0;
 
-	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BLDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3 
 	M3ActPdoV1Cmd * g = &(gains.command[chid]);
 	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
 	#else
@@ -105,7 +105,7 @@ int ramp_pid_gains_down(int chid,int rate)
 {
 	int done=0;
 	
-	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BLDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
 	M3ActPdoV1Cmd * g = &(gains.command[chid]);
 	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
 	#else
@@ -154,7 +154,7 @@ int ramp_pid_gains_down(int chid,int rate)
 
 void setup_pid(int chid)
 {
-	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BLDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
 	M3ActPdoV1Cmd * g = &(gains.command[chid]);
 	#else
 	M3ActPdoV3Cmd * g = &(gains.command[chid]);
@@ -296,7 +296,7 @@ void step_control()
 
 void step_torque_pid(int chid,int des)
 {
-	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
+	#if defined MAX2_BDC_0_2_A2R3 || defined MAX2_BLDC_0_2_A2R3 || defined MAX2_BDC_0_2_T2R3 || defined MAX2_BLDC_0_2_T2R3
 	M3ActPdoV1Cmd * g = &(gains.command[chid]);
 	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
 	#else
