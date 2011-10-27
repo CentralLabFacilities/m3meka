@@ -19,6 +19,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
  
 #include <stdio.h>
 #include <m3/toolbox/monitor.h>
+#include <m3/toolbox/log.h>
 ///////////////////////////////////////////////////////
 extern "C" 
 {
@@ -26,11 +27,14 @@ extern "C"
 //These names should match the create_xxx() and destroy_xxx() function names.
 //They should also match the names used for component definition in m3_config.yml 
 #define M3MONITOR_NAME "m3monitor"
+#define M3MEKA_LOG_NAME "m3log"
 ///////////////////////////////////////////////////////
 //Creators
 m3rt::M3Component * create_m3monitor(){return new m3::M3Monitor;}
+m3rt::M3Component * create_m3log(){return new m3::M3MekaLog;}
 //Deletors
 void destroy_m3monitor(m3rt::M3Component* c) {delete c;}
+void destroy_m3log(m3rt::M3Component* c) {delete c;}
 ///////////////////////////////////////////////////////
 class M3FactoryProxy 
 { 
@@ -39,6 +43,9 @@ public:
 	{
 		m3rt::creator_factory[M3MONITOR_NAME] =	create_m3monitor;
 		m3rt::destroyer_factory[M3MONITOR_NAME] =  destroy_m3monitor;
+		
+		m3rt::creator_factory[M3MEKA_LOG_NAME] = create_m3log;
+		m3rt::destroyer_factory[M3MEKA_LOG_NAME] =  destroy_m3log;
 	}
 };
 ///////////////////////////////////////////////////////

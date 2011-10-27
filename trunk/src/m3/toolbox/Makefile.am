@@ -25,10 +25,18 @@ clean-local:
 	
 trajectory.pb.h: trajectory.pb.cpp
 
+log.pb.h: log.pb.cpp
+
 trajectory.pb.cpp: trajectory.proto
 	protoc -I$(prefix)/include/m3rt/base -I./ --cpp_out=./ trajectory.proto
 	mv trajectory.pb.cc trajectory.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base -I./ --python_out=$(top_srcdir)/python/m3 trajectory.proto
+
+log.pb.cpp: log.proto
+	protoc -I$(prefix)/include/m3rt/base -I./ --cpp_out=./ log.proto
+	mv log.pb.cc log.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base -I./ --python_out=$(top_srcdir)/python/m3 log.proto
+
 
 proto: trajectory.pb.cpp
 
@@ -60,6 +68,9 @@ libm3toolboxincludedir = $(includedir)/m3/toolbox
 libm3toolboxinclude_HEADERS = \
 	dfilter.h\
 	toolbox.h\
+	log.h\
+	log.pb.h\
+	log.proto\
 	trajectory.h\
 	trajectory.pb.h\
 	trajectory.proto\
@@ -69,8 +80,10 @@ libm3toolboxinclude_HEADERS = \
 
 libm3toolbox_la_SOURCES = \
 	trajectory.pb.cpp\
+	log.pb.cpp\
 	dfilter.cpp\
 	trajectory.cpp\
+	log.cpp\
 	toolbox.cpp\
 	monitor.cpp\
 	factory_proxy.cpp\
