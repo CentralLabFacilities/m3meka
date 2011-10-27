@@ -250,7 +250,6 @@ libm3hardware_la_SOURCES = \
 	joint_slave.cpp\
 	joint_zlift.cpp\
   	transmission.cpp\
-	factory_proxy.cpp\
 	loadx1_ec.cpp\
 	loadx1.cpp\
 	loadx6_ec.cpp\
@@ -264,7 +263,8 @@ libm3hardware_la_SOURCES = \
 	robot_monitor.cpp\
 	async_io.cpp\
 	log_test.pb.cpp\
-	log_test.cpp
+	log_test.cpp\
+	factory_proxy.cpp
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -113,17 +113,16 @@ am_libm3hardware_la_OBJECTS = libm3hardware_la-actuator_ec.pb.lo \
 	libm3hardware_la-actuator_virtual.lo \
 	libm3hardware_la-joint_slave.lo \
 	libm3hardware_la-joint_zlift.lo \
-	libm3hardware_la-transmission.lo \
-	libm3hardware_la-factory_proxy.lo \
-	libm3hardware_la-loadx1_ec.lo libm3hardware_la-loadx1.lo \
-	libm3hardware_la-loadx6_ec.lo libm3hardware_la-loadx6.lo \
-	libm3hardware_la-loadx6_virtual.lo \
+	libm3hardware_la-transmission.lo libm3hardware_la-loadx1_ec.lo \
+	libm3hardware_la-loadx1.lo libm3hardware_la-loadx6_ec.lo \
+	libm3hardware_la-loadx6.lo libm3hardware_la-loadx6_virtual.lo \
 	libm3hardware_la-tactile_pps22_ec.lo \
 	libm3hardware_la-ledx2_ec.lo libm3hardware_la-motor.lo \
 	libm3hardware_la-led_matrix_ec.lo \
 	libm3hardware_la-ledx2xn_ec.lo \
 	libm3hardware_la-robot_monitor.lo libm3hardware_la-async_io.lo \
-	libm3hardware_la-log_test.pb.lo libm3hardware_la-log_test.lo
+	libm3hardware_la-log_test.pb.lo libm3hardware_la-log_test.lo \
+	libm3hardware_la-factory_proxy.lo
 libm3hardware_la_OBJECTS = $(am_libm3hardware_la_OBJECTS)
 libm3hardware_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -392,7 +391,6 @@ libm3hardware_la_SOURCES = \
 	joint_slave.cpp\
 	joint_zlift.cpp\
   	transmission.cpp\
-	factory_proxy.cpp\
 	loadx1_ec.cpp\
 	loadx1.cpp\
 	loadx6_ec.cpp\
@@ -406,7 +404,8 @@ libm3hardware_la_SOURCES = \
 	robot_monitor.cpp\
 	async_io.cpp\
 	log_test.pb.cpp\
-	log_test.cpp
+	log_test.cpp\
+	factory_proxy.cpp
 
 all: all-am
 
@@ -727,13 +726,6 @@ libm3hardware_la-transmission.lo: transmission.cpp
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libm3hardware_la-transmission.lo `test -f 'transmission.cpp' || echo '$(srcdir)/'`transmission.cpp
 
-libm3hardware_la-factory_proxy.lo: factory_proxy.cpp
-	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libm3hardware_la-factory_proxy.lo -MD -MP -MF $(DEPDIR)/libm3hardware_la-factory_proxy.Tpo -c -o libm3hardware_la-factory_proxy.lo `test -f 'factory_proxy.cpp' || echo '$(srcdir)/'`factory_proxy.cpp
-	$(am__mv) $(DEPDIR)/libm3hardware_la-factory_proxy.Tpo $(DEPDIR)/libm3hardware_la-factory_proxy.Plo
-#	source='factory_proxy.cpp' object='libm3hardware_la-factory_proxy.lo' libtool=yes \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libm3hardware_la-factory_proxy.lo `test -f 'factory_proxy.cpp' || echo '$(srcdir)/'`factory_proxy.cpp
-
 libm3hardware_la-loadx1_ec.lo: loadx1_ec.cpp
 	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libm3hardware_la-loadx1_ec.lo -MD -MP -MF $(DEPDIR)/libm3hardware_la-loadx1_ec.Tpo -c -o libm3hardware_la-loadx1_ec.lo `test -f 'loadx1_ec.cpp' || echo '$(srcdir)/'`loadx1_ec.cpp
 	$(am__mv) $(DEPDIR)/libm3hardware_la-loadx1_ec.Tpo $(DEPDIR)/libm3hardware_la-loadx1_ec.Plo
@@ -831,6 +823,13 @@ libm3hardware_la-log_test.lo: log_test.cpp
 #	source='log_test.cpp' object='libm3hardware_la-log_test.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libm3hardware_la-log_test.lo `test -f 'log_test.cpp' || echo '$(srcdir)/'`log_test.cpp
+
+libm3hardware_la-factory_proxy.lo: factory_proxy.cpp
+	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libm3hardware_la-factory_proxy.lo -MD -MP -MF $(DEPDIR)/libm3hardware_la-factory_proxy.Tpo -c -o libm3hardware_la-factory_proxy.lo `test -f 'factory_proxy.cpp' || echo '$(srcdir)/'`factory_proxy.cpp
+	$(am__mv) $(DEPDIR)/libm3hardware_la-factory_proxy.Tpo $(DEPDIR)/libm3hardware_la-factory_proxy.Plo
+#	source='factory_proxy.cpp' object='libm3hardware_la-factory_proxy.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libm3hardware_la-factory_proxy.lo `test -f 'factory_proxy.cpp' || echo '$(srcdir)/'`factory_proxy.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo
