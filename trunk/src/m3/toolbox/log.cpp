@@ -96,6 +96,7 @@ bool M3MekaLog::LinkDependentComponents()
 	return true;
 }
 
+
 ////////////////////////////////////////////////////////////
 
 void M3MekaLog::Startup()
@@ -136,8 +137,8 @@ void M3MekaLog::Startup()
 	  downsample_rate = MAX(0,((int)((mReal)RT_TASK_FREQUENCY)/freq)-1); 
 	  downsample_cnt = 0;
 	  
-	  int idx = factory->GetComponentIdx(GetName());
-	  components.push_back(factory->GetComponent(idx));
+	  //int idx = factory->GetComponentIdx(GetName());
+	  //components.push_back(factory->GetComponent(idx));
 	  
 	  //NOTE: This serialization needs to be done once only
 	  //Likely a semaphore is needed on rt_system
@@ -232,9 +233,15 @@ bool M3MekaLog::ReadConfig(const char * filename)
 	  return false;
   GetYamlDoc(filename, doc);
 
-  for(int i=0; i < doc["components"].size(); i++) 
-    comp_names.push_back(doc["components"][i]);
-    
+  try 
+	{
+	  
+	  for(int i=0; i < doc["components"].size(); i++) 
+	      comp_names.push_back(doc["components"][i]);		
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		
+	} 
   
    doc["log_name"] >> log_name;
    doc["freq"] >> freq;
