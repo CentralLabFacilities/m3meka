@@ -122,7 +122,8 @@ am_libm3hardware_la_OBJECTS = libm3hardware_la-actuator_ec.pb.lo \
 	libm3hardware_la-ledx2_ec.lo libm3hardware_la-motor.lo \
 	libm3hardware_la-led_matrix_ec.lo \
 	libm3hardware_la-ledx2xn_ec.lo \
-	libm3hardware_la-robot_monitor.lo libm3hardware_la-async_io.lo
+	libm3hardware_la-robot_monitor.lo libm3hardware_la-async_io.lo \
+	libm3hardware_la-log_test.pb.lo libm3hardware_la-log_test.lo
 libm3hardware_la_OBJECTS = $(am_libm3hardware_la_OBJECTS)
 libm3hardware_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -403,7 +404,9 @@ libm3hardware_la_SOURCES = \
 	led_matrix_ec.cpp\
 	ledx2xn_ec.cpp\
 	robot_monitor.cpp\
-	async_io.cpp
+	async_io.cpp\
+	log_test.pb.cpp\
+	log_test.cpp
 
 all: all-am
 
@@ -506,6 +509,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libm3hardware_la-loadx6_ec.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libm3hardware_la-loadx6_ec.pb.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libm3hardware_la-loadx6_virtual.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libm3hardware_la-log_test.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libm3hardware_la-log_test.pb.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libm3hardware_la-motor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libm3hardware_la-pwr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libm3hardware_la-pwr.pb.Plo@am__quote@
@@ -813,6 +818,20 @@ libm3hardware_la-async_io.lo: async_io.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libm3hardware_la-async_io.lo `test -f 'async_io.cpp' || echo '$(srcdir)/'`async_io.cpp
 
+libm3hardware_la-log_test.pb.lo: log_test.pb.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libm3hardware_la-log_test.pb.lo -MD -MP -MF $(DEPDIR)/libm3hardware_la-log_test.pb.Tpo -c -o libm3hardware_la-log_test.pb.lo `test -f 'log_test.pb.cpp' || echo '$(srcdir)/'`log_test.pb.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libm3hardware_la-log_test.pb.Tpo $(DEPDIR)/libm3hardware_la-log_test.pb.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='log_test.pb.cpp' object='libm3hardware_la-log_test.pb.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libm3hardware_la-log_test.pb.lo `test -f 'log_test.pb.cpp' || echo '$(srcdir)/'`log_test.pb.cpp
+
+libm3hardware_la-log_test.lo: log_test.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libm3hardware_la-log_test.lo -MD -MP -MF $(DEPDIR)/libm3hardware_la-log_test.Tpo -c -o libm3hardware_la-log_test.lo `test -f 'log_test.cpp' || echo '$(srcdir)/'`log_test.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libm3hardware_la-log_test.Tpo $(DEPDIR)/libm3hardware_la-log_test.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='log_test.cpp' object='libm3hardware_la-log_test.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libm3hardware_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libm3hardware_la-log_test.lo `test -f 'log_test.cpp' || echo '$(srcdir)/'`log_test.cpp
+
 mostlyclean-libtool:
 	-rm -f *.lo
 
@@ -1048,6 +1067,13 @@ clean-local:
 	rm -f *.pb.*
 
 #////////////////////////// M3 SYS ////////////////////////////
+log_test.pb.h: log_test.pb.cpp
+
+log_test.pb.cpp: log_test.proto
+	protoc -I$(prefix)/include/m3rt/base -I./ --cpp_out=./ log_test.proto
+	mv log_test.pb.cc log_test.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base -I./ --python_out=$(top_srcdir)/python/m3 log_test.proto
+
 ledx2xn_ec.pb.h: ledx2xn_ec.pb.cpp
 
 ledx2xn_ec.pb.cpp: ledx2xn_ec.proto

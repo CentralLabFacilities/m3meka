@@ -80,6 +80,13 @@ clean-local:
 	rm -f *.pb.*
 	
 #////////////////////////// M3 SYS ////////////////////////////
+log_test.pb.h: log_test.pb.cpp
+
+log_test.pb.cpp: log_test.proto
+	protoc -I$(prefix)/include/m3rt/base -I./ --cpp_out=./ log_test.proto
+	mv log_test.pb.cc log_test.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base -I./ --python_out=$(top_srcdir)/python/m3 log_test.proto
+
 ledx2xn_ec.pb.h: ledx2xn_ec.pb.cpp
 
 ledx2xn_ec.pb.cpp: ledx2xn_ec.proto
@@ -255,7 +262,9 @@ libm3hardware_la_SOURCES = \
 	led_matrix_ec.cpp\
 	ledx2xn_ec.cpp\
 	robot_monitor.cpp\
-	async_io.cpp
+	async_io.cpp\
+	log_test.pb.cpp\
+	log_test.cpp
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////
 
