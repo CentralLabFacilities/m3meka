@@ -61,7 +61,13 @@ libm3shm_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(top_srcdir)/src/m3/hardware \
 	-L$(top_srcdir)/src/m3/chains \
 	-L$(top_srcdir)/src/m3/robots \
-	-L$(rtai_lib)
+	-L$(rtai_lib) \
+	-L$(ros_dir)/../stacks/ros_comm/utilities/cpp_common/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_traits/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/lib \
+	-L$(ros_dir)/../stacks/ros_comm/tools/rosconsole/lib \
+	-L$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/lib
 
 libm3shm_la_CPPFLAGS =   -I../chains -I../robots -I../toolbox -I../hardware -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) $(EIGEN2_CFLAGS) -ffast-math -pipe -mhard-float \
 	-I$(ros_dir)/core/roscpp/include \
@@ -71,7 +77,14 @@ libm3shm_la_CPPFLAGS =   -I../chains -I../robots -I../toolbox -I../hardware -I$(
 	-I$(ros_dir)/core/rosconsole/include \
 	-I$(ros_dir)/3rdparty/xmlrpcpp/src \
 	-I$(rtai_inc) \
-	-D__RTAI__
+	-D__RTAI__ \
+	-I$(ros_dir)/../stacks/ros_comm/utilities/cpp_common/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_traits/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/include \
+	-I$(ros_dir)/../stacks/ros_comm/tools/rosconsole/include \
+	-I$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/src\
+	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include
 libm3shm_la_SOURCES = \
 	comp_shm.cpp\
 	torque_shm.pb.cpp\

@@ -53,7 +53,13 @@ libm3toolbox_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/ros/core/roscpp/lib \
 	-L$(ros_dir)/ros/core/roslib/lib \
 	-L$(ros_dir)/ros/core/rosconsole/lib \
-	-L$(ros_dir)/ros/3rdparty/xmlrpcpp/lib
+	-L$(ros_dir)/ros/3rdparty/xmlrpcpp/lib\
+	-L$(ros_dir)/stacks/ros_comm/utilities/cpp_common/lib \
+	-L$(ros_dir)/stacks/ros_comm/clients/cpp/roscpp_traits/lib \
+	-L$(ros_dir)/stacks/ros_comm/clients/cpp/roscpp_serialization/lib \
+	-L$(ros_dir)/stacks/ros_comm/clients/cpp/roscpp/lib \
+	-L$(ros_dir)/stacks/ros_comm/tools/rosconsole/lib \
+	-L$(ros_dir)/stacks/ros_comm/utilities/xmlrpcpp/lib
 
 libm3toolbox_la_CPPFLAGS =  -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) $(EIGEN2_CFLAGS) \
 	-pipe -msse2 -ffast-math -lpthread -mhard-float \
@@ -62,7 +68,14 @@ libm3toolbox_la_CPPFLAGS =  -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) $(EIGEN2_CF
 	-I$(ros_dir)/ros/core/rosconsole/include \
 	-I$(ros_dir)/ros/3rdparty/xmlrpcpp/src \
 	-I$(ros_dir)/stacks/m3_msgs/srv_gen/cpp/include \
-	-I$(ros_dir)/stacks/m3_msgs/msg_gen/cpp/include
+	-I$(ros_dir)/stacks/m3_msgs/msg_gen/cpp/include \
+	-I$(ros_dir)/stacks/ros_comm/utilities/cpp_common/include \
+	-I$(ros_dir)/stacks/ros_comm/clients/cpp/roscpp_traits/include \
+	-I$(ros_dir)/stacks/ros_comm/clients/cpp/roscpp_serialization/include \
+	-I$(ros_dir)/stacks/ros_comm/clients/cpp/roscpp/include \
+	-I$(ros_dir)/stacks/ros_comm/tools/rosconsole/include \
+	-I$(ros_dir)/stacks/ros_comm/utilities/xmlrpcpp/src\
+	-I$(ros_dir)/stacks/ros_comm/utilities/rostime/include
 
 libm3toolboxincludedir = $(includedir)/m3/toolbox
 libm3toolboxinclude_HEADERS = \

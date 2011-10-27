@@ -59,7 +59,13 @@ libm3robots_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/3rdparty/xmlrpcpp/lib \
 	-L$(top_srcdir)/src/m3/toolbox \
 	-L$(top_srcdir)/src/m3/hardware \
-	-L$(top_srcdir)/src/m3/chains
+	-L$(top_srcdir)/src/m3/chains \
+	-L$(ros_dir)/../stacks/ros_comm/utilities/cpp_common/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_traits/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/lib \
+	-L$(ros_dir)/../stacks/ros_comm/tools/rosconsole/lib \
+	-L$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/lib
 
 
 libm3robots_la_CPPFLAGS =   -I../chains -I../toolbox -I../hardware -I$(m3_dir) -I$(m3tb_dir) \
@@ -70,7 +76,14 @@ libm3robots_la_CPPFLAGS =   -I../chains -I../toolbox -I../hardware -I$(m3_dir) -
 	-I$(top_srcdir)/ros/m3meka_msgs/msg_gen/cpp/include \
 	-I$(ros_dir)/core/roslib/include \
 	-I$(ros_dir)/core/rosconsole/include \
-	-I$(ros_dir)/3rdparty/xmlrpcpp/src
+	-I$(ros_dir)/3rdparty/xmlrpcpp/src \
+	-I$(ros_dir)/../stacks/ros_comm/utilities/cpp_common/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_traits/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/include \
+	-I$(ros_dir)/../stacks/ros_comm/tools/rosconsole/include \
+	-I$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/src\
+	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include
 libm3robots_la_SOURCES = \
 	humanoid.pb.cpp\
 	humanoid.cpp\

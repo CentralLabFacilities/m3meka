@@ -220,7 +220,7 @@ PYTHON_PREFIX = ${prefix}
 PYTHON_SITE_PKG = /usr/lib/python2.6/site-packages
 PYTHON_VERSION = 2.6
 RANLIB = ranlib
-ROS_DIR = /opt/ros/cturtle/ros
+ROS_DIR = /opt/ros/diamondback/ros
 RTAI_DIR = /usr/realtime-2.6.32.11-rtai-3.8.1
 SED = /bin/sed
 SET_MAKE = 
@@ -353,7 +353,13 @@ libm3hardware_la_LDFLAGS = -version-info 1:1:0 -module -L$(rtai_lib)  \
 	-L$(ros_dir)/core/roslib/lib \
 	-L$(ros_dir)/core/rosconsole/lib \
 	-L$(ros_dir)/3rdparty/xmlrpcpp/lib\
-	-L$(top_srcdir)/src/m3/toolbox
+	-L$(top_srcdir)/src/m3/toolbox \
+	-L$(ros_dir)/../stacks/ros_comm/utilities/cpp_common/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_traits/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/lib \
+	-L$(ros_dir)/../stacks/ros_comm/tools/rosconsole/lib \
+	-L$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/lib
 
 libm3hardware_la_CPPFLAGS = -I$(rtai_inc) -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) -ffast-math -pipe \
 	$(EIGEN2_CFLAGS) \
@@ -362,7 +368,14 @@ libm3hardware_la_CPPFLAGS = -I$(rtai_inc) -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_di
 	-I$(top_srcdir)/ros/m3meka_msgs/msg_gen/cpp/include \
 	-I$(ros_dir)/core/roslib/include \
 	-I$(ros_dir)/core/rosconsole/include \
-	-I$(ros_dir)/3rdparty/xmlrpcpp/src
+	-I$(ros_dir)/3rdparty/xmlrpcpp/src \
+	-I$(ros_dir)/../stacks/ros_comm/utilities/cpp_common/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_traits/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/include \
+	-I$(ros_dir)/../stacks/ros_comm/tools/rosconsole/include \
+	-I$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/src\
+	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include
 
 libm3hardware_la_SOURCES = \
 	actuator_ec.pb.cpp\

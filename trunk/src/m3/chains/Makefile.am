@@ -92,7 +92,15 @@ libm3chains_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/core/rosconsole/lib \
 	-L$(ros_dir)/3rdparty/xmlrpcpp/lib \
 	-L$(top_srcdir)/src/m3/toolbox \
-	-L$(top_srcdir)/src/m3/hardware
+	-L$(top_srcdir)/src/m3/hardware \
+	-L$(ros_dir)/../stacks/ros_comm/utilities/cpp_common/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_traits/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/lib \
+	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/lib \
+	-L$(ros_dir)/../stacks/ros_comm/tools/rosconsole/lib \
+	-L$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/lib
+	
+
 
 
 libm3chains_la_CPPFLAGS =   -I../hardware/ -I../toolbox/ -I$(m3_dir) \
@@ -104,7 +112,17 @@ libm3chains_la_CPPFLAGS =   -I../hardware/ -I../toolbox/ -I$(m3_dir) \
 	-I$(top_srcdir)/ros/m3meka_msgs/msg_gen/cpp/include \
 	-I$(ros_dir)/core/roslib/include \
 	-I$(ros_dir)/core/rosconsole/include \
-	-I$(ros_dir)/3rdparty/xmlrpcpp/src
+	-I$(ros_dir)/3rdparty/xmlrpcpp/src \
+	-I$(ros_dir)/../stacks/ros_comm/utilities/cpp_common/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_traits/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/include \
+	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/include \
+	-I$(ros_dir)/../stacks/ros_comm/tools/rosconsole/include \
+	-I$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/src \
+	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include
+
+	
+
 libm3chains_la_SOURCES = \
 	joint_array_mode.pb.cpp\
 	joint_array.pb.cpp\
