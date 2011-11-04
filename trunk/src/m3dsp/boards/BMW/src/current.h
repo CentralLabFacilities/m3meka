@@ -42,18 +42,31 @@ enum
 	CURRENT_HOLD
 };
 
+#ifdef BMW_0_5_A2R4
 // ACS711 w/ amp (G = -1.65): 4.44mA/bit
 // current(mA) = (ADC*I_GAIN) >> I_SHIFT; //equivalent to 4.5mA/bit
 #define I_GAIN 					9
 #define I_SHIFT					1
+//Valid auto-zero (1.65V*1.65 ±10%)
+#define AMP_MIN		2450
+#define AMP_MAX		2995
+#endif //BMW_0_5_A2R4
+
+#ifdef BMW_0_6_A2R4
+// ACS711 w/ amp (G = -5): 1.465mA/bit
+// current(mA) = (ADC*I_GAIN) >> I_SHIFT; //equivalent to 1.5mA/bit
+#define I_GAIN 					3
+#define I_SHIFT					1
+//Valid auto-zero (1.65V ±10%)
+#define AMP_MIN		1843
+#define AMP_MAX		2253
+#endif //BMW_0_6_A2R4
+
+//Current limits
 #define MAX_MOM_CURRENT			5000		//5A
 #define MAX_CONT_CURRENT 		2000		//2A
 #define CURRENT_MAX_MOM_RMS_SQ  25000000	//MAX_MOM_CURRENT*MAX_MOM_CURRENT
 #define CURRENT_MAX_CONT_RMS_SQ 4000000		//MAX_CONT_CURRENT*MAX_CONT_CURRENT
-
-//Valid auto-zero (1.65V*1.65 ±10%)
-#define AMP_MIN		2450
-#define AMP_MAX		2995
 
 #endif
 #endif
