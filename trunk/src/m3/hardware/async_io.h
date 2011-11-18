@@ -22,8 +22,12 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include "m3rt/base/component_async.h"
+
+#ifdef __RTAI__
 #include <rtai.h>
 #include "rtai_sem.h"
+#endif
+
 #include "m3/hardware/async_io.pb.h"
 #include <google/protobuf/message.h>
 

@@ -17,6 +17,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef __RTAI__
+
 #include "m3/hardware/async_io.h"
 #include "m3rt/base/m3rt_def.h"
 #include "m3rt/base/component_factory.h"
@@ -79,7 +81,9 @@ void M3AsyncIO::StepAsync()
       msg_to_copy_new_values_to->set_tmp(2.0);
       
       M3_DEBUG("got: %f\n", msg_to_get_cmds_from->tmp() );
+
       rt_sleep(10000000);
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,6 +105,6 @@ bool M3AsyncIO::ReadConfig(const char * filename)
 	return true;
 }
 
-
-
 }
+
+#endif
