@@ -1,0 +1,36 @@
+
+
+to make xml robot:
+
+rosrun xacro xacro.py `rospack find m3_description`/robots/uta.urdf.xacro -o /tmp/uta.xml
+
+to generate arm_nav scripts:
+
+roslaunch planning_environment planning_description_configuration_wizard.launch urdf_package:=m3_description urdf_path:=robots/iir.xml
+
+to launch visualizer:
+
+roslaunch m3_arm_navigation planning_components_visualizer.launch
+
+to make better motion planner:
+
+rosrun move_arm_warehouse create_launch_files.py m3
+
+roslaunch m3_arm_navigation planning_scene_warehouse_viewer_m3.launch
+
+
+
+for grabbing:
+
+(add to .bashrc export ROBOT=sim)
+
+roslaunch pr2_warehouse_viewer pr2_tabletop_world.launch
+roslaunch pr2_test_arm_navigation ompl_planning.launch
+roslaunch move_arm_warehouse planning_scene_warehouse_viewer_pr2_real.launch
+
+roslaunch pr2_teleop_general pr2_teleop_general_keyboard_noik.launch
+
+roslaunch move_arm_warehouse planning_scene_warehouse_viewer_pr2_only.launch
+
+rosrun rviz rviz
+
