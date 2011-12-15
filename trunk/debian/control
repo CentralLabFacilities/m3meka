@@ -1,7 +1,7 @@
 Source: m3meka
 Priority: extra
 Maintainer: Pierre-Luc Bacon <info@mekabot.com>
-Build-Depends: debhelper (>= 7), autotools-dev, libeigen2-dev, libprotobuf-dev, protobuf-compiler, libyaml-cpp-dev, python-support,  python-all-dbg, python-all, python-dev, python-all-dev, ros-cturtle-ros, ros-cturtle-common, ros-cturtle-common-msgs,  ros-cturtle-geometry,  ros-cturtle-laser-pipeline,  ros-cturtle-robot-model,  ros-cturtle-visualization, ros-cturtle-visualization-common, ros-cturtle-joystick-drivers,  ros-cturtle-image-pipeline, ros-cturtle-people, ros-cturtle-laser-drivers, ros-cturtle-camera-drivers, m3core
+Build-Depends: debhelper (>= 7), autotools-dev, libeigen2-dev, libprotobuf-dev, protobuf-compiler, libyaml-cpp-dev, python-support,  python-all-dbg, python-all, python-dev, python-all-dev, ros-cturtle-ros, ros-cturtle-common, ros-cturtle-common-msgs,  ros-cturtle-geometry,  ros-cturtle-laser-pipeline,  ros-cturtle-robot-model,  ros-cturtle-visualization, ros-cturtle-visualization-common, m3core
 Standards-Version: 3.8.3
 Section: devel
 Homepage: http://mekabot.com
