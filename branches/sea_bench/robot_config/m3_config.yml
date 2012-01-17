@@ -1,0 +1,19 @@
+########### M3 CONFIG ######################
+hostname: meka-merry
+factory_rt_libs:
+  - /usr/local/lib/libm3toolbox.so
+  - /usr/local/lib/libm3hardware.so
+factory_py_libs:
+  - /usr/local/lib/python2.6/dist-packages/m3/m3meka_factory_proxy.py
+rt_components:
+  pwr:
+    m3pwr_pwr010: m3pwr
+  sea:
+    m3actuator_mt4_j1: m3actuator
+    m3actuator_mt4_j2: m3actuator
+ec_components:
+  sea:
+    m3actuator_ec_mt4_j1: m3actuator_ec
+    m3actuator_ec_mt4_j2: m3actuator_ec
+  pwr:
+    m3pwr_ec_pwr010: m3pwr_ec
