@@ -235,9 +235,12 @@ bool M3MekaLog::ReadConfig(const char * filename)
 
   try 
 	{
-	  
+	  string tmp;
 	  for(int i=0; i < doc["components"].size(); i++) 
-	      comp_names.push_back(doc["components"][i]);		
+	  {
+	      doc["components"][i] >> tmp;
+	       comp_names.push_back(tmp);
+	  }	   
 	} catch(YAML::TypedKeyNotFound<string> e) 
 	{
 		
