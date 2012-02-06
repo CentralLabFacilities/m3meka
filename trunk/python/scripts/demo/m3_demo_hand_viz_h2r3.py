@@ -97,10 +97,11 @@ class M3Proc:
 	while(True):
 	    self.positions = []	    
 	    self.proxy.step()	    
-	    for i in range(len(self.hands)):
+	    for i in range(len(self.hands)):		
 		th =self.hands[i].get_theta_rad()
+		
 		#Thumb
-		self.positions.append(th[0]) #0
+		self.positions.append(-th[0]+1.57) #0
 		self.positions.append(th[1] * self.flex_factor_thumb[0])
 		self.positions.append(th[1] * self.flex_factor_thumb[1])
 		#Index
