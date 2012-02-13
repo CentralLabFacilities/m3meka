@@ -17,6 +17,7 @@
       <itemPath>../../src/ethercat_hw.h</itemPath>
       <itemPath>../../src/ethercat_slave_fsm.h</itemPath>
       <itemPath>../../src/inttypes.h</itemPath>
+      <itemPath>../../src/p33FJ32MC204.h</itemPath>
       <itemPath>../../src/pwm.h</itemPath>
       <itemPath>../../src/setup.h</itemPath>
       <itemPath>../../src/timer3.h</itemPath>
