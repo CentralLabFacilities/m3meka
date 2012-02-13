@@ -55,7 +55,7 @@ void setup_adc(void) {
 	adc_idx_fast=0;
 
         AD1CON2bits.VCFG = 0;           // AVdd/AVss
-	AD1CON3bits.SAMC=10; 			// SLOW: Auto Sample Time = 3*Tad
+	AD1CON3bits.SAMC=6; 			// SLOW: Auto Sample Time = 3*Tad
 
 	AD1CON1bits.FORM   = 0;		// Data Output Format: Signed Fraction (Q15 format) 3
 	//AD1CON1bits.SSRC   = 2;		// Sample Clock Source: GP Timer starts conversion
@@ -69,7 +69,7 @@ void setup_adc(void) {
 
 	AD1CON3bits.ADRC = 0;		// ADC Clock is derived from Systems Clock
 	//AD1CON3bits.ADCS = 63;		// ADC Conversion Clock Tad=Tcy*(ADCS+1)= (1/40M)*64 = 1.6us (625Khz)
-	AD1CON3bits.ADCS=40;			// SLOW: System clock divider TAD=(ADCS+1)*TCY=5*=50ns (As fast as works...)
+	AD1CON3bits.ADCS=12;			// SLOW: System clock divider TAD=(ADCS+1)*TCY=5*=50ns (As fast as works...)
 								// ADC Conversion Time for 10-bit Tc=12*Tab = 19.2us
 
 	AD1CON1bits.ADDMABM = 0; 	// DMA buffers are built in scatter/gather mode
@@ -77,19 +77,48 @@ void setup_adc(void) {
 	AD1CON4bits.DMABL   = 3;	// Each buffer contains 8 words
 
 	//AD1CSSH/AD1CSSL: A/D Input Scan Selection Register
-//	AD1CSSH = 0x0000;
-	AD1CSSLbits.CSS0=1;			// Enable AN4 for channel scan
-	AD1CSSLbits.CSS1=1;			// Enable AN5 for channel scan
-	AD1CSSLbits.CSS2=1;		// Enable AN10 for channel scan
+#if defined HB2_H2R2_J0J1 || defined HB2_0_2_H2R3_J0J1
+	AD1CON1bits.SSRC = 0b111;		// Auto StartOfConversion
+	AD1CON2bits.BUFM=0;				// Use 1x16-word buffer for conversion sequences
+	AD1CSSLbits.CSS0=1;
+	AD1CSSLbits.CSS1=1;
+	AD1CSSLbits.CSS2=1;
+	AD1CSSLbits.CSS3=1;
+	AD1CSSLbits.CSS4=1;
+	AD1CSSLbits.CSS5=1;
+        // Analog Inputs
+      	AD1PCFGLbits.PCFG0 = 0;
+	AD1PCFGLbits.PCFG1 = 0;
+        AD1PCFGLbits.PCFG2 = 0;
+        AD1PCFGLbits.PCFG3 = 0;
+        AD1PCFGLbits.PCFG4 = 0;
+        AD1PCFGLbits.PCFG5 = 0;
 
+#endif
+
+#if defined HB2_H2R2_J2J3J4 || defined HB2_0_2_H2R3_J2J3J4
+	AD1CON1bits.SSRC = 0b111;		// Auto StartOfConversion
+	AD1CON2bits.BUFM=0;				// Use 1x16-word buffer for conversion sequences
+	AD1CSSLbits.CSS0=1;
+	AD1CSSLbits.CSS1=1;
+	AD1CSSLbits.CSS2=1;
+	AD1CSSLbits.CSS3=1;
+	AD1CSSLbits.CSS4=1;
+	AD1CSSLbits.CSS5=1;
+	AD1CSSLbits.CSS6=1;
+        // Analog Inputs
+      	AD1PCFGLbits.PCFG0 = 0;
+	AD1PCFGLbits.PCFG1 = 0;
+        AD1PCFGLbits.PCFG2 = 0;
+        AD1PCFGLbits.PCFG3 = 0;
+        AD1PCFGLbits.PCFG4 = 0;
+        AD1PCFGLbits.PCFG5 = 0;
+        AD1PCFGLbits.PCFG6 = 0;
+#endif
 
  	//AD1PCFGH/AD1PCFGL: Port Configuration Register
 	AD1PCFGL=0xFFFF;
-//	AD1PCFGH=0xFFFF;
-	AD1PCFGLbits.PCFG0 = 0;		// AN4 as Analog Input
-	AD1PCFGLbits.PCFG1 = 0;		// AN5 as Analog Input
-// 	AD1PCFGLbits.PCFG10 = 0;	// AN10 as Analog Input
-//	AD1PCFGLbits.PCFG13 = 0;	// AN13 as Analog Input
+
 
 	IFS0bits.AD1IF   = 0;		// Clear the A/D interrupt flag bit
 	IEC0bits.AD1IE   = 0;		// Do Not Enable A/D interrupt
