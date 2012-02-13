@@ -17,31 +17,38 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __ADC_H__
-#define __ADC_H__ 
-#include "setup.h"
+#ifndef __CONTROL_H__
+#define __CONTROL_H__ 
 
-#ifdef USE_ADC
+#ifdef USE_CONTROL
 
+void setup_control();
+void step_control();
 
-#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
-//Can afford heavy smoothing
-#define ADC_NUM_SMOOTH	32 //Must be even
-#define ADC_SHIFT_SMOOTH 5 //2^ADC_SHIFT_SMOOTH
-#define ADC_NUM_CH 3  // Number of channels enabled for channel scan
-#define ADC_BUS_VOLTAGE 0
-#define ADC_CURRENT_DIGITAL 1
-#define ADC_EXT 2
-#define  MAX_CHNUM	 			2		// Highest Analog input number in Channel Scan
-#define  SAMP_BUFF_SIZE	 		8		// Size of the input buffer per analog input
+#define NUM_CTRL_CH 1
 
+//Modes
+#define MODE_OFF 0
+#define MODE_PWM 1
+#define MODE_PID 2
+#define MODE_CURRENT 3
 
-#endif
+//FSA states
+#define CTRL_OFF 0
+#define CTRL_PWM 1
+#define CTRL_OFF_TO_PID 2
+#define CTRL_PID_TO_OFF 3
+#define CTRL_PID 4
+#define	CTRL_ABORT 5
+#define CTRL_CURRENT 6
 
-void setup_adc(void);
-extern void initDma0(void);
-unsigned int get_avg_adc(int idx);
-extern unsigned int adc_raw[];
+#define GAIN_LIMIT 32000			//Safety check on signed 16 bit gains
+#define RAMP_UPDATE_RATE 250		//Slew rate for gains
+#define NUM_TORQUE_DOT_SAMPLES 32	//Buffering of error derivative
+extern long p_term[];
+extern long i_term[];
+extern long d_term[];
+extern long ff_term[];
 
 #endif
 #endif

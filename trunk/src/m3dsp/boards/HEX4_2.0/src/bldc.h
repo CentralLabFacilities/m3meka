@@ -17,31 +17,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __ADC_H__
-#define __ADC_H__ 
-#include "setup.h"
 
-#ifdef USE_ADC
+#ifndef _BLDC_H
+#define _BLDC_H
+#ifdef USE_BLDC
 
+//Setup for use with BLDC commutation
 
-#if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5
-//Can afford heavy smoothing
-#define ADC_NUM_SMOOTH	32 //Must be even
-#define ADC_SHIFT_SMOOTH 5 //2^ADC_SHIFT_SMOOTH
-#define ADC_NUM_CH 3  // Number of channels enabled for channel scan
-#define ADC_BUS_VOLTAGE 0
-#define ADC_CURRENT_DIGITAL 1
-#define ADC_EXT 2
-#define  MAX_CHNUM	 			2		// Highest Analog input number in Channel Scan
-#define  SAMP_BUFF_SIZE	 		8		// Size of the input buffer per analog input
+void setup_bldc(void);
+void set_bldc_dir(unsigned int fwd);
+extern unsigned int bldc_hall_val;
 
+#define BLDC_HALL_1 PORTBbits.RB0		//RB0	INPUT	PIN21	RP0/CN4 (HALL1) 
+#define BLDC_HALL_2 PORTBbits.RB1		//RB1	INPUT	PIN22	RP1/CN5 (HALL2)
+#define BLDC_HALL_3 PORTBbits.RB2		//RB2	INPUT	PIN23	RP2/CN6 (HALL3)
 
-#endif
-
-void setup_adc(void);
-extern void initDma0(void);
-unsigned int get_avg_adc(int idx);
-extern unsigned int adc_raw[];
-
+#define BLDC_HALL_STATE (BLDC_HALL_3<<2)|(BLDC_HALL_2<<1)|BLDC_HALL_1
 #endif
 #endif
