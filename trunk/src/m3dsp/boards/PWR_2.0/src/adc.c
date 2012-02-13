@@ -75,7 +75,7 @@ void setup_adc(void) {
 	AD1CON4bits.DMABL   = 3;	// Each buffer contains 8 words
 
 	//AD1CSSH/AD1CSSL: A/D Input Scan Selection Register
-//	AD1CSSH = 0x0000;
+
 	AD1CSSLbits.CSS0=1;			// Enable AN4 for channel scan
 	AD1CSSLbits.CSS1=1;			// Enable AN5 for channel scan
 	AD1CSSLbits.CSS2=1;		// Enable AN10 for channel scan
@@ -83,11 +83,11 @@ void setup_adc(void) {
 
  	//AD1PCFGH/AD1PCFGL: Port Configuration Register
 	AD1PCFGL=0xFFFF;
-//	AD1PCFGH=0xFFFF;
-	AD1PCFGLbits.PCFG0 = 0;		// AN4 as Analog Input
-	AD1PCFGLbits.PCFG1 = 0;		// AN5 as Analog Input
-// 	AD1PCFGLbits.PCFG10 = 0;	// AN10 as Analog Input
-//	AD1PCFGLbits.PCFG13 = 0;	// AN13 as Analog Input
+
+	AD1PCFGLbits.PCFG0 = 0;		// AN0 as Analog Input
+	AD1PCFGLbits.PCFG1 = 0;		// AN1 as Analog Input
+        AD1PCFGLbits.PCFG2 = 0;		// AN2 as Analog Input
+
 
 	IFS0bits.AD1IF   = 0;		// Clear the A/D interrupt flag bit
 	IEC0bits.AD1IE   = 0;		// Do Not Enable A/D interrupt
