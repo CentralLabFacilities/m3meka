@@ -19,7 +19,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef USE_PWM
 
-#include "p33FJ32MC204.h"
+
 #include "pwm.h"
 #include "setup.h"
 

@@ -31,6 +31,9 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_CURRENT 1
 #define ADC_TEMP_AMB 2
 #define ADC_TEMP_BOARD 0
+#define  MAX_CHNUM	 			2		// Highest Analog input number in Channel Scan
+#define  SAMP_BUFF_SIZE	 		8		// Size of the input buffer per analog input
+
 
 void setup_adc(void);
 unsigned int get_avg_adc(int idx);

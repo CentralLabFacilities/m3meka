@@ -19,7 +19,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef USE_BLDC
 
-#include "p33Fxxxx.h"
+//#include "p33Fxxxx.h"
 #include "setup.h"
 #include "bldc.h"
 #include "ethercat.h"

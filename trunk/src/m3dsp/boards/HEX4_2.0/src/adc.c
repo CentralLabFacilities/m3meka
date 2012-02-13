@@ -23,7 +23,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #ifdef USE_ADC
 
-#include "p33Fxxxx.h"
+//#include "p33Fxxxx.h"
 #include "setup.h"
 #include "adc.h"
 
@@ -36,6 +36,11 @@ unsigned int volatile adc_buffer[ADC_NUM_CH][ADC_NUM_SMOOTH];
 unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
 int irq_cnt; 
 unsigned int wd_cnt = 0, last_status = 0, watchdog_expired;	//Watchdog
+
+
+
+int  BufferA[MAX_CHNUM+1][SAMP_BUFF_SIZE] __attribute__((space(dma),aligned(256)));
+int  BufferB[MAX_CHNUM+1][SAMP_BUFF_SIZE] __attribute__((space(dma),aligned(256)));
 
 unsigned int get_avg_adc(int ch)
 {
@@ -58,104 +63,125 @@ unsigned int get_avg_adc_torque()
 	return (unsigned int)(v>>ADC_SHIFT_SMOOTH_FAST);
 }
 
-void setup_adc(void) 
-{
+void setup_adc(void) {
 	adc_idx=0;
 	adc_idx_fast=0;
 
-	//Setup for current sensing
-	// System clock divider TAD=(ADCS+1)*TCY==50ns (As fast as works...)
-	// Auto Sample Time = 5*Tad, 4 conversions, (14+5)*4*TAD=68*50ns=3.8us
+        AD1CON2bits.VCFG = 0;           // AVdd/AVss
+	AD1CON3bits.SAMC=5; 			// SLOW: Auto Sample Time = 3*Tad
 
-	AD1CON1bits.ADON = 0;			//Turn off ADC
+	AD1CON1bits.FORM   = 0;		// Data Output Format: Signed Fraction (Q15 format) 3
+	//AD1CON1bits.SSRC   = 2;		// Sample Clock Source: GP Timer starts conversion
+	AD1CON1bits.SSRC = 0b011;		// Auto StartOfConversion
+	AD1CON1bits.ASAM   = 1;		// ADC Sample Control: Sampling begins immediately after conversion
+	AD1CON1bits.AD12B  = 1;		// 10-bit ADC operation
 
-	AD1CON3bits.SAMC = 5; 			// Change to 10?	//ToDo Original HEX4 = 10	
-	AD1CON3bits.ADCS = 1;								//ToDo Original HEX4 = 40
-	AD1CON2bits.VCFG = 0;           // Vref AVdd/AVss
-	AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
-	AD1CON1bits.SSRC = 0b011;		// Manual StartOfConversion 0b000 //PWM: 0b011;
-	AD1CON2bits.CHPS = 0;			// Only convert CH0	in 12-bit mode
-	AD1CON1bits.ASAM = 1;			// Sampling begins immediately after conversion is done
-	AD1CON1bits.AD12B = 1;			// 12-bit ADC operation
-	AD1CON2bits.BUFM = 1;			// Use 2x8-word buffer for conversion sequences
-	AD1CON1bits.SIMSAM = 0;			// No simultaneous sample for 1CH
-	AD1CON2bits.CSCNA = 1;			// Enable channel scanning
-	AD1CON2bits.SMPI = 2;			// Select 3 conversions between interrupts 
-	AD1CSSLbits.CSS0 = 1;
-	AD1CSSLbits.CSS1 = 1;				
-	AD1CSSLbits.CSS6 = 1;
-	AD1PCFGL = 0xFFFF; 				// All digital by default
-	AD1PCFGLbits.PCFG0 = 0;
-	AD1PCFGLbits.PCFG1 = 0;
-	AD1PCFGLbits.PCFG6 = 0;
-	AD1CON1bits.FORM = 0;			// Select results format Integer Output Format (0B 0000 dddd dddd dddd )
-	
-	AD1CON1bits.ADON = 1;			// Turn on ADC
-	_AD1IF = 0;						// Enable interrupt
-	_AD1IE = 1;
+
+	AD1CON2bits.CSCNA = 1;		// Scan Input Selections for CH0+ during Sample A bit
+	AD1CON2bits.CHPS  = 0;		// Converts CH0
+
+	AD1CON3bits.ADRC = 0;		// ADC Clock is derived from Systems Clock
+	//AD1CON3bits.ADCS = 63;		// ADC Conversion Clock Tad=Tcy*(ADCS+1)= (1/40M)*64 = 1.6us (625Khz)
+	AD1CON3bits.ADCS=1;			// SLOW: System clock divider TAD=(ADCS+1)*TCY=5*=50ns (As fast as works...)
+								// ADC Conversion Time for 10-bit Tc=12*Tab = 19.2us
+
+	AD1CON1bits.ADDMABM = 0; 	// DMA buffers are built in scatter/gather mode
+	AD1CON2bits.SMPI    = (ADC_NUM_CH-1);	// 4 ADC Channel is scanned
+	AD1CON4bits.DMABL   = 3;	// Each buffer contains 8 words
+
+	//AD1CSSH/AD1CSSL: A/D Input Scan Selection Register
+
+	AD1CSSLbits.CSS0=1;			// Enable AN0 for channel scan
+	AD1CSSLbits.CSS1=1;			// Enable AN1 for channel scan
+	AD1CSSLbits.CSS6=1;		// Enable AN6 for channel scan
+
+
+ 	//AD1PCFGH/AD1PCFGL: Port Configuration Register
+	AD1PCFGL=0xFFFF;
+
+	AD1PCFGLbits.PCFG0 = 0;		// AN0 as Analog Input
+	AD1PCFGLbits.PCFG1 = 0;		// AN1 as Analog Input
+        AD1PCFGLbits.PCFG6 = 0;		// AN6 as Analog Input
+
+
+	IFS0bits.AD1IF   = 0;		// Clear the A/D interrupt flag bit
+	IEC0bits.AD1IE   = 0;		// Do Not Enable A/D interrupt
+	AD1CON1bits.ADON = 1;		// Turn on the A/D converter
+
+}
+
+// DMA0 configuration
+// Direction: Read from peripheral address 0-x300 (ADC1BUF0) and write to DMA RAM
+// AMODE: Peripheral Indirect Addressing Mode
+// MODE: Continuous, Ping-Pong Mode
+// IRQ: ADC Interrupt
+
+void initDma0(void)
+{
+	DMA0CONbits.AMODE = 2;			// Configure DMA for Peripheral indirect mode
+	DMA0CONbits.MODE  = 2;			// Configure DMA for Continuous Ping-Pong mode
+	DMA0PAD=(int)&ADC1BUF0;
+	DMA0CNT = (SAMP_BUFF_SIZE*ADC_NUM_CH)-1;
+	DMA0REQ = 13;					// Select ADC1 as DMA Request source
+
+	DMA0STA = __builtin_dmaoffset(BufferA);
+	DMA0STB = __builtin_dmaoffset(BufferB);
+
+	IFS0bits.DMA0IF = 0;			//Clear the DMA interrupt flag bit
+        IEC0bits.DMA0IE = 1;			//Set the DMA interrupt enable bit
+
+	DMA0CONbits.CHEN=1;				// Enable DMA
+
+}
+
+
+/*=============================================================================
+_DMA0Interrupt(): ISR name is chosen from the device linker script.
+=============================================================================*/
+
+unsigned int DmaBuffer = 0;
+
+
+
+void __attribute__((interrupt, no_auto_psv)) _DMA0Interrupt(void)
+{
+    int j;
+	if(DmaBuffer == 0)
+	{
+            for (j = 0; j < 8; j++)
+            {
+
+                adc_buffer[ADC_TEMP_BOARD][(adc_idx*8)+j] = BufferA[ADC_TEMP_BOARD][j];
+		adc_buffer[ADC_CURRENT][(adc_idx*8)+j] = BufferA[ADC_CURRENT][j];
+		adc_buffer[ADC_TEMP_AMB][(adc_idx*8)+j] = BufferA[ADC_TEMP_AMB][j];
+
+            }
+	}
+	else
+	{
+            for (j = 0; j < 8; j++)
+            {
+
+                adc_buffer[ADC_TEMP_BOARD][(adc_idx*8)+j] = BufferB[ADC_TEMP_BOARD][j];
+		adc_buffer[ADC_CURRENT][(adc_idx*8)+j] = BufferB[ADC_CURRENT][j];
+		adc_buffer[ADC_TEMP_AMB][(adc_idx*8)+j] = BufferB[ADC_TEMP_AMB][j];
+            }
+
+	}
+
+	DmaBuffer ^= 1;
+
+        adc_idx=INC_MOD(adc_idx,4);
+
+
+	IFS0bits.DMA0IF = 0;		// Clear the DMA0 Interrupt Flag
 }
 
 
 void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 {
-	static unsigned int count = 0;
-	
 	_AD1IF = 0;		//Clear the flag
-	
-	adc_raw[0] = ADC1BUF0;
-	adc_raw[1] = ADC1BUF1;
-	adc_raw[2] = ADC1BUF2;
-	
-	adc_buffer[ADC_TEMP_BOARD][adc_idx] = adc_raw[ADC_TEMP_BOARD];
-	adc_buffer[ADC_CURRENT][adc_idx] = adc_raw[ADC_CURRENT];
-	adc_buffer[ADC_TEMP_AMB][adc_idx] = adc_raw[ADC_TEMP_AMB];
-	adc_idx = INC_MOD(adc_idx,ADC_NUM_SMOOTH);
-	
-	//Timed actions - 2kHz
-	//Originaly in timer3 ISR
-	//======================
-	
-	count = INC_MOD(count,5);		
-	if(count == 0)
-	{
-		//Latch encoder timestamp on Rising edge.
-		#ifdef USE_TIMESTAMP_DC			//Takes 0.05us to execute
-		SetTimestampLatch;	
-		ClrTimestampLatch;
-		#endif
-	
-		#if defined USE_ENCODER_VERTX	//Takes 122us to execute
-		step_vertx();					
-		#endif
-	
-		#ifdef USE_CURRENT				//Takes 0.475us to execute
-		step_current();
-		#endif
-	
-		#ifdef USE_CONTROL				//Takes 2.3us to execute
-		step_control();					//(will probably increase in PID mode...)
-		#endif
-		
-		irq_cnt++;		
-		
-		#ifdef USE_WATCHDOG
-		wd_cnt++;
-		if ((ec_cmd.command[0].config & 0x4000) != last_status)		// if the WD bit changes, everything is cool
-		{
-			wd_cnt = 0;
-			watchdog_expired = 0;
-		}
-		else if (wd_cnt > 500)					// if the status doesn't change in 250ms, problem
-		{
-			watchdog_expired = 1;
-		}	
-		last_status = (ec_cmd.command[0].config & 0x4000);
-		#else
-		watchdog_expired = 0;	//Always off
-		#endif
-		
-		//Sum = 125us, 25% of this time slice
-	}
+
 }
 
 #endif

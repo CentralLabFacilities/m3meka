@@ -34,10 +34,11 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 //#define USE_SYNC0					//Use Sync0 EtherCAT IRQ
 //#define USE_TIMESTAMP_DC			//Use DC CLOCK Timestamp from LATCH
 
-#include "p33Fxxxx.h"
+#include "p33FJ64MC204.h"
 #include "inttypes.h"
 #include <string.h>
-#include "..\..\..\..\m3\hardware\m3ec_pdo_v3_def.h"
+#include "../../../../m3/hardware/m3ec_pdo_v3_def.h"
+#include "../../../../m3/hardware/m3ec_pdo_v1_def.h"
 
 #include "dio.h"
 #include "ethercat.h"
