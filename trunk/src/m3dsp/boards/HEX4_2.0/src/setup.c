@@ -53,15 +53,17 @@ void setup_oscillator(void)
 {
 	/*
 	Need to Multiply FIN by factor of 3.2
-	FIN (INPUT FREQ)	25MHZ	FOR OSCILLATOR FOR ET1200	
-	N1	25	PLLPRE	
-	N2	2	PLLPOST	
-	M	160	PLLDIV	
-	FOSC=FIN*(M/(N1*N2))	80MHZ		
-	FCY=FOSC/2	GIVES A 40 MIPS	OUTPUT FREQUENCY	
+	FIN (INPUT FREQ)	25MHZ	FOR OSCILLATOR FOR ET1200
+	N1	25	PLLPRE
+	N2	2	PLLPOST
+	M	160	PLLDIV
+	FOSC=FIN*(M/(N1*N2))	80MHZ
+	FCY=FOSC/2	GIVES A 40 MIPS	OUTPUT FREQUENCY
 	*/
-	PLLFBD=160;
-	CLKDIVbits.PLLPOST=0;//Gives divide by 2
+	//PLLFBD=160;
+	PLLFBD=318; // gives 320
+	//CLKDIVbits.PLLPOST=0;//Gives divide by 2
+	CLKDIVbits.PLLPOST=1;//Gives divide by 4
 	CLKDIVbits.PLLPRE=23; //Gives divide by 25
 	// the CPU will automatically switch when all is stable....
 	while(OSCCONbits.LOCK!=1) {};  // Wait for PLL to lock

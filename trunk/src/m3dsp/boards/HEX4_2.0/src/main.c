@@ -87,6 +87,7 @@ int main (void)
 	//Analog to Digital
 	#ifdef USE_ADC
 	setup_adc();
+        initDma0();					// Initialise the DMA controller to buffer ADC data in conversion order
 	#endif
 	
 	//Torso external ADC
