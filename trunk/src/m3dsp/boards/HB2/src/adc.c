@@ -137,27 +137,46 @@ void __attribute__((interrupt, no_auto_psv)) _DMA0Interrupt(void)
 	{
             for (j = 0; j < 8; j++)
             {
-
+#if defined HB2_H2R2_J0J1  || defined HB2_0_2_H2R3_J0J1
                 adc_buffer[ADC_SEAS_B][(adc_idx*8)+j] = BufferA[ADC_SEAS_B][j];
                 adc_buffer[ADC_CURRENT_B][(adc_idx*8)+j] = BufferA[ADC_CURRENT_B][j];
                 adc_buffer[ADC_SEAS_A][(adc_idx*8)+j] = BufferA[ADC_SEAS_A][j];
                 adc_buffer[ADC_CURRENT_A][(adc_idx*8)+j] = BufferA[ADC_CURRENT_A][j];
                 adc_buffer[ADC_AMP_TEMP_B][(adc_idx*8)+j] = BufferA[ADC_AMP_TEMP_B][j];
                 adc_buffer[ADC_AMP_TEMP_A][(adc_idx*8)+j] = BufferA[ADC_AMP_TEMP_A][j];
+#endif
+#if defined HB2_H2R2_J2J3J4 || defined HB2_0_2_H2R3_J2J3J4
+                adc_buffer[ADC_SEAS_A][(adc_idx*8)+j] = BufferA[ADC_SEAS_A][j];
+                adc_buffer[ADC_CURRENT_A][(adc_idx*8)+j] = BufferA[ADC_CURRENT_A][j];
+                adc_buffer[ADC_SEAS_B][(adc_idx*8)+j] = BufferA[ADC_SEAS_B][j];
+                adc_buffer[ADC_CURRENT_B][(adc_idx*8)+j] = BufferA[ADC_CURRENT_B][j];
+                adc_buffer[ADC_SEAS_C][(adc_idx*8)+j] = BufferA[ADC_SEAS_C][j];
+                adc_buffer[ADC_AMP_TEMP_A][(adc_idx*8)+j] = BufferA[ADC_AMP_TEMP_A][j];
+#endif
             }
-            
+
 	}
 	else
 	{
             for (j = 0; j < 8; j++)
             {
-
+#if defined HB2_H2R2_J0J1  || defined HB2_0_2_H2R3_J0J1
                 adc_buffer[ADC_SEAS_B][(adc_idx*8)+j] = BufferB[ADC_SEAS_B][j];
                 adc_buffer[ADC_CURRENT_B][(adc_idx*8)+j] = BufferB[ADC_CURRENT_B][j];
                 adc_buffer[ADC_SEAS_A][(adc_idx*8)+j] = BufferB[ADC_SEAS_A][j];
                 adc_buffer[ADC_CURRENT_A][(adc_idx*8)+j] = BufferB[ADC_CURRENT_A][j];
                 adc_buffer[ADC_AMP_TEMP_B][(adc_idx*8)+j] = BufferB[ADC_AMP_TEMP_B][j];
                 adc_buffer[ADC_AMP_TEMP_A][(adc_idx*8)+j] = BufferB[ADC_AMP_TEMP_A][j];
+#endif
+
+#if defined HB2_H2R2_J2J3J4 || defined HB2_0_2_H2R3_J2J3J4
+                adc_buffer[ADC_SEAS_A][(adc_idx*8)+j] = BufferA[ADC_SEAS_A][j];
+                adc_buffer[ADC_CURRENT_A][(adc_idx*8)+j] = BufferA[ADC_CURRENT_A][j];
+                adc_buffer[ADC_SEAS_B][(adc_idx*8)+j] = BufferA[ADC_SEAS_B][j];
+                adc_buffer[ADC_CURRENT_B][(adc_idx*8)+j] = BufferA[ADC_CURRENT_B][j];
+                adc_buffer[ADC_SEAS_C][(adc_idx*8)+j] = BufferA[ADC_SEAS_C][j];
+                adc_buffer[ADC_AMP_TEMP_A][(adc_idx*8)+j] = BufferA[ADC_AMP_TEMP_A][j];
+#endif                
             }
 	}
 

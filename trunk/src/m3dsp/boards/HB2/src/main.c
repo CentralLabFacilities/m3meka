@@ -71,6 +71,7 @@ int main (void)
 
 #ifdef USE_ADC
 	setup_adc();
+        initDma0();					// Initialise the DMA controller to buffer ADC data in conversion order
 #endif
 #ifdef USE_TIMER3
 	setup_timer3();

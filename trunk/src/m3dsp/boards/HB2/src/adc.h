@@ -77,6 +77,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_AMP_TEMP_A 6 //shared among all
 #define ADC_AMP_TEMP_B 6
 #define ADC_AMP_TEMP_C 6
+#define  MAX_CHNUM	 			6		// Highest Analog input number in Channel Scan
+#define  SAMP_BUFF_SIZE	 		8		// Size of the input buffer per analog input
 #endif
 
 void setup_adc(void);
