@@ -45,6 +45,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_CURRENT_A 3
 #define ADC_AMP_TEMP_B 4
 #define ADC_AMP_TEMP_A 5
+#define  MAX_CHNUM	 			5		// Highest Analog input number in Channel Scan
+#define  SAMP_BUFF_SIZE	 		8		// Size of the input buffer per analog input
 #endif
 
 #if defined HB2_H2R1_J2J3J4

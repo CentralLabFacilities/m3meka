@@ -45,12 +45,14 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 //#define USE_SYNC0					//Use Sync0 EtherCAT IRQ
 //#define USE_TIMESTAMP_DC			//Use DC CLOCK Timestamp from LATCH
 
-#include "p33Fxxxx.h"
+
 #include <string.h>
-#include "..\..\..\..\m3\hardware\m3ec_def.h"
-#include "..\..\..\..\m3\hardware\m3ec_pdo_v1_def.h"
-#include "..\..\..\..\m3\hardware\m3ec_pdo_v2_def.h"
-#include "..\..\..\..\m3\hardware\m3ec_pdo_v0_def.h"
+
+#include "p33FJ64MC204.h"
+#include "../../../../m3/hardware/m3ec_def.h"
+#include "../../../../m3/hardware/m3ec_pdo_v1_def.h"
+#include "../../../../m3/hardware/m3ec_pdo_v2_def.h"
+#include "../../../../m3/hardware/m3ec_pdo_v0_def.h" //needed for M3_FB_DEV_0_0 ??
 
 #include "dio.h"
 #include "ethercat.h"
