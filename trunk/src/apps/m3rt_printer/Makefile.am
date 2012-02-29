@@ -19,10 +19,11 @@ m3_dir = $(top_srcdir)/src
 bin_PROGRAMS = m3rt_printer
 m3rt_printer_SOURCES = m3rt_printer.c 
 m3rt_printer_LDADD = -lpthread
+rtai_inc = $(RTAI_DIR)/include
 
 AM_CPPFLAGS = -I/opt/etherlab/include  \
-				-I/usr/local/src/ethercat/master\
-				-I/usr/realtime/include \
+				-I/usr/include/libethercat/include \
+				-I$(rtai_inc) \
 				-I$(m3_dir)\
 				-D__IN_RTAI__ -ffast-math 
 
