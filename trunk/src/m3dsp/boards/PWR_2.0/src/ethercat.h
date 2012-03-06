@@ -72,6 +72,13 @@ typedef M3PwrPdoV2Status ec_stat_t;
 extern ec_cmd_t  ec_cmd;
 extern ec_stat_t   ec_stat;
 /////////////////////////////////////////////////////////////////
+extern unsigned char pdo_cmd[];
 
+extern unsigned char do_ecat_isr;
+extern unsigned char ecat_step_running;
+extern unsigned char ecat_isr_running;
+
+extern int rx_cnt;
+extern int tx_cnt;
 #endif
 #endif

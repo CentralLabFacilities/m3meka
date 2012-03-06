@@ -37,10 +37,11 @@ void setup_interrupt_priorities(void)
 	//ToDo:FIX!
 
 	_INT0IP=3;	//Ethercat Interrupt
-	_INT2IP=2;	//SYNC0 Interrupt
-
-	_AD1IP=5;	//ADC conversion done 
-	_T3IP=4;	//Timer3 
+	//_INT2IP=2;	//SYNC0 Interrupt
+        _DMA1IP = 5;
+	//_AD1IP=5;	//ADC conversion done
+	_T3IP=2;	//Timer3
+        //_T4IP = 5;
 }
 
 
@@ -56,10 +57,17 @@ void setup_oscillator(void)
 	FCY=FOSC/2	GIVES A 40 MIPS	OUTPUT FREQUENCY	
 	*/
 	//PLLFBD=160;
-	PLLFBD=318; // gives 320
+
+
+        PLLFBD=209;
+	CLKDIVbits.PLLPOST=0;//Gives divide by 2
+	CLKDIVbits.PLLPRE=31; //Gives divide by 25
+
+
+/*	PLLFBD=318; // gives 320
 	//CLKDIVbits.PLLPOST=0;//Gives divide by 2
 	CLKDIVbits.PLLPOST=1;//Gives divide by 4
-	CLKDIVbits.PLLPRE=23; //Gives divide by 25
+	CLKDIVbits.PLLPRE=23; //Gives divide by 25*/
 	// the CPU will automatically switch when all is stable....
 	while(OSCCONbits.LOCK!=1) {};  // Wait for PLL to lock
 	return;

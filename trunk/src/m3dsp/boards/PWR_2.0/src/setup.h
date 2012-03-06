@@ -21,6 +21,10 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _SETUP_H
 #define _SETUP_H
 
+#define ECAT_DMA
+//#define BURST_DMA
+
+
 //Configure the desired board with these compiler options
 
 //////////////////// Supported Boards ///////////////////////////

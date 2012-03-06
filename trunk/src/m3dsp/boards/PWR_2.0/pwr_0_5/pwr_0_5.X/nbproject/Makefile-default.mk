@@ -39,11 +39,11 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/adc_spi.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer3.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/adc.o.d ${OBJECTDIR}/_ext/1445274692/adc_spi.o.d ${OBJECTDIR}/_ext/1445274692/control.o.d ${OBJECTDIR}/_ext/1445274692/dio.o.d ${OBJECTDIR}/_ext/1445274692/ethercat.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d ${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/setup.o.d ${OBJECTDIR}/_ext/1445274692/timer3.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1445274692/spi1Drv.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/dio.o.d ${OBJECTDIR}/_ext/1445274692/ethercat.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d ${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/setup.o.d ${OBJECTDIR}/_ext/1445274692/timer3.o.d ${OBJECTDIR}/_ext/1445274692/spi1Drv.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/adc_spi.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer3.o
+OBJECTFILES=${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1445274692/spi1Drv.o
 
 
 CFLAGS=
@@ -94,138 +94,114 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/_ext/1445274692/adc.o: ../../src/adc.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/adc.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/adc.o.ok ${OBJECTDIR}/_ext/1445274692/adc.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/adc.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/adc.o.d" -o ${OBJECTDIR}/_ext/1445274692/adc.o ../../src/adc.c  
-	
-${OBJECTDIR}/_ext/1445274692/adc_spi.o: ../../src/adc_spi.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/adc_spi.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/adc_spi.o.ok ${OBJECTDIR}/_ext/1445274692/adc_spi.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/adc_spi.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/adc_spi.o.d" -o ${OBJECTDIR}/_ext/1445274692/adc_spi.o ../../src/adc_spi.c  
-	
-${OBJECTDIR}/_ext/1445274692/control.o: ../../src/control.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/control.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/control.o.ok ${OBJECTDIR}/_ext/1445274692/control.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/control.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/control.o.d" -o ${OBJECTDIR}/_ext/1445274692/control.o ../../src/control.c  
-	
 ${OBJECTDIR}/_ext/1445274692/dio.o: ../../src/dio.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/dio.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/dio.o.ok ${OBJECTDIR}/_ext/1445274692/dio.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/dio.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/dio.o.d" -o ${OBJECTDIR}/_ext/1445274692/dio.o ../../src/dio.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/dio.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/dio.o.d" -o ${OBJECTDIR}/_ext/1445274692/dio.o ../../src/dio.c  
 	
 ${OBJECTDIR}/_ext/1445274692/ethercat.o: ../../src/ethercat.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat.o.ok ${OBJECTDIR}/_ext/1445274692/ethercat.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat.o ../../src/ethercat.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat.o ../../src/ethercat.c  
 	
 ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o: ../../src/ethercat_appl.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.ok ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ../../src/ethercat_appl.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ../../src/ethercat_appl.c  
 	
 ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o: ../../src/ethercat_hw.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.ok ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ../../src/ethercat_hw.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ../../src/ethercat_hw.c  
 	
 ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o: ../../src/ethercat_slave_fsm.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.ok ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ../../src/ethercat_slave_fsm.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ../../src/ethercat_slave_fsm.c  
 	
 ${OBJECTDIR}/_ext/1445274692/main.o: ../../src/main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/main.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/main.o.ok ${OBJECTDIR}/_ext/1445274692/main.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/main.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/main.o.d" -o ${OBJECTDIR}/_ext/1445274692/main.o ../../src/main.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/main.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/main.o.d" -o ${OBJECTDIR}/_ext/1445274692/main.o ../../src/main.c  
 	
 ${OBJECTDIR}/_ext/1445274692/setup.o: ../../src/setup.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/setup.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/setup.o.ok ${OBJECTDIR}/_ext/1445274692/setup.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/setup.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/setup.o.d" -o ${OBJECTDIR}/_ext/1445274692/setup.o ../../src/setup.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/setup.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/setup.o.d" -o ${OBJECTDIR}/_ext/1445274692/setup.o ../../src/setup.c  
 	
 ${OBJECTDIR}/_ext/1445274692/timer3.o: ../../src/timer3.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/timer3.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/timer3.o.ok ${OBJECTDIR}/_ext/1445274692/timer3.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/timer3.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/timer3.o.d" -o ${OBJECTDIR}/_ext/1445274692/timer3.o ../../src/timer3.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/timer3.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/timer3.o.d" -o ${OBJECTDIR}/_ext/1445274692/timer3.o ../../src/timer3.c  
+	
+${OBJECTDIR}/_ext/1445274692/spi1Drv.o: ../../src/spi1Drv.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/spi1Drv.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/spi1Drv.o.ok ${OBJECTDIR}/_ext/1445274692/spi1Drv.o.err 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/spi1Drv.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/spi1Drv.o.d" -o ${OBJECTDIR}/_ext/1445274692/spi1Drv.o ../../src/spi1Drv.c  
 	
 else
-${OBJECTDIR}/_ext/1445274692/adc.o: ../../src/adc.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/adc.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/adc.o.ok ${OBJECTDIR}/_ext/1445274692/adc.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/adc.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/adc.o.d" -o ${OBJECTDIR}/_ext/1445274692/adc.o ../../src/adc.c  
-	
-${OBJECTDIR}/_ext/1445274692/adc_spi.o: ../../src/adc_spi.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/adc_spi.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/adc_spi.o.ok ${OBJECTDIR}/_ext/1445274692/adc_spi.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/adc_spi.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/adc_spi.o.d" -o ${OBJECTDIR}/_ext/1445274692/adc_spi.o ../../src/adc_spi.c  
-	
-${OBJECTDIR}/_ext/1445274692/control.o: ../../src/control.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/control.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/control.o.ok ${OBJECTDIR}/_ext/1445274692/control.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/control.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/control.o.d" -o ${OBJECTDIR}/_ext/1445274692/control.o ../../src/control.c  
-	
 ${OBJECTDIR}/_ext/1445274692/dio.o: ../../src/dio.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/dio.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/dio.o.ok ${OBJECTDIR}/_ext/1445274692/dio.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/dio.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/dio.o.d" -o ${OBJECTDIR}/_ext/1445274692/dio.o ../../src/dio.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/dio.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/dio.o.d" -o ${OBJECTDIR}/_ext/1445274692/dio.o ../../src/dio.c  
 	
 ${OBJECTDIR}/_ext/1445274692/ethercat.o: ../../src/ethercat.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat.o.ok ${OBJECTDIR}/_ext/1445274692/ethercat.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat.o ../../src/ethercat.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat.o ../../src/ethercat.c  
 	
 ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o: ../../src/ethercat_appl.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.ok ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ../../src/ethercat_appl.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ../../src/ethercat_appl.c  
 	
 ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o: ../../src/ethercat_hw.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.ok ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ../../src/ethercat_hw.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ../../src/ethercat_hw.c  
 	
 ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o: ../../src/ethercat_slave_fsm.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.ok ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ../../src/ethercat_slave_fsm.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d" -o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ../../src/ethercat_slave_fsm.c  
 	
 ${OBJECTDIR}/_ext/1445274692/main.o: ../../src/main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/main.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/main.o.ok ${OBJECTDIR}/_ext/1445274692/main.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/main.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/main.o.d" -o ${OBJECTDIR}/_ext/1445274692/main.o ../../src/main.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/main.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/main.o.d" -o ${OBJECTDIR}/_ext/1445274692/main.o ../../src/main.c  
 	
 ${OBJECTDIR}/_ext/1445274692/setup.o: ../../src/setup.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/setup.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/setup.o.ok ${OBJECTDIR}/_ext/1445274692/setup.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/setup.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/setup.o.d" -o ${OBJECTDIR}/_ext/1445274692/setup.o ../../src/setup.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/setup.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/setup.o.d" -o ${OBJECTDIR}/_ext/1445274692/setup.o ../../src/setup.c  
 	
 ${OBJECTDIR}/_ext/1445274692/timer3.o: ../../src/timer3.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/timer3.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/timer3.o.ok ${OBJECTDIR}/_ext/1445274692/timer3.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/timer3.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ADC -DUSE_CONTROL -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -DUSE_WATCHDOG -I"../../src" -O1 -MMD -MF "${OBJECTDIR}/_ext/1445274692/timer3.o.d" -o ${OBJECTDIR}/_ext/1445274692/timer3.o ../../src/timer3.c  
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/timer3.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/timer3.o.d" -o ${OBJECTDIR}/_ext/1445274692/timer3.o ../../src/timer3.c  
+	
+${OBJECTDIR}/_ext/1445274692/spi1Drv.o: ../../src/spi1Drv.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/spi1Drv.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1445274692/spi1Drv.o.ok ${OBJECTDIR}/_ext/1445274692/spi1Drv.o.err 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/spi1Drv.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_ETHERCAT -DUSE_TIMER3 -DUSE_DIO -DUSE_TIMESTAMP_DC -DPWR_0_5 -I"../../src" -O3 -funroll-loops -fomit-frame-pointer -MMD -MF "${OBJECTDIR}/_ext/1445274692/spi1Drv.o.d" -o ${OBJECTDIR}/_ext/1445274692/spi1Drv.o ../../src/spi1Drv.c  
 	
 endif
 

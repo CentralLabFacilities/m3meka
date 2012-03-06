@@ -1,4 +1,4 @@
-/* 
+/*
 M3 -- Meka Robotics Real-Time Control System
 Copyright (c) 2010 Meka Robotics
 Author: edsinger@mekabot.com (Aaron Edsinger)
@@ -25,8 +25,10 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "ethercat_def.h"
 #include <string.h>
 #include  "ethercat_esc.h"
+//#include "p33fxxxx.h" //Configure for dsPIC 33FJ32MC204 M3 System
 
-
+extern void ISR_EscReadAccess( UINT8 *pData, UINT16 Address, UINT16 Len );
+extern void ISR_EscWriteAccess( UINT8 *pData, UINT16 Address, UINT16 Len );
 //////////////////////////////////////////////////////////////////////////////////
 
 #define SPI_DEACTIVE		1		//Active low
@@ -65,17 +67,17 @@ RA8 INPUT   PIN32   EEPROM_LOADED
 /* ESC interrupt */
 #ifdef M3_BLD
 //No interrupts
-#define	DISABLE_ESC_INT				
-#define	ENABLE_ESC_INT			
-#define	ACK_ESC_INT				
-#define	SET_ESC_INT				
+#define	DISABLE_ESC_INT
+#define	ENABLE_ESC_INT
+#define	ACK_ESC_INT
+#define	SET_ESC_INT
 #else
-#define	DISABLE_ESC_INT			_INT0IE=0		
+#define	DISABLE_ESC_INT			_INT0IE=0
 #define	ENABLE_ESC_INT			_INT0IE=1
 #define	ACK_ESC_INT				_INT0IF=0
 #define	SET_ESC_INT				_INT0IF=1
 // RJK: For Sync0 Int
-#define	DISABLE_SYNC_INT			_INT2IE=0		
+#define	DISABLE_SYNC_INT			_INT2IE=0
 #define	ENABLE_SYNC_INT				_INT2IE=1
 #define	ACK_SYNC_INT				_INT2IF=0
 #define	SET_SYNC_INT				_INT2IF=1
@@ -83,7 +85,7 @@ RA8 INPUT   PIN32   EEPROM_LOADED
 
 
 /* AL interrupt */
-#define	DISABLE_GLOBAL_INT			DISABLE_ESC_INT 
+#define	DISABLE_GLOBAL_INT			DISABLE_ESC_INT
 #define	ENABLE_GLOBAL_INT			ENABLE_ESC_INT
 
 #define	DISABLE_AL_EVENT_INT		DISABLE_GLOBAL_INT
@@ -93,22 +95,22 @@ RA8 INPUT   PIN32   EEPROM_LOADED
 
 /* Timer interrupt */
 //Meka: This timer appears to be used to time the Slave running time
-//Meka: We won't use it. 
+//Meka: We won't use it.
 #define	TIMER_RELOAD_REG			TMR0
 #define	TIMER_RELOAD_REG_LO			TMR0L
 #define	TIMER_RELOAD_REG_HI			TMR0H
 #define	TIMER_CONFIG_REG			T0CON
-#define	DISABLE_TIMER_INT					
-#define	ENABLE_TIMER_INT			
-#define	ACK_TIMER_INT				
-#define	START_TIMER				
-#define	STOP_TIMER					
+#define	DISABLE_TIMER_INT
+#define	ENABLE_TIMER_INT
+#define	ACK_TIMER_INT
+#define	START_TIMER
+#define	STOP_TIMER
 
 //////////////////////////////////////////////////////////////////////////////////
 
-// EtherCAT Timer (counts cyclically) 
+// EtherCAT Timer (counts cyclically)
 // TMR3 with prescaler 1
-// 
+//
 #define	ECAT_TIMER_REG				TMR3
 #define	ECAT_TIMER_CONFIG_REG		T3CON
 #define	ECAT_TIMER_REQ				_T3IF
@@ -121,11 +123,12 @@ RA8 INPUT   PIN32   EEPROM_LOADED
 
 //////////////////////////////////////////////////////////////////////////////////
 
-/* Capture to filter the jitter of the DC-interrupt 
+/* Capture to filter the jitter of the DC-interrupt
    CCP2 is connected to TMR3, capture mode with every falling edge */
 #define	ESC_CAPTURE					0x04 //???
 #define	ECAT_CAPTURE_REG			CCPR2
 #define	ECAT_CAPTURE_CONFIG_REG	CCP2CON
+
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -138,8 +141,8 @@ typedef	union
 //////////////////////////////////////////////////////////////////////////////////
 
 #if _ETHERCATHW_
-	#define PROTO 
-#else 
+	#define PROTO
+#else
 	#define PROTO extern
 #endif
 
@@ -150,7 +153,7 @@ PROTO	UALCONTROL	EscAlControl;
 PROTO UALEVENT		EscAlEvent;
 
 //////////////////////////////////////////////////////////////////////////////////
-// Note: 
+// Note:
 // The HW_* are called from the main cyclic loop
 // The ISR_* are called from within the INT0 ISR
 
@@ -164,6 +167,17 @@ PROTO	void HW_EnableSyncManChannel(UINT8 channel);
 PROTO	TSYNCMAN * HW_GetSyncMan(UINT8 channel);
 PROTO	void HW_Main(void);
 PROTO   void ISR_GetInterruptRegister();
+
+PROTO   void ResetIdx();
+PROTO void ISR_StartDMA(  );
+PROTO	void HW_EscReadAccessDMA( UINT8 *pData, UINT16 Address, UINT16 Len );
+PROTO	void HW_EscWriteAccessDMA( UINT8 *pData, UINT16 Address, UINT16 Len );
+
+extern unsigned char did_rx;
+extern unsigned char did_tx;
+
+extern unsigned char do_rx;
+extern unsigned char do_tx;
 
 
 #undef	PROTO

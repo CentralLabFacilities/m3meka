@@ -21,6 +21,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 //#include "p33FJ64MC204.h"
 #include "setup.h"
+#include "ethercat_hw.h"
 //#include "p33FJ64MC204.h"
 
 //---------------------------------------------------------------
@@ -79,17 +80,24 @@ int main (void)
         initDma0();					// Initialise the DMA controller to buffer ADC data in conversion order
 #endif
 #ifdef USE_TIMER3
-	setup_timer3();
+	//setup_timer3();
 #endif
 
 #ifdef USE_UART
 	setup_uart();
 #endif
 
+        ecat_isr_running = 0;
+
 #ifdef USE_ETHERCAT
 	while (!eeprom_loaded())		//Wait until ESC is ready
 		//ToggleHeartbeatLED();				//Success
 		SetHeartbeatLED;
+//#ifdef ECAT_DMA
+        cfgDma0SpiTx();
+	cfgDma1SpiRx();
+//#endif
+
 	setup_ethercat();
 	ClrHeartbeatLED;
 #endif
@@ -107,10 +115,16 @@ dummy = U1RXREG;
 
 		if (i++%20001==0)
 		{
-			ToggleHeartbeatLED();
+			//ToggleHeartbeatLED();
 		}
 #if defined USE_ETHERCAT
-		step_ethercat();
+                if (!IEC0bits.DMA1IE)
+                {
+                    DISABLE_AL_EVENT_INT;
+                    step_ethercat();
+                    ENABLE_AL_EVENT_INT;
+
+                }
 #endif
 
 	} 

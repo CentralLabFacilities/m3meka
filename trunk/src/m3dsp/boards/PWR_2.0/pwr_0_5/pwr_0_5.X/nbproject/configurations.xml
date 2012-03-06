@@ -17,6 +17,7 @@
       <itemPath>../../src/setup.h</itemPath>
       <itemPath>../../src/timer3.h</itemPath>
       <itemPath>../../src/warning.h</itemPath>
+      <itemPath>../../src/spi1Drv.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -33,9 +34,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>../../src/adc.c</itemPath>
-      <itemPath>../../src/adc_spi.c</itemPath>
-      <itemPath>../../src/control.c</itemPath>
       <itemPath>../../src/dio.c</itemPath>
       <itemPath>../../src/ethercat.c</itemPath>
       <itemPath>../../src/ethercat_appl.c</itemPath>
@@ -44,6 +42,7 @@
       <itemPath>../../src/main.c</itemPath>
       <itemPath>../../src/setup.c</itemPath>
       <itemPath>../../src/timer3.c</itemPath>
+      <itemPath>../../src/spi1Drv.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -82,22 +81,22 @@
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
       </makeCustomizationType>
       <C30>
-        <property key="optimization-level" value="1"/>
+        <property key="optimization-level" value="3"/>
         <property key="preprocessor-macros"
-                  value="EMBEDDED;USE_ADC;USE_CONTROL;USE_ETHERCAT;USE_TIMER3;USE_DIO;USE_TIMESTAMP_DC;PWR_0_5;USE_WATCHDOG"/>
+                  value="EMBEDDED;USE_ETHERCAT;USE_TIMER3;USE_DIO;USE_TIMESTAMP_DC;PWR_0_5"/>
         <property key="code-model" value="default"/>
         <property key="const-model" value="default"/>
         <property key="enable-procedural-abstraction" value="false"/>
         <property key="enable-ansi-warnings" value="false"/>
         <property key="enable-short-double" value="false"/>
-        <property key="extra-include-directories" value="../../src;"/>
+        <property key="extra-include-directories" value="../../src"/>
         <property key="post-instruction-scheduling" value="default"/>
-        <property key="enable-unroll-loops" value="false"/>
+        <property key="enable-unroll-loops" value="true"/>
         <property key="enable-symbols" value="true"/>
         <property key="data-model" value="default"/>
         <property key="isolate-each-function" value="false"/>
         <property key="enable-fatal-warnings" value="false"/>
-        <property key="enable-omit-frame-pointer" value="false"/>
+        <property key="enable-omit-frame-pointer" value="true"/>
         <property key="enable-ansi-std" value="false"/>
         <property key="enable-all-warnings" value="true"/>
         <property key="pre-instruction-scheduling" value="default"/>
@@ -109,8 +108,8 @@
         <property key="extra-include-directories-for-assembler" value="..;"/>
         <property key="preprocessor-macros" value=""/>
         <property key="list-file" value=""/>
-        <property key="list-assembly" value="false"/>
         <property key="list-source" value="false"/>
+        <property key="list-assembly" value="false"/>
         <property key="relax" value="false"/>
         <property key="extra-include-directories-for-preprocessor" value=""/>
         <property key="warning-level" value="emit-warnings"/>

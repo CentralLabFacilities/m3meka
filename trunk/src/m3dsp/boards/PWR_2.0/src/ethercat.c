@@ -40,6 +40,14 @@ int ec_wd_expired;
 long ec_wd_timestamp;
 int ec_active;
 
+int isr_cnt;
+
+unsigned char do_ecat_isr;
+unsigned char ecat_step_running;
+unsigned char ecat_isr_running;
+
+int rx_cnt;
+int tx_cnt;
 
 
 int ec_debug[NUM_DBG_CH];
@@ -68,13 +76,14 @@ void isr_update_outputs(void)
 		ec_wd_timestamp = 0;//ECAT_TIMER_REG;
 		ec_wd=0;
 #endif
-		ISR_EscReadAccess( (unsigned char *) pdo_cmd, nEscAddrOutputData, nPdOutputSize );
+		//ISR_EscReadAccess( (unsigned char *) pdo_cmd, nEscAddrOutputData, nPdOutputSize );
+                ISR_EscReadAccessDMA( (unsigned char *) pdo_cmd, nEscAddrOutputData, nPdOutputSize );
 		
 #if defined USE_ACTX1_PDO_V2
 	memcpy((unsigned char *)&ec_cmd_in,pdo_cmd,sizeof(ec_cmd_in_t));
 	unpack_command_in();
 #else
-		memcpy((unsigned char *)&ec_cmd,pdo_cmd,sizeof(ec_cmd_t));
+		//memcpy((unsigned char *)&ec_cmd,pdo_cmd,sizeof(ec_cmd_t));
 #endif
 
 	}
@@ -91,6 +100,8 @@ void isr_update_inputs(void)
 #ifdef USE_TIMESTAMP_DC
 	ISR_EscReadAccess((unsigned char*)&dc_timestamp, (unsigned int)EC_LATCH1_POS_EDG_ADDR, (unsigned int)8 );
 	ec_stat.timestamp=dc_timestamp;
+        //ISR_EscReadAccess((unsigned char*)&dc_timestamp, (unsigned int)EC_LATCH1_POS_EDG_ADDR, (unsigned int)8 );
+	//ec_stat.timestamp=dc_timestamp;
 #else
 #ifndef M3_BLD
 	ec_stat.timestamp=0;
@@ -102,7 +113,8 @@ void isr_update_inputs(void)
 #else
 	memcpy(pdo_stat,(unsigned char *)&ec_stat,sizeof(ec_stat_t));
 #endif
-	ISR_EscWriteAccess( (UINT8 *) pdo_stat, nEscAddrInputData, nPdInputSize );
+	//ISR_EscWriteAccess( (UINT8 *) pdo_stat, nEscAddrInputData, nPdInputSize );
+        ISR_EscWriteAccessDMA( (UINT8 *) pdo_stat, nEscAddrInputData, nPdInputSize );
 	return;
 }
 
@@ -129,13 +141,15 @@ void isr_update_input_pdo(void)
 #endif
 
 #if defined PWR_0_4 || defined PWR_0_5
-	ec_stat.adc_bus_voltage=get_avg_adc(ADC_BUS_VOLTAGE);
-	ec_stat.adc_current_digital=get_avg_adc(ADC_CURRENT_DIGITAL);
+	//ec_stat.adc_bus_voltage=get_avg_adc(ADC_BUS_VOLTAGE);
+	//ec_stat.adc_current_digital=get_avg_adc(ADC_CURRENT_DIGITAL);
 #if defined USE_ADC_SPI
 	ec_stat.adc_ext=get_adc_spi(0); 
 #endif
-	ec_stat.motor_enabled=GetMotorEnabledFiltered();//PinMotorEnabled;
-	ec_stat.flags=ec_flags[0];
+	//ec_stat.motor_enabled=GetMotorEnabledFiltered();//PinMotorEnabled;
+        ec_stat.motor_enabled=ec_cmd.enable_motor;//PinMotorEnabled;
+	//ec_stat.flags=ec_flags[0];
+        ec_stat.flags=tx_cnt++;
 #endif
 }
 
@@ -150,10 +164,31 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 	against mode change blips, etc. However it causes priority issues, in particular it affects
 	the TIMER3 timing with VertX. Disabling it doesn't seem to affect performance.*/
 
-	SPI_SEL = SPI_DEACTIVE;				/* SPI should be deactivated to interrupt a possible transmission */
-	ACK_ESC_INT;						/* reset the interrupt flag */
-	
+        ecat_isr_running = 1;
+
+        ACK_ESC_INT;						/* reset the interrupt flag */
+
+        while(IEC0bits.DMA1IE);
+
+//        ResetIdx();
+        SPI_SEL = SPI_DEACTIVE;				/* SPI should be deactivated to interrupt a possible transmission */
+
+        
+        /*if(isr_cnt >= 1)
+        {   isr_cnt = 0;
+            return;
+        }
+
+        isr_cnt++;*/
+
+
+        SetHeartbeatLED;
+
 	ISR_GetInterruptRegister();			/* get the AL event in EscAlEvent */
+        unsigned long long dc_timestamp;
+        //ISR_EscReadAccess((unsigned char*)&dc_timestamp, (unsigned int)EC_LATCH1_POS_EDG_ADDR, (unsigned int)8 );
+	//ec_stat.timestamp=dc_timestamp;
+
 #if DC_SUPPORTED 
 	if ( bDcSyncActive )				/* read the sync 0 status to acknowledge the SYNC interrupt */
 		ISR_EscReadAccess( dummy, ESC_ADDR_SYNC_STATUS, 2);
@@ -162,14 +197,60 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 	if (bSynchronMode)						/* Application is synchronized to DC-, SM2- or SM3-event */
 	{		
 		if ( bEcatOutputUpdateRunning )		// Get Process Outputs
+                {
+                    while(IEC0bits.DMA1IE);
 			isr_update_outputs();				// EtherCAT slave is in OPERATIONAL, update outputs 
+                       /*if (did_rx || did_tx)
+                {
+                    SPI_SEL = SPI_ACTIVE;
+                    ISR_StartDMA();
+                    //while(IEC0bits.DMA1IE);
+                }*/
+                }
 		else
 			isr_reset_outputs();
 		if ( bEcatInputUpdateRunning )		//Update Process Inputs
+                {
+                    if (did_rx)
+                    {
+                        do_tx = 1;
+                    }
+                    else
+                    {
+                        while(IEC0bits.DMA1IE);
 			isr_update_inputs();				/* EtherCAT slave is at least in SAFE-OPERATIONAL, update inputs */
 
+                        
+                    }
+			//isr_update_inputs();				/* EtherCAT slave is at least in SAFE-OPERATIONAL, update inputs */
+                         /*if (did_rx || did_tx)
+                        {
+                            SPI_SEL = SPI_ACTIVE;
+                            ISR_StartDMA();
+                            while(!IFS0bits.DMA1IF);
+                            //SPI_SEL = SPI_DEACTIVE;
+                            IFS0bits.DMA1IF = 0;		// Clear the DMA0 Interrupt Flag
+                        }*/
+                        //SPI_SEL = SPI_ACTIVE;
+                        //ISR_StartDMA();
+                        //while(IEC0bits.DMA1IE);
+                }
+                 if (did_rx || did_tx)
+                {
+                    SPI_SEL = SPI_ACTIVE;
+                    ISR_StartDMA();
+                    //while(IEC0bits.DMA1IE);
+                    //while(!IFS0bits.DMA1IF);
+                    //while(IEC0bits.DMA1IE);
+                    //SPI_SEL = SPI_DEACTIVE;
+                    //IFS0bits.DMA1IF = 0;		// Clear the DMA0 Interrupt Flag*/
+                }
+                
+
 	}	
-	ec_active=1;	
+	ec_active=1;
+
+        //ClrHeartbeatLED;
 }
 #endif
 
@@ -199,11 +280,11 @@ void setup_ethercat(void)
 {  
 	int i;
 	UINT8 u8PDICtrl = 0;
-
+        isr_cnt = 0;
 	/* Hardcode PDO size for now*/
 	nPdInputSize=PDO_STATUS_SIZE;	
 	nPdOutputSize=PDO_COMMAND_SIZE;
-	
+	ResetIdx();
 	// Initialize structs
 	memset((unsigned char *)&ec_stat,0,sizeof(ec_stat_t));
 	memset((unsigned char *)&ec_cmd,0,sizeof(ec_cmd_t));
@@ -308,7 +389,7 @@ void setup_spi(void)
 	SPI1CON1=0;
 	SPI1CON1bits.MSTEN=1;		//Act as SPI Master
 	SPI1CON1bits.PPRE=0b10;		// ((0b10, 4:1), (0b00, 64:1) (0b11,1:1) prescalar
-	SPI1CON1bits.SPRE=0b110;	// (0b111, 1:1),(0b110, 2:1) secondary scalar
+	SPI1CON1bits.SPRE=0b111;	// (0b111, 1:1),(0b110, 2:1) secondary scalar
     SPI1CON1bits.CKP=1;			//Idle state is high
     SPI1CON1bits.CKE=0;			//Data changes on clock transition from idle to active
     SPI1CON1bits.SMP=0;			//Input data sampled at middle of data output time 

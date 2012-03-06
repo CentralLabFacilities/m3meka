@@ -25,7 +25,9 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef USE_TIMER3
 
 #if defined PWR_0_2 || defined PWR_0_3 || defined PWR_0_4 || defined PWR_0_5 //100hz
-#define T3_US_PER_IRQ 10000
+//#define T3_US_PER_IRQ 10000*5 // 100Hz
+#define T3_US_PER_IRQ 10000*5 // 100Hz
+#define T3_US_PER_IRQ 1667  // 3KHz
 #define T3_US_ROLLOVER 100000000
 #endif
 
