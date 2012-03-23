@@ -328,8 +328,7 @@ void M3MotorModel::StepModelV1(mReal i, mReal pwm, mReal rpm, mReal tmp)
 		//put in mA
 		
 		mReal I_ma = MAX(.00001,((MAX(0.0,v_pwm-v_cemf))/(winding_resistance+duty*duty*amplifier_resistance))*1000.0);
-		mReal x=curr_avg_rms.Step(I_ma*I_ma); //for some reason must brake up term and be >0, otherwise get NAN when I_ma=0
-		
+		mReal x=curr_avg_rms.Step(I_ma*I_ma); 
 		i_rms = i_scale*sqrt(ABS(x)); //min(starting_current*1000.0,sqrt(curr_avg_rms.Step(I_ma*I_ma)));
 		//if (tmp_cnt++%100==0)
 		//	M3_INFO("i_rms %f x %f I_ma %f v_pwm %f v_cemf %f duty %f\n",i_rms,x,I_ma, v_pwm, v_cemf, duty);
