@@ -21,7 +21,7 @@ option optimize_for = SPEED;
 import "component_base.proto";
 
 
-enum JOINT_IQ_MODE{	
+enum JOINT_TRAJ_IQ_MODE{	
 	JOINT_MODE_OFF = 0;		//Actuator off
 	JOINT_MODE_PWM = 1;		//Direct PWM control
 	JOINT_MODE_TORQUE = 2;		//Direct Torque control
@@ -32,7 +32,7 @@ enum JOINT_IQ_MODE{
 	JOINT_MODE_THETA_GC_MJ = 7;	//Minimum Jerk gravity compensated joint angle control
 }
 
-message M3JointIQStatus{
+message M3JointTrajIQStatus{
 	optional M3BaseStatus	base=1;					//Reserved
 	optional double		motor_temp= 2;				//(C)
     	optional double		amp_temp=3;				//(C)
@@ -50,7 +50,7 @@ message M3JointIQStatus{
 	optional int32		flags=16;				//Status reported by DSP
 }
 
-message M3JointIQParam{
+message M3JointTrajIQParam{
 	
 	optional double		kq_p = 1;					//P gain, gc joint angle control (THETA_GC Mode)
 	optional double		kq_i = 2;					//I gain, gc joint angle  control (THETA_GC Mode)
@@ -70,7 +70,7 @@ message M3JointIQParam{
 	optional double		min_q_pad = 16 ;				//Safety thresh padding (Deg)
 }
 		
-message M3JointIQCommand{
+message M3JointTrajIQCommand{
 		optional double        		tq_desired = 1;                                 //Desired torque (mNm)
     	optional double            	q_desired = 2;                                  //Desired joint angle (Deg)
     	optional int32            	pwm_desired = 3;                                //Desired pwm (ticks)

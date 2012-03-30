@@ -43,10 +43,10 @@ class M3Transmission;
 
 
 //Joint space representation.
-class M3JointIQ: public m3rt::M3Component
+class M3JointTrajIQ: public m3rt::M3Component
 {
 	public:
-		M3JointIQ(): m3rt::M3Component(JOINT_PRIORITY),brake_type(BRAKE_NONE),cpj(0),pwr_on_last(0),brake_off_cmd(0),mode_last(-1),trans(0),
+		M3JointTrajIQ(): m3rt::M3Component(JOINT_PRIORITY),brake_type(BRAKE_NONE),cpj(0),pwr_on_last(0),brake_off_cmd(0),mode_last(-1),trans(0),
 		  tq_switch(0), q_switch(0), pwm_switch(0), disable_pwm_ramp(false)
 		{
 			RegisterVersion("default",DEFAULT);	//RBL. Now works with default case/ambient values
