@@ -95,7 +95,7 @@ class M3CurrentSensor
 		virtual int mAtoTicks(mReal milliamps);
 		virtual void SetZero(){val=0.0;}
 	protected:
-		enum {NONE,  ADC_POLY, ADC_LINEAR_5V,ADC_LINEAR_5V_NS,LINEAR_AMP_VIA_DAC,ADC_POLY_SINGLE,DSP_CALIB};
+		enum {NONE,  ADC_POLY, ADC_LINEAR_5V,ADC_LINEAR_5V_NS,LINEAR_AMP_VIA_DAC,ADC_POLY_SINGLE,DSP_CALIB, DSP_TICKS};
 		mReal val;
 		vector<mReal> cb_current_a, cb_current_b;
 		int type;
