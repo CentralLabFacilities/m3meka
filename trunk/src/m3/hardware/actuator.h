@@ -42,6 +42,7 @@ class M3Actuator : public m3rt::M3Component
 		{
 			RegisterVersion("default",DEFAULT);	//RBL
 			RegisterVersion("iss",ISS);		//ISS. Updated safety thresholds to use motor model.
+			RegisterVersion("iq",IQ);
 			
 		}
 		google::protobuf::Message * GetCommand(){return &command;}
@@ -91,7 +92,7 @@ class M3Actuator : public m3rt::M3Component
 		int mNmToTicks(mReal x){return tq_sense.mNmToTicks(x);}
 		M3ActuatorEc * GetActuatorEc(){return ecc;}
 	protected:
-		enum {DEFAULT, ISS};		
+		enum {DEFAULT, ISS, IQ};		
 		M3AngleSensor q_sense;
 		M3TorqueSensor tq_sense;
 		M3TempSensor ex_sense;

@@ -308,10 +308,23 @@ bool M3Dynamatics::ReadConfig(const char * filename)
 						param.payload_inertia(4));
 
 	bool btemp;
-	ymlparam["use_velocities"] >> btemp;
-	param.set_use_velocities(btemp);
-	ymlparam["use_accelerations"] >> btemp;
-	param.set_use_accelerations(btemp);
+	try
+	{
+	    ymlparam["use_velocities"] >> btemp;
+	    param.set_use_velocities(btemp);
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		param.set_use_velocities(0);
+	} 
+	try
+	{
+	  ymlparam["use_accelerations"] >> btemp;
+	  param.set_use_accelerations(btemp);
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		param.set_use_accelerations(0);
+	} 	
+
 
 	const YAML::Node& links = doc["links"];
 

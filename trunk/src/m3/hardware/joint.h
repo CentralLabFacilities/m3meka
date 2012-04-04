@@ -51,6 +51,7 @@ class M3Joint: public m3rt::M3Component
 		{
 			RegisterVersion("default",DEFAULT);	//RBL. Now works with default case/ambient values
 			RegisterVersion("iss",ISS);		//ISS. Now displays motor-model case/ambient/motor temp values
+			RegisterVersion("iq",IQ);
 		}
 		//API
 		void SetDesiredPwm(int val){command.set_pwm_desired(val);}
@@ -102,7 +103,7 @@ class M3Joint: public m3rt::M3Component
 		M3Transmission * GetTransmission(){return trans;} //Allow other components to access state
 		int mNmToTicks(mReal x){return act->mNmToTicks(x);}
 	protected:
-		enum{DEFAULT,ISS};
+		enum{DEFAULT,ISS, IQ};
 		enum {BRAKE_NONE, BRAKE_AUTO, BRAKE_MANUAL};
 		virtual void CalcThetaDesiredSmooth();
 		virtual void StepBrake(mReal & ctrl_des, mReal curr);

@@ -50,6 +50,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 			RegisterVersion("default",DEFAULT);		//RBL
 			RegisterVersion("iss",ISS);			//ISS. No change from DEFAULT
 			RegisterVersion("esp",ESP);			//ESP. Moved torque feedforward from DSP to Component 
+			RegisterVersion("iq",IQ);
 			RegisterPdo("actx1_pdo_v3", ACTX1_PDO_V3);	//CRL
 			RegisterPdo("actx1_pdo_v1", ACTX1_PDO_V1);	//RBL 
 			RegisterPdo("actx2_pdo_v1", ACTX2_PDO_V1);	//RBL 
