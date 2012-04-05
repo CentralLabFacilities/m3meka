@@ -1,0 +1,105 @@
+// M3 -- Meka Robotics Robot Components
+// Copyright (c) 2010 Meka Robotics
+// Author: edsinger@mekabot.com (Aaron Edsinger)
+// 
+// M3 is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// M3 is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with M3.  If not, see <http://www.gnu.org/licenses/>.
+
+option optimize_for = SPEED;
+import "component_base.proto";
+
+
+enum ACTUATOR_EC_IQ_MODE{
+	ACTUATOR_EC_IQ_MODE_OFF = 0;
+	ACTUATOR_EC_IQ_MODE_PWM = 1;
+	ACTUATOR_EC_IQ_MODE_CURRENT = 2;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//	STATUS
+
+
+
+message M3ActuatorEcIQStatusADC {
+	optional int32					adc_torque=1;		//Torque input
+	optional int32					adc_ext_temp=2;		//External temp sensor
+	optional int32					adc_amp_temp=3;		//Amplifier temp
+	optional int32					adc_current_a=4;	//Motor current leg A
+	optional int32					adc_current_b=5;	//Motor current leg B
+	optional int32					adc_ext_a=6;		//Misc input
+	
+}
+
+message M3ActuatorEcIQStatusQei {
+	optional int32				pos			= 1;
+	optional int32				per			= 2;
+}
+
+message M3ActuatorEcIQStatusAng {
+	optional int32				pos			= 1;
+	optional int32				err			= 2;
+}
+
+message M3ActuatorEcIQStatusCmd {
+	optional int32				pwm			= 1;
+	optional int32				current			= 2;
+}
+
+message M3ActuatorEcIQStatus {
+	optional M3BaseStatus			base			= 1;	// Reserved
+	optional M3EtherCATStatus		ethercat 		= 2;	// EtherCAT info
+	optional uint64				timestamp		= 3;	// Time in us
+	optional int32				debug			= 4;	// Reserved
+	optional int32				flags			= 5;	// Reserved
+	optional M3ActuatorEcIQStatusCmd	cmd		= 6;
+	optional M3ActuatorEcIQStatusADC	adc		= 7;
+	optional M3ActuatorEcIQStatusAng	ang		= 8;
+	optional M3ActuatorEcIQStatusAng	frc		= 9;
+	optional M3ActuatorEcIQStatusQei	qei		= 10;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//	PARAMS
+message M3ActuatorEcIQParamCurrentPID {
+	optional int32	kp				= 1;
+	optional int32	ki				= 2;
+	optional int32	kp_shift			= 3;
+	optional int32	ki_shift			= 4;
+	optional int32	ki_limit			= 5;
+}
+
+
+message M3ActuatorEcIQParamSoftlimits {
+	optional int32	current_max			= 1;	// (adc)
+	optional int32	pwm_max				= 2;	// (counts)
+}
+
+
+message M3ActuatorEcIQParam {
+	optional int32						config			= 1;//Reserved
+	optional M3ActuatorEcIQParamCurrentPID			pid_current		= 2;
+	optional M3ActuatorEcIQParamSoftlimits			softlimits		= 3;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//	COMMAND
+
+
+message M3ActuatorEcIQCommand{
+	optional ACTUATOR_EC_MODE		mode	= 1;	// Control mode
+	optional int32				pwm	= 2;
+	optional int32				current	= 3;
+	optional bool				brake_off=4;	//Disable brake if present
+}
+
+
