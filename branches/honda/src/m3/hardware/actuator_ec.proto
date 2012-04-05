@@ -80,15 +80,15 @@ message M3ActuatorEcCommand{
 
 message M3ActuatorEcParam{
 	optional int32			config=1;					//Reserved
-	optional int32			k_p=2;						//P gain, torque control
-	optional int32			k_i=3;						//I gain, torque control
-	optional int32			k_d=4;						//D gain, torque control
-	optional int32			k_p_shift=5;					//Shift scalar, torque control
-	optional int32			k_i_shift=6;					//Shift scalar, torque control
-	optional int32			k_d_shift=7;					//Shift scalar, torque control
-	optional int32			k_i_limit=8;					//Integral limit, torque control
-	optional int32			t_max=9;					//Max permissible torque
-	optional int32			t_min=10;					//Min permissible torque
+	optional int32			k_p=2;						//P gain, torque/current control
+	optional int32			k_i=3;						//I gain, torque/current control
+	optional int32			k_d=4;						//D gain, torque/current control
+	optional int32			k_p_shift=5;					//Shift scalar, torque/current control
+	optional int32			k_i_shift=6;					//Shift scalar, torque/current control
+	optional int32			k_d_shift=7;					//Shift scalar, torque/current control
+	optional int32			k_i_limit=8;					//Integral limit, torque/current control
+	optional int32			t_max=9;					//Max permissible torque/current
+	optional int32			t_min=10;					//Min permissible torque/current
 	optional int32			pwm_max=11;					//Max permissible pwm
 	optional int32			qei_max=12;					//Max permissible qei
 	optional int32			qei_min=13;					//Min permissible qei

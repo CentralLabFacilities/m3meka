@@ -35,6 +35,7 @@ libm3hardwareinclude_HEADERS = \
 	m3ec_pdo_v1_def.h\
 	m3ec_pdo_v2_def.h\
 	m3ec_pdo_v3_def.h\
+	m3ec_pdo_v4_def.h\
 	m3meka_ec_def.h\
 	motor.h\
 	actuator.h\

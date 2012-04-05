@@ -38,7 +38,7 @@ namespace m3
 class M3Actuator : public m3rt::M3Component
 {
 	public:
-		M3Actuator(): m3rt::M3Component(CALIB_PRIORITY),ecc(NULL),ignore_bounds(false),overload_cnt(0),old_ts(0),encoder_calib_req(1),old_ts_rtai(0),old_ticks(0),old_is_calibrated(false)
+		M3Actuator(): m3rt::M3Component(CALIB_PRIORITY),ecc(NULL),ignore_bounds(false),use_i_torque_ctrl(false),overload_cnt(0),old_ts(0),encoder_calib_req(1),old_ts_rtai(0),old_ticks(0),old_is_calibrated(false)
 		{
 			RegisterVersion("default",DEFAULT);	//RBL
 			RegisterVersion("iss",ISS);		//ISS. Updated safety thresholds to use motor model.
@@ -49,9 +49,11 @@ class M3Actuator : public m3rt::M3Component
 		google::protobuf::Message * GetStatus(){return &status;}
 		google::protobuf::Message * GetParam(){return &param;}
 	public:
+		M3ActuatorParamPID *	ParamPIDTorque(){return param.mutable_pid_torque();}
 		void SetDesiredPwm(int val){command.set_pwm_desired(val);}
 		void SetDesiredControlMode(ACTUATOR_MODE val){command.set_ctrl_mode(val);}
 		void SetDesiredTorque(mReal val){ command.set_tq_desired(val);}
+		void SetDesiredCurrent(mReal val){ command.set_i_desired(val);}
 		void SetBrakeOff(bool off){command.set_brake_off(off);}
 		mReal GetDesiredTorque(){return command.tq_desired();}
 		mReal GetMotorTemp(){return status.motor_temp();}
@@ -103,6 +105,7 @@ class M3Actuator : public m3rt::M3Component
 		M3JointFilter angle_df;
 		M3DFilter torquedot_df;
 		M3DitherToInt pwm_dither;
+		M3PID pid_torque;
 		
 		bool ReadConfig(const char * filename);
 		void Startup();
@@ -121,6 +124,7 @@ class M3Actuator : public m3rt::M3Component
 		bool ignore_bounds;
 		bool safe_pwm_limit; 
 		bool encoder_calib_req;
+		bool use_i_torque_ctrl;
 		int overload_cnt;
 		mReal max_motor_temp; //V-DEFAULT
 		mReal max_current;//V-DEFAULT

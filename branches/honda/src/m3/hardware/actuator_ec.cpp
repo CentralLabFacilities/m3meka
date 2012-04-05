@@ -100,6 +100,29 @@ void M3ActuatorEc::ResetCommandPdo(unsigned char * pdo)
 		memset(p,0,sizeof(M3ActPdoV2Cmd));	
 		return;
 	}
+	
+	//V4
+	if (IsPdoVersion(ACTX1_PDO_V4)) 
+	{
+		M3ActX1PdoV4Cmd * p = (M3ActX1PdoV4Cmd *) pdo;
+		memset(p,0,sizeof(M3ActX1PdoV4Cmd));	
+		return;
+	}
+	if (IsPdoVersion(ACTX2_PDO_V4))
+	{
+		M3ActX2PdoV4Cmd * ec = (M3ActX2PdoV4Cmd *) pdo;
+		M3ActPdoV4Cmd * p=&(ec->command[chid]);
+		memset(p,0,sizeof(M3ActPdoV4Cmd));	
+		return;
+	}
+	if (IsPdoVersion(ACTX3_PDO_V4))
+	{
+		M3ActX3PdoV4Cmd * ec = (M3ActX3PdoV4Cmd *) pdo;
+		M3ActPdoV4Cmd * p=&(ec->command[chid]);
+		memset(p,0,sizeof(M3ActPdoV4Cmd));	
+		return;
+	}
+	
 }
 
 void M3ActuatorEc::SetStatusFromPdoV0(unsigned char * data)
@@ -234,6 +257,46 @@ void M3ActuatorEc::SetStatusFromPdoV2(unsigned char * data)
       status.set_adc_current_a(exs.adc_current_a);
       status.set_adc_current_b(exs.adc_current_b);
 }
+
+
+void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
+{
+    M3ActPdoV4Status * ax;
+    if (IsPdoVersion(ACTX1_PDO_V4))
+    {
+	    M3ActX1PdoV4Status * ec = (M3ActX1PdoV4Status *) data;
+	    status.set_timestamp(ec->timestamp);
+	    ax=&(ec->status[chid]);
+    }
+    if (IsPdoVersion(ACTX2_PDO_V4))
+    {
+	    M3ActX2PdoV4Status * ec = (M3ActX2PdoV4Status *) data;
+	    status.set_timestamp(ec->timestamp);
+	    ax=&(ec->status[chid]);
+    }
+    if (IsPdoVersion(ACTX3_PDO_V4))
+    {
+	    M3ActX3PdoV4Status * ec = (M3ActX3PdoV4Status *) data;
+	    status.set_timestamp(ec->timestamp);
+	    ax=&(ec->status[chid]);
+    }
+    
+    
+    status.set_qei_period(ax->qei_period);
+    status.set_qei_on(ax->qei_on);
+    status.set_qei_rollover(ax->qei_rollover);
+    status.set_debug(ax->debug);
+    status.set_adc_torque(ax->adc_torque);
+    status.set_adc_ext_temp(ax->adc_motor_temp); //Post RBL version renamed PDO motor_temp to ext_temp
+    status.set_adc_ext_a(ax->adc_ext_a);
+    status.set_adc_ext_b(ax->adc_ext_b);
+    status.set_adc_amp_temp(ax->adc_amp_temp);
+    status.set_adc_current_a(ax->adc_current_a);
+    status.set_adc_current_b(ax->adc_current_b);
+    status.set_pwm_cmd(ax->pwm_cmd);	
+    status.set_flags(ax->flags);
+}
+
 
 void M3ActuatorEc::SetStatusFromPdo(unsigned char * data)
 {
@@ -498,13 +561,19 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 		  ax->k_ff=(int)CLAMP(pwm_ff,-1*ax->pwm_max,ax->pwm_max);
 	  }
 	}
-
+	if (IsVersion(IQ)) //Deprecated
+	{
+	  ax->k_ff_zero=0;
+	  ax->k_ff_shift=0;	
+	  ax->k_ff=0;	
+	}
 	
 	ax->t_max=CLAMP(param.t_max(),-32767,32767);
 	ax->t_min=CLAMP(param.t_min(),-32767,32767);
 	
 	ax->qei_max=CLAMP(param.qei_max(),-32767,32767);
 	ax->qei_min=CLAMP(param.qei_min(),-32767,32767);
+	
 	if (pwr_scale==0)
 		ax->mode=(int)ACTUATOR_EC_MODE_OFF;
 	else
