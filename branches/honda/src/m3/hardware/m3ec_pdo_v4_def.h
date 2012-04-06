@@ -32,6 +32,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 ///////////////////////////////  From M3ACT_PDO_V4 /////////////////////////////////////////////////////
 
+//V4 is for IQ version of actuator (current commanded)
 
 typedef struct 
 {
@@ -47,6 +48,7 @@ typedef struct
 	int16_t		mode;					//Mode (Off=0, Pwm=1, PID=2)
 	int16_t		qei_max;				//Max permissible qei
 	int16_t		qei_min;				//Min permissible qei
+	int16_t		pwm_max;				//Max permissible pwm
 } M3ActPdoV4Cmd;
 
 #define M3ACT_FLAG_POS_LIMITSWITCH 1
@@ -59,9 +61,10 @@ typedef struct
 typedef struct 
 {
 	int16_t		current_ma;		//Calibrated value
-	int16_t		debug;			//Reserved
-	int16_t		adc_torque;		//Torque input 
-	int16_t		adc_motor_temp;		//Motor temp
+	int16_t		debug;			//Reserved [vertx err cnts]
+	int16_t		torque;			//Torque input 
+	int16_t		torque_err_cnt;		//Err
+	int16_t		adc_ext_temp;		//Motor temp
 	int16_t		adc_amp_temp;		//Amplifier temp 
 	int16_t		adc_current_a;		//Motor current leg A 
 	int16_t		adc_current_b;		//Motor current leg B 
@@ -69,6 +72,7 @@ typedef struct
 	int16_t		qei_on;			//Encoder ticks
 	int16_t		qei_period;		//Encoder ticks
 	int16_t		qei_rollover;		//Encoder rollover counts (directional) -1|0|1 ...
+	int16_t		qei_err_cnt;		//Err
 	int16_t		flags;			//Reserved
 }M3ActPdoV4Status;
 
@@ -112,11 +116,6 @@ typedef struct
 	M3ActPdoV4Status 	status[3];
 } M3ActX3PdoV4Status;
 
-typedef struct
-{
-	uint64_t    timestamp;		    //Time in us
-	M3ActPdoV4Status 	status[4];
-} M3ActX4PdoV4Status;
 
 
 #endif

@@ -105,7 +105,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		void ResetCommandPdo(unsigned char * pdo);
 		void SetPdoV4FromPdoV1Command(unsigned char * data);
 		void SetPdoV2FromPdoV1Command(unsigned char * data);
-		void SetPdoV0FromPdoV1Command(unsigned char * data);
+		void SetPdoV4FromPdoV1Command(unsigned char * data);
 		void StepStatus();
 	protected:
 		enum {GMB_PDO_V0,ACTX1_PDO_V1, ACTX2_PDO_V1, ACTX3_PDO_V1, ACTX4_PDO_V1, TACTX2_PDO_V1,
@@ -132,7 +132,6 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		M3ActPdoV2Cmd    axc;
 		M3ActPdoV2CmdExt exc;
 		M3ActPdoV1Cmd  acc;
-		M3ActPdoV4Cmd  acf;
 		M3SeaPdoV0Cmd  scc;
 		bool error_printed;
 		

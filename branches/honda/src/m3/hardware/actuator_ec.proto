@@ -55,21 +55,23 @@ enum ACTUATOR_EC_CONFIG{
 message M3ActuatorEcStatus{
 	optional M3BaseStatus			base=1;						//Reserved
 	optional M3EtherCATStatus		ethercat =2;				//EtherCAT info
-	optional uint64					timestamp=3;				//Time in us
-	optional int32					qei_on=4;				//MA3 Encoder ticks
-	optional int32					qei_rollover=5;
-	optional int32					qei_period=6;				//MA3 Encoder ticks
-	optional int32					debug=7;				//Reserved
-	optional int32					adc_torque=8;				//Torque input
-	optional int32					adc_ext_temp=9;				//External temp sensor
-	optional int32					adc_amp_temp=10;			//Amplifier temp
-	optional int32					adc_current_a=11;			//Motor current leg A
-	optional int32					adc_current_b=12;			//Motor current leg B
-	optional int32					adc_ext_a=13;				//Auxillary adc input
-	optional int32					adc_ext_b=14;				//Auxillary adc input
-	optional int32					pwm_cmd=15;				//Current PWM command to motor
-	optional int32					flags=16;				//Reserved
-	optional int32					current_ma=17;				//Calibrated on amp (1 mA precision)
+	optional uint64				timestamp=3;				//Time in us
+	optional int32				qei_on=4;				//MA3 Encoder ticks
+	optional int32				qei_rollover=5;
+	optional int32				qei_period=6;				//MA3 Encoder ticks
+	optional int32				qei_err_cnt=7;
+	optional int32				debug=8;				//Reserved
+	optional int32				adc_torque=9;				//Torque input
+	optional int32				torque_err_cnt=10;			//Err
+	optional int32				adc_ext_temp=11;				//External temp sensor
+	optional int32				adc_amp_temp=12;			//Amplifier temp
+	optional int32				adc_current_a=13;			//Motor current leg A
+	optional int32				adc_current_b=14;			//Motor current leg B
+	optional int32				adc_ext_a=15;				//Auxillary adc input
+	optional int32				adc_ext_b=16;				//Auxillary adc input
+	optional int32				pwm_cmd=17;				//Current PWM command to motor
+	optional int32				flags=18;				//Reserved
+	optional int32				current_ma=19;				//Calibrated on amp (1 mA precision)
 }
 
 message M3ActuatorEcCommand{
