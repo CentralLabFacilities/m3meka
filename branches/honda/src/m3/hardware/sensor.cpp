@@ -168,6 +168,10 @@ int M3CurrentSensor::mAtoTicks(mReal milliamps)
     {
 	  return int((milliamps - cb_bias) * (1.0/cb_scale) * (1.0/(cb_amp_mA_per_mV * cb_dac_mV_per_tick)));
     } 
+    if (type==DSP_TICKS)
+    {
+      return int((milliamps - cb_bias) * (1.0/cb_scale));
+    } 
     return 0;
 }
 

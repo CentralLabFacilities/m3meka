@@ -45,7 +45,6 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 			memset(&exc,0,sizeof(M3ActPdoV2CmdExt));
 			memset(&axc,0,sizeof(M3ActPdoV2Cmd));
 			memset(&acc,0,sizeof(M3ActPdoV1Cmd));
-			memset(&acf,0,sizeof(M3ActPdoV4Cmd));
 			memset(&scc,0,sizeof(M3SeaPdoV0Cmd));
 		
 			RegisterVersion("default",DEFAULT);		//RBL
@@ -105,7 +104,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		void ResetCommandPdo(unsigned char * pdo);
 		void SetPdoV4FromPdoV1Command(unsigned char * data);
 		void SetPdoV2FromPdoV1Command(unsigned char * data);
-		void SetPdoV4FromPdoV1Command(unsigned char * data);
+		void SetPdoV0FromPdoV1Command(unsigned char * data);
 		void StepStatus();
 	protected:
 		enum {GMB_PDO_V0,ACTX1_PDO_V1, ACTX2_PDO_V1, ACTX3_PDO_V1, ACTX4_PDO_V1, TACTX2_PDO_V1,

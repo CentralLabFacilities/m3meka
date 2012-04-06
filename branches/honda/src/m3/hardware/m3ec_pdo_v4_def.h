@@ -62,7 +62,7 @@ typedef struct
 {
 	int16_t		current_ma;		//Calibrated value
 	int16_t		debug;			//Reserved [vertx err cnts]
-	int16_t		torque;			//Torque input 
+	int16_t		adc_torque;			//Torque input 
 	int16_t		torque_err_cnt;		//Err
 	int16_t		adc_ext_temp;		//Motor temp
 	int16_t		adc_amp_temp;		//Amplifier temp 

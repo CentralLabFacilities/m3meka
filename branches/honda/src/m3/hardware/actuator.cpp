@@ -140,15 +140,15 @@ bool M3Actuator::ReadConfig(const char * filename)
 	if (IsVersion(IQ))
 	{
 	      doc["param"]["pid_current"]["k_p"] >> mval;
-	      ParamPIDTorque()->set_k_p(val);
+	      ParamPIDTorque()->set_k_p(mval);
 	      doc["param"]["pid_current"]["k_i"] >> mval;
-	      ParamPIDTorque()->set_k_i(val);
+	      ParamPIDTorque()->set_k_i(mval);
 	      doc["param"]["pid_current"]["k_d"] >> mval;
-	      ParamPIDTorque()->set_k_d(val);
+	      ParamPIDTorque()->set_k_d(mval);
 	      doc["param"]["pid_current"]["k_i_limit"] >> mval;
-	      ParamPIDTorque()->k_i_limit(val);
+	      ParamPIDTorque()->set_k_i_limit(mval);
 	      doc["param"]["pid_current"]["k_i_range"] >> mval;
-	      ParamPIDTorque()->k_i_range(val);
+	      ParamPIDTorque()->set_k_i_range(mval);
 	}
 	return true;
 }
@@ -328,17 +328,17 @@ void M3Actuator::StepCommand()
 			
 			if (use_i_torque_ctrl && IsVersion(IQ)) //Do torque control here, command current
 			{
-			   mReal des = pid_torque.Step(GetTorque(),
+			   mReal i_mA = pid_torque.Step(GetTorque(),
 					      GetTorqueDot(),
 					      tq_mNm,
-					      ParamPidTorque()->k_p(), 
-					      ParamPidTorque()->k_i(),
-					      ParamPidTorque()->k_d(),
-					      ParamPidTorque()->k_i_limit(),
-					      ParamPidTorque()->k_i_range());
+					      ParamPIDTorque()->k_p(), 
+					      ParamPIDTorque()->k_i(),
+					      ParamPIDTorque()->k_d(),
+					      ParamPIDTorque()->k_i_limit(),
+					      ParamPIDTorque()->k_i_range());
 			    ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
-			    i_mA=CLAMP(des,-1*param.max_i(),param.max_i()); 
-			    ec_command->set_t_desire(i_sense.mAToTicks(i_mA));
+			    i_mA=CLAMP(i_mA,-1*param.max_i(),param.max_i()); 
+			    ec_command->set_t_desire(i_sense.mAtoTicks(i_mA));
 			}
 			else if (tq_sense.IsFFCurrentCtrl()) //Fake a torque by commanding a voltage
 			{
@@ -369,8 +369,8 @@ void M3Actuator::StepCommand()
 			if ( IsVersion(IQ)) 
 			{
 			  ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
-			  i_mA=CLAMP(command.i_desired(),-1*param.max_i(),param.max_i()); 
-			  ec_command->set_t_desire(i_sense.mAToTicks(i_mA));
+			  mReal i_mA=CLAMP(command.i_desired(),-1*param.max_i(),param.max_i()); 
+			  ec_command->set_t_desire(i_sense.mAtoTicks(i_mA));
 			}
 			else //Previous versions don't support current mode
 			{

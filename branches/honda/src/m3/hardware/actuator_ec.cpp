@@ -305,7 +305,7 @@ void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
     
     status.set_current_ma(ax->current_ma);
     status.set_debug(ax->debug);
-    status.set_torque(ax->torque);
+    status.set_adc_torque(ax->adc_torque);
     status.set_torque_err_cnt(ax->torque_err_cnt);
     status.set_adc_ext_temp(ax->adc_ext_temp); 
     status.set_adc_amp_temp(ax->adc_amp_temp);
