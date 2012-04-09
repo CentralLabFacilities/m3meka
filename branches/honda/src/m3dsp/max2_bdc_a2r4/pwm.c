@@ -22,82 +22,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "pwm.h"
 #include "setup.h"
 
-unsigned int actual_pwm = 0;
-int pwm_cmd_buf[NUM_PWM_CH];
-int pwm_duty_buf[NUM_PWM_CH];
-int pwm_cmd(int chid){return pwm_cmd_buf[chid];}
-
-int pwm_deadband(int chid, int abs_val)
-{
-	if (abs_val==0)
-		return 0;
-	if (ec_cmd.command[chid].pwm_db<0)
-	{
-		if (abs_val<ABS(ec_cmd.command[chid].pwm_db))
-			abs_val=0;
-	}
-	else
-		abs_val=abs_val+ec_cmd.command[chid].pwm_db;
-	return abs_val;
-}
-
-//In: 0<=PWM_MIN_DUTY<=val<=ec_cmd.command[chid].pwm_max<=PWM_MAX_DUTY
-//Out: Inverted clamped version
-int invert_and_clamp_pwm(int chid, int abs_val)
-{
-	int pm=MAX(PWM_MIN_DUTY,MIN(PWM_MAX_DUTY,ec_cmd.command[chid].pwm_max));
-	return CLAMP(PWM_MAX_DUTY-abs_val,PWM_MAX_DUTY-pm, PWM_MAX_DUTY-PWM_MIN_DUTY);
-}
-
-int clamp_pwm(int chid, int abs_val)
-{
-	int pm=MAX(PWM_MIN_DUTY,MIN(PWM_MAX_DUTY,ec_cmd.command[chid].pwm_max));
-	return CLAMP(abs_val,PWM_MIN_DUTY,pm);
-}
-
-void set_pwm(int chid, int val)
-{
-	#if defined USE_CURRENT
-	     if (get_current_state()!=CURRENT_READY)
-			val=0;
-	#endif
-	
-	int sign=SIGN(val);
-	val=pwm_deadband(chid,ABS(val));
-	pwm_cmd_buf[chid]=SIGN(val)*CLAMP(ABS(val),0,ec_cmd.command[chid].pwm_max); //Send back commanded value before gets inverted, deadband, etc
-	
-	//Used by correct_ma
-	#ifdef USE_CURRENT
-	actual_pwm = val;
-	#endif
-	
-	//ADC trigger at the middle of a pulse
-	P1SECMPbits.SEVTCMP = val >> 2; //MAX(val-10,10);	//WAS
-
-	#ifdef PWM_4Q
-	/*
-	X X POVD3H POVD3L   POVD2H POVD2L POVD1H POVD1L   X X POUT3H POUT3L   POUT2H POUT2L POUT1H POUT1L 
-	X X   Q5     Q6       Q3     Q4      Q1    Q2     X X   Q5     Q6       Q3    Q4      Q1    Q2
-	POVDXX=1: PWM
-	POVDXX=0: POUT
-	Forward: Q1=On, Q4=PWM	 =	0000 1100 0000 0010 = 0x0C02
-	Reverse: Q3=On, Q2=PWM	 =	0000 0011 0000 1000 = 0x0308
-	*/
-	pwm_duty_buf[chid]=invert_and_clamp_pwm(chid,val); //Invert as switching on low-leg
-	if (sign >= 0) 
-	{
-			P1DC1 = pwm_duty_buf[0];
-			//P1DC2 = 0;
-			OVDCON=0x0308;
-	} else 
-	{
-			//P1DC1 = 0;
-			OVDCON=0x0C02;
-			P1DC2 = pwm_duty_buf[0];
-	}
-	#endif//4Q
-}
-
 void setup_pwm(void) {
 	int i;
 	for (i=0;i<NUM_PWM_CH;i++)
@@ -137,14 +61,17 @@ void setup_pwm(void) {
 	#endif
 
 	//Synchronize ADC to PWM
-	PWMCON2 = 0;			
-	PWMCON2bits.SEVOPS = 0;	// Special event 1:1 post scale	
+	P1SECMPbits.SEVTDIR = 1;
+	PWMCON2				= 0;			
+	PWMCON2bits.SEVOPS	= 0;				// Special event 1:1 post scale	
+	P1SECMPbits.SEVTCMP	= PWM_ADC_SYNC_TICKS;	//ADC trigger - specifiy the phase realtive to PWM
+//	AD1CON1bits.SSRC = 0b011;
 
-	//PWMCON2bits.IUE=0;	//Update of duty cycle sync to PWM time base (default)
-	PWMCON2bits.IUE=1;		//Immediate update of duty cycle
+//	PWMCON2bits.IUE		= 0;				// Update of duty cycle sync to PWM time base (default)
+	PWMCON2bits.IUE		= 1;				// Immediate update of duty cycle
 
-	P1SECMPbits.SEVTCMP = PWM_ADC_SYNC_TICKS;	//ADC trigger - specifiy the phase realtive to PWM
 	//Note: see current.c, this value is changing at runtime
+
 	
 	//Set PWM dead time
 	DTCON1 = 0;					//Deadtime clock base is 1:1 TCY for Unit A, Unit B
@@ -160,26 +87,95 @@ void setup_pwm(void) {
 
 	DTCON2bits.DTS3A = 0;		//Deadtime for PWM1H3/PWM1L3 going active from Unit A
 	DTCON2bits.DTS3I = 1;		//Deadtime for PWM1H3/PWM1L3 going inactive from Unit B
+	
 	PDC3 = 0;
 	//OVDCON=0;					//Allow control PWM1H/L1-3 using OVD. Set in bldc.c instead...
 	PWMCON2bits.OSYNC=0;		//OVDCON overrides are on next Tcy boundary
 	//PWMCON2bits.OSYNC=1;		//OVDCON overrides synchronized to PWM time base
 
-	#ifdef USE_TIMER1
+#ifdef USE_TIMER1
 	T1CONbits.TON = 1;   	 	//Start Timer 1 for ADC Sync functionality
-	#endif
+#endif
 	
 	//Disable faults
 	FLTACON = 0;
 	_PWM1IF = 0;
 	_PWM1IE = 0;				//Disable interrupts	
 	PTCONbits.PTEN = 1;  		// PWM enable
+	
+	P1DC1	= 1;
+	P1DC2	= 1;
+	P1DC3	= 1;
 }
-#endif 
 
 //PWM1 Interrupt - Trig on Match
-void __attribute__ ((interrupt, no_auto_psv)) _MPWM1Interrupt(void)
+//void __attribute__ ((interrupt, no_auto_psv)) _MPWM1Interrupt(void)
+//The linker is incomplete, manual mapping to vector 57:
+void __attribute__((__interrupt__, no_auto_psv)) _Interrupt57(void)
 {
-	_PWM1IF=0;	//Clear flag
-	//Interrupt disabled, should never be called
+	_PWMIF=0;	//Clear flag
+	//Will be useful in the future (synchronization)
+}
+
+
+unsigned int actual_pwm = 0;
+int pwm_cmd_buf[NUM_PWM_CH];
+int pwm_duty_buf[NUM_PWM_CH];
+int pwm_cmd(int chid){return pwm_cmd_buf[chid];}
+
+//In: 0<=PWM_MIN_DUTY<=val<=ec_cmd.command[chid].pwm_max<=PWM_MAX_DUTY
+//Out: Inverted clamped version
+int invert_and_clamp_pwm(int chid, int abs_val)
+{
+	int pm=MAX(PWM_MIN_DUTY,MIN(PWM_MAX_DUTY,ec_cmd.command[chid].pwm_max));
+	return CLAMP(PWM_MAX_DUTY-abs_val,PWM_MAX_DUTY-pm, PWM_MAX_DUTY-PWM_MIN_DUTY);
+}
+
+int clamp_pwm(int chid, int abs_val)
+{
+	int pm=MAX(PWM_MIN_DUTY,MIN(PWM_MAX_DUTY,ec_cmd.command[chid].pwm_max));
+	return CLAMP(abs_val,PWM_MIN_DUTY,pm);
+}
+
+void set_pwm(int chid, int val)
+{
+	#if defined USE_CURRENT
+	     if (get_current_state()!=CURRENT_READY)
+			val=0;
+	#endif
+	
+	int sign=SIGN(val);
+	val=ABS(val);
+	pwm_cmd_buf[chid]=sign*CLAMP(val,0,ec_cmd.command[chid].pwm_max); //Send back commanded value before gets inverted, deadband, etc
+	
+	//Used by correct_ma
+	#ifdef USE_CURRENT
+	actual_pwm = val;
+	#endif
+	
+	//ADC trigger at the middle of a pulse
+	//P1SECMPbits.SEVTCMP = val >> 2; //MAX(val-10,10);	//WAS
+
+	#ifdef PWM_4Q
+	/*
+	X X POVD3H POVD3L   POVD2H POVD2L POVD1H POVD1L   X X POUT3H POUT3L   POUT2H POUT2L POUT1H POUT1L 
+	X X   Q5     Q6       Q3     Q4      Q1    Q2     X X   Q5     Q6       Q3    Q4      Q1    Q2
+	POVDXX=1: PWM
+	POVDXX=0: POUT
+	Forward: Q1=On, Q4=PWM	 =	0000 1100 0000 0010 = 0x0C02
+	Reverse: Q3=On, Q2=PWM	 =	0000 0011 0000 1000 = 0x0308
+	*/
+	pwm_duty_buf[chid]=invert_and_clamp_pwm(chid,val); //Invert as switching on low-leg
+	if (sign >= 0) 
+	{
+			P1DC1 = pwm_duty_buf[0];
+			//P1DC2 = 0;
+			OVDCON=0x0308;
+	} else 
+	{
+			//P1DC1 = 0;
+			OVDCON=0x0C02;
+			P1DC2 = pwm_duty_buf[0];
+	}
+	#endif//4Q
 }

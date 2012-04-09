@@ -35,7 +35,7 @@ void setup_pwm();
 void set_pwm(int chid, int val);
 int pwm_cmd(int chid);
 
-#define PWM_TIMEBASE_CYC  1011 	//WAS 1599	//1011 = 40kHz
+/*#define PWM_TIMEBASE_CYC  1011 	//WAS 1599	//1011 = 40kHz
 #define PWM_HALF_PERIOD_CYC	PWM_TIMEBASE_CYC
 #define PWM_FULL_PERIOD_CYC	2*PWM_TIMEBASE_CYC
 #define PWM_MIN_DUTY 	5	//MAX2 has 100NS min pulse width. Each tick is 25ns, so min of 4
@@ -43,8 +43,16 @@ int pwm_cmd(int chid);
 #define PWM_ADC_SYNC_TICKS	10	
 #define PWM_DEAD_CYC_A  6			//200
 #define PWM_DEAD_CYC_B  6			//200
+*/
+
+
+#define PWM_TIMEBASE_CYC		200//620//1243 	//1011 = 40kHz, 1999 = 20kHz, 1279 = 31.25kHz (Optimal current reading)
+#define PWM_MIN_DUTY			5//2//5	//MAX2 has 100NS min pulse width. Each tick is 25ns, so min of 4
+#define PWM_MAX_DUTY			2*PWM_TIMEBASE_CYC-5	//Never turn on 100%
+#define PWM_ADC_SYNC_TICKS		1	
+#define PWM_DEAD_CYC_A			7			//200	was 6
+#define PWM_DEAD_CYC_B			7			//200
 #define NUM_PWM_CH 1
 #define PWM_4Q
-
 #endif
 #endif
