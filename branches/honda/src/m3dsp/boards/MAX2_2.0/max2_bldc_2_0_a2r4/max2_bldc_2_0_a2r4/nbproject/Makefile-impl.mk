@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=max2_bldc_0_3_a2r2.X
+PROJECTNAME=max2_bldc_2_0_a2r4
 
 # Active Configuration
 DEFAULTCONF=default

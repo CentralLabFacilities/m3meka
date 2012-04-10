@@ -30,7 +30,7 @@ int pwm_cmd(int chid){return pwm_cmd_buf[chid];}
 
 int pwm_deadband(int chid, int abs_val)
 {
-	if (abs_val==0)
+/*	if (abs_val==0)
 		return 0;
 	if (ec_cmd.command[chid].pwm_db<0)
 	{
@@ -38,7 +38,7 @@ int pwm_deadband(int chid, int abs_val)
 			abs_val=0;
 	}
 	else
-		abs_val=abs_val+ec_cmd.command[chid].pwm_db;
+		abs_val=abs_val+ec_cmd.command[chid].pwm_db; */
 	return abs_val;
 }
 

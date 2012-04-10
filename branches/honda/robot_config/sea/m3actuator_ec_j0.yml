@@ -1,6 +1,6 @@
 chid: 0
 ethercat:
-  pdo_version: actx1_pdo_v1
+  pdo_version: actx1_pdo_v4
   product_code: 1010
   serial_number: 746
 firmware: m3_controller_max2_bldc_a2r3

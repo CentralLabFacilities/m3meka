@@ -41,7 +41,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h> /* memset */
 //#include "../../m3rt/base/m3ec_def.h"
 #include "../../../../m3/hardware/m3ec_pdo_v1_def.h"
-#include "../../../../m3/hardware/m3ec_pdo_v3_def.h"
+#include "../../../../m3/hardware/m3ec_pdo_v4_def.h"
 
 #include "dio.h"
 #include "ethercat.h"

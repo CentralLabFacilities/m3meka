@@ -79,18 +79,25 @@ void setup_adc(void)
 
 	AD1CON1bits.ADON = 0;			//Turn off ADC
 
-	AD1CON3bits.SAMC = 5; 			// Change to 10?	
-	AD1CON3bits.ADCS = 1;						
-	AD1CON2bits.VCFG = 0;           // Vref AVdd/AVss
-	AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
-	AD1CON1bits.SSRC = 0b011;		// Manual StartOfConversion 0b000 //PWM: 0b011;
-	AD1CON2bits.CHPS = 0;			// Only convert CH0	in 12-bit mode
-	AD1CON1bits.ASAM = 1;			// Sampling begins immediately after conversion is done
-	AD1CON1bits.AD12B = 1;			// 12-bit ADC operation
-	AD1CON2bits.BUFM = 1;			// Use 2x8-word buffer for conversion sequences
-	AD1CON1bits.SIMSAM = 0;			// No simultaneous sample for 1CH
+        AD1CON1bits.ADDMABM = 1;                // DMA in order of conversion
+        AD1CON1bits.AD12B = 1;			// 12-bit ADC operation
+        AD1CON1bits.FORM = 0;			// Select results format Integer Output Format (0B 0000 dddd dddd dddd )
+        AD1CON1bits.SSRC = 0b011;		// Manual StartOfConversion 0b000 //PWM: 0b011;
+        AD1CON1bits.SIMSAM = 0;                 // No simultaneous sample for 1CH
+        AD1CON1bits.ASAM = 1;			// Sampling begins immediately after conversion is done
+
+	AD1CON2bits.VCFG = 0;                   // Vref AVdd/AVss
 	AD1CON2bits.CSCNA = 1;			// Enable channel scanning
-	AD1CON2bits.SMPI = 3;			// Select 4 conversions between interrupts 
+        AD1CON2bits.CSCNA = 0;
+        AD1CON2bits.CHPS = 0;			// Only convert CH0	in 12-bit mode
+	AD1CON2bits.SMPI = 3;			// Select 4 conversions between interrupts
+        AD1CON2bits.BUFM = 1;			// Use 2x8-word buffer for conversion sequences
+
+        AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
+	AD1CON3bits.SAMC = 5;
+	AD1CON3bits.ADCS = 1;
+
+
 	AD1CSSLbits.CSS0 = 1;
 	AD1CSSLbits.CSS1 = 1;				
 	AD1CSSLbits.CSS2 = 1;
@@ -110,8 +117,7 @@ void setup_adc(void)
 	AD1PCFGLbits.PCFG6 = 1;
 	AD1PCFGLbits.PCFG7 = 1;
 	AD1PCFGLbits.PCFG8 = 1;
-	AD1CON1bits.FORM = 0;			// Select results format Integer Output Format (0B 0000 dddd dddd dddd )
-	
+
 	AD1CON1bits.ADON = 1;			// Turn on ADC
 	_AD1IF = 0;						// Enable interrupt
 	_AD1IE = 1;
@@ -149,9 +155,9 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	|| defined  MAX2_BLDC_0_2_A2R3
 	adc_buffer[ADC_MOTOR_TEMP][adc_idx]=adc_raw[ADC_MOTOR_TEMP];
 	adc_buffer[ADC_AMP_TEMP][adc_idx]=adc_raw[ADC_AMP_TEMP];
-	adc_buffer[ADC_CURRENT_A][adc_idx]=adc_raw[ADC_CURRENT_A];
-	adc_buffer[ADC_CURRENT_B][adc_idx]=adc_raw[ADC_CURRENT_B];
-	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH);
+	adc_buffer[ADC_CURRENT_A][adc_idx>>1]=adc_raw[ADC_CURRENT_A];
+	adc_buffer[ADC_CURRENT_B][adc_idx>>1]=adc_raw[ADC_CURRENT_B];
+	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH*2);
 	#endif
 	
 	#if defined MAX2_BLDC_0_3_T2R2 || defined MAX2_BDC_0_3_T2R2 

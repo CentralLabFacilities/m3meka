@@ -47,8 +47,8 @@ extern long ec_wd_timestamp;
 typedef M3ActX1PdoV1Status ec_stat_t;
 typedef M3ActX1PdoV1Cmd ec_cmd_t;
 #else
-typedef M3ActX1PdoV3Status ec_stat_t;
-typedef M3ActX1PdoV3Cmd ec_cmd_t;
+typedef M3ActX1PdoV4Status ec_stat_t;
+typedef M3ActX1PdoV4Cmd ec_cmd_t;
 #endif
 
 #define NUM_DBG_CH 1

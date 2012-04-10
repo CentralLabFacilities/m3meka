@@ -349,6 +349,10 @@ void M3ActuatorEc::SetStatusFromPdo(unsigned char * data)
 	IsPdoVersion(ACTX2_PDO_V1) || 
 	IsPdoVersion(ACTX3_PDO_V1))
 	SetStatusFromPdoV1(data);
+	
+	if (IsPdoVersion(ACTX1_PDO_V4))
+		SetStatusFromPdoV4(data);
+	
 }
 
 
