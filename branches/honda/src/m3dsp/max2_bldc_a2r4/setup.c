@@ -58,11 +58,24 @@ void setup_oscillator(void)
 	FOSC=FIN*(M/(N1*N2))	80MHZ		
 	FCY=FOSC/2	GIVES A 40 MIPS	OUTPUT FREQUENCY	
 	*/
+    
+        /*
 	PLLFBD=160;
 	CLKDIVbits.PLLPOST=0;//Gives divide by 2
 	CLKDIVbits.PLLPRE=23; //Gives divide by 25
 	// the CPU will automatically switch when all is stable....
 	while(OSCCONbits.LOCK!=1) {};  // Wait for PLL to lock
+        */
+
+        CLKDIVbits.PLLPRE=23; //Gives divide by 25
+        us_delay(13);
+	PLLFBD=158;
+        us_delay(13); //Can be 12.5us-1.2=11.3us in theory
+	CLKDIVbits.PLLPOST=0;//Gives divide by 2
+        us_delay(13);
+	// the CPU will automatically switch when all is stable....
+	while(OSCCONbits.LOCK!=1) {};  // Wait for PLL to lock
+
 	return;
 }
 
