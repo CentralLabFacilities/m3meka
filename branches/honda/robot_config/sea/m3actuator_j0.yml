@@ -1,0 +1,63 @@
+act_ec_component: m3lcj_actuator_ec_j0
+calib:
+  joint_calib:
+    Nm_per_adc_torque: 0.20574000000000001
+    Nm_per_adc_torque_lc: 1.0
+    ticks_per_rev: 10000
+  joint_torque_df:
+    type: df_chain
+    x_df:
+      cutoff_freq: 100
+      order: 3
+      type: butterworth
+    xdot_df:
+      cutoff_freq: 100
+      order: 3
+      type: diff_butterworth
+    xdotdot_df:
+      cutoff_freq: 20
+      order: 3
+      type: diff_butterworth
+  joint_torque_lc_df:
+    type: df_chain
+    x_df:
+      cutoff_freq: 100
+      order: 3
+      type: butterworth
+    xdot_df:
+      cutoff_freq: 100
+      order: 3
+      type: diff_butterworth
+    xdotdot_df:
+      cutoff_freq: 20
+      order: 3
+      type: diff_butterworth
+  motor_calib:
+    A_per_adc: 0.041428600000000003
+    alpha_cu: 0.0038999999999999998
+    max_motor_temp: 100.0
+    max_winding_temp: 100.0
+    thermal_resistance_housing_ambient: 1.5
+    thermal_resistance_rotor_housing: 1.0
+    thermal_time_constant_motor: 800
+    thermal_time_constant_winding: 50
+    ticks_per_rev: 2000
+    torque_constant: 0.06
+    winding_resistance: 0.08
+name: m3lcj_actuator_j0
+param:
+  calibration:
+    current_d: 0.0
+    zero_joint_theta: 0.0006283185307179584
+    zero_joint_torque: 81.267300000000006
+    zero_joint_torque_lc: -839.0
+    zero_motor_current_d: 0.0
+    zero_motor_current_q: 0.0
+    zero_motor_theta: -114.49848585273359
+  softlimits:
+    current: 500.0
+    max_overload_time: 1000000.0
+    motor_theta_max: 100000.0
+    motor_theta_min: -100000.0
+sensor_ec_component: m3lcj_sensor_ec_j0
+version: default

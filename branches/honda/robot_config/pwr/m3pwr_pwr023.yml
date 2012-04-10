@@ -18,9 +18,9 @@ calib:
     - -64.140647888183594
     type: adc_poly
 calibration_date: Tue Oct 26 16:32:55 2010
-ec_component: m3pwr_ec_pwr021
+ec_component: m3pwr_ec_pwr023
 ignore_bounds: 0
-name: m3pwr_pwr021
+name: m3pwr_pwr023
 param:
   max_bus_voltage: 36.0
   max_current_digital: 5000
