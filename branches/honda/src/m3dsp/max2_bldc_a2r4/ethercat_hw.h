@@ -25,7 +25,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "ethercat_def.h"
 #include <string.h>
 #include  "ethercat_esc.h"
-#include "p33fxxxx.h" //Configure for dsPIC 33FJ32MC204 M3 System
+#include <p33Fxxxx.h> //Configure for dsPIC 33FJ32MC204 M3 System
 
 extern void ISR_EscReadAccess( UINT8 *pData, UINT16 Address, UINT16 Len );
 extern void ISR_EscWriteAccess( UINT8 *pData, UINT16 Address, UINT16 Len );

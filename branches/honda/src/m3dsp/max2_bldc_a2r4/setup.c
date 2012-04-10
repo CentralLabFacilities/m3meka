@@ -18,7 +18,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-#include "p33fxxxx.h"
+#include <p33Fxxxx.h>
 #include "setup.h"
 
 void setup_oscillator(void);

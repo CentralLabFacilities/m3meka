@@ -50,5 +50,9 @@ extern long i_term[];
 extern long d_term[];
 extern long ff_term[];
 
+#define M3ACT_CONFIG_TORQUE_SMOOTH  0
+#define M3ACT_CONFIG_TORQUE_FF      0
+#define M3ACT_CONFIG_VERTX_FILTER_OFF   1
+
 #endif
 #endif
