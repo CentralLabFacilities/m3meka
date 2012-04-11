@@ -52,6 +52,12 @@ void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void)
 	ClrTimestampLatch;
 	#endif
 
+        //set_pwm(0,1000);
+        /*P1DC1=100;
+        P1DC2=100;
+        P1DC3=100;
+        set_bldc_dir(1);*/
+
 	#if defined USE_ENCODER_VERTX
 	step_vertx();
 	#endif

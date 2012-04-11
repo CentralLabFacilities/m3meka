@@ -122,11 +122,7 @@ int main (void)
 
 	while(1)
 	{
-             set_pwm(0,1000);
-            /*P1DC1=500;
-            P1DC2=500;
-            P1DC3=500;
-            set_bldc_dir(1);*/
+             
 		if (i++%20001==0)
 		{
 			ToggleHeartbeatLED();
