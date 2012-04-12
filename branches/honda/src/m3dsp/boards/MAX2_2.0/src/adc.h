@@ -46,8 +46,8 @@ unsigned int get_avg_adc(int idx);
 extern unsigned int adc_raw[];
 unsigned int get_avg_adc_torque();
 unsigned int * current_dma_buf();
-void adc_filter(int *y, int x );
-int current_control(int current_command, int current_reading);
+void adc_filter(int *y, int x, int alpha);
+
 
 #endif
 #endif

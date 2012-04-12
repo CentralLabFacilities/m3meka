@@ -30,8 +30,15 @@ int get_hall_state();
 
 extern unsigned int bldc_hall_val;
 
-#define BLDC_HALL_1 PORTBbits.RB4		//RB4	INPUT	PIN33	RP4/CN1 (HALL1) 
-#define BLDC_HALL_2 PORTBbits.RB9		//RB9	INPUT	PIN1	RP9/CN21 (HALL2)
+
+// small maxon ec motor gearbox number 143996
+//#define BLDC_HALL_1 PORTBbits.RB4		//RB4	INPUT	PIN33	RP4/CN1 (HALL1)
+//#define BLDC_HALL_2 PORTBbits.RB9		//RB9	INPUT	PIN1	RP9/CN21 (HALL2)
+//#define BLDC_HALL_3 PORTBbits.RB8		//RB8	INPUT	PIN44	RP8/CN22 (HALL3)
+
+// ec 45 flat ribbon cable
+#define BLDC_HALL_2 PORTBbits.RB4		//RB4	INPUT	PIN33	RP4/CN1 (HALL1)
+#define BLDC_HALL_1 PORTBbits.RB9		//RB9	INPUT	PIN1	RP9/CN21 (HALL2)
 #define BLDC_HALL_3 PORTBbits.RB8		//RB8	INPUT	PIN44	RP8/CN22 (HALL3)
 
 #define BLDC_HALL_STATE (BLDC_HALL_3<<2)|(BLDC_HALL_2<<1)|BLDC_HALL_1

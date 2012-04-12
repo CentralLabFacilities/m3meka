@@ -32,15 +32,20 @@ int adc_idx;
 int adc_idx_fast;
 
 unsigned int adc_raw[ADC_NUM_CH];
-unsigned int volatile adc_buffer[ADC_NUM_CH][ADC_NUM_SMOOTH];
-unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
-unsigned int adc_zero[ADC_NUM_CH] = {520,520,0,0};
-int adc[ADC_NUM_CH];
+int adc_meas[ADC_NUM_CH];
+unsigned int adc_zero[ADC_NUM_CH] = {524,524,0,0};
+
+//unsigned int volatile adc_buffer[ADC_NUM_CH];
+//unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
+
+
 int irq_cnt; 
 unsigned int wd_cnt = 0, last_status = 0, watchdog_expired;	//Watchdog
 
-int * current_sensor[8] = {&adc[0], &adc[0], &adc[1], &adc[1], &adc[1], &adc[0], &adc[0], &adc[0]};
-int current_signs[8] = {0,1,1,1,-1,1,-1,0};
+const int * current_sensor[8] = {&adc_meas[0], &adc_meas[0], &adc_meas[1],
+                                &adc_meas[1], &adc_meas[1], &adc_meas[0],
+                                &adc_meas[0], &adc_meas[0]};
+const int current_signs[8] = {0,1,1,1,-1,1,-1,0};
 
 // Number of locations for ADC buffer = 100 (AN0 only) x BUF_depth (100) = 100 Words
 // Align the buffer to 128 words or 256 bytes. This is needed for peripheral indirect mode
@@ -64,8 +69,8 @@ unsigned int BufferB[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(256)) );
 
 //dma_adc_buf BufferB __attribute__( (space(dma),aligned(64)) );
 
-static int16_t an_idx;
-static int16_t an[2];
+//static int16_t an_idx;
+//static int16_t an[2];
 
 
 unsigned int get_avg_adc(int ch)
@@ -74,7 +79,7 @@ unsigned int get_avg_adc(int ch)
 //	int i;
 //	v=0;
 
-        return(adc[ch]);
+        return(adc_meas[ch]);
 //        dma_adc_buf * buf_ptr;
 
 	//for (i=0;i<ADC_NUM_SMOOTH;i++)
@@ -115,23 +120,24 @@ unsigned int get_avg_adc(int ch)
 
 unsigned int get_avg_adc_torque()
 {
-	int i;
+/*	int i;
 	long v=0;
 	for (i=0;i<ADC_NUM_SMOOTH_FAST;i++)
 		v=v+adc_buffer_fast[i];
 		
-	return (unsigned int)(v>>ADC_SHIFT_SMOOTH_FAST);
+	return (unsigned int)(v>>ADC_SHIFT_SMOOTH_FAST); */
+    return 0;
 }
 
 void setup_adc(void) 
 {
-	adc_idx=0;
-	adc_idx_fast=0;
+//	adc_idx=0;
+//	adc_idx_fast=0;
 
 
-        an[0] = 0;
-	an[1] = 1;
-	an_idx = 0;
+//        an[0] = 0;
+//	an[1] = 1;
+//	an_idx = 0;
 
 	//Setup for current sensing
 	// System clock divider TAD=(ADCS+1)*TCY==50ns (As fast as works...)
@@ -202,7 +208,6 @@ void setup_adc(void)
 	AD1CON1bits.ADON = 1;			// Turn on ADC
 	_AD1IF = 0;						// Enable interrupt
 	_AD1IE = 0;
-        //_AD1IE = 0;
 }
 
 void setup_dma1(void)
@@ -252,6 +257,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
     int current_reading;
     int hall_state;
     const int current_command = ec_cmd.command[0].t_desire;
+    int tmp;
 
 
     dma_buf_ptr = current_dma_buf();
@@ -259,53 +265,32 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
     
     for(i=0;i<DMA_BUF_DEPTH-1;i++) {
         adc_raw[i] = dma_buf_ptr[i];
-        adc_filter((int *)&adc_buffer[i][0],adc_raw[i]);
-        adc[i]= adc_buffer[i][0] - adc_zero[i];
+        tmp = adc_raw[i] - adc_zero[i];
+        adc_filter((int *)&adc_meas[i], tmp, 0x8 );
+
     }
 
     hall_state = get_hall_state();
     current_reading = *current_sensor[hall_state]*current_signs[hall_state];
 
-    adc[3] = current_reading;
-    //set_pwm(0,adc_buffer[0][0]);
-    //set_pwm(0,599);
-
-//    adc[3] = current_command;
+    adc_meas[3] = current_reading;
 
     set_pwm(0,current_control(current_command, current_reading));
-    
- //   set_pwm(0,100*(5+current_reading));
-
- //   tmp = 8*(20-current_reading);
-   // adc[3] = tmp;
     
     _DMA1IF = 0;		//Clear the flag
 }
 
-int current_control(int current_command, int current_reading)
-{
-    static int i_sum = 0;
-    int error = current_command-current_reading;
-    int command;
-    const int kp = ec_cmd.command[0].k_p;
-    const int kp_shift = ec_cmd.command[0].k_p_shift;
-    const int ki = ec_cmd.command[0].k_i;
-    const int ki_shift = ec_cmd.command[0].k_i_shift;
-    const int ki_limit = ec_cmd.command[0].k_i_limit;
 
-    error = current_command-current_reading;
-    
-    i_sum += error;
-    command = ((-kp*error)>>kp_shift) - ((ki*i_sum)>>ki_shift);
-    adc[3] = kp*error;
-    return (command);
+
+void adc_filter(int *y, int x, int alpha)
+{
+    // y and alpha are 10Q6, x is 10Q0
+    long tmp;
+    tmp = __builtin_mulsu(*y,0x40-alpha);
+    *y = ((tmp>>6) + x*alpha);
 }
 
-void adc_filter(int *y, int x )
-{
-    *y = (*y*7 + x)/8;
-}
-
+#if 0
 void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 {
 	static unsigned int count = 0;
@@ -437,5 +422,5 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	AD1CON1bits.ADON	= 1;							// turn on the adc module
 
 }
-
+#endif
 #endif
