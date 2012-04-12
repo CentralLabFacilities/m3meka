@@ -34,9 +34,35 @@ int adc_idx_fast;
 unsigned int adc_raw[ADC_NUM_CH];
 unsigned int volatile adc_buffer[ADC_NUM_CH][ADC_NUM_SMOOTH];
 unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
+unsigned int adc_zero[ADC_NUM_CH] = {520,520,0,0};
+int adc[ADC_NUM_CH];
 int irq_cnt; 
 unsigned int wd_cnt = 0, last_status = 0, watchdog_expired;	//Watchdog
 
+int * current_sensor[8] = {&adc[0], &adc[0], &adc[1], &adc[1], &adc[1], &adc[0], &adc[0], &adc[0]};
+int current_signs[8] = {0,1,1,1,-1,1,-1,0};
+
+// Number of locations for ADC buffer = 100 (AN0 only) x BUF_depth (100) = 100 Words
+// Align the buffer to 128 words or 256 bytes. This is needed for peripheral indirect mode
+//unsigned int BufferA[DMA_BUF_DEPTH] __attribute__((space(dma),aligned(256)));
+//unsigned int BufferB[DMA_BUF_DEPTH] __attribute__((space(dma),aligned(256)));
+/*typedef struct
+{
+    unsigned int ch0[8];
+    unsigned int ch1[8];
+    unsigned int ch2[8];
+    unsigned int ch3[8];
+} dma_adc_buf;*/
+
+//typedef unsigned int dma_adc_buf[ADC_NUM_SMOOTH][4];
+
+//dma_adc_buf BufferA  __attribute__( (space(dma),aligned(64)) );
+//dma_adc_buf BufferB  __attribute__( (space(dma),aligned(64)) );
+
+unsigned int BufferA[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(256)) );
+unsigned int BufferB[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(256)) );
+
+//dma_adc_buf BufferB __attribute__( (space(dma),aligned(64)) );
 
 static int16_t an_idx;
 static int16_t an[2];
@@ -44,13 +70,47 @@ static int16_t an[2];
 
 unsigned int get_avg_adc(int ch)
 {
-	long v;
-	int i;
-	v=0;
-	for (i=0;i<ADC_NUM_SMOOTH;i++)
-		v=v+adc_buffer[ch][i];
-		
-	return (unsigned int)(v>>ADC_SHIFT_SMOOTH);
+//	long v;
+//	int i;
+//	v=0;
+
+        return(adc[ch]);
+//        dma_adc_buf * buf_ptr;
+
+	//for (i=0;i<ADC_NUM_SMOOTH;i++)
+	//	v=v+adc_buffer[ch][i];
+
+
+
+   /*     for (i=0;i<1;i++)
+            if (DMACS1bits.PPST1)
+                v += BufferA[1*ch+i];
+            else
+                v += BufferB[1*ch+i];*/
+/*
+        switch (ch) {
+            case 0:
+                return (unsigned int)(v>>ADC_SHIFT_SMOOTH);
+            case 1:
+                return buf_ptr->ch0[0];
+            case 2:
+                v=0;
+                for(i=0;i<8;i++)
+                    v=v+buf_ptr->ch0[i];
+                return v;
+            case 3:
+                v = 0;
+                for(i=0;i<DMA_BUF_DEPTH;i+=4)
+                    ;
+                return DMACS1bits.PPST1;
+        }*/
+
+       /* if (DMACS1bits.PPST1)
+            return BufferA[8*ch];
+        else
+            return BufferB[8*ch];*/
+        //return BufferB[ch];
+       // return v;
 }
 
 unsigned int get_avg_adc_torque()
@@ -79,27 +139,37 @@ void setup_adc(void)
 
 	AD1CON1bits.ADON = 0;			//Turn off ADC
 
-        AD1CON1bits.ADDMABM = 1;                // DMA in order of conversion
-        AD1CON1bits.AD12B = 1;			// 12-bit ADC operation
+        AD1CON1bits.ADDMABM = 0;                // DMA in order of conversion
+        AD1CON1bits.AD12B = 0;			// 10-bit ADC operation
         AD1CON1bits.FORM = 0;			// Select results format Integer Output Format (0B 0000 dddd dddd dddd )
         AD1CON1bits.SSRC = 0b011;		// Manual StartOfConversion 0b000 //PWM: 0b011;
-        AD1CON1bits.SIMSAM = 0;                 // No simultaneous sample for 1CH
+        AD1CON1bits.SIMSAM = 1;                 // Simultaneous sample
         AD1CON1bits.ASAM = 1;			// Sampling begins immediately after conversion is done
 
 	AD1CON2bits.VCFG = 0;                   // Vref AVdd/AVss
-	AD1CON2bits.CSCNA = 1;			// Enable channel scanning
-        AD1CON2bits.CSCNA = 0;
-        AD1CON2bits.CHPS = 0;			// Only convert CH0	in 12-bit mode
-	AD1CON2bits.SMPI = 3;			// Select 4 conversions between interrupts
-        AD1CON2bits.BUFM = 1;			// Use 2x8-word buffer for conversion sequences
+	AD1CON2bits.CSCNA = 0;			// Disable channel scanning
+        AD1CON2bits.CHPS = 2;			// Convert ch0-3
+	AD1CON2bits.SMPI = 0;			// Select 4 conversions between interrupts
+        AD1CON2bits.BUFM = 0;			// Use 2x8-word buffer for conversion sequences
 
         AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
 	AD1CON3bits.SAMC = 5;
 	AD1CON3bits.ADCS = 1;
 
+        AD1CON4bits.DMABL	= 0;		// Allocates 8 words of buffer to each analog input
 
+        AD1CHS123bits.CH123NB = 0;              // ch1-3 negative input is vrefl
+        AD1CHS123bits.CH123SB = 0;              // ch1 -> an0, ch2 -> an1, ch3 -> an2
+        AD1CHS123bits.CH123NA = 0;              // ch1-3 negative input is vrefl
+        AD1CHS123bits.CH123SA = 0;              // ch1 -> an0, ch2 -> an1, ch3 -> an2
+
+        AD1CHS0bits.CH0NB = 0;                  // ch0 negative input is vrefl
+        AD1CHS0bits.CH0SB = 0;                  // ch0 -> an0
+        AD1CHS0bits.CH0NA = 0;                  // ch0 negative input is vrefl
+        AD1CHS0bits.CH0SA = 0;                  // ch0 -> an0
+/*
 	AD1CSSLbits.CSS0 = 1;
-	AD1CSSLbits.CSS1 = 1;				
+	AD1CSSLbits.CSS1 = 1;
 	AD1CSSLbits.CSS2 = 1;
 	#if defined MAX2_BDC_0_2_T2R3		
 	AD1CSSLbits.CSS3 = 0;
@@ -116,14 +186,125 @@ void setup_adc(void)
 	AD1PCFGLbits.PCFG5 = 1;
 	AD1PCFGLbits.PCFG6 = 1;
 	AD1PCFGLbits.PCFG7 = 1;
-	AD1PCFGLbits.PCFG8 = 1;
+	AD1PCFGLbits.PCFG8 = 1;*/
+
+     //   AD1CSSLbits.CSS0 = 1;
+//	AD1CSSLbits.CSS1 = 1;
+//	AD1CSSLbits.CSS2 = 1;
+//        AD1CSSLbits.CSS3 = 1;
+        ADPCFG = 0xFFFF;
+        AD1PCFGLbits.PCFG0 = 0;
+	AD1PCFGLbits.PCFG1 = 0;
+	AD1PCFGLbits.PCFG2 = 0;
+        AD1PCFGLbits.PCFG3 = 0;
+
 
 	AD1CON1bits.ADON = 1;			// Turn on ADC
 	_AD1IF = 0;						// Enable interrupt
-	_AD1IE = 1;
+	_AD1IE = 0;
         //_AD1IE = 0;
 }
 
+void setup_dma1(void)
+{
+	DMA1CONbits.SIZE = 0;					//Word
+	DMA1CONbits.DIR = 0;					//Read from Peripheral address, write to DPSRAM address
+	DMA1CONbits.HALF = 0;					//Initiate interrupt when all of the data has been moved
+	DMA1CONbits.NULLW = 0;					//Normal operation
+	DMA1CONbits.AMODE = 2;					// Configure DMA for Peripheral indirect mode
+	DMA1CONbits.MODE = 2;					// Configure DMA for Continuous Ping-Pong mode
+
+	DMA1PAD=(int)&ADC1BUF0;
+
+	DMA1REQbits.FORCE = 0;					//Automatic DMA transfer initiation by DMA Request
+	DMA1REQbits.IRQSEL = 0b0001101; 		//ADC1 ? ADC1 Convert done
+
+	DMA1STA = __builtin_dmaoffset(BufferA);	//Primary DPSRAM Start Address Offset bits (source or destination)
+	DMA1STB = __builtin_dmaoffset(BufferB);	//Secondary DPSRAM Start Address Offset bits (source or destination)
+
+	DMA1CNT = DMA_BUF_DEPTH - 1;			//DMA Transfer Count Register bits
+
+	//Interrupts
+	IFS0bits.DMA1IF = 0;					//Clear the DMA interrupt flag bit
+	IPC3bits.DMA1IP = 6;					//Highest-1
+//XXX
+	IEC0bits.DMA1IE = 1;					//Set the DMA interrupt enable bit
+
+	DMA1CONbits.CHEN = 1;					//Channel enabled
+}	// end setup_dma1
+
+unsigned int * current_dma_buf()
+{
+    unsigned int * dma_buf_ptr;
+
+    if (DMACS1bits.PPST1)
+        dma_buf_ptr = BufferA;
+    else
+        dma_buf_ptr = BufferB;
+    return(dma_buf_ptr);
+}
+
+
+void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
+{
+    unsigned int * dma_buf_ptr;
+    int i;
+    int current_reading;
+    int hall_state;
+    const int current_command = ec_cmd.command[0].t_desire;
+
+
+    dma_buf_ptr = current_dma_buf();
+
+    
+    for(i=0;i<DMA_BUF_DEPTH-1;i++) {
+        adc_raw[i] = dma_buf_ptr[i];
+        adc_filter((int *)&adc_buffer[i][0],adc_raw[i]);
+        adc[i]= adc_buffer[i][0] - adc_zero[i];
+    }
+
+    hall_state = get_hall_state();
+    current_reading = *current_sensor[hall_state]*current_signs[hall_state];
+
+    adc[3] = current_reading;
+    //set_pwm(0,adc_buffer[0][0]);
+    //set_pwm(0,599);
+
+//    adc[3] = current_command;
+
+    set_pwm(0,current_control(current_command, current_reading));
+    
+ //   set_pwm(0,100*(5+current_reading));
+
+ //   tmp = 8*(20-current_reading);
+   // adc[3] = tmp;
+    
+    _DMA1IF = 0;		//Clear the flag
+}
+
+int current_control(int current_command, int current_reading)
+{
+    static int i_sum = 0;
+    int error = current_command-current_reading;
+    int command;
+    const int kp = ec_cmd.command[0].k_p;
+    const int kp_shift = ec_cmd.command[0].k_p_shift;
+    const int ki = ec_cmd.command[0].k_i;
+    const int ki_shift = ec_cmd.command[0].k_i_shift;
+    const int ki_limit = ec_cmd.command[0].k_i_limit;
+
+    error = current_command-current_reading;
+    
+    i_sum += error;
+    command = ((-kp*error)>>kp_shift) - ((ki*i_sum)>>ki_shift);
+    adc[3] = kp*error;
+    return (command);
+}
+
+void adc_filter(int *y, int x )
+{
+    *y = (*y*7 + x)/8;
+}
 
 void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 {
@@ -153,11 +334,14 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	
 	#if defined MAX2_BDC_0_3_A2R2 || defined MAX2_BLDC_0_3_A2R2 || defined MAX2_BDC_0_2_A2R3 \
 	|| defined  MAX2_BLDC_0_2_A2R3
-	adc_buffer[ADC_MOTOR_TEMP][adc_idx]=adc_raw[ADC_MOTOR_TEMP];
-	adc_buffer[ADC_AMP_TEMP][adc_idx]=adc_raw[ADC_AMP_TEMP];
-	adc_buffer[ADC_CURRENT_A][adc_idx>>1]=adc_raw[ADC_CURRENT_A];
-	adc_buffer[ADC_CURRENT_B][adc_idx>>1]=adc_raw[ADC_CURRENT_B];
+	adc_buffer[ADC_MOTOR_TEMP][adc_idx/2]=adc_raw[ADC_MOTOR_TEMP];
+	adc_buffer[ADC_AMP_TEMP][adc_idx/2]=adc_raw[ADC_AMP_TEMP];
+        adc_buffer[ADC_CURRENT_A][adc_idx/2]=adc_raw[ADC_CURRENT_A];
+	adc_buffer[ADC_CURRENT_B][adc_idx/2]=adc_raw[ADC_CURRENT_B];
 	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH*2);
+	/*adc_buffer[ADC_CURRENT_A][adc_idx>>1]=adc_raw[ADC_CURRENT_A];
+	adc_buffer[ADC_CURRENT_B][adc_idx>>1]=adc_raw[ADC_CURRENT_B];
+	adc_idx=INC_MOD(adc_idx,ADC_NUM_SMOOTH*2);*/
 	#endif
 	
 	#if defined MAX2_BLDC_0_3_T2R2 || defined MAX2_BDC_0_3_T2R2 

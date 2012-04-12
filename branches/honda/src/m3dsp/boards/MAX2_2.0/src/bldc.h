@@ -26,6 +26,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 void setup_bldc(void);
 void set_bldc_dir(unsigned int fwd);
+int get_hall_state();
+
 extern unsigned int bldc_hall_val;
 
 #define BLDC_HALL_1 PORTBbits.RB4		//RB4	INPUT	PIN33	RP4/CN1 (HALL1) 

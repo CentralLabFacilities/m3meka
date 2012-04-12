@@ -65,7 +65,7 @@ FIXDEPS=fixDeps
 	${MAKE}  -f nbproject/Makefile-default.mk dist/${CND_CONF}/${IMAGE_TYPE}/max2_bldc_2_0_a2r4.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
 
 MP_PROCESSOR_OPTION=33FJ64MC204
-MP_LINKER_FILE_OPTION=,-Tp33FJ64MC204.gld
+MP_LINKER_FILE_OPTION=,--script="/opt/microchip/mplabc30/v3.30c/support/dsPIC33F/gld/p33FJ64MC204.gld"
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assemble
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)

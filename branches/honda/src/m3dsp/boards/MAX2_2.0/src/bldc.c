@@ -132,4 +132,8 @@ void setup_bldc(void) {
 	_CNIF = 0;		//Clear change-notification Interrupt Status Flag
 	_CNIE=1;//Enable change notification interrupt
 }
+
+int get_hall_state() {
+    return (BLDC_HALL_STATE);
+}
 #endif

@@ -56,7 +56,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void)
 	step_vertx();
 	#endif
 
-        set_pwm(0,1000);
+//        set_pwm(0,1000);
         /*P1DC1=500;
         P1DC2=500;
 	P1DC3=500;

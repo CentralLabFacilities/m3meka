@@ -136,10 +136,10 @@ void isr_update_input_pdo(void)
 	#ifdef USE_ADC
 	ec_stat.status[0].adc_ext_temp = get_avg_adc(ADC_MOTOR_TEMP);
 	ec_stat.status[0].adc_amp_temp = get_avg_adc(ADC_AMP_TEMP);
-	//ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT_A);
-	//ec_stat.status[0].adc_current_b = get_avg_adc(ADC_CURRENT_B);
-        ec_stat.status[0].adc_current_a = 10;
-	ec_stat.status[0].adc_current_b = 20;
+	ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT_A);
+	ec_stat.status[0].adc_current_b = get_avg_adc(ADC_CURRENT_B);
+        //ec_stat.status[0].adc_current_a = 10;
+	//ec_stat.status[0].adc_current_b = 20;
 	#endif
 
 	#ifdef USE_PWM

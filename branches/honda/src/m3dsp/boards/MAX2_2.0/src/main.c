@@ -85,6 +85,7 @@ int main (void)
 	
 	//Analog to Digital
 	#ifdef USE_ADC
+        setup_dma1();
 	setup_adc();
 	#endif
 	
