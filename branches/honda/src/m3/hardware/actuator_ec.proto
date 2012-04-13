@@ -80,6 +80,8 @@ message M3ActuatorEcCommand{
 	optional int32			t_desire=1;			//Desired joint torque, raw adc ticks
 	optional ACTUATOR_EC_MODE	mode=2;				//Slave control mode
 	optional bool			brake_off=3;			//Disable brake if present
+	optional int32			current_desired = 4;
+	optional int32			pwm_desired = 5;
 }
 
 message M3ActuatorEcParam{

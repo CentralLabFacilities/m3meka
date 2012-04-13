@@ -51,6 +51,7 @@ _FICD(ICS_PGD2 & JTAGEN_OFF);
 int main (void)
 {
 	int i=0;
+        tmp_debug = 0;
 
 	//Setup oscillator/ports/pins first
 	setup_oscillator();

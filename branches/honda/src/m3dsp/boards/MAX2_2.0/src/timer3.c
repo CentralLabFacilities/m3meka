@@ -44,7 +44,7 @@ void setup_timer3(void)
 //ToDo Every X us
 void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void) 
 {
-	_T3IF = 0;
+	
 
 	//Latch encoder timestamp on Rising edge.
 	#ifdef USE_TIMESTAMP_DC
@@ -71,6 +71,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void)
 	#endif
 
         step_state();
+
+        _T3IF = 0;
 	
 //	irq_cnt++;
 }

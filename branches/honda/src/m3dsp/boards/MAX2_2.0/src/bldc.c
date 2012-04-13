@@ -28,7 +28,14 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "pwm.h"
 
 volatile unsigned int bldc_fwd;
-unsigned int bldc_hall_val;
+//unsigned int bldc_hall_val;
+enum {
+    OFF,
+    BRAKE,
+    COMMUTATION
+} bldc_mode;
+
+void commutate();
 
 
 
@@ -94,46 +101,78 @@ unsigned int StateTableRev[] = {0x0000, 0x0210, 0x0801, 0x0810,
 
 void set_bldc_dir(unsigned int fwd)
 {
-	bldc_fwd=fwd;
-	bldc_hall_val = BLDC_HALL_STATE; 
-	ec_debug[0]=bldc_hall_val;
-	if (bldc_fwd)
-		P1OVDCON = StateTableFwd[bldc_hall_val];
-	else
-		P1OVDCON = StateTableRev[bldc_hall_val];
+    if (bldc_fwd != fwd) {
+        bldc_fwd=fwd;
+
+        if (bldc_mode == COMMUTATION)
+            commutate();
+    }
+
 }
 
 void __attribute__((__interrupt__, no_auto_psv)) _CNInterrupt(void)
 {
-	_CNIF=0;
-	bldc_hall_val = BLDC_HALL_STATE;
-	///if (bldc_hall_val==0 || bldc_hall_val==7)
-		//ec_debug[0]=ec_debug[0]+1;//=bldc_hall_val;
-	if (bldc_fwd)
-		OVDCON = StateTableFwd[bldc_hall_val];
-	else
-		OVDCON = StateTableRev[bldc_hall_val];
+    if (bldc_mode == COMMUTATION)
+        commutate();
+    _CNIF=0;
 }
 
-void setup_bldc(void) {
-	bldc_fwd=0;
-	bldc_hall_val = BLDC_HALL_STATE;
-	//ec_debug[0]=bldc_hall_val;
-	OVDCON = StateTableRev[bldc_hall_val];
-
-	CNEN1bits.CN1IE =1;		//Enable change-notification interrupt CN1: Hall1
-	CNEN2bits.CN21IE =1;	//Enable change-notification interrupt CN21: Hall2
-	CNEN2bits.CN22IE =1;	//Enable change-notification interrupt CN22: Hall3
-
-	CNPU1bits.CN1PUE=1; //Enable weak pull-up on CN1
-	CNPU2bits.CN21PUE=1; //Enable weak pull-up on CN21
-	CNPU2bits.CN22PUE=1; //Enable weak pull-up on CN22
-
-	_CNIF = 0;		//Clear change-notification Interrupt Status Flag
-	_CNIE=1;//Enable change notification interrupt
+void setup_bldc(void)
+{
+    set_bldc_open();
 }
 
-int get_hall_state() {
+int get_hall_state()
+{
     return (BLDC_HALL_STATE);
 }
+
+void set_bldc_open()
+{
+    bldc_mode = OFF;
+    P1OVDCON = 0x3F00;
+    _CNIE=0;
+}
+
+void set_bldc_brake()
+{
+    bldc_mode = BRAKE;
+    // set all low legs to on, kill interrupts
+    P1OVDCON = 0x3F15;
+    _CNIE=0;
+}
+
+void set_bldc_commutation()
+{
+    bldc_mode = COMMUTATION;
+
+    CNPU1bits.CN1PUE=1; //Enable weak pull-up on CN1
+    CNPU2bits.CN21PUE=1; //Enable weak pull-up on CN21
+    CNPU2bits.CN22PUE=1; //Enable weak pull-up on CN22
+
+    CNEN1bits.CN1IE =1;		//Enable change-notification interrupt CN1: Hall1
+    CNEN2bits.CN21IE =1;	//Enable change-notification interrupt CN21: Hall2
+    CNEN2bits.CN22IE =1;	//Enable change-notification interrupt CN22: Hall3
+
+    set_bldc_dir(0);
+    commutate();
+
+
+
+    _CNIF = 0;		//Clear change-notification Interrupt Status Flag
+    _CNIE=1;            //Enable change notification interrupt
+}
+
+void commutate()
+{
+    int hall_val = BLDC_HALL_STATE;
+
+
+    if (bldc_fwd)
+        P1OVDCON = StateTableFwd[hall_val];
+    else
+        P1OVDCON = StateTableRev[hall_val];
+}
+
 #endif
+

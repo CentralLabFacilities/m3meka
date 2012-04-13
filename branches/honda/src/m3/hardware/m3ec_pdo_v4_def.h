@@ -49,6 +49,8 @@ typedef struct
 	int16_t		qei_max;				//Max permissible qei
 	int16_t		qei_min;				//Min permissible qei
 	int16_t		pwm_max;				//Max permissible pwm
+        int16_t         pwm_desired;
+        int16_t         current_desired;
 } M3ActPdoV4Cmd;
 
 #define M3ACT_FLAG_POS_LIMITSWITCH 1

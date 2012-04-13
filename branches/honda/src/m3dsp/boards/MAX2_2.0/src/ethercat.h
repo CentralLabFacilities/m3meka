@@ -39,6 +39,7 @@ void setup_spi(void);
 
 extern unsigned long long dc_timestamp;  //RJK edit for DC
 extern int ec_debug[];
+extern int tmp_debug;
 extern int ec_flags[];
 extern  int ec_wd_expired;
 extern long ec_wd_timestamp;

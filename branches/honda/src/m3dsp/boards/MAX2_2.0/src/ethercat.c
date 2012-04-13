@@ -37,6 +37,7 @@ int ec_wd_expired;
 long ec_wd_timestamp;
 int ec_debug[NUM_DBG_CH];
 int ec_flags[NUM_DBG_CH];
+int tmp_debug;
 
 void isr_update_input_pdo(void);
 
@@ -160,7 +161,11 @@ void isr_update_input_pdo(void)
 
         ec_stat.status[0].current_ma = get_current_ma();
 	
-	ec_stat.status[0].debug=ec_debug[0];
+	//ec_stat.status[0].debug=ec_debug[0];
+        //ec_stat.status[0].debug = get_dsp_state();
+        //ec_stat.status[0].debug = get_adc_zero(0);
+        //ec_stat.status[0].debug = P1OVDCON;
+        ec_stat.status[0].debug = get_hall_state();
 }
 
 /////////////////////////////////////////////////////////////

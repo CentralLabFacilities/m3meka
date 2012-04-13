@@ -33,7 +33,7 @@ int adc_idx_fast;
 
 unsigned int adc_raw[ADC_NUM_CH];
 int adc_meas[ADC_NUM_CH];
-unsigned int adc_zero[ADC_NUM_CH] = {524,524,0,0};
+unsigned int adc_zero[ADC_NUM_CH] = {524<<ADC_Q_FORM,524<<ADC_Q_FORM,0,0};
 
 //unsigned int volatile adc_buffer[ADC_NUM_CH];
 //unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
@@ -64,8 +64,8 @@ const int current_signs[8] = {0,1,1,1,-1,1,-1,0};
 //dma_adc_buf BufferA  __attribute__( (space(dma),aligned(64)) );
 //dma_adc_buf BufferB  __attribute__( (space(dma),aligned(64)) );
 
-unsigned int BufferA[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(256)) );
-unsigned int BufferB[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(256)) );
+unsigned int BufferA[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(8)) );
+unsigned int BufferB[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(8)) );
 
 //dma_adc_buf BufferB __attribute__( (space(dma),aligned(64)) );
 
@@ -256,23 +256,35 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
     int i;
     int current_reading;
     int hall_state;
-    int current_command = ec_cmd.command[0].t_desire;
     int tmp;
+    int pwm_current_control;
 
 
     dma_buf_ptr = current_dma_buf();
 
     
-    for(i=0;i<DMA_BUF_DEPTH-1;i++) {
+    for(i=0;i<ADC_NUM_CH-1;i++) {
         adc_raw[i] = dma_buf_ptr[i];
-        tmp = adc_raw[i] - adc_zero[i];
+        tmp = adc_raw[i] - (adc_zero[i]>>ADC_Q_FORM);
         adc_filter((int *)&adc_meas[i], tmp, 0x8 );
 
     }
 
     hall_state = get_hall_state();
     current_reading = *current_sensor[hall_state]*current_signs[hall_state];
-    set_pwm(0,current_control(current_command, current_reading));
+    pwm_current_control = current_control(current_desired, current_reading);
+
+    switch (get_dsp_state()) {
+        case DSP_PWM:
+            set_pwm(0,pwm_desired);
+            break;
+        case DSP_CURRENT:
+            set_pwm(0,pwm_current_control);
+            break;
+        default:
+            set_pwm(0,0);
+            break;
+    }
     
     _DMA1IF = 0;		//Clear the flag
 }
@@ -283,8 +295,22 @@ void adc_filter(int *y, int x, int alpha)
 {
     // y and alpha are 10Q6, x is 10Q0
     long tmp;
-    tmp = __builtin_mulsu(*y,0x40-alpha);
-    *y = ((tmp>>6) + x*alpha);
+    tmp = __builtin_mulsu(*y,(1<<ADC_Q_FORM)-alpha);
+    *y = ((tmp>>ADC_Q_FORM) + x*alpha);
+}
+
+void set_adc_zeros()
+{
+    int i;
+
+    for(i=0;i<ADC_NUM_CH-1;i++) {
+        adc_filter((int *)&adc_zero[i], adc_raw[i], 1);
+    }
+}
+
+int get_adc_zero(int ch)
+{
+    return adc_zero[ch];
 }
 
 #if 0

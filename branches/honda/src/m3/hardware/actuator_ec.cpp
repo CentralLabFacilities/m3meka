@@ -438,6 +438,11 @@ void M3ActuatorEc::SetPdoV4FromPdoV1Command(unsigned char * data)
     ax->qei_max=acc.qei_max;
     ax->qei_min=acc.qei_min;
     ax->pwm_max=acc.pwm_max;
+    
+    ax->current_desired = CLAMP(command.current_desired(),-32767,32767);
+	ax->pwm_desired = CLAMP(command.pwm_desired(),-32767,32767);
+    //ax->pwm_desired = acc.pwm_desired;
+    //ax->current_desired = acc.current_desired;
 }
 
 
@@ -595,6 +600,7 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	ax->pwm_db=CLAMP(param.pwm_db(),-32767,32767);			
 	ax->pwm_max=(int)(CLAMP(MIN(pwm_max_ext,param.pwm_max()),0,32767));
 	ax->t_desire=CLAMP(command.t_desire(),-32767,32767);
+
 	
 	if (command.mode()==ACTUATOR_EC_MODE_PWM) //Overwrite
 		ax->t_desire=CLAMP((int)((mReal)command.t_desire()*pwr_scale*pwm_scale),-1*ax->pwm_max,ax->pwm_max);
@@ -628,9 +634,10 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	ax->qei_max=CLAMP(param.qei_max(),-32767,32767);
 	ax->qei_min=CLAMP(param.qei_min(),-32767,32767);
 	
-	if (pwr_scale==0)
-		ax->mode=(int)ACTUATOR_EC_MODE_OFF;
-	else
+	// TODO Lee commented this
+	//if (pwr_scale==0)
+	//	ax->mode=(int)ACTUATOR_EC_MODE_OFF;
+	//else
 		ax->mode=(int)command.mode();
 	
 	//toggle bit to give DSP a heartbeat signal

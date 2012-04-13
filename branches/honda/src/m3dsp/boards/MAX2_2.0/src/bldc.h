@@ -28,6 +28,10 @@ void setup_bldc(void);
 void set_bldc_dir(unsigned int fwd);
 int get_hall_state();
 
+void set_bldc_open();
+void set_bldc_brake();
+void set_bldc_commutation();
+
 extern unsigned int bldc_hall_val;
 
 
