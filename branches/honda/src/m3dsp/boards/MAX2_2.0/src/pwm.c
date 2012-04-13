@@ -93,10 +93,10 @@ void set_pwm(int chid, int val)
 	#endif
 
 
-		if (sign<=0) {
-                    set_bldc_dir(0);
-                    tmp_debug+=2; 
-                } else set_bldc_dir(1);
+        if (sign<=0) {
+            set_bldc_dir(0);
+        } else
+            set_bldc_dir(1);
 
 	#else	//BLDC or not
 	#ifdef PWM_4Q
