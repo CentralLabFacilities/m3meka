@@ -3,8 +3,15 @@
 
 // for Q6 format, multiplier is .4578 mA/tick
 // 32768*.4578 = 15001
-#define CURRENT_MA_MULT     15001
+//#define CURRENT_MA_MULT     15001
+//#define CURRENT_MA_SHIFT    15
+
+// for Q5 format, multiplier is .9155 mA/tick
+// .9155 = 3.3/1024 * 1000/.11 * 1/2^5
+// 32768*.9155 =
+#define CURRENT_MA_MULT     30000
 #define CURRENT_MA_SHIFT    15
+
 
 int current_control(int current_command, int current_reading);
 int get_current_ma();

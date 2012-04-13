@@ -27,6 +27,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 void setup_bldc(void);
 void set_bldc_dir(unsigned int fwd);
 int get_hall_state();
+int get_bldc_dir();
 
 void set_bldc_open();
 void set_bldc_brake();

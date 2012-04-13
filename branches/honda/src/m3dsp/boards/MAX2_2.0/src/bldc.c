@@ -27,7 +27,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "dio.h"
 #include "pwm.h"
 
-volatile unsigned int bldc_fwd;
+static volatile unsigned int bldc_fwd;
 //unsigned int bldc_hall_val;
 enum {
     OFF,
@@ -144,6 +144,9 @@ void set_bldc_brake()
 
 void set_bldc_commutation()
 {
+    if (bldc_mode == COMMUTATION)
+        return;
+
     bldc_mode = COMMUTATION;
 
     CNPU1bits.CN1PUE=1; //Enable weak pull-up on CN1
@@ -154,6 +157,7 @@ void set_bldc_commutation()
     CNEN2bits.CN21IE =1;	//Enable change-notification interrupt CN21: Hall2
     CNEN2bits.CN22IE =1;	//Enable change-notification interrupt CN22: Hall3
 
+    tmp_debug +=1;
     set_bldc_dir(0);
     commutate();
 
@@ -172,6 +176,11 @@ void commutate()
         P1OVDCON = StateTableFwd[hall_val];
     else
         P1OVDCON = StateTableRev[hall_val];
+}
+
+int get_bldc_dir()
+{
+    return bldc_fwd;
 }
 
 #endif
