@@ -69,6 +69,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void)
 	#ifdef USE_CONTROL	
 	//step_control();
 	#endif
+
+        step_state();
 	
 //	irq_cnt++;
 }

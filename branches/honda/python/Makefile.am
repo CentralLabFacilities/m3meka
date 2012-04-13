@@ -135,6 +135,8 @@ dist_bin_SCRIPTS = \
 	scripts/tutorials/m3_tutorial_1.py\
 	scripts/tutorials/m3_tutorial_2.py\
 	scripts/tutorials/m3_tutorial_3.py\
-	scripts/tutorials/m3_tutorial_4.py
+	scripts/tutorials/m3_tutorial_4.py\
+	scripts/dev/m3dev_actuator_ec_tuning2.py
+	
 
 

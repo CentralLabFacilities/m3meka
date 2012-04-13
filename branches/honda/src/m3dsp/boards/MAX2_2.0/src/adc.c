@@ -256,7 +256,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
     int i;
     int current_reading;
     int hall_state;
-    const int current_command = ec_cmd.command[0].t_desire;
+    int current_command = ec_cmd.command[0].t_desire;
     int tmp;
 
 
@@ -272,9 +272,6 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
 
     hall_state = get_hall_state();
     current_reading = *current_sensor[hall_state]*current_signs[hall_state];
-
-    adc_meas[3] = current_reading;
-
     set_pwm(0,current_control(current_command, current_reading));
     
     _DMA1IF = 0;		//Clear the flag

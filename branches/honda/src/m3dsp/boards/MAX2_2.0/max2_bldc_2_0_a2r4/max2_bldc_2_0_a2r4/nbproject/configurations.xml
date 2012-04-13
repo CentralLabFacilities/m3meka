@@ -23,6 +23,7 @@
       <itemPath>../../src/timer3.h</itemPath>
       <itemPath>../../src/warning.h</itemPath>
       <itemPath>../../src/current2.h</itemPath>
+      <itemPath>../../src/state_machine.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -56,6 +57,7 @@
       <itemPath>../../src/timer1.c</itemPath>
       <itemPath>../../src/timer3.c</itemPath>
       <itemPath>../../src/current2.c</itemPath>
+      <itemPath>../../src/state_machine.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
