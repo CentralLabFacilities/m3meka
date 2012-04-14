@@ -131,5 +131,6 @@ AC_CONFIG_FILES([
 	src/m3/shared_mem/Makefile
 	src/m3/robot_ctrl/Makefile
 	src/m3/vehicles/Makefile
+	src/m3/hardware_iq/Makefile
 ])
 AC_OUTPUT

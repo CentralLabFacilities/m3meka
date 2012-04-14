@@ -17,18 +17,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef M3_JOINT_H
-#define M3_JOINT_H
+#ifndef M3_HUMANOID_ROS_IQ_H
+#define M3_HUMANOID_ROS_IQ_H
 
 #include "m3rt/base/component.h"
-#include "m3/hardware_iq/joint_iq.pb.h"
-#include "m3/hardware/actuator_ec.pb.h"
-#include "m3/hardware/actuator.pb.h"
-#include "m3/hardware/actuator.h"
-#include "m3/hardware/transmission.h"
-#include "m3/toolbox/trajectory.h"
 #include <google/protobuf/message.h>
-#include "m3meka_msgs/M3JointStatus.h"
+#include "m3/robots/humanoid.h"
 
 
 namespace m3
@@ -36,76 +30,24 @@ namespace m3
 	using namespace std;
 	using namespace ros;
 
-/////////////////////////////////////////////////////////////////////////
-class M3Transmission;
 
-
-
-
-//Joint space representation.
-class M3JointIQ: public m3rt::M3Component
+class M3HumanoidRosIQ: public m3rt::M3Component
 {
 	public:
-		M3JointIQ(): m3rt::M3Component(JOINT_PRIORITY),brake_type(BRAKE_NONE),cpj(0),pwr_on_last(0),brake_off_cmd(0),mode_last(-1),trans(0),
-		  tq_switch(0), q_switch(0), pwm_switch(0), disable_pwm_ramp(false)
+		M3HumanoidRosIQ(): m3rt::M3Component(JOINT_PRIORITY),bot(NULL)
 		{
-			RegisterVersion("default",DEFAULT);	//RBL. Now works with default case/ambient values
-			RegisterVersion("iss",ISS);		//ISS. Now displays motor-model case/ambient/motor temp values
+			RegisterVersion("default",DEFAULT);	//RBL. Now works with default case/ambient values			
 		}
 		//API
-		void SetDesiredPwm(int val){command.set_pwm_desired(val);}
-		void SetDesiredThetaDeg(mReal val){command.set_q_desired(val);}
-		void SetDesiredThetaDotDeg(mReal val){command.set_qdot_desired(val);}
-		void SetDesiredThetaRad(mReal val){command.set_q_desired(RAD2DEG(val));}
-		void SetDesiredThetaDotRad(mReal val){command.set_qdot_desired(RAD2DEG(val));}
-		void SetDesiredStiffness(mReal val){command.set_q_stiffness(val);}
-		void SetDesiredControlMode(JOINT_MODE val){command.set_ctrl_mode(val);}
-		void SetDesiredTorque(mReal val){command.set_tq_desired(val);}
-		void SetSlewRate(mReal val){command.set_q_slew_rate(val);}
-		void SetBrakeOff(bool off){command.set_brake_off(off);}
-		void DisablePwmRamp(){disable_pwm_ramp = true;} // for when we use current control
-		mReal GetTorque(){return status.torque();}
-		mReal GetTorqueDot(){return status.torquedot();}
-		mReal GetTorqueGravity(){return status.torque_gravity();}
-		void  SetTorqueGravity(mReal val){status.set_torque_gravity(val);}
-		M3Actuator * GetActuator(){return act;}
-		mReal GetMotorTemp(){return status.motor_temp();}
-		mReal GetAmpTemp(){return status.amp_temp();}
-		mReal GetAmbientTemp(){return status.ambient_temp();}
-		mReal GetCaseTemp(){return status.case_temp();}
-		mReal GetPower(){return status.power();}
-		mReal GetCurrent(){return status.current();}
-		mReal GetThetaDeg(){return status.theta();}
-		mReal GetThetaRad(){return DEG2RAD(status.theta());}
-		mReal GetThetaDotDeg(){return status.thetadot();}
-		mReal GetThetaDotRad(){return DEG2RAD(status.thetadot());}
-		mReal GetThetaDotDotDeg(){return status.thetadotdot();}
-		mReal GetThetaDotDotRad(){return DEG2RAD(status.thetadotdot());}
-		mReal GetThetaMaxDeg(){return param.max_q();}
-		mReal GetThetaMinDeg(){return param.min_q();}
-		int GetPwmCmd(){return status.pwm_cmd();}
-		int GetFlags(){return status.flags();}
-		int64_t GetTimestamp(){return status.base().timestamp();}
-		M3Joint * GetCoupledJoint(){return cpj;}
-		int GetTicks(){return act->GetTicks();}		
-		virtual bool IsMotorPowerOn(){return act->IsMotorPowerOn();}
-		virtual bool IsLimitSwitchPosOn() {return act->IsLimitSwitchPosOn();}
-		virtual bool IsLimitSwitchNegOn() {return act->IsLimitSwitchNegOn();}
-		virtual bool IsEncoderCalibrated(){return act->IsEncoderCalibrated();}
-		void SetLimitSwitchNegZeroEncoder(){act->SetLimitSwitchNegZeroEncoder();}
-		void ClrLimitSwitchNegZeroEncoder(){act->ClrLimitSwitchNegZeroEncoder();}
-		Publisher RosInitPublish(NodeHandle * node_handle);
-		bool RosPublish(Publisher * pub);
+		
+		
 		google::protobuf::Message * GetCommand(){return &command;}
 		google::protobuf::Message * GetStatus(){return &status;}
 		google::protobuf::Message * GetParam(){return &param;}			
-		M3Transmission * GetTransmission(){return trans;} //Allow other components to access state
-		int mNmToTicks(mReal x){return act->mNmToTicks(x);}
+		
 	protected:
-		enum{DEFAULT,ISS};
-		enum {BRAKE_NONE, BRAKE_AUTO, BRAKE_MANUAL};
-		virtual void CalcThetaDesiredSmooth();
-		virtual void StepBrake(mReal & ctrl_des, mReal curr);
+		enum{DEFAULT};
+		
 		void Startup();
 		void Shutdown();
 		void StepStatus();
@@ -113,28 +55,11 @@ class M3JointIQ: public m3rt::M3Component
 		bool LinkDependentComponents();
 		bool ReadConfig(const char * filename);
 		M3BaseStatus * GetBaseStatus(){return status.mutable_base();}
-		M3MinJerkTrajectory jerk_joint;
-		M3PID pid_theta;
-		M3PID pid_theta_gc;
-		M3TimeSlew q_slew;
-		M3TimeSlew q_on_slew;
-		M3TimeSlew tq_on_slew;
-		M3TimeSlew pwm_on_slew;
-		M3TimeSlew brake_off_slew;
-		mReal tq_switch, q_switch, pwm_switch;
+		M3Humanoid * bot;
 		M3JointStatus status;
 		M3JointCommand command;
 		M3JointParam param;
-		M3Actuator * act;
-		M3Transmission * trans;
-		M3Joint * cpj;   //coupled joint component (present in derived classes only)
-		string act_name;
-		int mode_last;
-		int tmp_cnt;
-		int pwr_on_last;
-		int brake_off_cmd;
-		int brake_type;
-		bool disable_pwm_ramp;
+
 };
 
 
