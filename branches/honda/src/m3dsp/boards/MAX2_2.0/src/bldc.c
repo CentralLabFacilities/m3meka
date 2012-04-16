@@ -130,7 +130,8 @@ int get_hall_state()
 void set_bldc_open()
 {
     bldc_mode = OFF;
-    P1OVDCON = 0x3F00;
+//    P1OVDCON = 0x3F00;
+    P1OVDCON = 0x0000;
     _CNIE=0;
 }
 
@@ -138,7 +139,8 @@ void set_bldc_brake()
 {
     bldc_mode = BRAKE;
     // set all low legs to on, kill interrupts
-    P1OVDCON = 0x3F15;
+//    P1OVDCON = 0x3F15;
+    P1OVDCON = 0x0015;
     _CNIE=0;
 }
 

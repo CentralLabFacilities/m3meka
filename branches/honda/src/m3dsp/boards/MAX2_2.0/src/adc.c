@@ -272,7 +272,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
 
     hall_state = get_hall_state();
     current_reading = *current_sensor[hall_state]*current_signs[hall_state];
-    pwm_current_control = current_control(current_desired, current_reading);
+    pwm_current_control = current_control(current_reading);
 
     switch (get_dsp_state()) {
         case DSP_PWM:

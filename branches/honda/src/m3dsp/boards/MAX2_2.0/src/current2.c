@@ -3,11 +3,12 @@
 #include "current2.h"
 
 static int current_meas;
+static int current_desired;
 
-int current_control(int current_command, int current_reading)
+int current_control(int current_reading)
 {
     static long ki_sum = 0;
-    int error = (current_command<<6)-current_reading;
+    int error = current_desired-current_reading;
     int command;
     const int kp = ec_cmd.command[0].k_p;
     const int kp_shift = ec_cmd.command[0].k_p_shift;
@@ -16,9 +17,6 @@ int current_control(int current_command, int current_reading)
     const long ki_limit = (long) ec_cmd.command[0].k_i_limit<<6;
 
     current_meas = current_reading;
-   // current_meas = current_command;
-
-    //error = current_command-current_reading;
 
     ki_sum += ki*error;
     ki_sum = CLAMP(ki_sum,-ki_limit,ki_limit);
@@ -32,3 +30,11 @@ int get_current_ma()
     //return (current_meas);
     return (__builtin_mulsu(current_meas,CURRENT_MA_MULT)>>CURRENT_MA_SHIFT);
 }
+
+void set_current_command_ma(int current_desired_ma)
+{
+    // sets current_desired in shifted adc ticks
+    current_desired = __builtin_mulsu(current_desired_ma,CURRENT_ADC_MULT)>>CURRENT_MA_SHIFT;
+
+}
+

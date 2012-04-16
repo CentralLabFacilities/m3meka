@@ -11,7 +11,6 @@ enum dsp_state {
     DSP_BRAKE
 };
 
-extern int current_desired;
 extern int pwm_desired;
 
 void step_state();

@@ -6,7 +6,6 @@
 
 static enum dsp_state dsp = DSP_OFF;
 
-int current_desired;
 int pwm_desired;
 
 void step_state()
@@ -39,29 +38,29 @@ void step_state()
 
     switch (dsp) {
         case DSP_OFF:
-            current_desired = 0;
+            set_current_command_ma(0);
             pwm_desired = 0;
             set_bldc_open();
             break;
         case DSP_STARTUP:
-            current_desired = 0;
+            set_current_command_ma(0);
             pwm_desired = 0;
             set_bldc_open();
             set_adc_zeros();
             break;
         case DSP_PWM:
-            current_desired = 0;
+            set_current_command_ma(0);
             pwm_desired = ec_cmd.command[0].pwm_desired;
             set_bldc_commutation();
             break;
         case DSP_CURRENT:
-            current_desired = ec_cmd.command[0].current_desired;
+            set_current_command_ma(ec_cmd.command[0].current_desired);
             pwm_desired = 0;
             set_bldc_commutation();
             break;
         case DSP_BRAKE:
         default:
-            current_desired = 0;
+            set_current_command_ma(0);
             pwm_desired = 0;
             set_bldc_brake();
             break;

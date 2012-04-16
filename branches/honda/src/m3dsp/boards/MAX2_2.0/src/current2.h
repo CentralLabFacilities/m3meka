@@ -11,10 +11,13 @@
 // 32768*.9155 =
 #define CURRENT_MA_MULT     30000
 #define CURRENT_MA_SHIFT    15
+// other direction
+#define CURRENT_ADC_MULT    35791
 
 
-int current_control(int current_command, int current_reading);
+int current_control(int current_reading);
 int get_current_ma();
+void set_current_command_ma(int current_desired_ma);
 
 #endif
 
