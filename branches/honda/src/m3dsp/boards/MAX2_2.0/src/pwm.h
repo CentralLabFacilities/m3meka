@@ -40,11 +40,11 @@ void setup_pwm();
 void set_pwm(int chid, int val);
 int get_pwm_cmd(int chid);
 
-#define PWM_TIMEBASE_CYC  1011 	//WAS 1599	//1011 = 40kHz
-#define PWM_HALF_PERIOD_CYC	PWM_TIMEBASE_CYC
-#define PWM_FULL_PERIOD_CYC	2*PWM_TIMEBASE_CYC
+#define PWM_TIMEBASE_CYC  500 //1011 	//WAS 1599	//1011 = 40kHz // 500 => 40 kHz in center aligned mode
+//#define PWM_HALF_PERIOD_CYC	PWM_TIMEBASE_CYC
+//#define PWM_FULL_PERIOD_CYC	2*PWM_TIMEBASE_CYC
 #define PWM_MIN_DUTY 	5	//MAX2 has 100NS min pulse width. Each tick is 25ns, so min of 4
-#define PWM_MAX_DUTY   PWM_FULL_PERIOD_CYC-2*PWM_MIN_DUTY	//Never turn on 100%
+#define PWM_MAX_DUTY   PWM_TIMEBASE_CYC-2*PWM_MIN_DUTY	//Never turn on 100%
 #define PWM_ADC_SYNC_TICKS	100	
 #define PWM_DEAD_CYC_A  6			//200
 #define PWM_DEAD_CYC_B  6			//200
