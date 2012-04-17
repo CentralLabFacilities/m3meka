@@ -441,6 +441,7 @@ void M3ActuatorEc::SetPdoV4FromPdoV1Command(unsigned char * data)
     
     ax->current_desired = CLAMP(command.current_desired(),-32767,32767);
 	ax->pwm_desired = CLAMP(command.pwm_desired(),-32767,32767);
+	ax->bldc_mode = param.bldc_mode();
     //ax->pwm_desired = acc.pwm_desired;
     //ax->current_desired = acc.current_desired;
 }
@@ -732,6 +733,8 @@ bool M3ActuatorEc::ReadConfig(const char * filename)
 		pwm_max_ext=val;
 		ymlparam["pwm_db"] >> val;
 		param.set_pwm_db(val);
+		ymlparam["bldc_mode"] >> val;
+		param.set_bldc_mode(val);
 		if (IsVersion(DEFAULT)||IsVersion(ISS))
 		{
 		  ymlparam["k_ff_zero"] >> val;

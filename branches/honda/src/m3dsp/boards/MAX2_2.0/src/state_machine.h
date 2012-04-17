@@ -11,7 +11,7 @@ enum dsp_state {
     DSP_BRAKE
 };
 
-extern int pwm_desired;
+
 
 void step_state();
 enum dsp_state get_dsp_state();

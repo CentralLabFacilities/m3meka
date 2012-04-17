@@ -26,8 +26,35 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 unsigned int actual_pwm = 0;
 int pwm_cmd_buf[NUM_PWM_CH];
 int pwm_duty_buf[NUM_PWM_CH];
-int pwm_cmd(int chid){return pwm_cmd_buf[chid];}
+int get_pwm_cmd(int chid){return pwm_cmd_buf[chid];}
 
+static int pwm_desired;
+static int pwm_current_desired;
+
+void update_pwm()
+{
+        switch (get_dsp_state()) {
+        case DSP_PWM:
+            set_pwm(0,pwm_desired);
+            break;
+        case DSP_CURRENT:
+            set_pwm(0,pwm_current_desired);
+            break;
+        default:
+            set_pwm(0,0);
+            break;
+    }
+}
+
+void set_pwm_desired(int pwm)
+{
+    pwm_desired = pwm;
+}
+
+void set_pwm_current_desired(int pwm)
+{
+    pwm_current_desired = pwm;
+}
 int pwm_deadband(int chid, int abs_val)
 {
 /*	if (abs_val==0)
@@ -66,6 +93,7 @@ void set_pwm(int chid, int val)
 	ec_cmd.command[chid].pwm_max = PWM_MAX_DUTY;
 	int sign=SIGN(val);	
 	pwm_cmd_buf[chid]=sign*CLAMP(ABS(val),0,ec_cmd.command[chid].pwm_max); //Send back commanded value before gets inverted, deadband, etc
+        
         //pwm_cmd_buf[chid]=sign*CLAMP(ABS(val),0,PWM_MAX_DUTY); //Send back commanded value before gets inverted, deadband, etc
 	val = pwm_deadband(chid,ABS(val));
 	
@@ -79,7 +107,9 @@ void set_pwm(int chid, int val)
 
 	#ifdef USE_BLDC
 	#if defined PWM_4Q 
-		pwm_duty_buf[chid]=invert_and_clamp_pwm(chid,val); //Invert as switching on low-leg
+//		pwm_duty_buf[chid]=invert_and_clamp_pwm(chid,val); //Invert as switching on low-leg
+
+                pwm_duty_buf[chid] = clamp_pwm(chid,val);
                 pwm_cmd_buf[chid]=pwm_duty_buf[chid];
 		P1DC1=pwm_duty_buf[chid];
 		P1DC2=pwm_duty_buf[chid];
@@ -93,7 +123,7 @@ void set_pwm(int chid, int val)
 	#endif
 
 
-        if (sign<=0) {
+        if (sign<0) {
             set_bldc_dir(0);
         } else
             set_bldc_dir(1);

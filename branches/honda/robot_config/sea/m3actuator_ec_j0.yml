@@ -23,5 +23,6 @@ param:
   qei_min: 0
   t_max: 16000
   t_min: 0
+  bldc_mode: 1
 pwr_component: m3pwr_pwr023
 version: esp

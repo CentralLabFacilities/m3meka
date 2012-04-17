@@ -35,6 +35,11 @@ enum {
     COMMUTATION
 } bldc_mode;
 
+enum {
+    BDC_OFF,
+    BDC_ON
+} bdc_mode;
+
 void commutate();
 
 
@@ -77,10 +82,17 @@ Code: 6 : Q5=On, Q2=PWM  =	0000 0001 0010 0000 = 0x0120
 //Pwm low leg
 
 #ifdef PWM_4Q
-unsigned int StateTableFwd[] = {0x0000, 0x3002, 0x0308, 0x3008,
-									0x0C20, 0x0C02, 0x0320, 0x0000};
-unsigned int StateTableRev[] = {0x0000, 0x0320, 0x0C02, 0x0C20,
-								0x3008, 0x0308, 0x3002, 0x0000};
+//unsigned int StateTableFwd[] = {0x0000, 0x3002, 0x0308, 0x3008,
+//									0x0C20, 0x0C02, 0x0320, 0x0000};
+//unsigned int StateTableRev[] = {0x0000, 0x0320, 0x0C02, 0x0C20,
+//								0x3008, 0x0308, 0x3002, 0x0000};
+
+// low side table
+unsigned int StateTableFwd[] = {0x0000, 0x3001, 0x0304, 0x3004,
+                                             0x0C10, 0x0C01, 0x0310, 0x0000};
+
+unsigned int StateTableRev[] = {0x0000, 0x0310, 0x0C01, 0x0C10,
+                                        0x3004, 0x0304, 0x3001, 0x0000};
 
 #endif
 #ifdef PWM_2Q
@@ -124,7 +136,10 @@ void setup_bldc(void)
 
 int get_hall_state()
 {
-    return (BLDC_HALL_STATE);
+    if(bdc_mode)
+        return (2);
+    else
+        return (BLDC_HALL_STATE);
 }
 
 void set_bldc_open()
@@ -159,7 +174,6 @@ void set_bldc_commutation()
     CNEN2bits.CN21IE =1;	//Enable change-notification interrupt CN21: Hall2
     CNEN2bits.CN22IE =1;	//Enable change-notification interrupt CN22: Hall3
 
-    tmp_debug +=1;
     set_bldc_dir(0);
     commutate();
 
@@ -171,7 +185,7 @@ void set_bldc_commutation()
 
 void commutate()
 {
-    int hall_val = BLDC_HALL_STATE;
+    int hall_val = get_hall_state();
 
 
     if (bldc_fwd)
@@ -184,6 +198,13 @@ int get_bldc_dir()
 {
     return bldc_fwd;
 }
+
+void set_bldc_mode(int bldc_bdc_mode)
+{
+    // 1 for bldc, 0 for bdc
+    bdc_mode = !bldc_bdc_mode;
+}
+
 
 #endif
 

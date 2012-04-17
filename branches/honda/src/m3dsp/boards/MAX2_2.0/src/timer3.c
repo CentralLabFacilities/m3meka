@@ -71,6 +71,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void)
 	#endif
 
         step_state();
+        set_bldc_mode(ec_cmd.command[0].bldc_mode);
 
         _T3IF = 0;
 	

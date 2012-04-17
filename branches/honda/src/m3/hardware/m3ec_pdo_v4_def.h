@@ -51,6 +51,7 @@ typedef struct
 	int16_t		pwm_max;				//Max permissible pwm
         int16_t         pwm_desired;
         int16_t         current_desired;
+        int16_t         bldc_mode;                              // 1 for bldc, 0 for bdc
 } M3ActPdoV4Cmd;
 
 #define M3ACT_FLAG_POS_LIMITSWITCH 1

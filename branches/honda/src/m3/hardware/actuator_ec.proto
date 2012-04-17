@@ -102,5 +102,6 @@ message M3ActuatorEcParam{
 	optional int32			k_ff_shift=15;					//Shift scalar, torque control
 	optional int32			k_ff=16;					//Feedforward gain, torque control
 	optional int32			pwm_db=17;					//Deadband pwm
+	optional int32			bldc_mode=18;
 }
 

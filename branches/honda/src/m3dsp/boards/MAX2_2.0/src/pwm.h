@@ -31,9 +31,14 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 //#define PWM_TIMEBASE_CYC  1999  // TPWM=TCY(PTPER+1)*PTMR PRESCALE = (1/40MHZ)*2000 = 1/20KHZ
 //#define PWM_TIMEBASE_CYC  2665  // TPWM=TCY(PTPER+1)*PTMR PRESCALE = (1/40MHZ)*2666 = 1/15KHZ
 
+
+void update_pwm();
+void set_pwm_desired(int pwm);
+void set_pwm_current_desired(int pwm);
+
 void setup_pwm();
 void set_pwm(int chid, int val);
-int pwm_cmd(int chid);
+int get_pwm_cmd(int chid);
 
 #define PWM_TIMEBASE_CYC  1011 	//WAS 1599	//1011 = 40kHz
 #define PWM_HALF_PERIOD_CYC	PWM_TIMEBASE_CYC
