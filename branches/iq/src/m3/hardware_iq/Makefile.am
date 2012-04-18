@@ -30,7 +30,9 @@ ros_dir = $(ROS_DIR)
 libm3hardware_iqincludedir = $(includedir)/m3/hardware_iq
 libm3hardware_iqinclude_HEADERS = \
 	humanoid_ros_iq.pb.h \
-	humanoid_ros_iq.h
+	humanoid_ros_iq.h \
+	humanoid_shm.pb.h \
+	humanoid_shm.h
 
 clean-local:
 	rm -f *.pb.*
@@ -42,8 +44,16 @@ humanoid_ros_iq.pb.cpp: humanoid_ros_iq.proto
 	protoc -I$(prefix)/include/m3rt/base -I../toolbox -I../hardware -I../chains -I./ --cpp_out=./ humanoid_ros_iq.proto
 	mv humanoid_ros_iq.pb.cc humanoid_ros_iq.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base -I../toolbox -I../hardware -I../chains -I./ --python_out=$(top_srcdir)/python/m3 humanoid_ros_iq.proto
+
+humanoid_shm.pb.h: humanoid_shm.pb.cpp
+
+humanoid_shm.pb.cpp: humanoid_shm.proto
+	protoc -I$(prefix)/include/m3rt/base -I../toolbox -I../hardware -I../chains -I./ --cpp_out=./ humanoid_shm.proto
+	mv humanoid_shm.pb.cc humanoid_shm.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base -I../toolbox -I../hardware -I../chains -I./ --python_out=$(top_srcdir)/python/m3 humanoid_shm.proto
+
 	
-proto: humanoid_ros_iq.pb.cpp 
+proto: humanoid_shm.pb.cpp 
 
 proto_install: 
 	if test -d $(includedir)/m3; then echo '' ; else mkdir $(includedir)/m3;fi
@@ -88,7 +98,7 @@ libm3hardware_iq_la_CPPFLAGS =   -I../hardware/ -I../toolbox/ -I../chains/ -I../
 
 
 libm3hardware_iq_la_SOURCES = \
-	humanoid_ros_iq.pb.cpp\
-	humanoid_ros_iq.cpp\
+	humanoid_shm.pb.cpp\
+	humanoid_shm.cpp\
 	factory_proxy.cpp
 

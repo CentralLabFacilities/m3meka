@@ -26,20 +26,25 @@ extern "C"
 ///////////////////////////////////////////////////////
 //These names should match the create_xxx() and destroy_xxx() function names.
 //They should also match the names used for component definition in m3_config.yml 
-#define M3HUMANOID_ROS_IQ_TYPE_NAME	"m3humanoid_ros_iq"
+//#define M3HUMANOID_ROS_IQ_TYPE_NAME	"m3humanoid_ros_iq"
+#define M3HUMANOID_SHM_TYPE_NAME	"m3humanoid_shm"
 ///////////////////////////////////////////////////////
 //Creators
-m3rt::M3Component * create_m3humanoid_ros_iq(){return new m3::M3HumanoidRosIQ;}
+//m3rt::M3Component * create_m3humanoid_ros_iq(){return new m3::M3HumanoidRosIQ;}
+m3rt::M3Component * create_m3humanoid_shm(){return new m3::M3HumanoidShm;}
 //Deletors
-void destroy_m3humanoid_ros_iq(m3rt::M3Component* c) {delete c;}
+//void destroy_m3humanoid_ros_iq(m3rt::M3Component* c) {delete c;}
+void destroy_m3humanoid_shm(m3rt::M3Component* c) {delete c;}
 ///////////////////////////////////////////////////////
 class M3FactoryProxy 
 { 
 public:
 	M3FactoryProxy()
 	{
-		m3rt::creator_factory[M3HUMANOID_ROS_IQ_TYPE_NAME] =	create_m3humanoid_ros_iq;
-		m3rt::destroyer_factory[M3HUMANOID_ROS_IQ_TYPE_NAME] =  destroy_m3humanoid_ros_iq;
+		m3rt::creator_factory[M3HUMANOID_SHM_TYPE_NAME] =	create_m3humanoid_shm;
+		m3rt::destroyer_factory[M3HUMANOID_SHM_TYPE_NAME] =  destroy_m3humanoid_shm;
+		//m3rt::creator_factory[M3HUMANOID_ROS_IQ_TYPE_NAME] =	create_m3humanoid_ros_iq;
+		//m3rt::destroyer_factory[M3HUMANOID_ROS_IQ_TYPE_NAME] =  destroy_m3humanoid_ros_iq;
 	}
 };
 ///////////////////////////////////////////////////////
