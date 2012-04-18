@@ -22,16 +22,16 @@ import "component_base.proto";
 
 
 
-message M3BipShmStatus
+message M3HumanoidShmStatus
 {
 	optional M3BaseStatus	base=1;			//Reserved	
 	optional double			test=2;
 }
 
-message M3BipShmCommand{
+message M3HumanoidShmCommand{
 	optional double			test=1;
 }
 
-message M3BipShmParam{
+message M3HumanoidShmParam{
 	optional double			test=1;
 }

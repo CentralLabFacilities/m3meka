@@ -19,7 +19,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #include <m3rt/base/component.h>
-#include <m3/hardware_iq/humanoid_ros_iq.h>
+//#include <m3/hardware_iq/humanoid_ros_iq.h>
+#include <m3/hardware_iq/humanoid_shm.h>
 ///////////////////////////////////////////////////////
 extern "C" 
 {

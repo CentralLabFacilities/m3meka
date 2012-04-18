@@ -23,6 +23,8 @@ m3_dir = $(top_srcdir)/src
 m3rt_dir = $(prefix)/include/m3rt
 m3rtb_dir = $(prefix)/include/m3rt/base
 m3tb_dir = $(prefix)/include/m3/toolbox
+rtai_inc = $(RTAI_DIR)/include
+rtai_lib = $(RTAI_DIR)/lib
 
 ros_dir = $(ROS_DIR)
 
@@ -61,7 +63,7 @@ proto_install:
 	cp *.proto $(includedir)/m3/chains
 	
 lib_LTLIBRARIES = libm3hardware_iq.la 
-libm3hardware_iq_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3toolbox -lyaml-cpp -lXmlRpc -lros -lroslib
+libm3hardware_iq_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3toolbox -lyaml-cpp -lXmlRpc -lros -lroslib -llxrt
 libm3hardware_iq_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/core/roscpp/lib \
 	-L$(ros_dir)/core/roslib/lib \
@@ -74,7 +76,8 @@ libm3hardware_iq_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/lib \
 	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/lib \
 	-L$(ros_dir)/../stacks/ros_comm/tools/rosconsole/lib \
-	-L$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/lib
+	-L$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/lib \
+	-L$(rtai_lib)
 	
 
 libm3hardware_iq_la_CPPFLAGS =   -I../hardware/ -I../toolbox/ -I../chains/ -I../robots/ -I$(m3_dir) \
@@ -93,7 +96,9 @@ libm3hardware_iq_la_CPPFLAGS =   -I../hardware/ -I../toolbox/ -I../chains/ -I../
 	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/include \
 	-I$(ros_dir)/../stacks/ros_comm/tools/rosconsole/include \
 	-I$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/src \
-	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include
+	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include \
+	-I$(rtai_inc) \
+	-D__RTAI__
 
 
 

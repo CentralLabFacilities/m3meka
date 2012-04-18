@@ -17,24 +17,24 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef M3BIP_SHM_H
-#define M3BIP_SHM_H
+#ifndef M3HUMANOID_SHM_H
+#define M3HUMANOID_SHM_H
 
 #include <m3rt/base/component_shm.h>
-#include "bip_shm.pb.h"
-#include "bip_shm_sds.h"
-#include <m3uta/controllers/uta_imu.h>
-#include "bip_act_array.h"
+#include "humanoid_shm.pb.h"
+#include "humanoid_shm_sds.h"
+#include "m3/robots/humanoid.h"
+#include "m3/hardware/loadx6.h"
+#include "m3/chains/hand.h"
 
-
-namespace m3bip{
+namespace m3{
 using namespace std;
-using namespace m3;
-using namespace m3uta;
+using namespace m3rt;
 
-class M3BotShm : public  m3::M3CompShm{
+
+class M3HumanoidShm : public  m3::M3CompShm{
 	public:
-		M3BotShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),bot(NULL),right_hand(NULL),right_loadx6(NULL),tmp_cnt(0)
+		M3HumanoidShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),bot(NULL),right_hand(NULL),right_loadx6(NULL),tmp_cnt(0)
 		{		  
 		  RegisterVersion("default",DEFAULT);		  
 		}
@@ -53,17 +53,17 @@ class M3BotShm : public  m3::M3CompShm{
 		
 		enum {DEFAULT};
 		M3BaseStatus * GetBaseStatus();		
-		M3BotShmCommand command;
-		M3BotShmParam param;
-		M3BotShmStatus status;
+		M3HumanoidShmCommand command;
+		M3HumanoidShmParam param;
+		M3HumanoidShmStatus status;
 		M3Humanoid * bot;
 		M3LoadX6 * right_loadx6;
 		M3Hand * right_hand;
-		M3BotShmSdsCommand command_from_sds;
-		M3BotShmSdsStatus status_to_sds;
+		M3HumanoidShmSdsCommand command_from_sds;
+		M3HumanoidShmSdsStatus status_to_sds;
 		int sds_status_size;
 		int sds_cmd_size;	
-		string bot_name, right_hand_name, right_loadx6;
+		string bot_name, right_hand_name, right_loadx6_name;
 		int64_t timeout;
 		int tmp_cnt;		
 		bool startup_motor_pwr_on;

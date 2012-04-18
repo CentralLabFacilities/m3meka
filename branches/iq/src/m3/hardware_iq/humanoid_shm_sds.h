@@ -17,8 +17,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef M3BOT_SHM_SDS_H
-#define M3BOT_SHM_SDS_H
+#ifndef M3HUMANOID_SHM_SDS_H
+#define M3HUMANOID_SHM_SDS_H
 
 #include <m3rt/base/m3rt_def.h>
 #include <m3rt/base/m3ec_def.h>
@@ -54,14 +54,14 @@ typedef struct
   int64_t	timestamp;
   M3JntArrayShmSdsStatus right_arm;    
   M3JntArrayShmSdsStatus right_hand;
-}M3BotShmSdsStatus;
+  M3LoadX6ShmSdsStatus right_loadx6;
+}M3HumanoidShmSdsStatus;
 
 typedef struct
 {
   int64_t	timestamp;
   M3JntArrayShmSdsCommand right_arm;    
-  M3JntArrayShmSdsCommand right_hand;
-  M3LoadX6ShmSdsStatus right_loadx6;
-}M3BotShmSdsCommand;
+  M3JntArrayShmSdsCommand right_hand;  
+}M3HumanoidShmSdsCommand;
 
 #endif

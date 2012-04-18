@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <bot_shm.h>
+#include <humanoid_shm.h>
 #include "m3rt/base/component_factory.h"
 
 
@@ -28,44 +28,44 @@ using namespace std;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-M3BaseStatus * M3BotShm::GetBaseStatus()
+M3BaseStatus * M3HumanoidShm::GetBaseStatus()
 {
 	return status.mutable_base();
 }
 
-void  M3BotShm::Startup()
+void  M3HumanoidShm::Startup()
 {  
   M3CompShm::Startup();
   
-  sds_status_size = sizeof(M3BotShmSdsStatus);
-  sds_cmd_size = sizeof(M3BotShmSdsCommand);  
+  sds_status_size = sizeof(M3HumanoidShmSdsStatus);
+  sds_cmd_size = sizeof(M3HumanoidShmSdsCommand);  
   
   memset(&status_to_sds, 0, sds_status_size);
   
 }
 
-void M3BotShm::ResetCommandSds(unsigned char * sds)
+void M3HumanoidShm::ResetCommandSds(unsigned char * sds)
 {
   
-  memset(sds,0,sizeof(M3BotShmSdsCommand));
+  memset(sds,0,sizeof(M3HumanoidShmSdsCommand));
   
 }
 
 
-size_t M3BotShm::GetStatusSdsSize()
+size_t M3HumanoidShm::GetStatusSdsSize()
 {
 	return sds_status_size;
 }
 
-size_t M3BotShm::GetCommandSdsSize()
+size_t M3HumanoidShm::GetCommandSdsSize()
 {
 	return sds_cmd_size;
 }
 
-void M3BotShm::SetCommandFromSds(unsigned char * data)
+void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 {
   
-  M3BotShmSdsCommand * sds = (M3BotShmSdsCommand *) data;
+  M3HumanoidShmSdsCommand * sds = (M3HumanoidShmSdsCommand *) data;
     request_command();
    memcpy(&command_from_sds, sds, GetCommandSdsSize()); 
     release_command();    
@@ -90,7 +90,7 @@ void M3BotShm::SetCommandFromSds(unsigned char * data)
 	bot->SetSlewRate(RIGHT_ARM, i, command_from_sds.right_arm.slew_rate_q_desired[i]);
 	bot->SetTorque_mNm(RIGHT_ARM, i, command_from_sds.right_arm.tq_desired[i]);
 	bot->SetStiffness(RIGHT_ARM, i, command_from_sds.right_arm.q_stiffness[i]);
-	((M3HumanoidCommand*)bot->GetCommand())->mutable_right_arm()->set_ctrl_mode(idx, command_from_sds.right_arm.ctrl_mode[i]);
+	((M3HumanoidCommand*)bot->GetCommand())->mutable_right_arm()->set_ctrl_mode(i, command_from_sds.right_arm.ctrl_mode[i]);
       }
     }
   }
@@ -104,9 +104,9 @@ void M3BotShm::SetCommandFromSds(unsigned char * data)
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);
 	} else{	  	  
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.right_hand.ctrl_mode[i]);      
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_desired(i, command_from_sds.right_hand.q_desired(i));
+	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_desired(i, command_from_sds.right_hand.q_desired[i]);
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_slew_rate(i, command_from_sds.right_hand.slew_rate_q_desired[i]);    
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_tq_desired(i, command_from_sds.right_hand.tq_desired(i));      
+	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_tq_desired(i, command_from_sds.right_hand.tq_desired[i]);      
 	}
       }	      
   }
@@ -115,7 +115,7 @@ void M3BotShm::SetCommandFromSds(unsigned char * data)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void M3BotShm::SetSdsFromStatus(unsigned char * data)
+void M3HumanoidShm::SetSdsFromStatus(unsigned char * data)
 {  
   status_to_sds.timestamp = GetBaseStatus()->timestamp(); 
   
@@ -147,7 +147,7 @@ void M3BotShm::SetSdsFromStatus(unsigned char * data)
     }
   }
   
-  M3BotShmSdsStatus * sds = (M3BotShmSdsStatus *) data;
+  M3HumanoidShmSdsStatus * sds = (M3HumanoidShmSdsStatus *) data;
   request_status();  
   memcpy(sds, &status_to_sds, GetStatusSdsSize());  
   release_status();
@@ -155,17 +155,17 @@ void M3BotShm::SetSdsFromStatus(unsigned char * data)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool M3BotShm::LinkDependentComponents()
+bool M3HumanoidShm::LinkDependentComponents()
 {
 	tmp_cnt = 0;
 	
-	if (humanoid_name.size()!=0)
+	if (bot_name.size()!=0)
 	{		
-		bot=(M3Humanoid*)factory->GetComponent(humanoid_name);
+		bot=(M3Humanoid*)factory->GetComponent(bot_name);
 		if (bot==NULL)
 		{
 			M3_ERR("M3Humanoid component %s declared for M3BotShm but could not be linked\n",
-					humanoid_name.c_str());
+					bot_name.c_str());
 		    //return false;
 		}
 	}
@@ -201,7 +201,7 @@ bool M3BotShm::LinkDependentComponents()
 	}
 }
 
-bool M3BotShm::ReadConfig(const char * filename)
+bool M3HumanoidShm::ReadConfig(const char * filename)
 {	
 	if (!M3CompShm::ReadConfig(filename))
 		return false;
@@ -214,7 +214,7 @@ bool M3BotShm::ReadConfig(const char * filename)
 	}
 	catch(YAML::KeyNotFound& e)
 	{
-	  left_leg_name="";
+	  bot_name="";
 	}
 	
 	try{
@@ -222,7 +222,7 @@ bool M3BotShm::ReadConfig(const char * filename)
 	}
 	catch(YAML::KeyNotFound& e)
 	{
-	  left_leg_name="";
+	  right_hand_name="";
 	}
 	
 	try{
@@ -230,7 +230,7 @@ bool M3BotShm::ReadConfig(const char * filename)
 	}
 	catch(YAML::KeyNotFound& e)
 	{
-	  left_leg_name="";
+	  right_loadx6_name="";
 	}
 		
 	try{
