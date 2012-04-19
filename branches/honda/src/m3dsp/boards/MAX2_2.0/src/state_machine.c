@@ -5,15 +5,23 @@
 
 
 static enum dsp_state dsp = DSP_OFF;
+int trace_temperature_max = 10000;  // centikelvin
 
 void step_state()
 {
     static int count = 0;
+    static int temperature_count = 0;
+
+    if (temperature_count++%20 == 0)
+        step_temperature_model(get_current_ma());
+
+    if (get_model_temperature_cK() > trace_temperature_max)
+        dsp = DSP_ERROR;
 
     if (count<1000) {
         count++;
         dsp = DSP_STARTUP;
-    } else {
+    } else if (dsp != DSP_ERROR) { // latch in the error mode
         switch (ec_cmd.command[0].mode) {
             case 0:
                 dsp = DSP_OFF;
@@ -57,10 +65,15 @@ void step_state()
             set_bldc_commutation();
             break;
         case DSP_BRAKE:
-        default:
             set_current_command_ma(0);
             set_pwm_desired(0);
             set_bldc_brake();
+            break;
+        case DSP_ERROR:
+        default:
+            set_current_command_ma(0);
+            set_pwm_desired(0);
+            set_bldc_open();
             break;
     }
 }

@@ -8,7 +8,8 @@ enum dsp_state {
     DSP_STARTUP,
     DSP_PWM,
     DSP_CURRENT,
-    DSP_BRAKE
+    DSP_BRAKE,
+    DSP_ERROR
 };
 
 

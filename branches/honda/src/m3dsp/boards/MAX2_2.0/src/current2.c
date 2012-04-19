@@ -31,6 +31,12 @@ int get_current_ma()
     return (__builtin_mulsu(current_meas,CURRENT_MA_MULT)>>CURRENT_MA_SHIFT);
 }
 
+int get_max_current_ma()
+{
+    // return the max of the two current sensors
+    return (0);
+}
+
 void set_current_command_ma(int current_desired_ma)
 {
     // sets current_desired in shifted adc ticks

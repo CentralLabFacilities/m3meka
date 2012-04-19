@@ -164,7 +164,7 @@ void isr_update_input_pdo(void)
 	//ec_stat.status[0].debug=ec_debug[0];
         //ec_stat.status[0].debug = get_dsp_state();
         //ec_stat.status[0].debug = get_adc_zero(0);
-        ec_stat.status[0].debug = P1OVDCON;
+        ec_stat.status[0].debug = get_model_temperature_cK();
         //ec_stat.status[0].debug = get_hall_state();
         //ec_stat.status[0].debug = tmp_debug;
 }

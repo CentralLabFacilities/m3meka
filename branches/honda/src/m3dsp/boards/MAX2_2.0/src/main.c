@@ -59,6 +59,8 @@ int main (void)
 	setup_peripheral_pin_select();
 	setup_interrupt_priorities();
 
+        init_temperature_model();
+
 	//Blinking HB LED and Timestamp
 	#ifdef USE_DIO
 	setup_dio();

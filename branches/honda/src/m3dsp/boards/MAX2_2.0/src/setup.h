@@ -57,6 +57,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "adc_spi.h"
 #include "current2.h"
 #include "state_machine.h"
+#include "temperature_model.h"
 
 //#define EC_USE_WATCHDOG
 
