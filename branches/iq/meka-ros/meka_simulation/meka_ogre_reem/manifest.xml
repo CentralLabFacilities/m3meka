@@ -1,0 +1,14 @@
+<package>
+  <description brief="REEM Ogre Mesh Files"></description>
+  <author>Maintained by Adolfo Rodriguez Tsouroukdissian</author>
+  <license>Modified BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url></url>
+
+  <depend package="convex_decomposition"/>
+  <depend package="ivcon"/>
+  <depend package="ogre_tools"/>
+  <depend package="meka_description"/>
+</package>
+
+
