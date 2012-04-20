@@ -41,11 +41,11 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/bldc.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/current.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/pwm.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer1.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1445274692/current2.o ${OBJECTDIR}/_ext/1445274692/state_machine.o ${OBJECTDIR}/_ext/1445274692/temperature_model.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/adc.o.d ${OBJECTDIR}/_ext/1445274692/bldc.o.d ${OBJECTDIR}/_ext/1445274692/control.o.d ${OBJECTDIR}/_ext/1445274692/current.o.d ${OBJECTDIR}/_ext/1445274692/dio.o.d ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o.d ${OBJECTDIR}/_ext/1445274692/ethercat.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d ${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/pwm.o.d ${OBJECTDIR}/_ext/1445274692/setup.o.d ${OBJECTDIR}/_ext/1445274692/timer1.o.d ${OBJECTDIR}/_ext/1445274692/timer3.o.d ${OBJECTDIR}/_ext/1445274692/current2.o.d ${OBJECTDIR}/_ext/1445274692/state_machine.o.d ${OBJECTDIR}/_ext/1445274692/temperature_model.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/bldc.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/current.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/pwm.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer1.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1445274692/current2.o ${OBJECTDIR}/_ext/1445274692/state_machine.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/adc.o.d ${OBJECTDIR}/_ext/1445274692/bldc.o.d ${OBJECTDIR}/_ext/1445274692/control.o.d ${OBJECTDIR}/_ext/1445274692/current.o.d ${OBJECTDIR}/_ext/1445274692/dio.o.d ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o.d ${OBJECTDIR}/_ext/1445274692/ethercat.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d ${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/pwm.o.d ${OBJECTDIR}/_ext/1445274692/setup.o.d ${OBJECTDIR}/_ext/1445274692/timer1.o.d ${OBJECTDIR}/_ext/1445274692/timer3.o.d ${OBJECTDIR}/_ext/1445274692/current2.o.d ${OBJECTDIR}/_ext/1445274692/state_machine.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/bldc.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/current.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/pwm.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer1.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1445274692/current2.o ${OBJECTDIR}/_ext/1445274692/state_machine.o ${OBJECTDIR}/_ext/1445274692/temperature_model.o
+OBJECTFILES=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/bldc.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/current.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/pwm.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer1.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1445274692/current2.o ${OBJECTDIR}/_ext/1445274692/state_machine.o
 
 
 CFLAGS=
@@ -183,12 +183,6 @@ ${OBJECTDIR}/_ext/1445274692/state_machine.o: ../../src/state_machine.c  nbproje
 	@${RM} ${OBJECTDIR}/_ext/1445274692/state_machine.o.ok ${OBJECTDIR}/_ext/1445274692/state_machine.o.err 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/state_machine.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_MAX2_0_3 -DUSE_BLDC -DUSE_ENCODER_VERTX -DMAX2_BLDC_0_3_A2R2 -DUSE_TIMER3 -I"../../src" -O3 -MMD -MF "${OBJECTDIR}/_ext/1445274692/state_machine.o.d" -o ${OBJECTDIR}/_ext/1445274692/state_machine.o ../../src/state_machine.c  
 	
-${OBJECTDIR}/_ext/1445274692/temperature_model.o: ../../src/temperature_model.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/temperature_model.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/temperature_model.o.ok ${OBJECTDIR}/_ext/1445274692/temperature_model.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/temperature_model.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_MAX2_0_3 -DUSE_BLDC -DUSE_ENCODER_VERTX -DMAX2_BLDC_0_3_A2R2 -DUSE_TIMER3 -I"../../src" -O3 -MMD -MF "${OBJECTDIR}/_ext/1445274692/temperature_model.o.d" -o ${OBJECTDIR}/_ext/1445274692/temperature_model.o ../../src/temperature_model.c  
-	
 else
 ${OBJECTDIR}/_ext/1445274692/adc.o: ../../src/adc.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
@@ -291,12 +285,6 @@ ${OBJECTDIR}/_ext/1445274692/state_machine.o: ../../src/state_machine.c  nbproje
 	@${RM} ${OBJECTDIR}/_ext/1445274692/state_machine.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1445274692/state_machine.o.ok ${OBJECTDIR}/_ext/1445274692/state_machine.o.err 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/state_machine.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_MAX2_0_3 -DUSE_BLDC -DUSE_ENCODER_VERTX -DMAX2_BLDC_0_3_A2R2 -DUSE_TIMER3 -I"../../src" -O3 -MMD -MF "${OBJECTDIR}/_ext/1445274692/state_machine.o.d" -o ${OBJECTDIR}/_ext/1445274692/state_machine.o ../../src/state_machine.c  
-	
-${OBJECTDIR}/_ext/1445274692/temperature_model.o: ../../src/temperature_model.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/temperature_model.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/temperature_model.o.ok ${OBJECTDIR}/_ext/1445274692/temperature_model.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/temperature_model.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_ETHERCAT -DUSE_MAX2_0_3 -DUSE_BLDC -DUSE_ENCODER_VERTX -DMAX2_BLDC_0_3_A2R2 -DUSE_TIMER3 -I"../../src" -O3 -MMD -MF "${OBJECTDIR}/_ext/1445274692/temperature_model.o.d" -o ${OBJECTDIR}/_ext/1445274692/temperature_model.o ../../src/temperature_model.c  
 	
 endif
 

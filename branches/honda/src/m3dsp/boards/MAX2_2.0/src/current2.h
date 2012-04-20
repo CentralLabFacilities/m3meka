@@ -15,9 +15,13 @@
 #define CURRENT_ADC_MULT    35791
 
 
-int current_control(int current_reading);
+int current_control();
 int get_current_ma();
 void set_current_command_ma(int current_desired_ma);
+void set_current_ab(int i_a, int i_b);
+int adc2ma(int adc);
+int ma2adc(int ma);
+int get_max_current_ma();
 
 #endif
 

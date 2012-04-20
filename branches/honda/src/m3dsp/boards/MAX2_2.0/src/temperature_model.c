@@ -47,4 +47,3 @@ int get_model_temperature_cK()
     // returns temperature in centikelvin
     return temperature;
 }
-

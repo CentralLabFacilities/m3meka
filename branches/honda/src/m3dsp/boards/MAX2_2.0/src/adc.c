@@ -42,14 +42,14 @@ unsigned int adc_zero[ADC_NUM_CH] = {524<<ADC_Q_FORM,524<<ADC_Q_FORM,0,0};
 int irq_cnt; 
 unsigned int wd_cnt = 0, last_status = 0, watchdog_expired;	//Watchdog
 
-#define MEAS_A &adc_meas[0]
-#define MEAS_B &adc_meas[1]
-const int * current_sensor[8] = {MEAS_A, MEAS_A, MEAS_B, MEAS_B,
-                                         MEAS_B, MEAS_A, MEAS_A, MEAS_A};
+//#define MEAS_A &adc_meas[0]
+//#define MEAS_B &adc_meas[1]
+//const int * current_sensor[8] = {MEAS_A, MEAS_A, MEAS_B, MEAS_B,
+//                                         MEAS_B, MEAS_A, MEAS_A, MEAS_A};
 // low side table
 //const int current_signs[8] = {0,1,1,1,-1,1,-1,0};
 // high side table
-const int current_signs[8] = {0,-1,-1,-1,1,-1,1,0};
+//const int current_signs[8] = {0,-1,-1,-1,1,-1,1,0};
 
 // Number of locations for ADC buffer = 100 (AN0 only) x BUF_depth (100) = 100 Words
 // Align the buffer to 128 words or 256 bytes. This is needed for peripheral indirect mode
@@ -258,8 +258,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
 {
     unsigned int * dma_buf_ptr;
     int i;
-    int current_reading;
-    int hall_state;
+//    int current_reading;
+//    int hall_state;
     int tmp;
    // int pwm_current_control;
 
@@ -274,9 +274,10 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
 
     }
 
-    hall_state = get_hall_state();
-    current_reading = *current_sensor[hall_state]*current_signs[hall_state];
-    set_pwm_current_desired(current_control(current_reading));
+    set_current_ab(adc_meas[ADC_CURRENT_A],adc_meas[ADC_CURRENT_B]);
+    //hall_state = get_hall_state();
+    //current_reading = *current_sensor[hall_state]*current_signs[hall_state];
+    set_pwm_current_desired(current_control());
     update_pwm();
 
     /*switch (get_dsp_state()) {

@@ -5,18 +5,33 @@
 
 
 static enum dsp_state dsp = DSP_OFF;
-int trace_temperature_max = 10000;  // centikelvin
+//int trace_temperature_max = 10000;  // centikelvin
+int max_current_ma = 13000;
+int max_current_error_count_max = 10;
 
 void step_state()
 {
     static int count = 0;
-    static int temperature_count = 0;
+    static int max_current_error_count = 0;
+    //static int temperature_count = 0;
 
-    if (temperature_count++%20 == 0)
-        step_temperature_model(get_current_ma());
+    //if (temperature_count++%20 == 0)
+    //    step_temperature_model(get_current_ma());
 
-    if (get_model_temperature_cK() > trace_temperature_max)
+    //if (get_model_temperature_cK() > trace_temperature_max)
+    //    dsp = DSP_ERROR;
+
+    if (get_max_current_ma() > max_current_ma) {
+        max_current_error_count++;
+        max_current_error_count = CLAMP(max_current_error_count,0,
+                max_current_error_count_max);
+    } else
+        max_current_error_count = 0;
+
+    if (max_current_error_count >= max_current_error_count_max) {
         dsp = DSP_ERROR;
+    }
+        
 
     if (count<1000) {
         count++;
