@@ -78,11 +78,11 @@ void StepHumanoidShm(int cntr)
       
       for (int i = 0; i < 7; i++)
       {
-	cmd.right_arm.ctrl_mode[i] = JOINT_ARRAY_MODE_THETA_GC;
-	cmd.right_arm.q_desired[i] = 0;
-	cmd.right_arm.tq_desired[i] = 0;
-	cmd.right_arm.slew_rate_q_desired[i] = 0;
-	cmd.right_arm.q_stiffness[i] = 0;	
+	cmd.right_arm.ctrl_mode[i] = JOINT_ARRAY_MODE_TORQUE;
+	cmd.right_arm.q_desired[i] = 50.0;
+	cmd.right_arm.tq_desired[i] = 40.0;
+	cmd.right_arm.slew_rate_q_desired[i] = 20.0;
+	cmd.right_arm.q_stiffness[i] = 1.0;	
       }
       
 
@@ -96,7 +96,7 @@ void StepHumanoidShm(int cntr)
 	printf("Ty: %f\n", status.right_loadx6.wrench[4]);
 	printf("Tz: %f\n", status.right_loadx6.wrench[5]);
 	  
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 7; i++)
 	{
 	    printf("jnt_tq: %i, %f\n", i, status.right_arm.torque[i]);
 	    printf("jnt_ang: %i, %f\n", i, status.right_arm.theta[i]);

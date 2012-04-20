@@ -50,6 +50,8 @@ class M3HumanoidShm : public  m3::M3CompShm{
 		bool LinkDependentComponents();
 		void ResetCommandSds(unsigned char * sds);
 		void Startup();		
+		bool RosPublish(Publisher * pub);
+		Publisher RosInitPublish(NodeHandle * node_handle);
 		
 		enum {DEFAULT};
 		M3BaseStatus * GetBaseStatus();		

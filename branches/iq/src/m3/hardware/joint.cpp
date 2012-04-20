@@ -204,7 +204,7 @@ void M3Joint::CalcThetaDesiredSmooth()
 	//Min-Jerk may make desired out of bounds so re-clamp
 	q_des_jt=CLAMP(q_des_jt,param.min_q()+param.min_q_pad(),param.max_q()-param.max_q_pad());
 	
-	//Set result
+	//Set result	
 	trans->SetThetaDesJointDeg(q_des_jt);
 }
 

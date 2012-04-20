@@ -122,6 +122,7 @@ AC_CONFIG_FILES([
 	python/Makefile
 	src/apps/m3rt_printer/Makefile
 	src/apps/m3rt_torque_shm/Makefile
+	src/apps/m3humanoid_shm_test/Makefile
 	src/apps/m3rt_timestats/Makefile
 	src/m3/toolbox/Makefile
 	src/m3/hardware/Makefile

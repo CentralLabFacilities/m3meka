@@ -1,0 +1,37 @@
+
+########### M3 CONFIG ######################
+
+factory_rt_libs:
+  - /usr/local/lib/libm3toolbox.so
+  - /usr/local/lib/libm3hardware.so
+  - /usr/local/lib/libm3chains.so
+  - /usr/local/lib/libm3robots.so
+  - /usr/local/lib/libm3hardware_iq.so
+factory_py_libs:
+  - /usr/local/lib/python2.6/dist-packages/m3/m3meka_factory_proxy.py
+
+rt_components:
+  pwr:
+    m3pwr_pwr012: m3pwr_virtual  
+  ma10:
+    m3actuator_ma10_j0: m3actuator_virtual
+    m3actuator_ma10_j1: m3actuator_virtual
+    m3actuator_ma10_j2: m3actuator_virtual
+    m3actuator_ma10_j3: m3actuator_virtual
+    m3actuator_ma10_j4: m3actuator_virtual
+    m3actuator_ma10_j5: m3actuator_virtual
+    m3actuator_ma10_j6: m3actuator_virtual
+    m3joint_ma10_j0: m3joint
+    m3joint_ma10_j1: m3joint
+    m3joint_ma10_j2: m3joint
+    m3joint_ma10_j3: m3joint
+    m3joint_ma10_j4: m3joint
+    m3joint_ma10_j5: m3joint
+    m3joint_ma10_j6: m3joint
+    m3arm_ma10: m3arm
+    m3dynamatics_right_h2r2_fts_ma10: m3dynamatics
+    m3loadx6_ma10_l0: m3loadx6_virtual
+  mr8:
+    m3humanoid_right_arm_mr8: m3humanoid
+    m3humanoid_shm8: m3humanoid_shm
+

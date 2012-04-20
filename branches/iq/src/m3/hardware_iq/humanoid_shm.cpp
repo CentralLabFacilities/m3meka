@@ -19,7 +19,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <humanoid_shm.h>
 #include "m3rt/base/component_factory.h"
-
+#include "sensor_msgs/JointState.h"
 
 namespace m3{
 	
@@ -91,6 +91,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	bot->SetTorque_mNm(RIGHT_ARM, i, command_from_sds.right_arm.tq_desired[i]);
 	bot->SetStiffness(RIGHT_ARM, i, command_from_sds.right_arm.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_right_arm()->set_ctrl_mode(i, command_from_sds.right_arm.ctrl_mode[i]);
+	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
       }
     }
   }
@@ -245,5 +246,52 @@ bool M3HumanoidShm::ReadConfig(const char * filename)
 	
 	return true;
 }
+
+
+Publisher M3HumanoidShm::RosInitPublish(NodeHandle * node_handle)
+{
+  return node_handle->advertise<sensor_msgs::JointState>("/joint_states", 1000);
+  
 }
+
+bool M3HumanoidShm::RosPublish(Publisher * pub)
+{
+  /*Header header
+string[] name
+float64[] position
+float64[] velocity
+float64[] effort*/
+  
+  int ndof = 7;
+  
+  sensor_msgs::JointState msg;
+  
+  msg.name.resize(ndof);
+  msg.position.resize(ndof);
+  msg.velocity.resize(ndof);
+  msg.effort.resize(ndof);
+  
+  msg.name[0] = "m3joint_ma10_j0";
+  msg.name[1] = "m3joint_ma10_j1";
+  msg.name[2] = "m3joint_ma10_j2";
+  msg.name[3] = "m3joint_ma10_j3";
+  msg.name[4] = "m3joint_ma10_j4";
+  msg.name[5] = "m3joint_ma10_j5";
+  msg.name[6] = "m3joint_ma10_j6";
+  
+  for (int i = 0; i < ndof; i++)
+  {
+      msg.position[i] = bot->GetThetaDeg(RIGHT_ARM,i);
+      msg.velocity[i] = bot->GetThetaDotDeg(RIGHT_ARM,i);
+      msg.effort[i] =  bot->GetTorque_mNm(RIGHT_ARM,i);
+  }
+
+  pub->publish(msg);
+  
+}
+
+
+
+
+} // namespace
    

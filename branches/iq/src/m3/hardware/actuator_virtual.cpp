@@ -72,6 +72,8 @@ void M3ActuatorVirtual::StepStatus()
 	status.set_torquedot(torquedot_df.Step(GetTorque()));
 	status.set_flags(ACTUATOR_EC_FLAG_QEI_CALIBRATED);
 
+	//M3_DEBUG("%s, %d, f, %f \n", GetName().c_str(), (int)command.ctrl_mode(), command.);
+	
 	if (joint != NULL)
 	{
 		M3Transmission * t=joint->GetTransmission();

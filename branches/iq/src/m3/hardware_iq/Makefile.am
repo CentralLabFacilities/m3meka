@@ -63,7 +63,7 @@ proto_install:
 	cp *.proto $(includedir)/m3/chains
 	
 lib_LTLIBRARIES = libm3hardware_iq.la 
-libm3hardware_iq_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3toolbox -lyaml-cpp -lXmlRpc -lros -lroslib -llxrt
+libm3hardware_iq_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3chains -lm3robots -lm3toolbox -lyaml-cpp -lXmlRpc -lros -lroslib -llxrt
 libm3hardware_iq_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/core/roscpp/lib \
 	-L$(ros_dir)/core/roslib/lib \
@@ -97,9 +97,14 @@ libm3hardware_iq_la_CPPFLAGS =   -I../hardware/ -I../toolbox/ -I../chains/ -I../
 	-I$(ros_dir)/../stacks/ros_comm/tools/rosconsole/include \
 	-I$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/src \
 	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include \
+	-I/opt/ros/cturtle/stacks/common_msgs/sensor_msgs/msg_gen/cpp/include \
+	-I/opt/ros/cturtle/ros/core/roslib/msg_gen/cpp/include \
 	-I$(rtai_inc) \
 	-D__RTAI__
 
+#	-I/opt/ros/electric/stacks/common_msgs/sensor_msgs/msg_gen/cpp/include \
+#	-I/opt/ros/electric/stacks/ros_comm/messages/std_msgs/msg_gen/cpp/include \
+#	-I/opt/ros/electric/stacks/ros_comm/messages/std_msgs/include 
 
 
 libm3hardware_iq_la_SOURCES = \

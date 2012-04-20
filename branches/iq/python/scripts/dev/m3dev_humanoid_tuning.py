@@ -96,7 +96,14 @@ class M3Proc:
 		#self.proxy.subscribe_status(self.bot)
 		#self.proxy.publish_command(self.bot)		
 		#self.proxy.make_operational_all()
-		self.bot.initialize(self.proxy)
+		
+		#self.bot.initialize(self.proxy)
+		
+		self.proxy.subscribe_status(self.bot)
+		self.bot.set_motor_power_on()
+		self.proxy.make_operational_all()
+		self.proxy.step()
+			
 		self.chain_names = self.bot.get_available_chains()
 		#Create gui
 		self.mode=[0]
