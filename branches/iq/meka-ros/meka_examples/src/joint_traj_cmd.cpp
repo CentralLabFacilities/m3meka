@@ -81,17 +81,28 @@ public:
     // To be reached 1 second after starting along the trajectory
     goal.trajectory.points[ind].time_from_start = ros::Duration(1.0);
 
+    double deg_2_rad = 3.14/180.0;
+    
     // Second trajectory point
     // Positions
     ind += 1;
     goal.trajectory.points[ind].positions.resize(7);
-    goal.trajectory.points[ind].positions[0] = 0.1;
-    goal.trajectory.points[ind].positions[1] = 0.1;
-    goal.trajectory.points[ind].positions[2] = 0.1;
-    goal.trajectory.points[ind].positions[3] = 0.1;
-    goal.trajectory.points[ind].positions[4] = 0.1;
-    goal.trajectory.points[ind].positions[5] = 0.1;
-    goal.trajectory.points[ind].positions[6] = 0.1;
+    goal.trajectory.points[ind].positions[0] = (30.0 * deg_2_rad);
+    //goal.trajectory.points[ind].positions[0] = 0.0;
+    //goal.trajectory.points[ind].positions[1] = 90.0 * deg_2_rad;
+    goal.trajectory.points[ind].positions[1] = (30.0 * deg_2_rad);
+    goal.trajectory.points[ind].positions[2] = (30.0 * deg_2_rad);
+    goal.trajectory.points[ind].positions[3] = (30.0 * deg_2_rad);
+    goal.trajectory.points[ind].positions[4] = (30.0 * deg_2_rad);
+    goal.trajectory.points[ind].positions[5] = (30.0 * deg_2_rad);
+    goal.trajectory.points[ind].positions[6] = (30.0 * deg_2_rad);
+    
+    /*goal.trajectory.points[ind].positions[1] = 90.0 * deg_2_rad;
+    goal.trajectory.points[ind].positions[2] = 45.0 * deg_2_rad;
+    goal.trajectory.points[ind].positions[3] = 90.0 * deg_2_rad;
+    goal.trajectory.points[ind].positions[4] = 90.0 * deg_2_rad;
+    goal.trajectory.points[ind].positions[5] = 30.0 * deg_2_rad;
+    goal.trajectory.points[ind].positions[6] = 30.0 * deg_2_rad;*/
     // Velocities
     goal.trajectory.points[ind].velocities.resize(7);
     for (size_t j = 0; j < 7; ++j)
@@ -99,7 +110,7 @@ public:
       goal.trajectory.points[ind].velocities[j] = 0.0;
     }
     // To be reached 2 seconds after starting along the trajectory
-    goal.trajectory.points[ind].time_from_start = ros::Duration(4.0);
+    goal.trajectory.points[ind].time_from_start = ros::Duration(10.0);
 
     //we are done; return the goal
     return goal;
