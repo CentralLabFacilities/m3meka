@@ -2,9 +2,11 @@ m3joint_ma10_j0_position_controller:
   type: robot_mechanism_controllers/JointPositionController
   joint: m3joint_ma10_j0
   pid: &m3joint_ma10_j0_position_gains
+#    p: 300.0
     p: 240.0
     d: 1.0
-    i: 80.0
+#    i: 80.0
+    i: 0.0
     i_clamp: 0.4
 m3joint_ma10_j1_position_controller:
   type: robot_mechanism_controllers/JointPositionController
@@ -12,7 +14,8 @@ m3joint_ma10_j1_position_controller:
   pid: &m3joint_ma10_j1_position_gains
     p: 120.0
     d: 1.0
-    i: 70.0
+#    i: 70.0
+    i: 0.0
     i_clamp: 0.4
 m3joint_ma10_j2_position_controller:
   type: robot_mechanism_controllers/JointPositionController
@@ -20,7 +23,8 @@ m3joint_ma10_j2_position_controller:
   pid: &m3joint_ma10_j2_position_gains
     p: 100.0
     d: 0.6
-    i: 60.0
+#    i: 60.0
+    i: 0.0
     i_clamp: 0.4
 m3joint_ma10_j3_position_controller:
   type: robot_mechanism_controllers/JointPositionController
@@ -28,7 +32,8 @@ m3joint_ma10_j3_position_controller:
   pid: &m3joint_ma10_j3_position_gains
     p: 70.0
     d: 0.4
-    i: 45.0
+#    i: 45.0
+    i: 0.0
     i_clamp: 0.4
 m3joint_ma10_j4_position_controller:
   type: robot_mechanism_controllers/JointPositionController
@@ -36,7 +41,8 @@ m3joint_ma10_j4_position_controller:
   pid: &m3joint_ma10_j4_position_gains
     p: 30.0
     d: 0.6
-    i: 30.0
+#    i: 30.0
+    i: 0.0
     i_clamp: 0.2
 m3joint_ma10_j5_position_controller:
   type: robot_mechanism_controllers/JointPositionController
@@ -44,7 +50,8 @@ m3joint_ma10_j5_position_controller:
   pid: &m3joint_ma10_j5_position_gains
     p: 30.0
     d: 0.4
-    i: 30.0
+    i: 0.0
+#    i: 30.0
     i_clamp: 0.2
 m3joint_ma10_j6_position_controller:
   type: robot_mechanism_controllers/JointPositionController
@@ -52,5 +59,6 @@ m3joint_ma10_j6_position_controller:
   pid: &m3joint_ma10_j6_position_gains
     p: 30.0
     d: 0.4
-    i: 30.0
+#    i: 30.0
+    i: 0.0
     i_clamp: 0.2

@@ -60,13 +60,13 @@
 		  <material name="GreyC" />
 		  <origin xyz="0 0 0" rpy="0 0 0" />
 		  <geometry name="upper_geom">
-			  <mesh filename="package://${MESH}/T2R3/T2R3_TJ3_chest_waist_neck.dae" />
+			  <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest.dae" />
 		  </geometry>
 	  </visual>
 	  <collision>
 		  <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 		  <geometry name="upper_collision_geom">
-			  <mesh filename="package://${MESH_COLL}/T2R3/T2R3_TJ3_chest_waist_neck.stl" />
+			  <mesh filename="package://${MESH_COLL}/A2R3/A2R3_T4_Chest.stl" />
 		  </geometry>
 	  </collision>
   </link>
