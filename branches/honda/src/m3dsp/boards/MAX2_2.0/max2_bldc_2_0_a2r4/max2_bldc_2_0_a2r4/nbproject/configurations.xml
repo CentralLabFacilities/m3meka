@@ -7,7 +7,6 @@
       <itemPath>../../src/adc.h</itemPath>
       <itemPath>../../src/bldc.h</itemPath>
       <itemPath>../../src/control.h</itemPath>
-      <itemPath>../../src/current.h</itemPath>
       <itemPath>../../src/dio.h</itemPath>
       <itemPath>../../src/encoder_vertx.h</itemPath>
       <itemPath>../../src/ethercat.h</itemPath>
@@ -22,8 +21,8 @@
       <itemPath>../../src/timer1.h</itemPath>
       <itemPath>../../src/timer3.h</itemPath>
       <itemPath>../../src/warning.h</itemPath>
-      <itemPath>../../src/current2.h</itemPath>
       <itemPath>../../src/temperature_model.h</itemPath>
+      <itemPath>../../src/current.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -43,8 +42,6 @@
                    projectFiles="true">
       <itemPath>../../src/adc.c</itemPath>
       <itemPath>../../src/bldc.c</itemPath>
-      <itemPath>../../src/control.c</itemPath>
-      <itemPath>../../src/current.c</itemPath>
       <itemPath>../../src/dio.c</itemPath>
       <itemPath>../../src/encoder_vertx.c</itemPath>
       <itemPath>../../src/ethercat.c</itemPath>
@@ -56,9 +53,10 @@
       <itemPath>../../src/setup.c</itemPath>
       <itemPath>../../src/timer1.c</itemPath>
       <itemPath>../../src/timer3.c</itemPath>
-      <itemPath>../../src/current2.c</itemPath>
       <itemPath>../../src/state_machine.c</itemPath>
       <itemPath>../../../../../m3/hardware/m3ec_pdo_v4_def.h</itemPath>
+      <itemPath>../../src/control.c</itemPath>
+      <itemPath>../../src/current.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

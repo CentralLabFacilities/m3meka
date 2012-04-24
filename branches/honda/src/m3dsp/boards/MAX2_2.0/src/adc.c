@@ -173,6 +173,7 @@ void setup_adc(void)
         AD1CHS123bits.CH123NA = 0;              // ch1-3 negative input is vrefl
         AD1CHS123bits.CH123SA = 0;              // ch1 -> an0, ch2 -> an1, ch3 -> an2
 
+// note, double sampling here probably just gets overwritten, could sample another channel instead
         AD1CHS0bits.CH0NB = 0;                  // ch0 negative input is vrefl
         AD1CHS0bits.CH0SB = 0;                  // ch0 -> an0
         AD1CHS0bits.CH0NA = 0;                  // ch0 negative input is vrefl

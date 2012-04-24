@@ -37,7 +37,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "p33Fxxxx.h"
 #include "inttypes.h"
 #include <string.h>
-#include "../../../../m3/hardware/m3ec_pdo_v3_def.h"
+#include "../../../../m3/hardware/m3ec_pdo_v4_def.h"
 #include "../../../../m3/hardware/m3ec_pdo_v1_def.h"
 #include "dio.h"
 #include "ethercat.h"
@@ -48,6 +48,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "current.h"
 #include "timer3.h"
 #include "bldc.h"
+#include "state_machine.h"
 
 //Status flags
 

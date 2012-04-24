@@ -9,6 +9,8 @@
 	#warning "Project: BMW_0_5_A2R4"
 #elif BMW_0_6_A2R4
 	#warning "Project: BMW_0_6_A2R4"
+#elif BMW_1_0_A2R4
+        #warning "Project: BWM_1_0_A2R4"
 #else
 	#warning "How do you expect it to work if you don't specify what robot?"
 #endif
