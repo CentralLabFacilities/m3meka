@@ -281,8 +281,8 @@ float64[] effort*/
   
   for (int i = 0; i < ndof; i++)
   {
-      msg.position[i] = bot->GetThetaDeg(RIGHT_ARM,i);
-      msg.velocity[i] = bot->GetThetaDotDeg(RIGHT_ARM,i);
+      msg.position[i] = bot->GetThetaDeg(RIGHT_ARM,i) * (3.14/180.0);
+      msg.velocity[i] = bot->GetThetaDotDeg(RIGHT_ARM,i) * (3.14/180.0);
       msg.effort[i] =  bot->GetTorque_mNm(RIGHT_ARM,i);
   }
 

@@ -78,29 +78,33 @@ void StepHumanoidShm(int cntr)
       
       for (int i = 0; i < 7; i++)
       {
-	cmd.right_arm.ctrl_mode[i] = JOINT_ARRAY_MODE_TORQUE;
-	cmd.right_arm.q_desired[i] = 50.0;
+	//cmd.right_arm.ctrl_mode[i] = JOINT_ARRAY_MODE_TORQUE;
+	cmd.right_arm.ctrl_mode[i] = JOINT_ARRAY_MODE_THETA;
+	cmd.right_arm.q_desired[i] = 30.0;
 	cmd.right_arm.tq_desired[i] = 40.0;
 	cmd.right_arm.slew_rate_q_desired[i] = 20.0;
 	cmd.right_arm.q_stiffness[i] = 1.0;	
       }
       
 
-      if (cntr % 100 == 0)
+      if (cntr % RT_TASK_FREQUENCY_BOT_SHM == 0)
       {
-    
-	printf("Fx: %f\n", status.right_loadx6.wrench[0]);
+	printf("------------------------------\n");
+	printf("timestamp: %ld\n",GetTimestamp() );
+	 
+	/*printf("Fx: %f\n", status.right_loadx6.wrench[0]);
 	printf("Fy: %f\n", status.right_loadx6.wrench[1]);
 	printf("Fz: %f\n", status.right_loadx6.wrench[2]);
 	printf("Tx: %f\n", status.right_loadx6.wrench[3]);
 	printf("Ty: %f\n", status.right_loadx6.wrench[4]);
-	printf("Tz: %f\n", status.right_loadx6.wrench[5]);
+	printf("Tz: %f\n", status.right_loadx6.wrench[5]);*/
 	  
 	for (int i = 0; i < 7; i++)
 	{
-	    printf("jnt_tq: %i, %f\n", i, status.right_arm.torque[i]);
-	    printf("jnt_ang: %i, %f\n", i, status.right_arm.theta[i]);
-	    printf("jnt_vel: %i, %f\n", i, status.right_arm.thetadot[i]);	    
+	    //printf("jnt_tq: %i, %f\n", i, status.right_arm.torque[i]);
+	    printf("joint_angle_read: %i, %f\n", i, status.right_arm.theta[i]);
+	    printf("joint_angle_command: %i, %f\n", i, cmd.right_arm.q_desired[i]);	    
+	    //printf("jnt_vel: %i, %f\n", i, status.right_arm.thetadot[i]);	    
 	}
 	
 	
@@ -157,6 +161,8 @@ static void* rt_system_thread(void * arg)
 	long long step_cnt = 0;
 	sys_thread_active=1;
 	
+	
+	
 	while(!sys_thread_end)
 	{
 		start_time = nano2count(rt_get_cpu_time_ns());
@@ -204,7 +210,7 @@ int main (void)
 	signal(SIGINT, endme);
 
 	if (sys = (M3Sds*)rt_shm_alloc(nam2num(BOT_SHM),sizeof(M3Sds),USE_VMALLOC))
-		printf("Found shared memory starting torque_shm.");
+		printf("Found shared memory starting m3humandoid_shm_test.\n");
 	else
 	{
 		printf("Rtai_malloc failure for %s\n",BOT_SHM);
