@@ -27,10 +27,13 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_SHIFT_SMOOTH 5 		//2^ADC_SHIFT_SMOOTH
 #define ADC_NUM_SMOOTH_FAST	16 	//Must be even				//ToDo Original BMW = 2
 #define ADC_SHIFT_SMOOTH_FAST 4 //2^ADC_SHIFT_SMOOTH_FAST	//ToDo Original BMW = 1
-#define ADC_NUM_CH 3 
-#define ADC_CURRENT 1
+#define ADC_NUM_CH 4
+//#define ADC_CURRENT 1
+
+#define ADC_CURRENT_A 0
+#define ADC_TEMP_BOARD 1
 #define ADC_TEMP_AMB 2
-#define ADC_TEMP_BOARD 0
+#define ADC_CURRENT_B 3
 
 void setup_adc(void);
 unsigned int get_avg_adc(int idx);

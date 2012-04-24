@@ -31,6 +31,10 @@ POSSIBILITY OF SUCH DAMAGE.
 int adc_idx;
 int adc_idx_fast;
 
+static int16_t an_idx;
+static int16_t an[ADC_NUM_CH];
+
+
 unsigned int adc_raw[ADC_NUM_CH];
 unsigned int volatile adc_buffer[ADC_NUM_CH][ADC_NUM_SMOOTH];
 unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
@@ -63,6 +67,16 @@ void setup_adc(void)
 	adc_idx=0;
 	adc_idx_fast=0;
 
+        
+        an[ADC_CURRENT_A] = 1;
+        an[ADC_TEMP_BOARD] = 0;
+	
+        an[ADC_TEMP_AMB] = 6;        
+        an[ADC_CURRENT_B] = 8;
+        
+	an_idx = 0;
+
+
 	//Setup for current sensing
 	// System clock divider TAD=(ADCS+1)*TCY==50ns (As fast as works...)
 	// Auto Sample Time = 5*Tad, 4 conversions, (14+5)*4*TAD=68*50ns=3.8us
@@ -79,15 +93,18 @@ void setup_adc(void)
 	AD1CON1bits.AD12B = 1;			// 12-bit ADC operation
 	AD1CON2bits.BUFM = 1;			// Use 2x8-word buffer for conversion sequences
 	AD1CON1bits.SIMSAM = 0;			// No simultaneous sample for 1CH
-	AD1CON2bits.CSCNA = 1;			// Enable channel scanning
-	AD1CON2bits.SMPI = 2;			// Select 3 conversions between interrupts 
-	AD1CSSLbits.CSS0 = 1;
-	AD1CSSLbits.CSS1 = 1;				
-	AD1CSSLbits.CSS6 = 1;
+	AD1CON2bits.CSCNA = 0;			// Enable channel scanning
+	//AD1CON2bits.SMPI = 3;			// Select 4 conversions between interrupts
+        AD1CON2bits.SMPI = 0;			// Select 4 conversions between interrupts
+	//AD1CSSLbits.CSS0 = 1;
+	AD1CSSLbits.CSS1 = 1;
+	/*AD1CSSLbits.CSS6 = 1;
+        AD1CSSLbits.CSS8 = 1;*/
 	AD1PCFGL = 0xFFFF; 				// All digital by default
 	AD1PCFGLbits.PCFG0 = 0;
 	AD1PCFGLbits.PCFG1 = 0;
 	AD1PCFGLbits.PCFG6 = 0;
+        AD1PCFGLbits.PCFG8 = 0;
 	AD1CON1bits.FORM = 0;			// Select results format Integer Output Format (0B 0000 dddd dddd dddd )
 	
 	AD1CON1bits.ADON = 1;			// Turn on ADC
@@ -101,22 +118,37 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 	static unsigned int count = 0;
 	
 	_AD1IF = 0;		//Clear the flag
-	
-	adc_raw[0] = ADC1BUF0;
+
+         if(an_idx == ADC_TEMP_BOARD)
+         {
+            adc_raw[ADC_TEMP_BOARD]=ADC1BUF0;
+            adc_buffer[ADC_TEMP_BOARD][adc_idx] = adc_raw[ADC_TEMP_BOARD];
+         } else if (an_idx == ADC_TEMP_AMB) {
+            adc_raw[ADC_TEMP_AMB]=ADC1BUF0;
+            adc_buffer[ADC_TEMP_AMB][adc_idx] = adc_raw[ADC_TEMP_AMB];
+         } else if (an_idx == ADC_CURRENT_A) {
+            adc_raw[ADC_CURRENT_A]=ADC1BUF0;
+            adc_buffer[ADC_CURRENT_A][adc_idx] = adc_raw[ADC_CURRENT_A];
+         } else if (an_idx == ADC_CURRENT_B) {
+            adc_raw[ADC_CURRENT_B]=ADC1BUF0;
+            adc_buffer[ADC_CURRENT_B][adc_idx] = adc_raw[ADC_CURRENT_B];
+         }
+
+//	adc_raw[0] = ADC1BUF0;
 //	adc_raw[1] = ADC1BUF1;
 //	adc_raw[2] = ADC1BUF2;
 	
-	adc_buffer[ADC_TEMP_BOARD][adc_idx] = adc_raw[ADC_TEMP_BOARD];
-	adc_buffer[ADC_CURRENT][adc_idx] = adc_raw[ADC_CURRENT];
-	adc_buffer[ADC_TEMP_AMB][adc_idx] = adc_raw[ADC_TEMP_AMB];
-	adc_idx = INC_MOD(adc_idx,ADC_NUM_SMOOTH);
+	
+		
+
 	
 	//Timed actions - 2kHz
 	//Originaly in timer3 ISR
 	//======================
 	
 	count = INC_MOD(count,5);		
-	if(count == 0)
+	//if(count == 0)
+        if(0)
 	{
 		//Latch encoder timestamp on Rising edge.
 		#ifdef USE_TIMESTAMP_DC			//Takes 0.05us to execute
@@ -156,6 +188,45 @@ void __attribute__((__interrupt__, no_auto_psv)) _ADC1Interrupt(void)
 		
 		//Sum = 125us, 25% of this time slice
 	}
+
+        /////////////////////////////
+        // ADC MANAGEMENT:
+	an_idx++;
+        if (an_idx >= ADC_NUM_CH)
+        {
+            an_idx = 0;
+            adc_idx = INC_MOD(adc_idx,ADC_NUM_SMOOTH);
+        }
+
+        if (an_idx == ADC_TEMP_BOARD)
+        {
+            AD1CSSLbits.CSS0 = 1;
+            AD1CSSLbits.CSS1 = 0;
+            AD1CSSLbits.CSS6 = 0;
+            AD1CSSLbits.CSS8 = 0;
+        } else if (an_idx == ADC_CURRENT_A) {
+            AD1CSSLbits.CSS0 = 0;
+            AD1CSSLbits.CSS1 = 1;
+            AD1CSSLbits.CSS6 = 0;
+            AD1CSSLbits.CSS8 = 0;
+        } else if (an_idx == ADC_TEMP_AMB) {
+            AD1CSSLbits.CSS0 = 0;
+            AD1CSSLbits.CSS1 = 0;
+            AD1CSSLbits.CSS6 = 1;
+            AD1CSSLbits.CSS8 = 0;
+        } else if (an_idx == ADC_CURRENT_B) {
+            AD1CSSLbits.CSS0 = 0;
+            AD1CSSLbits.CSS1 = 0;
+            AD1CSSLbits.CSS6 = 0;
+            AD1CSSLbits.CSS8 = 1;
+        }
+
+	AD1CON1bits.ADON	= 0;							// turn off the adc
+	AD1CHS0bits.CH0SA	= an[an_idx];					// select the analog input      
+	AD1CON1bits.SSRC	= 0b011;						// set to trigger the sample from the pwm hardware
+	AD1CON1bits.ADON	= 1;	// turn on the adc module
+
+        ToggleHeartbeatLED();
 }
 
 #endif

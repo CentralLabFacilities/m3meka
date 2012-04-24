@@ -385,7 +385,7 @@ void M3ActPdoV2StatusPrettyPrint(M3ActPdoV2Status * d, int sn, int ch)
 
 ////////////////////////////////////////////////////////////////////////////////////
 void M3ActPdoCmdPrettyPrint(M3ActPdoV1Cmd * d, int sn, int ch)
-{
+{	 
 	printf("id %d-%d: k_p: %d\n",sn,ch,(int) d->k_p);
 	printf("id %d-%d: k_i: %d\n",sn,ch,(int) d->k_i);
 	printf("id %d-%d: k_d: %d\n",sn,ch,(int) d->k_d);
@@ -403,7 +403,7 @@ void M3ActPdoCmdPrettyPrint(M3ActPdoV1Cmd * d, int sn, int ch)
 	printf("id %d-%d: qei_min: %d\n",sn,ch,(int) d->qei_min);
 	printf("id %d-%d: qei_max: %d\n",sn,ch,(int) d->qei_max);
 	printf("id %d-%d: mode: %d\n",sn,ch,(int) d->mode);
-	printf("id %d-%d: config: %d\n",sn,ch,(int) d->config);
+	printf("id %d-%d: config: %d\n",sn,ch,(int) d->config);		
 }
 
 void M3ActPdoV2CmdPrettyPrint(M3ActPdoV2Cmd * d, int sn, int ch)
@@ -581,6 +581,8 @@ void M3PwrPdoV1StatusPrettyPrint(M3PwrPdoV1Status * d, int sn)
 ////////////////////////////////////////////////////////////////////////////////////
 void M3PwrPdoV2CmdPrettyPrint(M3PwrPdoV2Cmd * d, int sn)
 {
+	d->enable_motor = 1;
+  
 	printf("----- Command -----\n",0);
 	printf("sn %d: config: %d\n",sn,(int) d->config);
 	printf("sn %d: enable_motor: %d\n",sn,(int) d->enable_motor);
