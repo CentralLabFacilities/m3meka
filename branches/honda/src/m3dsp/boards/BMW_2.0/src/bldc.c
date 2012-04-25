@@ -166,13 +166,13 @@ void set_bldc_commutation()
 
     bldc_mode = COMMUTATION;
 
-    CNPU1bits.CN1PUE=1; //Enable weak pull-up on CN1
-    CNPU2bits.CN21PUE=1; //Enable weak pull-up on CN21
-    CNPU2bits.CN22PUE=1; //Enable weak pull-up on CN22
+    CNPU1bits.CN4PUE=1; //Enable weak pull-up on CN1
+    CNPU1bits.CN5PUE=1; //Enable weak pull-up on CN21
+    CNPU1bits.CN6PUE=1; //Enable weak pull-up on CN22
 
-    CNEN1bits.CN1IE =1;		//Enable change-notification interrupt CN1: Hall1
-    CNEN2bits.CN21IE =1;	//Enable change-notification interrupt CN21: Hall2
-    CNEN2bits.CN22IE =1;	//Enable change-notification interrupt CN22: Hall3
+    CNEN1bits.CN4IE =1;	//Enable change-notification interrupt CN1: Hall1
+    CNEN1bits.CN5IE =1;	//Enable change-notification interrupt CN21: Hall2
+    CNEN1bits.CN6IE =1;	//Enable change-notification interrupt CN22: Hall3
 
     set_bldc_dir(0);
     commutate();

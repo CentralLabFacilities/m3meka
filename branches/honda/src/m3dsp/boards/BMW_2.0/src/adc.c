@@ -33,7 +33,8 @@ int adc_idx_fast;
 
 unsigned int adc_raw[ADC_NUM_CH];
 int adc_meas[ADC_NUM_CH];
-unsigned int adc_zero[ADC_NUM_CH] = {524<<ADC_Q_FORM,524<<ADC_Q_FORM,0,0};
+unsigned int adc_zero[ADC_NUM_CH] = {524<<ADC_Q_FORM,524<<ADC_Q_FORM,0,0,
+                                     0,0,0,0,524<<ADC_Q_FORM};
 
 //unsigned int volatile adc_buffer[ADC_NUM_CH];
 //unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
@@ -68,8 +69,8 @@ unsigned int wd_cnt = 0, last_status = 0, watchdog_expired;	//Watchdog
 //dma_adc_buf BufferA  __attribute__( (space(dma),aligned(64)) );
 //dma_adc_buf BufferB  __attribute__( (space(dma),aligned(64)) );
 
-unsigned int BufferA[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(8)) );
-unsigned int BufferB[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(8)) );
+unsigned int BufferA[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(16)) );
+unsigned int BufferB[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(16)) );
 
 //dma_adc_buf BufferB __attribute__( (space(dma),aligned(64)) );
 
@@ -149,7 +150,7 @@ void setup_adc(void)
 
 	AD1CON1bits.ADON = 0;			//Turn off ADC
 
-        AD1CON1bits.ADDMABM = 0;                // DMA in order of conversion
+        AD1CON1bits.ADDMABM = 0;                // DMA in scatter/gather
         AD1CON1bits.AD12B = 0;			// 10-bit ADC operation
         AD1CON1bits.FORM = 0;			// Select results format Integer Output Format (0B 0000 dddd dddd dddd )
         AD1CON1bits.SSRC = 0b011;		// Manual StartOfConversion 0b000 //PWM: 0b011;
@@ -159,14 +160,15 @@ void setup_adc(void)
 	AD1CON2bits.VCFG = 0;                   // Vref AVdd/AVss
 	AD1CON2bits.CSCNA = 0;			// Disable channel scanning
         AD1CON2bits.CHPS = 2;			// Convert ch0-3
-	AD1CON2bits.SMPI = 0;			// Select 4 conversions between interrupts
-        AD1CON2bits.BUFM = 0;			// Use 2x8-word buffer for conversion sequences
+	AD1CON2bits.SMPI = 0;			// Select 1 conversions between interrupts
+        AD1CON2bits.BUFM = 0;			// Use 1x9 buffer for conversion sequences
+        AD1CON2bits.ALTS = 0;
 
         AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
 	AD1CON3bits.SAMC = 5;
 	AD1CON3bits.ADCS = 1;
 
-        AD1CON4bits.DMABL	= 0;		// Allocates 8 words of buffer to each analog input
+        AD1CON4bits.DMABL	= 0;		// Allocates 1 word of buffer to each analog input
 
         AD1CHS123bits.CH123NB = 0;              // ch1-3 negative input is vrefl
         AD1CHS123bits.CH123SB = 0;              // ch1 -> an0, ch2 -> an1, ch3 -> an2
@@ -175,17 +177,19 @@ void setup_adc(void)
 
 
         AD1CHS0bits.CH0NB = 0;                  // ch0 negative input is vrefl
-        AD1CHS0bits.CH0SB = 7;                  // ch0 -> an7
+        AD1CHS0bits.CH0SB = 6;                  // ch0 -> an6
         AD1CHS0bits.CH0NA = 0;                  // ch0 negative input is vrefl
-        AD1CHS0bits.CH0SA = 8;                  // ch0 -> an8
+        AD1CHS0bits.CH0SA = ADC_CURRENT_B;                  // ch0 -> an8
 
         ADPCFG = 0xFFFF;
         AD1PCFGLbits.PCFG0 = 0;
 	AD1PCFGLbits.PCFG1 = 0;
-	AD1PCFGLbits.PCFG2 = 0;
-        AD1PCFGLbits.PCFG3 = 0;
+	AD1PCFGLbits.PCFG6 = 0;
+        AD1PCFGLbits.PCFG8 = 0;
 
 
+        setup_dma1();
+        
 	AD1CON1bits.ADON = 1;			// Turn on ADC
 	_AD1IF = 0;						// Enable interrupt
 	_AD1IE = 0;
@@ -244,7 +248,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
     dma_buf_ptr = current_dma_buf();
 
     
-    for(i=0;i<ADC_NUM_CH-1;i++) {
+    for(i=0;i<ADC_NUM_CH;i++) {
         adc_raw[i] = dma_buf_ptr[i];
         tmp = adc_raw[i] - (adc_zero[i]>>ADC_Q_FORM);
         adc_filter((int *)&adc_meas[i], tmp, 0x8 );
@@ -286,7 +290,7 @@ void set_adc_zeros()
 {
     int i;
 
-    for(i=0;i<ADC_NUM_CH-1;i++) {
+    for(i=0;i<ADC_NUM_CH;i++) {
         adc_filter((int *)&adc_zero[i], adc_raw[i], 1);
     }
 }

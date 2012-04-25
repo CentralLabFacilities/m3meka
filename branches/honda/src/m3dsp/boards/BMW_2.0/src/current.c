@@ -10,7 +10,7 @@ static int i_a, i_b;
 #define MEAS_B &i_b
 static const int * current_sensor[8] = {MEAS_A, MEAS_A, MEAS_B, MEAS_B,
                                          MEAS_B, MEAS_A, MEAS_A, MEAS_A};
-static const int current_signs[8] = {0,-1,-1,-1,1,-1,1,0};
+static const int current_signs[8] = {0,1,1,1,-1,1,-1,0};
 
 
 int current_control()

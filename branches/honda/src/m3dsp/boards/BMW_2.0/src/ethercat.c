@@ -112,8 +112,12 @@ void isr_update_input_pdo(void)
 	#else
 	ec_stat.status[0].flags=ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.
 	#endif
+
+        ec_stat.status[0].current_ma = get_current_ma();
+
 	
-	ec_stat.status[0].debug=ec_debug[0];
+	//ec_stat.status[0].debug=ec_debug[0];
+        ec_stat.status[0].debug = get_hall_state();
 }
 
 /////////////////////////////////////////////////////////////
