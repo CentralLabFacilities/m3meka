@@ -70,6 +70,6 @@ int adc2ma(int adc)
 
 int ma2adc(int ma)
 {
-    return (__builtin_mulsu(ma,CURRENT_ADC_MULT)>>CURRENT_MA_SHIFT);
+    return (__builtin_mulsu(ma,CURRENT_ADC_MULT)>>CURRENT_ADC_SHIFT);
 }
 

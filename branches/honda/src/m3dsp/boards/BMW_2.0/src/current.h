@@ -1,18 +1,16 @@
 #ifndef CURRENT2_H
 #define CURRENT2_H
 
-// for Q6 format, multiplier is .4578 mA/tick
-// 32768*.4578 = 15001
-//#define CURRENT_MA_MULT     15001
-//#define CURRENT_MA_SHIFT    15
 
-// for Q5 format, multiplier is .9155 mA/tick
-// .9155 = 3.3/1024 * 1000/.11 * 1/2^5
-// 32768*.9155 =
-#define CURRENT_MA_MULT     30000
-#define CURRENT_MA_SHIFT    15
-// other direction
-#define CURRENT_ADC_MULT    35791
+// sensitivity = 185 mV/A
+// for Q5 format, multiplier is .5444 mA/tick
+// .5444 = 3.3/1024 * 1000/.185 * 1/2^5
+// 2^16*.5444 =
+#define CURRENT_MA_MULT     35676
+#define CURRENT_MA_SHIFT    16
+// other direction 2^15*1/.5444
+#define CURRENT_ADC_MULT    60191
+#define CURRENT_ADC_SHIFT   15
 
 
 int current_control();

@@ -33,8 +33,8 @@ int adc_idx_fast;
 
 unsigned int adc_raw[ADC_NUM_CH];
 int adc_meas[ADC_NUM_CH];
-unsigned int adc_zero[ADC_NUM_CH] = {524<<ADC_Q_FORM,524<<ADC_Q_FORM,0,0,
-                                     0,0,0,0,524<<ADC_Q_FORM};
+unsigned int adc_zero[ADC_NUM_CH] = {TEMP_SENSOR_ZERO,524<<ADC_Q_FORM,0,0,
+                                     0,0,TEMP_SENSOR_ZERO,0,524<<ADC_Q_FORM};
 
 //unsigned int volatile adc_buffer[ADC_NUM_CH];
 //unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
@@ -69,8 +69,9 @@ unsigned int wd_cnt = 0, last_status = 0, watchdog_expired;	//Watchdog
 //dma_adc_buf BufferA  __attribute__( (space(dma),aligned(64)) );
 //dma_adc_buf BufferB  __attribute__( (space(dma),aligned(64)) );
 
-unsigned int BufferA[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(16)) );
-unsigned int BufferB[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(16)) );
+unsigned int BufferA[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(32)) );
+unsigned int BufferB[DMA_BUF_DEPTH] __attribute__( (space(dma),aligned(32)) );
+
 
 //dma_adc_buf BufferB __attribute__( (space(dma),aligned(64)) );
 
@@ -134,6 +135,11 @@ unsigned int get_avg_adc_torque()
     return 0;
 }
 
+int get_temperature_cC(int ch)
+{
+    return (__builtin_mulsu(adc_meas[ch],TEMP_ADC_CC_MULT)>>TEMP_ADC_CC_SHIFT);
+}
+
 void setup_adc(void) 
 {
 //	adc_idx=0;
@@ -160,15 +166,15 @@ void setup_adc(void)
 	AD1CON2bits.VCFG = 0;                   // Vref AVdd/AVss
 	AD1CON2bits.CSCNA = 0;			// Disable channel scanning
         AD1CON2bits.CHPS = 2;			// Convert ch0-3
-	AD1CON2bits.SMPI = 0;			// Select 1 conversions between interrupts
+	AD1CON2bits.SMPI = ADC_NUM_SAMPLES-1;			// Select ADC_NUM_SAMPLES conversions between interrupts
         AD1CON2bits.BUFM = 0;			// Use 1x9 buffer for conversion sequences
-        AD1CON2bits.ALTS = 0;
+        AD1CON2bits.ALTS = 1;
 
         AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
 	AD1CON3bits.SAMC = 5;
 	AD1CON3bits.ADCS = 1;
 
-        AD1CON4bits.DMABL	= 0;		// Allocates 1 word of buffer to each analog input
+        AD1CON4bits.DMABL	= 0;//ADC_NUM_SAMPLES-1;		// Allocates ADC_NUM_SAMPLES words of buffer to each analog input
 
         AD1CHS123bits.CH123NB = 0;              // ch1-3 negative input is vrefl
         AD1CHS123bits.CH123SB = 0;              // ch1 -> an0, ch2 -> an1, ch3 -> an2
@@ -177,7 +183,7 @@ void setup_adc(void)
 
 
         AD1CHS0bits.CH0NB = 0;                  // ch0 negative input is vrefl
-        AD1CHS0bits.CH0SB = 6;                  // ch0 -> an6
+        AD1CHS0bits.CH0SB = ADC_TEMP_AMB;                  // ch0 -> an6
         AD1CHS0bits.CH0NA = 0;                  // ch0 negative input is vrefl
         AD1CHS0bits.CH0SA = ADC_CURRENT_B;                  // ch0 -> an8
 
@@ -249,7 +255,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
 
     
     for(i=0;i<ADC_NUM_CH;i++) {
-        adc_raw[i] = dma_buf_ptr[i];
+        adc_raw[i] = dma_buf_ptr[i];//*ADC_NUM_SAMPLES];
         tmp = adc_raw[i] - (adc_zero[i]>>ADC_Q_FORM);
         adc_filter((int *)&adc_meas[i], tmp, 0x8 );
 
@@ -288,11 +294,13 @@ void adc_filter(int *y, int x, int alpha)
 
 void set_adc_zeros()
 {
-    int i;
+//    int i;
 
-    for(i=0;i<ADC_NUM_CH;i++) {
-        adc_filter((int *)&adc_zero[i], adc_raw[i], 1);
-    }
+//    for(i=0;i<ADC_NUM_CH;i++) {
+//        adc_filter((int *)&adc_zero[i], adc_raw[i], 1);
+//    }
+    adc_filter((int *)&adc_zero[ADC_CURRENT_A], adc_raw[ADC_CURRENT_A], 1);
+    adc_filter((int *)&adc_zero[ADC_CURRENT_B], adc_raw[ADC_CURRENT_B], 1);
 }
 
 int get_adc_zero(int ch)

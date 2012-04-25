@@ -36,11 +36,28 @@ void set_bldc_commutation();
 
 extern unsigned int bldc_hall_val;
 
+#define BLDC_PIN_1  0
+#define BLDC_PIN_2  1
+#define BLDC_PIN_3  2
+
+#define BLDC_CN_PIN_1 4
+#define BLDC_CN_PIN_2 5
+#define BLDC_CN_PIN_3 6
+
+#define CAT2(a,b)  a ## b
+#define CAT(a,b) CAT2(a,b)
 
 // ec 32 flat ribbon cable
-#define BLDC_HALL_1 PORTBbits.RB0		//RB4	INPUT	PIN33	RP4/CN1 (HALL1)
-#define BLDC_HALL_2 PORTBbits.RB1		//RB9	INPUT	PIN1	RP9/CN21 (HALL2)
-#define BLDC_HALL_3 PORTBbits.RB2		//RB8	INPUT	PIN44	RP8/CN22 (HALL3)
+#define BLDC_HALL_1 CAT(PORTBbits.RB,BLDC_PIN_1)	//RB4	INPUT	PIN33	RP4/CN1 (HALL1)
+#define BLDC_HALL_2 CAT(PORTBbits.RB,BLDC_PIN_2)		//RB9	INPUT	PIN1	RP9/CN21 (HALL2)
+#define BLDC_HALL_3 CAT(PORTBbits.RB,BLDC_PIN_3)		//RB8	INPUT	PIN44	RP8/CN22 (HALL3)
+
+#define BLDC_PU_1 CAT(CAT(CNPU1bits.CN,BLDC_CN_PIN_1),PUE)  //Enable weak pull-up on CN1
+#define BLDC_PU_2 CAT(CAT(CNPU1bits.CN,BLDC_CN_PIN_2),PUE)
+#define BLDC_PU_3 CAT(CAT(CNPU1bits.CN,BLDC_CN_PIN_3),PUE)
+#define BLDC_CN_1 CAT(CAT(CNEN1bits.CN,BLDC_CN_PIN_1),IE)
+#define BLDC_CN_2 CAT(CAT(CNEN1bits.CN,BLDC_CN_PIN_2),IE)
+#define BLDC_CN_3 CAT(CAT(CNEN1bits.CN,BLDC_CN_PIN_3),IE)
 
 #define BLDC_HALL_STATE (BLDC_HALL_3<<2)|(BLDC_HALL_2<<1)|BLDC_HALL_1
 #endif

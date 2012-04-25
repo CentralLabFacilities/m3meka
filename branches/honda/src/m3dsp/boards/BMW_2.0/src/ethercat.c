@@ -96,9 +96,9 @@ void isr_update_input_pdo(void)
 	#endif
 	
 	#ifdef USE_ADC
-        ec_stat.status[0].adc_amp_temp = get_avg_adc(ADC_TEMP_BOARD);
+        ec_stat.status[0].adc_amp_temp = get_temperature_cC(ADC_TEMP_BOARD);
         ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT_A);
-	ec_stat.status[0].adc_ext_temp = get_avg_adc(ADC_TEMP_AMB);
+	ec_stat.status[0].adc_ext_temp = get_temperature_cC(ADC_TEMP_AMB);
 	ec_stat.status[0].adc_current_b = get_avg_adc(ADC_CURRENT_B);
 	#endif
 	

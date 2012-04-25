@@ -34,12 +34,21 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_NUM_CH 9
 #define ADC_CURRENT_A 1
 #define ADC_CURRENT_B 8
-#define ADC_TEMP_AMB 6          // TODO check these analog inputs
+#define ADC_TEMP_AMB 6          
 #define ADC_TEMP_BOARD 0
 //#define ADC_EXT 3			//SEAX2-1.2 is configured to take load-cell on the motor temp connector
-#define DMA_BUF_DEPTH 			ADC_NUM_CH //32//128		//
+#define ADC_NUM_SAMPLES 2
+#define DMA_BUF_DEPTH 			ADC_NUM_SAMPLES*ADC_NUM_CH //32//128		//
 //#define DMA_FILTER_SHIFT		5		//128 = 2^7 : 2^DMA_FILTER_SHIFT = DMA_BUF_DEPTH
 #define ADC_Q_FORM                  5       // Q5
+
+// temperature sensors are TC1047, 10mv/C, 500 mv = 0C
+// offset in Q5 = 2^5*500/3300*1024 = 4965
+#define TEMP_SENSOR_ZERO 4965
+// convert to cC
+// 1/10*3300/1024*1/32 = 1.0071
+#define TEMP_ADC_CC_MULT 33000
+#define TEMP_ADC_CC_SHIFT   15
 
 void setup_adc(void);
 void setup_dma1(void);
@@ -50,6 +59,7 @@ unsigned int * current_dma_buf();
 void adc_filter(int *y, int x, int alpha);
 void set_adc_zeros();
 int get_adc_zero(int ch);
+int get_temperature_cC(int ch);
 
 
 #endif

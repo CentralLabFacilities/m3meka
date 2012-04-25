@@ -132,6 +132,15 @@ void __attribute__((__interrupt__, no_auto_psv)) _CNInterrupt(void)
 void setup_bldc(void)
 {
     set_bldc_open();
+
+    BLDC_PU_1=1; //Enable weak pull-up on CN1
+    BLDC_PU_2=1;
+    BLDC_PU_3=1;
+
+    BLDC_CN_1=1;
+    BLDC_CN_2=1;
+    BLDC_CN_3=1;
+
 }
 
 int get_hall_state()
@@ -166,13 +175,14 @@ void set_bldc_commutation()
 
     bldc_mode = COMMUTATION;
 
-    CNPU1bits.CN4PUE=1; //Enable weak pull-up on CN1
-    CNPU1bits.CN5PUE=1; //Enable weak pull-up on CN21
-    CNPU1bits.CN6PUE=1; //Enable weak pull-up on CN22
+    BLDC_PU_1=1; //Enable weak pull-up on CN
+    BLDC_PU_2=1;
+    BLDC_PU_3=1;
 
-    CNEN1bits.CN4IE =1;	//Enable change-notification interrupt CN1: Hall1
-    CNEN1bits.CN5IE =1;	//Enable change-notification interrupt CN21: Hall2
-    CNEN1bits.CN6IE =1;	//Enable change-notification interrupt CN22: Hall3
+    BLDC_CN_1=1;
+    BLDC_CN_2=1;
+    BLDC_CN_3=1;
+
 
     set_bldc_dir(0);
     commutate();

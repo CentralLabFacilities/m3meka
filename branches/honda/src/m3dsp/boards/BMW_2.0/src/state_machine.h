@@ -16,5 +16,6 @@ enum dsp_state {
 
 void step_state();
 enum dsp_state get_dsp_state();
+int limit_check(int item, int compare, int* count, int count_max );
 
 #endif
