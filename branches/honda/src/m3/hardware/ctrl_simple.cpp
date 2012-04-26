@@ -35,6 +35,24 @@ using namespace ros;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //			M3 Stuffs
 
+void operator >> (const YAML::Node& node, M3ParamTrajectory* traj)
+{
+	mReal tmp;
+	node["freq"] >> tmp; 		traj->set_freq(tmp);
+	node["amp"] >> tmp;			traj->set_amp(tmp);
+	node["zero"] >> tmp;		traj->set_zero(tmp);
+}
+
+void operator >> (const YAML::Node& node, M3ParamPID* pid)
+{
+	mReal val;
+	node["k_p"] >> val;			pid->set_k_p(val);
+	node["k_i"] >> val;			pid->set_k_i(val);
+	node["k_d"] >> val;			pid->set_k_d(val);
+	node["k_i_limit"] >> val;	pid->set_k_i_limit(val);
+	node["k_i_range"] >> val;	pid->set_k_i_range(val);
+}
+
 
 bool M3CtrlSimple::ReadConfig(const char * filename)
 {
@@ -49,7 +67,13 @@ bool M3CtrlSimple::ReadConfig(const char * filename)
 	//Misc
 	doc["act_component"] >> act_name;
 
+	doc["param"]["traj_current"] >> ParamTrajCurrent();
+	doc["param"]["traj_theta"] >> ParamTrajTheta();
 	
+	doc["param"]["pid_theta"] >> ParamPidTheta();
+	doc["param"]["pid_joint_torque"] >> ParamPidTorque();
+	
+	/*
 	//Trajectoreis
 	doc["param"]["traj_theta"]["freq"] >> val;
 	ParamTrajTheta()->set_freq(val);
@@ -70,10 +94,10 @@ bool M3CtrlSimple::ReadConfig(const char * filename)
 	doc["param"]["traj_torque"]["amp"] >> val;
 	ParamTrajTorque()->set_amp(val);
 	doc["param"]["traj_torque"]["zero"] >> val;
-	ParamTrajTorque()->set_zero(val);
+	ParamTrajTorque()->set_zero(val); */
 	
 	//PID
-	doc["param"]["pid_theta"]["k_p"] >> val;
+	/*doc["param"]["pid_theta"]["k_p"] >> val;
 	ParamPidTheta()->set_k_p(val);
 	doc["param"]["pid_theta"]["k_i"] >> val;
 	ParamPidTheta()->set_k_i(val);
@@ -82,22 +106,9 @@ bool M3CtrlSimple::ReadConfig(const char * filename)
 	doc["param"]["pid_theta"]["k_i_limit"] >> val;
 	ParamPidTheta()->set_k_i_limit(val);
 	doc["param"]["pid_theta"]["k_i_range"] >> val;
-	ParamPidTheta()->set_k_i_range(val);
+	ParamPidTheta()->set_k_i_range(val);*/
 
 
-	doc["param"]["pid_torque"]["k_p"] >> val;
-	ParamPidTorque()->set_k_p(val);
-	doc["param"]["pid_torque"]["k_i"] >> val;
-	ParamPidTorque()->set_k_i(val);
-	doc["param"]["pid_torque"]["k_d"] >> val;
-	ParamPidTorque()->set_k_d(val);
-	doc["param"]["pid_torque"]["k_i_limit"] >> val;
-	ParamPidTorque()->set_k_i_limit(val);
-	doc["param"]["pid_torque"]["k_i_range"] >> val;
-	ParamPidTorque()->set_k_i_range(val);
-
-	
-	
 	return true;
 } // end ReadConfig
 

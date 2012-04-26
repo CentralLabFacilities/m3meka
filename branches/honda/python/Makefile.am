@@ -85,7 +85,9 @@ pkgpython_PYTHON = \
 	m3/toolbox_ctrl.py\
 	m3/toolbox_beh.py\
 	m3/toolbox.py\
-	m3/trajectory.py
+	m3/trajectory.py\
+	m3/ctrl_simple.py\
+	m3/ctrl_simple_pb2.py
 
 #	m3/tactile_pps22_ec_pb2.py
 #	m3/tactile_pps22_ec.py
@@ -136,7 +138,9 @@ dist_bin_SCRIPTS = \
 	scripts/tutorials/m3_tutorial_2.py\
 	scripts/tutorials/m3_tutorial_3.py\
 	scripts/tutorials/m3_tutorial_4.py\
-	scripts/dev/m3dev_actuator_ec_tuning2.py
+	scripts/dev/m3dev_actuator_ec_tuning2.py\
+	scripts/dev/m3dev_actuator_tuning.py\
+	scripts/dev/m3dev_ctrl_simple_tuning.py
 	
 
 

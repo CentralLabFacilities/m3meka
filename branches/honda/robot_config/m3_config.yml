@@ -10,7 +10,8 @@ rt_components:
     m3pwr_pwr023: m3pwr
   sea:
 #   m3actuator_mt4_j1: m3actuator
-#    m3actuator_j0: m3actuator
+    m3ctrl_simple_j0: m3ctrl_simple
+    m3actuator_j0: m3actuator
 ec_components:
   sea:
 #   m3actuator_ec_mt4_j1: m3actuator_ec

@@ -289,6 +289,7 @@ libm3hardware_la_SOURCES = \
 	log_test.pb.cpp\
 	log_test.cpp\
 	factory_proxy.cpp\
+	ctrl_simple.pb.cpp\
 	ctrl_simple.cpp
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////

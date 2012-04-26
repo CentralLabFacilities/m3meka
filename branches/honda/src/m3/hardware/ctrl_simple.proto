@@ -94,7 +94,7 @@ message M3CtrlSimpleCommand
 	optional CTRL_SIMPLE_MODE		ctrl_mode		= 1;	// Desired control mode
 	optional CTRL_SIMPLE_TRAJ_MODE		traj_mode		= 2;	// Desired trajectory mode
 	optional double				desired_current		= 3; 	// Desired amp current (A)
-    	optional double				desired_theta		= 4;	// Desired joint angle (Rad)
+    optional double				desired_theta		= 4;	// Desired joint angle (Rad)
 	optional double				desired_torque		= 5;	// Desired joint torque (Nm)
 	optional double				desired_stiffness	= 6;	// Desired stiffness of impedance  (Nm/Rad)
 }
