@@ -304,7 +304,6 @@ void M3Actuator::StepCommand()
 
 	M3ActuatorEcCommand * ec_command = (M3ActuatorEcCommand *)ecc->GetCommand();
 	M3ActuatorEcParam * ec_param = (M3ActuatorEcParam *)ecc->GetParam();
-	ec_command->set_brake_off(command.brake_off());
 	
 	if(IsStateError())
 	{
@@ -312,76 +311,108 @@ void M3Actuator::StepCommand()
 		return;
 	}
 	
-	switch(command.ctrl_mode())
-	{
-		case ACTUATOR_MODE_OFF:
-			ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
-			break;
-		case ACTUATOR_MODE_PWM:
-			ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
-			ec_command->set_t_desire(pwm_dither.Step(command.pwm_desired()));
-			break;
-		case ACTUATOR_MODE_TORQUE:		
+	if (IsVersion(IQ)) { // new style is simple pass through, with limit checking
+		switch (command.ctrl_mode())
 		{
-			mReal tq_mNm=command.tq_desired();
-			tq_mNm=CLAMP(tq_mNm,param.min_tq(),param.max_tq());
-			
-			if (use_i_torque_ctrl && IsVersion(IQ)) //Do torque control here, command current
+			case ACTUATOR_MODE_OFF:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
+			case ACTUATOR_MODE_PWM:
+				ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
+				ec_command->set_pwm_desired(pwm_dither.Step(command.pwm_desired()));
+				break;
+			case ACTUATOR_MODE_TORQUE:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
+			case ACTUATOR_MODE_CURRENT:
 			{
-			   mReal i_mA = pid_torque.Step(GetTorque(),
-					      GetTorqueDot(),
-					      tq_mNm,
-					      ParamPIDTorque()->k_p(), 
-					      ParamPIDTorque()->k_i(),
-					      ParamPIDTorque()->k_d(),
-					      ParamPIDTorque()->k_i_limit(),
-					      ParamPIDTorque()->k_i_range());
-			    ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
-			    i_mA=CLAMP(i_mA,-1*param.max_i(),param.max_i()); 
-			    ec_command->set_t_desire(i_sense.mAtoTicks(i_mA));
+				ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
+				mReal i_mA=CLAMP(command.i_desired(),-1*param.max_i(),param.max_i()); 
+				ec_command->set_current_desired(i_mA);
+				break;
 			}
-			else if (tq_sense.IsFFCurrentCtrl()) //Fake a torque by commanding a voltage
-			{
-			  ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
-			  ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm,&i_sense));
-			} else 
-			{
-			  ec_command->set_mode(ACTUATOR_EC_MODE_TORQUE); //Do torque control on DSP
-			  int raw_t_max= tq_sense.mNmToTicks(param.max_tq());
-			  int raw_t_min= tq_sense.mNmToTicks(param.min_tq());
-			  if (raw_t_min>raw_t_max) //Can be reversed depending on calibration
-			  {
-				  int tmp=raw_t_min;
-				  raw_t_min=raw_t_max;
-				  raw_t_max=tmp;
-			  }
-			  //Overwrite the raw  params with the calibrated values
-			  ec_param->set_t_max(raw_t_max);
-			  ec_param->set_t_min(raw_t_min);			  
-			  status.set_torque_error(tq_mNm-status.torque());
-			  ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm));
-			  if (ecc->UseTorqueFF())
-			      ecc->SetTorqueFF(motor.mNmToPwm(tq_mNm));
-			}
-			break;
+			case ACTUATOR_MODE_BRAKE:
+				ec_command->set_mode(ACTUATOR_EC_MODE_BRAKE);
+				break;
+			default:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
 		}
-		case ACTUATOR_MODE_CURRENT:
-			if ( IsVersion(IQ)) 
+	
+	} else { // Legacy, no supported on BMW,MAX2 versions 2.0
+		ec_command->set_brake_off(command.brake_off());
+		
+		switch(command.ctrl_mode())
+		{
+			case ACTUATOR_MODE_OFF:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
+			case ACTUATOR_MODE_PWM:
+				ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
+				ec_command->set_t_desire(pwm_dither.Step(command.pwm_desired()));
+				break;
+			case ACTUATOR_MODE_TORQUE:		
 			{
-			  ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
-			  mReal i_mA=CLAMP(command.i_desired(),-1*param.max_i(),param.max_i()); 
-			  ec_command->set_t_desire(i_sense.mAtoTicks(i_mA));
+				mReal tq_mNm=command.tq_desired();
+				tq_mNm=CLAMP(tq_mNm,param.min_tq(),param.max_tq());
+				
+				if (use_i_torque_ctrl && IsVersion(IQ)) //Do torque control here, command current
+				{
+				mReal i_mA = pid_torque.Step(GetTorque(),
+							GetTorqueDot(),
+							tq_mNm,
+							ParamPIDTorque()->k_p(), 
+							ParamPIDTorque()->k_i(),
+							ParamPIDTorque()->k_d(),
+							ParamPIDTorque()->k_i_limit(),
+							ParamPIDTorque()->k_i_range());
+					ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
+					i_mA=CLAMP(i_mA,-1*param.max_i(),param.max_i()); 
+					ec_command->set_t_desire(i_sense.mAtoTicks(i_mA));
+				}
+				else if (tq_sense.IsFFCurrentCtrl()) //Fake a torque by commanding a voltage
+				{
+				ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
+				ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm,&i_sense));
+				} else 
+				{
+				ec_command->set_mode(ACTUATOR_EC_MODE_TORQUE); //Do torque control on DSP
+				int raw_t_max= tq_sense.mNmToTicks(param.max_tq());
+				int raw_t_min= tq_sense.mNmToTicks(param.min_tq());
+				if (raw_t_min>raw_t_max) //Can be reversed depending on calibration
+				{
+					int tmp=raw_t_min;
+					raw_t_min=raw_t_max;
+					raw_t_max=tmp;
+				}
+				//Overwrite the raw  params with the calibrated values
+				ec_param->set_t_max(raw_t_max);
+				ec_param->set_t_min(raw_t_min);			  
+				status.set_torque_error(tq_mNm-status.torque());
+				ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm));
+				if (ecc->UseTorqueFF())
+					ecc->SetTorqueFF(motor.mNmToPwm(tq_mNm));
+				}
+				break;
 			}
-			else //Previous versions don't support current mode
-			{
-			  ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
-			  ec_command->set_t_desire(0);
-			}
-			break;
-		default:
-			ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
-			break;
-	};
+			case ACTUATOR_MODE_CURRENT:
+				if ( IsVersion(IQ)) 
+				{
+				ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
+				mReal i_mA=CLAMP(command.i_desired(),-1*param.max_i(),param.max_i()); 
+				ec_command->set_t_desire(i_sense.mAtoTicks(i_mA));
+				}
+				else //Previous versions don't support current mode
+				{
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				ec_command->set_t_desire(0);
+				}
+				break;
+			default:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
+		};
+	}
 }
 
-}
+} // namespace

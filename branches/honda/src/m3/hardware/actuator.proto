@@ -25,6 +25,7 @@ enum ACTUATOR_MODE{
 		ACTUATOR_MODE_PWM = 1;				//Direct PWM control
 		ACTUATOR_MODE_TORQUE = 2;			//Direct Torque control
 		ACTUATOR_MODE_CURRENT = 3;			//Direct current control
+		ACTUATOR_MODE_BRAKE = 4;			// shorted bridge
 }
 
 

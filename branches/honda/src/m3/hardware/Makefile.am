@@ -75,7 +75,9 @@ libm3hardwareinclude_HEADERS = \
 	robot_monitor.pb.h\
 	async_io.h\
 	actuator_ec.proto\
-	async_io.pb.h
+	async_io.pb.h\
+	ctrl_simple.h\
+	ctrl_simple.pb.h
 	
 clean-local:
 	rm -f *.pb.*
@@ -193,9 +195,16 @@ async_io.pb.cpp: async_io.proto
 	mv async_io.pb.cc async_io.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 async_io.proto
 
+ctrl_simple.pb.h: ctrl_simple.pb.cpp
+
+ctrl_simple.pb.cpp: ctrl_simple.proto
+	protoc -I$(prefix)/include/m3rt/base   -I./ --cpp_out=./ ctrl_simple.proto
+	mv ctrl_simple.pb.cc ctrl_simple.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 ctrl_simple.proto
 
 proto: actuator.pb.cpp pwr.pb.cpp pwr_ec.pb.cpp  actuator_ec.pb.cpp joint.pb.cpp loadx1.pb.cpp loadx1_ec.pb.cpp \
-	loadx6.pb.cpp loadx6_ec.pb.cpp tactile_pps22_ec.pb.cpp ledx2_ec.pb.cpp ledx2xn_ec.pb.cpp led_matrix_ec.pb.cpp robot_monitor.pb.cpp async_io.pb.cpp
+	loadx6.pb.cpp loadx6_ec.pb.cpp tactile_pps22_ec.pb.cpp ledx2_ec.pb.cpp ledx2xn_ec.pb.cpp led_matrix_ec.pb.cpp \
+	robot_monitor.pb.cpp async_io.pb.cpp ctrl_simple.pb.cpp
 
 
 proto_install: 
@@ -279,7 +288,8 @@ libm3hardware_la_SOURCES = \
 	async_io.cpp\
 	log_test.pb.cpp\
 	log_test.cpp\
-	factory_proxy.cpp
+	factory_proxy.cpp\
+	ctrl_simple.cpp
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////
 
