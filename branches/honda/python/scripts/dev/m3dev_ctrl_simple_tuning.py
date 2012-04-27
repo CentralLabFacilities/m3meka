@@ -41,6 +41,8 @@ class M3Proc:
 			'ctrl': {'name': 'm3ctrl_simple_j0', 'type':m3cs.M3CtrlSimple}}#,
 #			'pwr': {'name': 'm3pwr_ec_pwr023', 'type':}
 
+
+
 	def __init__(self):
 		self.proxy = m3p.M3RtProxy()
 		self.gui = m3g.M3Gui(stride_ms=125)
@@ -63,6 +65,15 @@ class M3Proc:
 			self.proxy.publish_command(getattr(self,k)) 
 			self.proxy.publish_param(getattr(self,k)) 
 			self.proxy.make_operational(v['name'])
+			
+		pwr_rt=m3t.get_actuator_ec_pwr_component_name(self.comps['act_ec']['name'])
+		pwr_ec=pwr_rt.replace('m3pwr','m3pwr_ec')
+		pr=m3f.create_component(pwr_rt)
+		self.proxy.publish_command(pr)
+		self.proxy.make_operational(pwr_rt)
+		self.proxy.make_operational(pwr_ec)
+		pr.set_motor_power_on()
+			
 
 		self.proxy.step()
 
@@ -93,7 +104,7 @@ class M3Proc:
 		self.ctrl_scope_field2	= [0]
 		self.ec_scope_field1	= [0]
 
-		current_max = 10.0
+		current_max = 2.5
 		theta_max	= 100.0
 		torque_max = 40.0
 
@@ -162,24 +173,28 @@ class M3Proc:
 		self.ctrl.set_traj_mode(self.traj[0])
 			
 
-		if self.mode[0]==mec.CTRL_MODE_OFF:
+		if self.mode[0]==0:
 			self.ctrl.set_mode_off()
 			
-		elif self.mode[0]==mec.CTRL_MODE_CURRENT:
+#		elif self.mode[0]==1:
+#			self.ctrl.set_mode_pwm()
+#			self.ctrl.set_pwm(self.current[0])
+
+		elif self.mode[0]==1:		
 			self.ctrl.set_mode_current()
 			self.ctrl.set_current(self.current[0])
 			
-		elif self.mode[0]==mec.CTRL_MODE_THETA:
-			self.ctrl.set_mode_theta()
-			self.ctrl.set_theta(self.theta[0])
-			
-		elif self.mode[0]==mec.CTRL_MODE_TORQUE:
-			self.ctrl.set_mode_torque()
-			self.ctrl.set_torque(self.torque[0])
-			
-		elif self.mode[0]==mec.CTRL_MODE_TORQUE_LC:
-			self.ctrl.set_mode_torque_lc()
-			self.ctrl.set_torque_lc(self.torque_lc[0])
+#		elif self.mode[0]==mec.CTRL_MODE_THETA:
+#			self.ctrl.set_mode_theta()
+#			self.ctrl.set_theta(self.theta[0])
+#			
+#		elif self.mode[0]==mec.CTRL_MODE_TORQUE:
+#			self.ctrl.set_mode_torque()
+#			self.ctrl.set_torque(self.torque[0])
+#			
+#		elif self.mode[0]==mec.CTRL_MODE_TORQUE_LC:
+#			self.ctrl.set_mode_torque_lc()
+#			self.ctrl.set_torque_lc(self.torque_lc[0])
 		else:
 			self.ctrl.set_mode_off()
 		

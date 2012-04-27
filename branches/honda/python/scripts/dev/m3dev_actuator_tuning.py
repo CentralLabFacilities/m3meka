@@ -62,6 +62,14 @@ class M3Proc:
 			self.proxy.publish_param(getattr(self,k)) 
 			self.proxy.make_operational(v['name'])
 			
+		pwr_rt=m3t.get_actuator_ec_pwr_component_name(self.comps['act_ec']['name'])
+		pwr_ec=pwr_rt.replace('m3pwr','m3pwr_ec')
+		pr=m3f.create_component(pwr_rt)
+		self.proxy.publish_command(pr)
+		self.proxy.make_operational(pwr_rt)
+		self.proxy.make_operational(pwr_ec)
+		pr.set_motor_power_on()
+			
 
 		self.proxy.step()
 
@@ -98,7 +106,7 @@ class M3Proc:
 		self.zero_joint_theta			= False
 		self.zero_joint_theta_last		= False
 		
-		current_max = 10.0
+		current_max = 2.5
 
 
 		self.param_dict = self.proxy.get_param_dict()

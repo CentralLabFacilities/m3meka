@@ -33,7 +33,8 @@ int adc_idx_fast;
 
 unsigned int adc_raw[ADC_NUM_CH];
 int adc_meas[ADC_NUM_CH];
-unsigned int adc_zero[ADC_NUM_CH] = {524<<ADC_Q_FORM,524<<ADC_Q_FORM,0,0};
+unsigned int adc_zero[ADC_NUM_CH] = {524<<ADC_Q_FORM,524<<ADC_Q_FORM,
+                                     TEMP_SENSOR_ZERO, TEMP_SENSOR_ZERO};
 
 //unsigned int volatile adc_buffer[ADC_NUM_CH];
 //unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
@@ -133,6 +134,11 @@ unsigned int get_avg_adc_torque()
     return 0;
 }
 
+int get_temperature_cC(int ch)
+{
+    return (__builtin_mulsu(adc_meas[ch],TEMP_ADC_CC_MULT)>>TEMP_ADC_CC_SHIFT);
+}
+
 void setup_adc(void) 
 {
 //	adc_idx=0;
@@ -159,50 +165,33 @@ void setup_adc(void)
 	AD1CON2bits.VCFG = 0;                   // Vref AVdd/AVss
 	AD1CON2bits.CSCNA = 0;			// Disable channel scanning
         AD1CON2bits.CHPS = 2;			// Convert ch0-3
-	AD1CON2bits.SMPI = 0;			// Select 4 conversions between interrupts
-        AD1CON2bits.BUFM = 0;			// Use 2x8-word buffer for conversion sequences
+	AD1CON2bits.SMPI = ADC_NUM_SAMPLES-1;			// Select 4 conversions between interrupts
+        AD1CON2bits.BUFM = 0;
+        AD1CON2bits.ALTS = 0;
 
         AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
 	AD1CON3bits.SAMC = 5;
 	AD1CON3bits.ADCS = 1;
 
-        AD1CON4bits.DMABL	= 0;		// Allocates 8 words of buffer to each analog input
+        AD1CON4bits.DMABL	= ADC_NUM_SAMPLES-1;		// Allocates 8 words of buffer to each analog input
 
         AD1CHS123bits.CH123NB = 0;              // ch1-3 negative input is vrefl
         AD1CHS123bits.CH123SB = 0;              // ch1 -> an0, ch2 -> an1, ch3 -> an2
         AD1CHS123bits.CH123NA = 0;              // ch1-3 negative input is vrefl
         AD1CHS123bits.CH123SA = 0;              // ch1 -> an0, ch2 -> an1, ch3 -> an2
 
-// note, double sampling here probably just gets overwritten, could sample another channel instead
         AD1CHS0bits.CH0NB = 0;                  // ch0 negative input is vrefl
-        AD1CHS0bits.CH0SB = 0;                  // ch0 -> an0
+        AD1CHS0bits.CH0SB = ADC_MOTOR_TEMP;                  // ch0 -> an0
         AD1CHS0bits.CH0NA = 0;                  // ch0 negative input is vrefl
-        AD1CHS0bits.CH0SA = 0;                  // ch0 -> an0
-/*
-	AD1CSSLbits.CSS0 = 1;
-	AD1CSSLbits.CSS1 = 1;
-	AD1CSSLbits.CSS2 = 1;
-	#if defined MAX2_BDC_0_2_T2R3		
-	AD1CSSLbits.CSS3 = 0;
-	AD1PCFGLbits.PCFG3 = 1;
-	#else
-	AD1CSSLbits.CSS3 = 1;
-	AD1PCFGLbits.PCFG3 = 0;
-	#endif
-	ADPCFG = 0; 
-	AD1PCFGLbits.PCFG0 = 0;
-	AD1PCFGLbits.PCFG1 = 0;
-	AD1PCFGLbits.PCFG2 = 0;
-	AD1PCFGLbits.PCFG4 = 1;	
-	AD1PCFGLbits.PCFG5 = 1;
-	AD1PCFGLbits.PCFG6 = 1;
-	AD1PCFGLbits.PCFG7 = 1;
-	AD1PCFGLbits.PCFG8 = 1;*/
+        AD1CHS0bits.CH0SA = ADC_MOTOR_TEMP;                  // ch0 -> an0
 
-     //   AD1CSSLbits.CSS0 = 1;
-//	AD1CSSLbits.CSS1 = 1;
-//	AD1CSSLbits.CSS2 = 1;
-//        AD1CSSLbits.CSS3 = 1;
+        ADPCFG = 0xFFFF;
+        AD1PCFGLbits.PCFG0 = 0;
+	AD1PCFGLbits.PCFG1 = 0;
+	AD1PCFGLbits.PCFG6 = 0;
+        AD1PCFGLbits.PCFG8 = 0;
+
+
         ADPCFG = 0xFFFF;
         AD1PCFGLbits.PCFG0 = 0;
 	AD1PCFGLbits.PCFG1 = 0;

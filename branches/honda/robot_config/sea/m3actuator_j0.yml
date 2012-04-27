@@ -1,11 +1,9 @@
 calib:
   amp_temp:
-    cb_bias: 4.0965983072916714
-    cb_mV_at_25C: 750.0
-    cb_mV_per_C: 10.0
-    cb_scale: 1.0
-    name: Microchip TC1047
-    type: adc_linear_5V
+    cb_bias: 0.0
+    cb_scale: 0.01
+    name: Microchip TC1047, converted at dsp
+    type: dsp_calib
   angle_df:
     theta_df:
       cutoff_freq: 80
@@ -22,19 +20,14 @@ calib:
     type: df_chain
   current:
     cb_bias: 0.0
-    cb_mV_per_A: 66.0
     cb_scale: 1.0
-    cb_ticks_at_zero_a: 1940.0833333333333
-    cb_ticks_at_zero_b: 1949.25
-    name: Allegro ACS712-30
-    type: adc_linear_5V
+    name: Allegro ACS714-5
+    type: dsp_calib
   ext_temp:
-    cb_bias: 1.7789306640625
-    cb_mV_at_25C: 750.0
-    cb_mV_per_C: 10.0
-    cb_scale: 1.0
-    name: Analog TMP36
-    type: adc_linear_3V3
+    cb_bias: 0.0
+    cb_scale: 0.01
+    name: Microchip TC1047, converted at dsp
+    type: dsp_calib
   motor:
     amplifier_resistance: 0.013599999999999999
     current_sensor_type: none
@@ -99,5 +92,11 @@ param:
   max_tq: 20000.0
   min_tq: -20000.0
   max_i: 2.0
+  pid_current:
+    k_d: 0.0
+    k_i: 0.0
+    k_i_limit: 0.0
+    k_i_range: 0.0
+    k_p: 1.0
 safe_pwm_limit: 1
-version: iss
+version: iq

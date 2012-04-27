@@ -5,33 +5,26 @@
 
 
 static enum dsp_state dsp = DSP_OFF;
-//int trace_temperature_max = 10000;  // centikelvin
+
 int max_current_ma = 13000;
 int max_current_error_count_max = 10;
+int max_amp_temperature_cC = 8000;
+int max_amp_temperature_count_max = 10;
 
 void step_state()
 {
     static int count = 0;
     static int max_current_error_count = 0;
-    //static int temperature_count = 0;
+    static int max_amp_temperature_count = 0;
 
-    //if (temperature_count++%20 == 0)
-    //    step_temperature_model(get_current_ma());
-
-    //if (get_model_temperature_cK() > trace_temperature_max)
-    //    dsp = DSP_ERROR;
-
-    if (get_max_current_ma() > max_current_ma) {
-        max_current_error_count++;
-        max_current_error_count = CLAMP(max_current_error_count,0,
-                max_current_error_count_max);
-    } else
-        max_current_error_count = 0;
-
-    if (max_current_error_count >= max_current_error_count_max) {
+    if (limit_check(ABS(get_max_current_ma()), max_current_ma,
+            &max_current_error_count, max_current_error_count_max) )
         dsp = DSP_ERROR;
-    }
-        
+
+    if (limit_check(get_temperature_cC(ADC_AMP_TEMP), max_amp_temperature_cC,
+            &max_amp_temperature_count, max_amp_temperature_count_max) )
+        dsp = DSP_ERROR;
+    
 
     if (count<1000) {
         count++;
@@ -96,5 +89,16 @@ void step_state()
 enum dsp_state get_dsp_state()
 {
     return dsp;
+}
+
+int limit_check(int item, int compare, int* count, int count_max )
+{
+    if (item > compare) {
+        *count++;
+        *count = CLAMP(*count,0, count_max);
+    } else
+        *count = 0;
+
+    return (*count >= count_max) ? 1 : 0;
 }
 

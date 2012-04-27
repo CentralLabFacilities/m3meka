@@ -5,6 +5,8 @@ ethercat:
   serial_number: 746
 firmware: m3_controller_max2_bldc_a2r4
 name: m3actuator_ec_j0
+
+#note, tuned with ec32 48V, gains will be different for 24V
 param:
   bldc_mode: 1
   config: 0
@@ -13,10 +15,10 @@ param:
   k_ff: 0
   k_ff_shift: 0
   k_ff_zero: 0
-  k_i: 1
+  k_i: 10
   k_i_limit: 490
-  k_i_shift: 1
-  k_p: 10
+  k_i_shift: 0
+  k_p: 50
   k_p_shift: 0
   pwm_db: 0
   pwm_max: 490

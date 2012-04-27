@@ -22,8 +22,8 @@ param:
     k_p: 1.0
     k_slew_max: 1200.0
   traj_current:
-    amp: 100.0
-    freq: 500.0
+    amp: 2.0
+    freq: 100.0
     zero: 0.0
   traj_theta:
     amp: 10.0

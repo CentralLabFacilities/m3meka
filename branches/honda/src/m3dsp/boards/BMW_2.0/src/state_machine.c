@@ -6,7 +6,7 @@
 
 static enum dsp_state dsp = DSP_OFF;
 //int trace_temperature_max = 10000;  // centikelvin
-int max_current_ma = 13000;
+int max_current_ma = 5000;
 int max_current_error_count_max = 10;
 int max_amp_temperature_cC = 8000;
 int max_amp_temperature_count_max = 10;

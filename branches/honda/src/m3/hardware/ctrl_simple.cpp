@@ -171,6 +171,7 @@ void M3CtrlSimple::StepCommand()
 		return;
 	}
 	
+	
 	/////////////// Handle Trajectories ////////////////////
 	
 	mReal	desired_theta;

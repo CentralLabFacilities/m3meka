@@ -69,7 +69,7 @@ class M3TempSensor
 		virtual mReal GetTempF(){return C2F(GetTempC());} 
 		virtual void ReadConfig(const YAML::Node & doc);
 	protected:
-		enum {NONE, ADC_POLY, ADC_LINEAR_3V3, ADC_LINEAR_5V, TEMP_25C};
+		enum {NONE, ADC_POLY, ADC_LINEAR_3V3, ADC_LINEAR_5V, TEMP_25C, DSP_CALIB};
 		vector<mReal> cb_temp;
 		mReal cb_mV_at_25C;
 		mReal cb_mV_per_C;
@@ -91,11 +91,13 @@ class M3CurrentSensor
 		M3CurrentSensor():val(0){}
 		virtual void Step(mReal ticks_a, mReal ticks_b, mReal current_ma);
 		virtual mReal GetCurrent_mA(){return val;}
+		mReal GetCurrent_A() const {return val/1000.0;}
 		virtual void ReadConfig(const YAML::Node& doc);
 		virtual int mAtoTicks(mReal milliamps);
 		virtual void SetZero(){val=0.0;}
 	protected:
-		enum {NONE,  ADC_POLY, ADC_LINEAR_5V,ADC_LINEAR_5V_NS,LINEAR_AMP_VIA_DAC,ADC_POLY_SINGLE,DSP_CALIB, DSP_TICKS};
+		enum {NONE,  ADC_POLY, ADC_LINEAR_5V,ADC_LINEAR_5V_NS,LINEAR_AMP_VIA_DAC,
+			ADC_POLY_SINGLE,DSP_CALIB, DSP_TICKS, ADC_PHASE_MA};
 		mReal val;
 		vector<mReal> cb_current_a, cb_current_b;
 		int type;

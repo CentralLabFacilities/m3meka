@@ -175,7 +175,7 @@ void M3Actuator::StepStatus()
 	if (IsVersion(DEFAULT) || IsVersion(ISS) || IsVersion(IQ))
 	{
 		M3ActuatorEcStatus * ecs = (M3ActuatorEcStatus * )(ecc->GetStatus());
-		
+
 		
 		//Calibrate Raw Data
 		
@@ -221,12 +221,15 @@ void M3Actuator::StepStatus()
 		if (!ecc->IsMotorPowerOn()) //Force zero-reading when off to ignore small bias errors.
 		  i_sense.SetZero();
 		motor.Step(i_sense.GetCurrent_mA(), GetPwmCmd(), GetThetaDotDeg()*60.0/360.0, ex_sense.GetTempC());//Compute motor 
-				
+		
+		//printf("current: %f\n",ecs->current_ma());
+		status.set_current(i_sense.GetCurrent_A());
 		status.set_amp_temp(amp_temp_avg.Step(at_sense.GetTempC()));
+		status.set_ext_temp(ex_sense.GetTempC());
 		status.set_motor_temp(motor.GetWindingTemp());
 		status.set_ambient_temp(motor.GetAmbientTemp());
 		status.set_case_temp(motor.GetCaseTemp());
-		status.set_current(motor.GetCurrentRMS());
+		
 		status.set_power(motor.GetPowerElec());
 		//if (tmp_cnt%100==0)
 		 // M3_INFO("%s: %f %f\n",GetName().c_str(),ex_sense.GetTempC(),motor.GetWindingTemp());
@@ -305,6 +308,7 @@ void M3Actuator::StepCommand()
 	M3ActuatorEcCommand * ec_command = (M3ActuatorEcCommand *)ecc->GetCommand();
 	M3ActuatorEcParam * ec_param = (M3ActuatorEcParam *)ecc->GetParam();
 	
+				
 	if(IsStateError())
 	{
 		ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
@@ -312,6 +316,7 @@ void M3Actuator::StepCommand()
 	}
 	
 	if (IsVersion(IQ)) { // new style is simple pass through, with limit checking
+		status.set_mode_cmd(command.ctrl_mode());
 		switch (command.ctrl_mode())
 		{
 			case ACTUATOR_MODE_OFF:
@@ -327,8 +332,9 @@ void M3Actuator::StepCommand()
 			case ACTUATOR_MODE_CURRENT:
 			{
 				ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
-				mReal i_mA=CLAMP(command.i_desired(),-1*param.max_i(),param.max_i()); 
+				mReal i_mA=CLAMP(command.i_desired(),-1*param.max_i(),param.max_i())*1000.0; 
 				ec_command->set_current_desired(i_mA);
+				status.set_i_cmd(i_mA/1000.0);
 				break;
 			}
 			case ACTUATOR_MODE_BRAKE:

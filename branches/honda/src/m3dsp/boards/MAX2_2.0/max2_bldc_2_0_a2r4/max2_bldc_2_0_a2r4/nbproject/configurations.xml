@@ -23,6 +23,7 @@
       <itemPath>../../src/warning.h</itemPath>
       <itemPath>../../src/temperature_model.h</itemPath>
       <itemPath>../../src/current.h</itemPath>
+      <itemPath>../../src/state_machine.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"

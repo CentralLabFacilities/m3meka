@@ -401,6 +401,7 @@ void M3TempSensor::ReadConfig(const YAML::Node & doc)
 	if (t.compare("adc_poly")==0){type=ADC_POLY;}
 	if (t.compare("adc_linear_3V3")==0){type=ADC_LINEAR_3V3;}
 	if (t.compare("adc_linear_5V")==0){type=ADC_LINEAR_5V;}
+	if (t.compare("dsp_calib")==0){type=DSP_CALIB;}
 	doc["cb_scale"]>>cb_scale;
 	doc["cb_bias"]>>cb_bias;
 	if (type==ADC_POLY) //Older format v0.0-v0.5
@@ -443,6 +444,10 @@ void M3TempSensor::Step(mReal ticks)
 		mReal bias = 25.0-(cb_mV_at_25C/cb_mV_per_C); //C
 		val = mV/cb_mV_per_C + bias;
 		val= val*cb_scale+cb_bias;
+	}
+	if (type == DSP_CALIB)
+	{
+		val = ticks*cb_scale + cb_bias;
 	}
 }
 

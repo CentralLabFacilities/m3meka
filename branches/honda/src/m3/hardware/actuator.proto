@@ -48,6 +48,7 @@ message M3ActuatorStatus{
 	optional double			ext_temp=16;				//(C)
 	optional double			tq_cmd=17;				//mNm
 	optional double			i_cmd=18;				//mA
+	optional double			mode_cmd=19;
 }
 
 message M3ActuatorParamPID{

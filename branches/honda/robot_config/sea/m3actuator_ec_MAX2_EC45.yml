@@ -5,6 +5,8 @@ ethercat:
   serial_number: 746
 firmware: m3_controller_max2_bldc_a2r4
 name: m3actuator_ec_j0
+
+#note tuned on the 50 W motor, approximately 1300 Hz current control bandwidth
 param:
   bldc_mode: 1
   config: 0
