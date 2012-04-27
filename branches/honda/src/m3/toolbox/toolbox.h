@@ -242,6 +242,7 @@ class M3DitherToInt
 
 mReal EvalCalibrationPoly(vector<mReal> & p, mReal x);
 
+
 class M3PID
 	{
 		public:
@@ -256,6 +257,7 @@ class M3PID
 
 	};
 	
+
 //Measure the peak-to-peak excursion of a cyclic signal about 0
 class M3PeakToPeak
 {

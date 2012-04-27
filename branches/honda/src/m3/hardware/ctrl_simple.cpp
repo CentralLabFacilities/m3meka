@@ -69,45 +69,10 @@ bool M3CtrlSimple::ReadConfig(const char * filename)
 
 	doc["param"]["traj_current"] >> ParamTrajCurrent();
 	doc["param"]["traj_theta"] >> ParamTrajTheta();
+	doc["param"]["traj_torque"] >> ParamTrajTorque();
 	
 	doc["param"]["pid_theta"] >> ParamPidTheta();
 	doc["param"]["pid_joint_torque"] >> ParamPidTorque();
-	
-	/*
-	//Trajectoreis
-	doc["param"]["traj_theta"]["freq"] >> val;
-	ParamTrajTheta()->set_freq(val);
-	doc["param"]["traj_theta"]["amp"] >> val;
-	ParamTrajTheta()->set_amp(val);
-	doc["param"]["traj_theta"]["zero"] >> val;
-	ParamTrajTheta()->set_zero(val);
-
-	doc["param"]["traj_current"]["freq"] >> val;
-	ParamTrajCurrent()->set_freq(val);
-	doc["param"]["traj_current"]["amp"] >> val;
-	ParamTrajCurrent()->set_amp(val);
-	doc["param"]["traj_current"]["zero"] >> val;
-	ParamTrajCurrent()->set_zero(val);
-	
-	doc["param"]["traj_torque"]["freq"] >> val;
-	ParamTrajTorque()->set_freq(val);
-	doc["param"]["traj_torque"]["amp"] >> val;
-	ParamTrajTorque()->set_amp(val);
-	doc["param"]["traj_torque"]["zero"] >> val;
-	ParamTrajTorque()->set_zero(val); */
-	
-	//PID
-	/*doc["param"]["pid_theta"]["k_p"] >> val;
-	ParamPidTheta()->set_k_p(val);
-	doc["param"]["pid_theta"]["k_i"] >> val;
-	ParamPidTheta()->set_k_i(val);
-	doc["param"]["pid_theta"]["k_d"] >> val;
-	ParamPidTheta()->set_k_d(val);
-	doc["param"]["pid_theta"]["k_i_limit"] >> val;
-	ParamPidTheta()->set_k_i_limit(val);
-	doc["param"]["pid_theta"]["k_i_range"] >> val;
-	ParamPidTheta()->set_k_i_range(val);*/
-
 
 	return true;
 } // end ReadConfig
@@ -248,8 +213,8 @@ void M3CtrlSimple::StepCommand()
 			// update personal status
 			StatusCommand()->set_current(desired_current);
 			break;
-		  case CTRL_MODE_TORQUE:
-		  case CTRL_MODE_TORQUE_GC:
+		case CTRL_MODE_TORQUE:
+		case CTRL_MODE_TORQUE_GC:
 			//PID
 			desired_current = pid_torque.Step(GetJointTorque(),
 						  GetJointTorqueDot(),
@@ -266,7 +231,7 @@ void M3CtrlSimple::StepCommand()
 			StatusCommand()->set_torque(desired_torque);
 			break;
 		
-		  case CTRL_MODE_THETA:
+		case CTRL_MODE_THETA:
 			//PID
 			desired_current = pid_theta.Step(GetJointTheta(),
 						  GetJointThetaDot(),
@@ -281,6 +246,9 @@ void M3CtrlSimple::StepCommand()
 			// update personal status
 			StatusCommand()->set_current(desired_current);
 			StatusCommand()->set_theta(desired_theta);
+			break;
+		case CTRL_MODE_BRAKE:
+			act->SetDesiredControlMode(ACTUATOR_MODE_BRAKE);
 			break;
 		case CTRL_MODE_THETA_IMP: //Not yet implemented
 		case CTRL_MODE_OFF:

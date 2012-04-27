@@ -29,4 +29,8 @@ param:
     amp: 10.0
     freq: 1.0
     zero: 0.0
+  traj_torque:
+    amp: 1.0
+    freq: 1.0
+    zero: 0.0
 version: default

@@ -31,6 +31,7 @@ enum CTRL_SIMPLE_MODE
 	CTRL_MODE_TORQUE_GC	= 3;	// Direct torque control
 	CTRL_MODE_THETA		= 4;	// Joint angle control, stiff
 	CTRL_MODE_THETA_IMP	= 5;	// Impedance control (with gravity comp, inner torque)
+	CTRL_MODE_BRAKE		= 6;	// Shorted motor leads
 }
 
 enum CTRL_SIMPLE_TRAJ_MODE

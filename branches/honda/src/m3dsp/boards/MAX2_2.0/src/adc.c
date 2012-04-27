@@ -34,7 +34,7 @@ int adc_idx_fast;
 unsigned int adc_raw[ADC_NUM_CH];
 int adc_meas[ADC_NUM_CH];
 unsigned int adc_zero[ADC_NUM_CH] = {524<<ADC_Q_FORM,524<<ADC_Q_FORM,
-                                     TEMP_SENSOR_ZERO, TEMP_SENSOR_ZERO};
+                                     TEMP_SENSOR_ZERO, 0};
 
 //unsigned int volatile adc_buffer[ADC_NUM_CH];
 //unsigned int volatile adc_buffer_fast[ADC_NUM_SMOOTH_FAST];
@@ -181,9 +181,9 @@ void setup_adc(void)
         AD1CHS123bits.CH123SA = 0;              // ch1 -> an0, ch2 -> an1, ch3 -> an2
 
         AD1CHS0bits.CH0NB = 0;                  // ch0 negative input is vrefl
-        AD1CHS0bits.CH0SB = ADC_MOTOR_TEMP;                  // ch0 -> an0
+        AD1CHS0bits.CH0SB = ADC_EXT_TEMP;                  // ch0 -> an3
         AD1CHS0bits.CH0NA = 0;                  // ch0 negative input is vrefl
-        AD1CHS0bits.CH0SA = ADC_MOTOR_TEMP;                  // ch0 -> an0
+        AD1CHS0bits.CH0SA = ADC_EXT_TEMP;                  // ch0 -> an3
 
         ADPCFG = 0xFFFF;
         AD1PCFGLbits.PCFG0 = 0;
@@ -257,7 +257,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
     dma_buf_ptr = current_dma_buf();
 
     
-    for(i=0;i<ADC_NUM_CH-1;i++) {
+    for(i=0;i<ADC_NUM_CH;i++) {
         adc_raw[i] = dma_buf_ptr[i];
         tmp = adc_raw[i] - (adc_zero[i]>>ADC_Q_FORM);
         adc_filter((int *)&adc_meas[i], tmp, 0x8 );
@@ -297,11 +297,8 @@ void adc_filter(int *y, int x, int alpha)
 
 void set_adc_zeros()
 {
-    int i;
-
-    for(i=0;i<ADC_NUM_CH-1;i++) {
-        adc_filter((int *)&adc_zero[i], adc_raw[i], 1);
-    }
+    adc_filter((int *)&adc_zero[ADC_CURRENT_A], adc_raw[ADC_CURRENT_A], 1);
+    adc_filter((int *)&adc_zero[ADC_CURRENT_B], adc_raw[ADC_CURRENT_B], 1);
 }
 
 int get_adc_zero(int ch)
