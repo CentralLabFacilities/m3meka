@@ -44,8 +44,14 @@ void isr_update_input_pdo(void);
 /////////////////////////////////////////////////////////////
 int step_ethercat(void)
 {
+    if (!DMA1CONbits.CHEN)
+    {
+        DISABLE_AL_EVENT_INT;
 	ECAT_Main();		/* check if masked interrupts were received */
-	return 0;
+        ENABLE_AL_EVENT_INT;
+    }
+
+    return 0;
 }
 
 /////////////////////////////////////////////////////////////
@@ -63,8 +69,8 @@ void isr_update_outputs(void)
 		ec_wd_timestamp = 0;//ECAT_TIMER_REG;
 		ec_wd=0;
 		#endif
-		ISR_EscReadAccess( (unsigned char *) pdo_cmd, nEscAddrOutputData, nPdOutputSize );
-		memcpy((unsigned char *)&ec_cmd,pdo_cmd,sizeof(ec_cmd_t));
+		ISR_EscReadAccessDMA( (unsigned char *) pdo_cmd, nEscAddrOutputData, nPdOutputSize );
+		//memcpy((unsigned char *)&ec_cmd,pdo_cmd,sizeof(ec_cmd_t));
 	}
 }
 /////////////////////////////////////////////////////////////
@@ -72,7 +78,7 @@ void isr_update_outputs(void)
 void isr_update_inputs(void)
 {
 	unsigned long long dc_timestamp;
-	
+
 	#ifndef USE_SYNC0
 	isr_update_input_pdo();
 	#endif
@@ -81,11 +87,12 @@ void isr_update_inputs(void)
 	ISR_EscReadAccess((unsigned char*)&dc_timestamp, (unsigned int)EC_LATCH1_POS_EDG_ADDR, (unsigned int)8 );
 	ec_stat.timestamp=dc_timestamp;
 	#endif
-	
+
 	memcpy(pdo_stat,(unsigned char *)&ec_stat,sizeof(ec_stat_t));
-	ISR_EscWriteAccess( (UINT8 *) pdo_stat, nEscAddrInputData, nPdInputSize );
+	ISR_EscWriteAccessDMA( (UINT8 *) pdo_stat, nEscAddrInputData, nPdInputSize );
 	return;
 }
+
 
 void isr_update_input_pdo(void)
 {
@@ -162,11 +169,11 @@ void isr_update_input_pdo(void)
         ec_stat.status[0].current_ma = get_current_ma();
 	
 	//ec_stat.status[0].debug=ec_debug[0];
-        //ec_stat.status[0].debug = get_dsp_state();
+        ec_stat.status[0].debug = get_dsp_state();
         //ec_stat.status[0].debug = get_adc_zero(0);
         //ec_stat.status[0].debug = get_model_temperature_cK();
         //ec_stat.status[0].debug = get_hall_state();
-        ec_stat.status[0].debug = tmp_debug;
+        //ec_stat.status[0].debug = tmp_debug;
 }
 
 /////////////////////////////////////////////////////////////
@@ -184,23 +191,57 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 //	INTERRUPT_PROTECT_ENABLE; //For Elmo board which has QEI but no VertX encoder, disable interrupts to make timestamp copy atomic.	//WAS
 	SPI_SEL = SPI_DEACTIVE;				/* SPI should be deactivated to interrupt a possible transmission */
 	ACK_ESC_INT;						/* reset the interrupt flag */
-	
+	DISABLE_AL_EVENT_INT;
+
+        if (DMA1CONbits.CHEN)
+            return;
+
+         {
+            DMA1CONbits.CHEN = 0; // Enable DMA0 Channel
+            DMA0CONbits.CHEN = 0; // Enable DMA0 Channel
+            IEC0bits.DMA1IE = 0;
+            IFS0bits.DMA1IF = 0;
+            IFS0bits.DMA0IF = 0;		// Clear the DMA0 Interrupt Flag;
+            did_tx = 0;
+            did_rx = 0;
+            do_tx = 0;
+
+        }
+
 	ISR_GetInterruptRegister();			/* get the AL event in EscAlEvent */
-	#if DC_SUPPORTED 
+	#if DC_SUPPORTED
 	if ( bDcSyncActive )				/* read the sync 0 status to acknowledge the SYNC interrupt */
 		ISR_EscReadAccess( dummy, ESC_ADDR_SYNC_STATUS, 2);
 	#endif
-	
+
 	if (bSynchronMode)						/* Application is synchronized to DC-, SM2- or SM3-event */
-	{		
+	{
 		if ( bEcatOutputUpdateRunning )		// Get Process Outputs
-			isr_update_outputs();				// EtherCAT slave is in OPERATIONAL, update outputs 
+                {
+			isr_update_outputs();				// EtherCAT slave is in OPERATIONAL, update outputs
+                }
 		else
 			isr_reset_outputs();
 		if ( bEcatInputUpdateRunning )		//Update Process Inputs
+                {
+                    if (did_rx)
+                    {
+                        do_tx = 1;
+                    }
+                    else
+                    {
 			isr_update_inputs();				/* EtherCAT slave is at least in SAFE-OPERATIONAL, update inputs */
+                    }
 
-	}	
+                }
+                 if (did_rx || did_tx)
+                {
+                    SPI_SEL = SPI_ACTIVE;
+                    ISR_StartDMA();
+                }
+
+
+	}
 
 //	INTERRUPT_PROTECT_DISABLE;		//WAS
 }
@@ -250,6 +291,8 @@ void setup_ethercat(void)
 	ec_wd_expired=0;
 	ec_wd_timestamp=0;
 	//Setup SPI
+        cfgDma0SpiTx();
+	cfgDma1SpiRx();
 	setup_spi();
 
 	//Setup synchronization and timers
@@ -302,30 +345,30 @@ void setup_ethercat(void)
 
 void setup_spi(void)
 {
-	/*	
-	Initialize and enable the SPI as: 
+	/*
+	Initialize and enable the SPI as:
 	* SPI-Master with clock Fosc/4=10Mhz
 	* High level of clock as idle state
-	* SPI_MODE == 3 
+	* SPI_MODE == 3
 	* LATE_SAMPLE = FALSE
 	* Save input data at middle of data output time
-	* Data transmitting on rising edge of SC 
+	* Data transmitting on rising edge of SC
 	*/
 
 	//The ET1200 should be configured to SPI Mode 3
-	//SPI_CLK is then max 50ns, or 20Mhz 
+	//SPI_CLK is then max 50ns, or 20Mhz
 	//FCSK = FCY/(PrimaryPrescale*SecondaryPrescale) = 40M/(4*2)=5Mhz
 
 	_SPI1IF=0; //Clear interrupt
 	_SPI1IE=0; //Disable interrupt
-	
+
 	SPI1CON1=0;
 	SPI1CON1bits.MSTEN=1;		//Act as SPI Master
 	SPI1CON1bits.PPRE=0b10;		// ((0b10, 4:1), (0b00, 64:1) (0b11,1:1) prescalar
-	SPI1CON1bits.SPRE=0b110;	// (0b111, 1:1),(0b110, 2:1) secondary scalar
+	SPI1CON1bits.SPRE=0b111;	// (0b111, 1:1),(0b110, 2:1) secondary scalar
     SPI1CON1bits.CKP=1;			//Idle state is high
     SPI1CON1bits.CKE=0;			//Data changes on clock transition from idle to active
-    SPI1CON1bits.SMP=0;			//Input data sampled at middle of data output time 
+    SPI1CON1bits.SMP=0;			//Input data sampled at middle of data output time
     SPI1CON1bits.MODE16=0;		//Communication is 8bit bytes
 
 	SPI1STATbits.SPIROV=0;	//Clear overflow flag

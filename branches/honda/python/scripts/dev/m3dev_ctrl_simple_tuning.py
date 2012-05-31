@@ -36,9 +36,9 @@ import m3.actuator_ec as m3aec
 import m3.actuator as m3a
 
 class M3Proc:
-	comps = {'act': {'name': 'm3actuator_j0', 'type':m3a.M3Actuator }, 
-			'act_ec': {'name': 'm3actuator_ec_j0', 'type':m3aec.M3ActuatorEc},
-			'ctrl': {'name': 'm3ctrl_simple_j0', 'type':m3cs.M3CtrlSimple}}#,
+	comps = {'act': {'name': 'm3actuator_ma15_j0', 'type':m3a.M3Actuator }, 
+			'act_ec': {'name': 'm3actuator_ec_ma15_j0', 'type':m3aec.M3ActuatorEc},
+			'ctrl': {'name': 'm3ctrl_simple_ma15_j0', 'type':m3cs.M3CtrlSimple}}#,
 #			'pwr': {'name': 'm3pwr_ec_pwr023', 'type':}
 
 
@@ -104,7 +104,7 @@ class M3Proc:
 		self.ctrl_scope_field2	= [0]
 		self.ec_scope_field1	= [0]
 
-		current_max = 2.5
+		current_max = 3.5
 		theta_max	= 100.0
 		torque_max = 40.0
 

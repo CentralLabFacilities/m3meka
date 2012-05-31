@@ -199,44 +199,46 @@ void setup_adc(void)
         AD1PCFGLbits.PCFG3 = 0;
 
 
+        setup_dma2();
+
 	AD1CON1bits.ADON = 1;			// Turn on ADC
 	_AD1IF = 0;						// Enable interrupt
 	_AD1IE = 0;
 }
 
-void setup_dma1(void)
+void setup_dma2(void)
 {
-	DMA1CONbits.SIZE = 0;					//Word
-	DMA1CONbits.DIR = 0;					//Read from Peripheral address, write to DPSRAM address
-	DMA1CONbits.HALF = 0;					//Initiate interrupt when all of the data has been moved
-	DMA1CONbits.NULLW = 0;					//Normal operation
-	DMA1CONbits.AMODE = 2;					// Configure DMA for Peripheral indirect mode
-	DMA1CONbits.MODE = 2;					// Configure DMA for Continuous Ping-Pong mode
+	DMA2CONbits.SIZE = 0;					//Word
+	DMA2CONbits.DIR = 0;					//Read from Peripheral address, write to DPSRAM address
+	DMA2CONbits.HALF = 0;					//Initiate interrupt when all of the data has been moved
+	DMA2CONbits.NULLW = 0;					//Normal operation
+	DMA2CONbits.AMODE = 2;					// Configure DMA for Peripheral indirect mode
+	DMA2CONbits.MODE = 2;					// Configure DMA for Continuous Ping-Pong mode
 
-	DMA1PAD=(int)&ADC1BUF0;
+	DMA2PAD=(int)&ADC1BUF0;
 
-	DMA1REQbits.FORCE = 0;					//Automatic DMA transfer initiation by DMA Request
-	DMA1REQbits.IRQSEL = 0b0001101; 		//ADC1 ? ADC1 Convert done
+	DMA2REQbits.FORCE = 0;					//Automatic DMA transfer initiation by DMA Request
+	DMA2REQbits.IRQSEL = 0b0001101; 		//ADC1 ? ADC1 Convert done
 
-	DMA1STA = __builtin_dmaoffset(BufferA);	//Primary DPSRAM Start Address Offset bits (source or destination)
-	DMA1STB = __builtin_dmaoffset(BufferB);	//Secondary DPSRAM Start Address Offset bits (source or destination)
+	DMA2STA = __builtin_dmaoffset(BufferA);	//Primary DPSRAM Start Address Offset bits (source or destination)
+	DMA2STB = __builtin_dmaoffset(BufferB);	//Secondary DPSRAM Start Address Offset bits (source or destination)
 
-	DMA1CNT = DMA_BUF_DEPTH - 1;			//DMA Transfer Count Register bits
+	DMA2CNT = DMA_BUF_DEPTH - 1;			//DMA Transfer Count Register bits
 
 	//Interrupts
-	IFS0bits.DMA1IF = 0;					//Clear the DMA interrupt flag bit
-	IPC3bits.DMA1IP = 6;					//Highest-1
+	IFS1bits.DMA2IF = 0;					//Clear the DMA interrupt flag bit
+	
 //XXX
-	IEC0bits.DMA1IE = 1;					//Set the DMA interrupt enable bit
+	IEC1bits.DMA2IE = 1;					//Set the DMA interrupt enable bit
 
-	DMA1CONbits.CHEN = 1;					//Channel enabled
+	DMA2CONbits.CHEN = 1;					//Channel enabled
 }	// end setup_dma1
 
 unsigned int * current_dma_buf()
 {
     unsigned int * dma_buf_ptr;
 
-    if (DMACS1bits.PPST1)
+    if (DMACS1bits.PPST2)
         dma_buf_ptr = BufferA;
     else
         dma_buf_ptr = BufferB;
@@ -244,7 +246,7 @@ unsigned int * current_dma_buf()
 }
 
 
-void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
+void __attribute__((__interrupt__, no_auto_psv)) _DMA2Interrupt(void)
 {
     unsigned int * dma_buf_ptr;
     int i;
@@ -257,13 +259,14 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
     dma_buf_ptr = current_dma_buf();
 
     
-    for(i=0;i<ADC_NUM_CH;i++) {
+    for(i=0;i<3;i++) {
         adc_raw[i] = dma_buf_ptr[i];
         tmp = adc_raw[i] - (adc_zero[i]>>ADC_Q_FORM);
         adc_filter((int *)&adc_meas[i], tmp, 0x8 );
 
     }
-
+    //adc_meas[ADC_AMP_TEMP] = dma_buf_ptr[ADC_AMP_TEMP];
+    adc_meas[ADC_EXT_TEMP] = dma_buf_ptr[ADC_EXT_TEMP];
     set_current_ab(adc_meas[ADC_CURRENT_A],adc_meas[ADC_CURRENT_B]);
     //hall_state = get_hall_state();
     //current_reading = *current_sensor[hall_state]*current_signs[hall_state];
@@ -282,7 +285,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA1Interrupt(void)
             break;
     }*/
     
-    _DMA1IF = 0;		//Clear the flag
+    _DMA2IF = 0;		//Clear the flag
 }
 
 

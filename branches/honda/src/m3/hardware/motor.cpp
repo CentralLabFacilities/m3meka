@@ -227,7 +227,8 @@ void M3MotorModel::StepModelV2(mReal i, mReal pwm, mReal rpm, mReal tmp)
 	v_cemf = ABS(rpm*gear_ratio/speed_constant);
 	
 	//Current
-	i_rms=min(starting_current*1000.0,sqrt(ABS(curr_avg_rms.Step(i*i)))); //Just filter (Avoid NAN)
+	//i_rms=min(starting_current*1000.0,sqrt(ABS(curr_avg_rms.Step(i*i)))); //Just filter (Avoid NAN)
+	i_rms=min(starting_current*1000.0,i); // Lee: note this model does not use rms
 	i_cont=curr_avg_cont.Step(i_rms);
 
 	//Winding resistance

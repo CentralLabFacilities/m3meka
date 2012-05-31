@@ -41,6 +41,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/hardware/m3ec_pdo_v1_def.h"
 #include "m3/hardware/m3ec_pdo_v2_def.h"
 #include "m3/hardware/m3ec_pdo_v3_def.h"
+#include "m3/hardware/m3ec_pdo_v4_def.h"
 #include "m3rt/base/m3rt_def.h"
 #include "stdio.h"
 
@@ -51,10 +52,13 @@ void SysEcShmPrettyPrint(M3EcSystemShm * shm);
 
 void M3ActPdoStatusPrettyPrint(M3ActPdoV1Status * d, int sn,int ch);
 void M3ActPdoCommandPrettyPrint(M3ActPdoV1Cmd * d, int sn,int ch);
+void M3ActPdoV4StatusPrettyPrint(M3ActPdoV4Status * d, int sn, int ch);
 void M3ActX1PdoStatusPrettyPrint(M3ActX1PdoV1Status * d, int sn);
 void M3ActX1PdoV2StatusPrettyPrint(M3ActX1PdoV2Status * d, int sn);
+void M3ActX1PdoV4StatusPrettyPrint(M3ActX1PdoV4Status * d, int sn);
 void M3ActX1PdoCommandPrettyPrint(M3ActX1PdoV1Cmd * d, int sn);
 void M3ActX1PdoV2CommandPrettyPrint(M3ActX1PdoV2Cmd * d, int sn);
+void M3ActX1PdoV4CommandPrettyPrint(M3ActX1PdoV4Cmd * d, int sn);
 void M3ActX2PdoStatusPrettyPrint(M3ActX2PdoV1Status * d, int sn);
 void M3ActX2PdoCommandPrettyPrint(M3ActX2PdoV1Cmd * d, int sn);
 void M3ActX3PdoStatusPrettyPrint(M3ActX3PdoV1Status * d, int sn);
@@ -352,6 +356,24 @@ void M3ActPdoStatusPrettyPrint(M3ActPdoV1Status * d, int sn, int ch)
 	printf("id %d-%d: flags: %d\n",sn,ch,(int) d->flags);
 }
 
+void M3ActPdoV4StatusPrettyPrint(M3ActPdoV4Status * d, int sn, int ch)
+{
+	printf("Printing M3ActPdoV3Status\n");
+	printf("id %d-%d: qei_period: %d\n",sn,ch,(int) d->qei_period);
+	printf("id %d-%d: qei_on: %d\n",sn,ch,(int) d->qei_on);
+	printf("id %d-%d: qei_rollover: %d\n",sn,ch,(int) d->qei_rollover);
+	printf("id %d-%d: debug: %llu\n",sn,ch,(uint64_t) d->debug);
+	printf("id %d-%d: adc_torque: %d\n",sn,ch,(int) d->adc_torque);
+	//printf("id %d-%d: adc_motor_temp: %d\n",sn,ch,(int) d->adc_motor_temp);
+	printf("id %d-%d: adc_amp_temp: %d\n",sn,ch,(int) d->adc_amp_temp);
+	printf("id %d-%d: adc_current_a: %d\n",sn,ch,(int) d->adc_current_a);
+	printf("id %d-%d: adc_current_b: %d\n",sn,ch,(int) d->adc_current_b);
+	printf("id %d-%d: pwm_cmd: %d\n",sn,ch,(int) d->pwm_cmd);
+	printf("id %d-%d: flags: %d\n",sn,ch,(int) d->flags);
+	printf("id %d-%d: current_ma: %d\n",sn,ch, (int)d->current_ma);
+}
+
+
 void M3ActPdoV3StatusPrettyPrint(M3ActPdoV3Status * d, int sn, int ch)
 {
 	printf("Printing M3ActPdoV3Status\n");
@@ -406,6 +428,29 @@ void M3ActPdoCmdPrettyPrint(M3ActPdoV1Cmd * d, int sn, int ch)
 	printf("id %d-%d: config: %d\n",sn,ch,(int) d->config);		
 }
 
+void M3ActPdoV4CmdPrettyPrint(M3ActPdoV4Cmd * d, int sn, int ch)
+{	 
+	printf("id %d-%d: k_p: %d\n",sn,ch,(int) d->k_p);
+	printf("id %d-%d: k_i: %d\n",sn,ch,(int) d->k_i);
+	printf("id %d-%d: k_d: %d\n",sn,ch,(int) d->k_d);
+	//printf("id %d-%d: k_ff: %d\n",sn,ch,(int) d->k_ff);
+	printf("id %d-%d: k_p_shift: %d\n",sn,ch,(int) d->k_p_shift);
+	printf("id %d-%d: k_i_shift: %d\n",sn,ch,(int) d->k_i_shift);
+	printf("id %d-%d: k_d_shift: %d\n",sn,ch,(int) d->k_d_shift);
+	//printf("id %d-%d: k_ff_shift: %d\n",sn,ch,(int) d->k_ff_shift);
+	printf("id %d-%d: k_i_limit: %d\n",sn,ch,(int) d->k_i_limit);
+	//printf("id %d-%d: k_ff_zero: %d\n",sn,ch,(int) d->k_ff_zero);
+	printf("id %d-%d: t_desire: %d\n",sn,ch,(int) d->t_desire);	
+	//printf("id %d-%d: t_max: %d\n",sn,ch,(int) d->t_max);
+	//printf("id %d-%d: t_min: %d\n",sn,ch,(int) d->t_min);
+	printf("id %d-%d: pwm_max: %d\n",sn,ch,(int) d->pwm_max);
+	printf("id %d-%d: qei_min: %d\n",sn,ch,(int) d->qei_min);
+	printf("id %d-%d: qei_max: %d\n",sn,ch,(int) d->qei_max);
+	printf("id %d-%d: mode: %d\n",sn,ch,(int) d->mode);
+	printf("id %d-%d: config: %d\n",sn,ch,(int) d->config);		
+}
+
+
 void M3ActPdoV2CmdPrettyPrint(M3ActPdoV2Cmd * d, int sn, int ch)
 {
 	int i;
@@ -435,6 +480,14 @@ void M3ActX1PdoV3StatusPrettyPrint(M3ActX1PdoV3Status * d, int sn)
 	printf("sn %d: timestamp: %lld\n",sn, (uint64_t)d->timestamp);
 	M3ActPdoV3StatusPrettyPrint(&(d->status[0]),sn,0);
 }
+
+void M3ActX1PdoV4StatusPrettyPrint(M3ActX1PdoV4Status * d, int sn)
+{
+	printf("----- Status -----\n",0);
+	printf("sn %d: timestamp: %lld\n",sn, (uint64_t)d->timestamp);
+	M3ActPdoV4StatusPrettyPrint(&(d->status[0]),sn,0);
+}
+
 void M3ActX1PdoCommandPrettyPrint(M3ActX1PdoV1Cmd * d, int sn)
 {
 	printf("----- Command -----\n",0);
@@ -445,6 +498,13 @@ void M3ActX1PdoV2CommandPrettyPrint(M3ActX1PdoV2Cmd * d, int sn)
 	printf("----- Command -----\n",0);
 	M3ActPdoV2CmdPrettyPrint(&(d->command[0]),sn,0);
 }
+
+void M3ActX1PdoV4CommandPrettyPrint(M3ActX1PdoV4Cmd * d, int sn)
+{
+	printf("----- Command -----\n",0);
+	M3ActPdoV4CmdPrettyPrint(&(d->command[0]),sn,0);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 void M3ActX2PdoStatusPrettyPrint(M3ActX2PdoV1Status * d, int sn)
 {
@@ -713,8 +773,10 @@ void SlaveEcShmPrettyPrint(M3EcSlaveShm * shm)
 	  else
 	  {
 		  //M3ActX1PdoStatusPrettyPrint((M3ActX1PdoV1Status *) shm->status,shm->serial_number);
-		  M3ActX1PdoV3StatusPrettyPrint((M3ActX1PdoV3Status *) shm->status,shm->serial_number);
-		  M3ActX1PdoCommandPrettyPrint((M3ActX1PdoV1Cmd *) shm->cmd,shm->serial_number);
+		  //M3ActX1PdoV3StatusPrettyPrint((M3ActX1PdoV3Status *) shm->status,shm->serial_number);
+		  M3ActX1PdoV4StatusPrettyPrint((M3ActX1PdoV4Status *) shm->status,shm->serial_number);
+		  //M3ActX1PdoCommandPrettyPrint((M3ActX1PdoV1Cmd *) shm->cmd,shm->serial_number);
+		  M3ActX1PdoV4CommandPrettyPrint((M3ActX1PdoV4Cmd *) shm->cmd,shm->serial_number);
 	  }
 	}
 	if (shm->product_code==M3ACTX2_PRODUCT_CODE)

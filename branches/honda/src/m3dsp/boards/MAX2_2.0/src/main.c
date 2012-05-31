@@ -87,8 +87,7 @@ int main (void)
 	#endif
 	
 	//Analog to Digital
-	#ifdef USE_ADC
-        setup_dma1();
+	#ifdef USE_ADC        
 	setup_adc();
 	#endif
 	
@@ -135,12 +134,13 @@ int main (void)
 
 	while(1)
 	{
-		if (i++%20001==0)
+		if (i++%10001==0)
 		{
 			ToggleHeartbeatLED();
+                        #if defined USE_ETHERCAT
+                        step_ethercat();
+                        #endif
 		}
-		#if defined USE_ETHERCAT 
-		step_ethercat();
-		#endif
+		
 	}
 }

@@ -51,7 +51,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define TEMP_ADC_CC_SHIFT   15
 
 void setup_adc(void);
-void setup_dma1(void);
+void setup_dma2(void);
 unsigned int get_avg_adc(int idx);
 extern unsigned int adc_raw[];
 unsigned int get_avg_adc_torque();
