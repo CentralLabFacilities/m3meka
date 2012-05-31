@@ -110,17 +110,18 @@ dummy = U1RXREG;
 
 		if (i++%20001==0)
 		{
-			//ToggleHeartbeatLED();
-		}
+			ToggleHeartbeatLED();
 #if defined USE_ETHERCAT
-                if (!IEC0bits.DMA1IE)
-                {
-                    DISABLE_AL_EVENT_INT;
-                    step_ethercat();
-                    ENABLE_AL_EVENT_INT;
+                    if (!IEC0bits.DMA1IE)
+                    {
+                        DISABLE_AL_EVENT_INT;
+                        step_ethercat();
+                        ENABLE_AL_EVENT_INT;
 
-                }
+                    }
 #endif
+
+		}
 
 	} 
 }

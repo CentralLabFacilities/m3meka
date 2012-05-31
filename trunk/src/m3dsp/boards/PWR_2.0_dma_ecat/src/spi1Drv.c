@@ -174,7 +174,7 @@ void __attribute__((interrupt, no_auto_psv)) _DMA1Interrupt(void)
         IFS0bits.DMA1IF = 0;
         IEC0bits.DMA1IE  = 0;			// Enable DMA interrupt
 
-        ClrHeartbeatLED;
+//        ClrHeartbeatLED;
     }
 
   

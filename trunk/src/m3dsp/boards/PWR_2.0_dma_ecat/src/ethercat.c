@@ -137,8 +137,8 @@ void isr_update_input_pdo(void)
 #if defined USE_ADC_SPI
 	ec_stat.adc_ext=get_adc_spi(0); 
 #endif
-	//ec_stat.motor_enabled=GetMotorEnabledFiltered();//PinMotorEnabled;
-        ec_stat.motor_enabled=ec_cmd.enable_motor;//PinMotorEnabled;
+	ec_stat.motor_enabled=GetMotorEnabledFiltered();//PinMotorEnabled;
+        //ec_stat.motor_enabled=ec_cmd.enable_motor;//PinMotorEnabled;
 	//ec_stat.flags=ec_flags[0];
         ec_stat.flags=tx_cnt++;
 #endif
@@ -162,7 +162,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 
         SPI_SEL = SPI_DEACTIVE;				/* SPI should be deactivated to interrupt a possible transmission */
 
-        SetHeartbeatLED;
+        
 
 	ISR_GetInterruptRegister();			/* get the AL event in EscAlEvent */
 
