@@ -136,7 +136,7 @@ int main (void)
 	{
 		if (i++%10001==0)
 		{
-			ToggleHeartbeatLED();
+			//ToggleHeartbeatLED();
                         #if defined USE_ETHERCAT
                         step_ethercat();
                         #endif
