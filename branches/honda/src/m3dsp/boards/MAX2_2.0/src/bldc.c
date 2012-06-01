@@ -42,6 +42,20 @@ enum {
 
 void commutate();
 
+static int16_t motor_pos;
+const int16_t commutation_pos_table[8][8] = {{0,0,0,0,0,0,0,0},
+											 {0,0,0,1,0,-1,0,0},
+											 {0,0,0,-1,0,0,1,0},
+											 {0,-1,1,0,0,0,0,0},
+											 {0,0,0,0,0,1,-1,0},
+											 {0,1,0,0,-1,0,0,0},
+											 {0,0,-1,0,1,0,0,0},
+											 {0,0,0,0,0,0,0,0}};
+
+int16_t get_motor_pos()
+{
+	return motor_pos;
+}
 
 
 /*************************************************************
@@ -124,14 +138,34 @@ void set_bldc_dir(unsigned int fwd)
 
 void __attribute__((__interrupt__, no_auto_psv)) _CNInterrupt(void)
 {
-    if (bldc_mode == COMMUTATION)
+	static int hall_last = 0;
+	int hall_state = get_hall_state();
+	if (bldc_mode == COMMUTATION)
         commutate();
+
+	motor_pos += commutation_pos_table[hall_last][hall_state];
+
+
+	hall_last = hall_state;
     _CNIF=0;
 }
 
 void setup_bldc(void)
 {
     set_bldc_open();
+	
+	
+	motor_pos = 0;
+	CNPU1bits.CN1PUE=1; //Enable weak pull-up on CN1
+    CNPU2bits.CN21PUE=1; //Enable weak pull-up on CN21
+    CNPU2bits.CN22PUE=1; //Enable weak pull-up on CN22
+
+    CNEN1bits.CN1IE =1;		//Enable change-notification interrupt CN1: Hall1
+    CNEN2bits.CN21IE =1;	//Enable change-notification interrupt CN21: Hall2
+    CNEN2bits.CN22IE =1;	//Enable change-notification interrupt CN22: Hall3
+
+	_CNIF = 0;		//Clear change-notification Interrupt Status Flag
+    _CNIE=1;            //Enable change notification interrupt
 }
 
 int get_hall_state()
@@ -147,7 +181,7 @@ void set_bldc_open()
     bldc_mode = OFF;
 //    P1OVDCON = 0x3F00;
     P1OVDCON = 0x0000;
-    _CNIE=0;
+ //   _CNIE=0;
 }
 
 void set_bldc_brake()
@@ -156,7 +190,7 @@ void set_bldc_brake()
     // set all low legs to on, kill interrupts
 //    P1OVDCON = 0x3F15;
     P1OVDCON = 0x0015;
-    _CNIE=0;
+//    _CNIE=0;
 }
 
 void set_bldc_commutation()
@@ -166,21 +200,21 @@ void set_bldc_commutation()
 
     bldc_mode = COMMUTATION;
 
-    CNPU1bits.CN1PUE=1; //Enable weak pull-up on CN1
-    CNPU2bits.CN21PUE=1; //Enable weak pull-up on CN21
-    CNPU2bits.CN22PUE=1; //Enable weak pull-up on CN22
+//    CNPU1bits.CN1PUE=1; //Enable weak pull-up on CN1
+//    CNPU2bits.CN21PUE=1; //Enable weak pull-up on CN21
+//   CNPU2bits.CN22PUE=1; //Enable weak pull-up on CN22
 
-    CNEN1bits.CN1IE =1;		//Enable change-notification interrupt CN1: Hall1
-    CNEN2bits.CN21IE =1;	//Enable change-notification interrupt CN21: Hall2
-    CNEN2bits.CN22IE =1;	//Enable change-notification interrupt CN22: Hall3
+//    CNEN1bits.CN1IE =1;		//Enable change-notification interrupt CN1: Hall1
+//    CNEN2bits.CN21IE =1;	//Enable change-notification interrupt CN21: Hall2
+//    CNEN2bits.CN22IE =1;	//Enable change-notification interrupt CN22: Hall3
 
     set_bldc_dir(0);
     commutate();
 
 
 
-    _CNIF = 0;		//Clear change-notification Interrupt Status Flag
-    _CNIE=1;            //Enable change notification interrupt
+//    _CNIF = 0;		//Clear change-notification Interrupt Status Flag
+//    _CNIE=1;            //Enable change notification interrupt
 }
 
 void commutate()

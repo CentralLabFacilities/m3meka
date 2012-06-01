@@ -172,7 +172,7 @@ void setup_adc(void)
 
         AD1CON3bits.ADRC = 0;			// ADC Clock is derived from Systems Clock
 	AD1CON3bits.SAMC = 5;
-	AD1CON3bits.ADCS = 1;
+	AD1CON3bits.ADCS = 2;                   // I think this should be the minimum value
 
         AD1CON4bits.DMABL	= 0;//ADC_NUM_SAMPLES-1;		// Allocates ADC_NUM_SAMPLES words of buffer to each analog input
 

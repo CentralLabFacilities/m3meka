@@ -35,7 +35,7 @@ calib:
     i_scale: 1.0
     max_efficiency: 77.0
     max_pwm_duty: 3186.0
-    max_winding_temp: 125.0
+    max_winding_temp: 1025.0
     mechanical_time_constant: 20.300000000000001
     model_type: model_v1
     name: Maxon EC45 Flat 50W 24V 339286

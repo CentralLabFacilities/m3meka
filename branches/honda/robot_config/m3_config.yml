@@ -7,7 +7,7 @@ factory_py_libs:
   - /usr/local/lib/python2.6/dist-packages/m3/m3meka_factory_proxy.py
 rt_components:
   pwr:
-    m3pwr_pwr023: m3pwr
+    m3pwr_pwr026: m3pwr
   sea:
 #   m3actuator_mt4_j1: m3actuator
     m3ctrl_simple_j0: m3ctrl_simple
@@ -17,4 +17,4 @@ ec_components:
 #   m3actuator_ec_mt4_j1: m3actuator_ec
     m3actuator_ec_j0: m3actuator_ec
   pwr:
-    m3pwr_ec_pwr023: m3pwr_ec
+    m3pwr_ec_pwr026: m3pwr_ec

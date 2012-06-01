@@ -319,6 +319,7 @@ void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
     status.set_qei_rollover(ax->qei_rollover);
     status.set_qei_err_cnt(ax->qei_err_cnt);
     status.set_flags(ax->flags);
+	status.set_motor_pos(ax->motor_pos);
     
 }
 

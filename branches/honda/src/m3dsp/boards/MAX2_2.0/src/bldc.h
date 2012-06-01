@@ -33,6 +33,7 @@ void set_bldc_mode(int bldc_bdc_mode);
 void set_bldc_open();
 void set_bldc_brake();
 void set_bldc_commutation();
+int16_t get_motor_pos();
 
 extern unsigned int bldc_hall_val;
 

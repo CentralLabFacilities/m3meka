@@ -77,6 +77,7 @@ typedef struct
 	int16_t		qei_rollover;		//Encoder rollover counts (directional) -1|0|1 ...
 	int16_t		qei_err_cnt;		//Err
 	int16_t		flags;			//Reserved
+        int16_t         motor_pos;              // calculated from the hall effect sensors
 }M3ActPdoV4Status;
 
 ///////////////////////////////  M3ACT_PDO_V4 Multi-Channel /////////////////////////////////////////////////////

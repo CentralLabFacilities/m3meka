@@ -74,6 +74,7 @@ message M3ActuatorEcStatus{
 	optional int32				pwm_cmd=17;				//Current PWM command to motor
 	optional int32				flags=18;				//Reserved
 	optional int32				current_ma=19;				//Calibrated on amp (1 mA precision)
+	optional int32				motor_pos = 20;			// motor pos in hall effect transition counts
 }
 
 message M3ActuatorEcCommand{

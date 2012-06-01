@@ -70,6 +70,7 @@ class M3Proc:
 		self.proxy.publish_command(pr)
 		self.proxy.make_operational(pwr_rt)
 		self.proxy.make_operational(pwr_ec)
+		self.proxy.subscribe_status(pr)
 		pr.set_motor_power_on()
 		
 		tmax=[x.param.t_max for x in self.actuator_ec]
