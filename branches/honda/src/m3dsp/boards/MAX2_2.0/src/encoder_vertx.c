@@ -136,6 +136,7 @@ void step_vertx()
 	BB_SPI_SET_MISO
         DELAY_8000NS
 
+	__asm__ volatile ("disi #0x3FFF"); // disable interrupts
 	//Read in MSB Takes ~20us
 	x=0;
 	y=0;
@@ -163,8 +164,11 @@ void step_vertx()
 	BB_SPI_BIT_IN(x,y);
 	x=x<<1;
 	y=y<<1;
-	       
+
+	__asm__ volatile ("disi #0"); // enable interrupts
+
        DELAY_13000NS //Can be 12.5us-1.2=11.3us in theory
+	__asm__ volatile ("disi #0x3FFF"); // disable interrupts
 
 	//Read in LSB .Takes ~20us
 	BB_SPI_BIT_IN(x,y);
@@ -189,6 +193,7 @@ void step_vertx()
 	x=x<<1;
 	y=y<<1;
 	BB_SPI_BIT_IN(x,y);
+	__asm__ volatile ("disi #0"); // enable interrupts
         
         DELAY_2300NS // WAIT 2.3us min between the SPI_CLK = lo and SS
 	BB_SPI_SS_SET;

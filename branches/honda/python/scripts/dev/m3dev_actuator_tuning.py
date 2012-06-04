@@ -110,8 +110,8 @@ class M3Proc:
 
 
 		self.param_dict = self.proxy.get_param_dict()
-		#self.joint_torque	= self.param_dict[self.comp_name]['calib']['cb_bias']
-		#self.joint_theta	= self.param_dict[self.comp_name]['calib']['cb_bias']
+#		self.joint_torque	= self.param_dict[self.comps['act']['name']]['calib']['torque']['cb_bias']
+#		self.joint_theta	= self.param_dict[self.comps['act']['name']]['calib']['theta']['cb_bias']
 	
 		
 		self.gui.add('M3GuiTree',   'Status',		(self,'status_dict'),[],[],m3g.M3GuiRead,column=2)
@@ -147,13 +147,13 @@ class M3Proc:
 		self.status_dict=self.proxy.get_status_dict()
 
 	
-#		if self.zero_joint_theta and not self.zero_joint_theta_last:
-#			self.joint_theta -= self.act.get_joint_theta()
-#			print 'New joint_theta zero',self.joint_theta
-#		
-#		if self.zero_joint_torque and not self.zero_joint_torque_last:
-#			self.joint_torque -= self.act.get_joint_torque()
-#			print 'New joint_torque zero',self.joint_torque
+		if self.zero_joint_theta and not self.zero_joint_theta_last:
+			self.joint_theta -= self.act.get_joint_theta()
+			print 'New joint_theta zero',self.joint_theta
+		
+		if self.zero_joint_torque and not self.zero_joint_torque_last:
+			self.joint_torque -= self.act.get_joint_torque()
+			print 'New joint_torque zero',self.joint_torque
 #
 #		if self.zero_joint_torque_lc and not self.zero_joint_torque_lc_last:
 #			self.joint_torque_lc -= self.act.get_joint_torque_lc()
@@ -195,7 +195,7 @@ class M3Proc:
 				
 		elif self.mode[0] == 1: #Current
 			self.act.set_mode(mec.ACTUATOR_MODE_CURRENT)
-			self.act.set_current_q(self.current_desired[0])
+			self.act.set_i_desired(self.current_desired[0])
 		else:
 			self.act.set_mode(mec.ACTUATOR_MODE_OFF)
 		

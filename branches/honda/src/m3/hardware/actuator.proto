@@ -74,7 +74,7 @@ message M3ActuatorParam{
 message M3ActuatorCommand{
 	optional double			pwm_desired = 1;    			//Desired pwm (ticks)
 	optional double			tq_desired = 2;     			//Desired torque (mNm)
-	optional double			i_desired = 3;    			//Desired pwm (ticks)
+	optional double			i_desired = 3;    			//Desired current (A)
 	optional ACTUATOR_MODE		ctrl_mode = 4;				//Desired control mode
 	optional bool			brake_off=5;				//Disable brake if present
 }
