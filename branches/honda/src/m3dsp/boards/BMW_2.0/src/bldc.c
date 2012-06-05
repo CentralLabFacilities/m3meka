@@ -42,6 +42,20 @@ enum {
 
 void commutate();
 
+static int16_t motor_pos;
+const int16_t commutation_pos_table[8][8] = {{0,0,0,0,0,0,0,0},
+											 {0,0,0,1,0,-1,0,0},
+											 {0,0,0,-1,0,0,1,0},
+											 {0,-1,1,0,0,0,0,0},
+											 {0,0,0,0,0,1,-1,0},
+											 {0,1,0,0,-1,0,0,0},
+											 {0,0,-1,0,1,0,0,0},
+											 {0,0,0,0,0,0,0,0}};
+
+int16_t get_motor_pos()
+{
+	return motor_pos;
+}
 
 
 /*************************************************************
@@ -124,13 +138,22 @@ void set_bldc_dir(unsigned int fwd)
 
 void __attribute__((__interrupt__, no_auto_psv)) _CNInterrupt(void)
 {
+    static int hall_last = 0;
+	int hall_state = get_hall_state();
     if (bldc_mode == COMMUTATION)
         commutate();
+
+    motor_pos += commutation_pos_table[hall_last][hall_state];
+
+
+	hall_last = hall_state;
+
     _CNIF=0;
 }
 
 void setup_bldc(void)
 {
+    motor_pos = 0;
     set_bldc_open();
 
     BLDC_PU_1=1; //Enable weak pull-up on CN1
@@ -141,7 +164,10 @@ void setup_bldc(void)
     BLDC_CN_2=1;
     BLDC_CN_3=1;
 
+    _CNIF = 0;		//Clear change-notification Interrupt Status Flag
+    _CNIE=1;            //Enable change notification interrupt
 }
+
 
 int get_hall_state()
 {
@@ -156,7 +182,7 @@ void set_bldc_open()
     bldc_mode = OFF;
 //    P1OVDCON = 0x3F00;
     P1OVDCON = 0x0000;
-    _CNIE=0;
+    //_CNIE=0;
 }
 
 void set_bldc_brake()
@@ -165,7 +191,7 @@ void set_bldc_brake()
     // set all low legs to on, kill interrupts
 //    P1OVDCON = 0x3F15;
     P1OVDCON = 0x0015;
-    _CNIE=0;
+    //_CNIE=0;
 }
 
 void set_bldc_commutation()

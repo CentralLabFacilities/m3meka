@@ -125,10 +125,11 @@ int main (void)
              
 		if (i++%20001==0)
 		{
-			//ToggleHeartbeatLED();
+			ToggleHeartbeatLED();
+                        #if defined USE_ETHERCAT
+                        step_ethercat();
+                        #endif
 		}
-		#if defined USE_ETHERCAT 
-		step_ethercat();
-		#endif
+		
 	}
 }

@@ -6,7 +6,6 @@
                    projectFiles="true">
       <itemPath>../../src/adc.h</itemPath>
       <itemPath>../../src/bldc.h</itemPath>
-      <itemPath>../../src/control.h</itemPath>
       <itemPath>../../src/current.h</itemPath>
       <itemPath>../../src/dio.h</itemPath>
       <itemPath>../../src/encoder_vertx.h</itemPath>
@@ -21,6 +20,8 @@
       <itemPath>../../src/warning.h</itemPath>
       <itemPath>../../src/state_machine.h</itemPath>
       <itemPath>../../../../../m3/hardware/m3ec_pdo_v4_def.h</itemPath>
+      <itemPath>../../src/spi1Drv.h</itemPath>
+      <itemPath>../../src/ethercat_hw.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -39,7 +40,6 @@
                    projectFiles="true">
       <itemPath>../../src/adc.c</itemPath>
       <itemPath>../../src/bldc.c</itemPath>
-      <itemPath>../../src/control.c</itemPath>
       <itemPath>../../src/current.c</itemPath>
       <itemPath>../../src/dio.c</itemPath>
       <itemPath>../../src/encoder_vertx.c</itemPath>
@@ -52,6 +52,7 @@
       <itemPath>../../src/setup.c</itemPath>
       <itemPath>../../src/timer3.c</itemPath>
       <itemPath>../../src/state_machine.c</itemPath>
+      <itemPath>../../src/spi1Drv.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -117,11 +118,11 @@
         <property key="extra-include-directories-for-assembler" value=".."/>
         <property key="preprocessor-macros" value=""/>
         <property key="list-file" value=""/>
-        <property key="relax" value="false"/>
         <property key="list-source" value="false"/>
         <property key="list-assembly" value="false"/>
-        <property key="warning-level" value="emit-warnings"/>
+        <property key="relax" value="false"/>
         <property key="extra-include-directories-for-preprocessor" value=""/>
+        <property key="warning-level" value="emit-warnings"/>
         <property key="list-section-info" value="false"/>
         <property key="omit-forms" value="false"/>
         <property key="list-symbols" value="false"/>
@@ -139,8 +140,8 @@
         <property key="heap-size" value=""/>
         <property key="remove-unused-sections" value="false"/>
         <property key="stack-size" value=""/>
-        <property key="trace-symbols" value=""/>
         <property key="linker-symbols" value=""/>
+        <property key="trace-symbols" value=""/>
         <property key="map-file" value="&quot;${DISTDIR}/bmw_1_0_a2r4.X.${IMAGE_TYPE}.map&quot;"/>
         <property key="enable-pack-data" value="true"/>
         <property key="boot-eeprom" value="no_eeprom"/>
@@ -148,23 +149,23 @@
         <property key="enable-handles" value="true"/>
         <property key="enable-data-init" value="true"/>
         <property key="secure-flash" value="no_flash"/>
-        <property key="report-memory-usage" value="true"/>
-        <property key="boot-write-protect" value="no_write_protect"/>
-        <property key="boot-flash" value="no_flash"/>
         <property key="generate-cross-reference-file" value="false"/>
+        <property key="boot-flash" value="no_flash"/>
+        <property key="boot-write-protect" value="no_write_protect"/>
+        <property key="report-memory-usage" value="true"/>
         <property key="input-libraries" value=""/>
         <property key="secure-ram" value="no_ram"/>
         <property key="enable-check-sections" value="false"/>
         <property key="enable-default-isr" value="true"/>
         <property key="symbol-stripping" value=""/>
         <property key="boot-ram" value="no_ram"/>
-        <property key="secure-eeprom" value="no_eeprom"/>
         <property key="extra-lib-directories" value="..;"/>
+        <property key="secure-eeprom" value="no_eeprom"/>
       </C30-LD>
       <C30Global>
         <property key="fast-math" value="false"/>
-        <property key="output-file-format" value="elf"/>
         <property key="legacy-libc" value="false"/>
+        <property key="output-file-format" value="elf"/>
       </C30Global>
       <ICD3PlatformTool>
         <property key="tracecontrol.select" value="0"/>

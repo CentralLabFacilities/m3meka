@@ -38,12 +38,15 @@ void setup_interrupt_priorities(void)
 	//Ethercat Master AL interrupt on INT0
 	//Apps inherit Bootloader settings so need set here for Bootloader too.
 	//ToDo:FIX! (Will node more details if I want to fix this!)
-	_INT0IP = 3;	//Ethercat Interrupt
-	_INT2IP = 2;	//SYNC0 Interrupt
-	_AD1IP = 7;		//ADC conversion done 	
+	_INT0IP = 7;	//Ethercat Interrupt
+	//_INT2IP = 2;	//SYNC0 Interrupt
+	_AD1IP = 6;		//ADC conversion done
 	_T1IF = 0;
 	_T1IP = 3;		//Timer1 ToDo Remove?
-	
+	_DMA2IP = 6;
+
+        _DMA1IP = 7;
+        _DMA0IP = 7;
 	#ifdef USE_BLDC
 	_CNIP = 7; //Change notification for Hall 1-3
 	#endif	//#ifdef USE_BLDC

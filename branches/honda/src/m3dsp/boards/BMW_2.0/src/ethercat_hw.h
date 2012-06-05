@@ -168,6 +168,16 @@ PROTO	void HW_Main(void);
 PROTO   void ISR_GetInterruptRegister();
 
 
+
+PROTO   void ResetIdx();
+PROTO void ISR_StartDMA(  );
+PROTO	void ISR_EscWriteAccessDMA( UINT8 *pData, UINT16 Address, UINT16 Len );
+PROTO	void ISR_EscReadAccessDMA( UINT8 *pData, UINT16 Address, UINT16 Len );
+
+extern unsigned char did_rx;
+extern unsigned char did_tx;
+extern unsigned char do_tx;
+
 #undef	PROTO
 //////////////////////////////////////////////////////////////////////////////////
 
