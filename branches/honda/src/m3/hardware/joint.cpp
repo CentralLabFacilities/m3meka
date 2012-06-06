@@ -350,7 +350,7 @@ void M3Joint::StepCommand()
 				StepBrake(des,trans->GetThetaActuatorDeg());
 				//Do PID in actuator space so result is direct PWM
 				ctrl_simple->SetDesiredControlMode(CTRL_MODE_THETA);
-				ctrl_simple->SetDesiredTheta(des);
+				ctrl_simple->SetDesiredTheta(DEG2RAD(des));
 				break;
 			}
 			case JOINT_MODE_THETA_GC:
@@ -378,7 +378,7 @@ void M3Joint::StepCommand()
 				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
 				tq_out=tq_on*(stiffness*tq_des-gravity)+(1.0-tq_on)*tq_switch;
 				//Send out
-				trans->SetTorqueDesJoint(tq_out);				
+				trans->SetTorqueDesJoint(tq_out/1000.0);				
 				
 				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
 				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
@@ -397,7 +397,7 @@ void M3Joint::StepCommand()
 				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
 				tq_out=tq_on*(tq_des-gravity)+(1.0-tq_on)*tq_switch;
 				//Send out
-				trans->SetTorqueDesJoint(tq_out);				
+				trans->SetTorqueDesJoint(tq_out/1000.0);				
 				
 				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
 				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
@@ -413,7 +413,7 @@ void M3Joint::StepCommand()
 				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
 				tq_out=tq_on*tq_des+(1.0-tq_on)*tq_switch;
 				//Send out
-				trans->SetTorqueDesJoint(tq_out);
+				trans->SetTorqueDesJoint(tq_out/1000.0);
 				
 				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
 				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
