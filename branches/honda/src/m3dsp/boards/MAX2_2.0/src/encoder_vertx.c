@@ -109,7 +109,8 @@ void step_vertx()
 	BB_SPI_SS_CLR
 	BB_SPI_CLK_CLR
 	DELAY_2300NS // WAIT 2.3us min between the SPI_SEL = lo and clock        
-	
+
+	__asm__ volatile ("disi #0x3FFF"); // disable interrupts
 	//Send 0xAA =b10101010. Takes ~20us
 	BB_SPI_BIT_OUT(1,1)
 	BB_SPI_BIT_OUT(0,0)
@@ -119,9 +120,10 @@ void step_vertx()
 	BB_SPI_BIT_OUT(0,0)
 	BB_SPI_BIT_OUT(1,1)
 	BB_SPI_BIT_OUT(0,0)
-	
+	__asm__ volatile ("disi #0");
         DELAY_13000NS //Can be 12.5us-1.2=11.3us in theory
 
+	__asm__ volatile ("disi #0x3FFF"); // disable interrupts
 	//Send 0xFF =b11111111. Takes ~20us
 	BB_SPI_BIT_OUT(1,1)
 	BB_SPI_BIT_OUT(1,1)
@@ -131,7 +133,7 @@ void step_vertx()
 	BB_SPI_BIT_OUT(1,1)
 	BB_SPI_BIT_OUT(1,1)
 	BB_SPI_BIT_OUT(1,1)
-	
+	__asm__ volatile ("disi #0");
         DELAY_8000NS //Can be 15-1.2us-13.8us in theory
 	BB_SPI_SET_MISO
         DELAY_8000NS
