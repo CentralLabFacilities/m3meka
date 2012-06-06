@@ -214,7 +214,7 @@ void M3CtrlSimple::StepCommand()
 			StatusCommand()->set_current(desired_current);
 			break;
 		case CTRL_MODE_TORQUE:
-		case CTRL_MODE_TORQUE_GC:
+		//case CTRL_MODE_TORQUE_GC:
 			//PID
 			desired_current = pid_torque.Step(GetJointTorque(),
 						  GetJointTorqueDot(),
