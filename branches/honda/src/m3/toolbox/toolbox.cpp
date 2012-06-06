@@ -18,7 +18,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-#include "m3/toolbox/toolbox.h"
+#include "toolbox.h"
 
 namespace m3
 {
