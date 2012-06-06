@@ -3,15 +3,6 @@ name: m3ctrl_simple_j0
 param:
   controller:
     current_limit: 1000.0
-  pid_joint_torque:
-    k_d: 0.0
-    k_des_max: 10000.0
-    k_des_min: -10000.0
-    k_i: 0.0
-    k_i_limit: -20.0
-    k_i_range: 15000.0
-    k_p: 1.0
-    k_slew_max: 0.0
   pid_theta:
     k_d: 0.02
     k_des_max: 160
@@ -21,6 +12,15 @@ param:
     k_i_range: 1.0
     k_p: 1.0
     k_slew_max: 1200.0
+  pid_torque:
+    k_d: 0.01
+    k_des_max: 10000.0
+    k_des_min: -10000.0
+    k_i: 0.01
+    k_i_limit: 20.0
+    k_i_range: 15000.0
+    k_p: 2.0
+    k_slew_max: 0.0
   traj_current:
     amp: 2.0
     freq: 100.0
