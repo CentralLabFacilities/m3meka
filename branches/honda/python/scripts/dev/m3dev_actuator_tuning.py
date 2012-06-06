@@ -27,16 +27,14 @@ import m3.gui as m3g
 import m3.rt_proxy as m3p
 import m3.toolbox as m3t
 import m3.actuator_pb2 as mec
-import m3.actuator as m3s
+
 import m3.component_factory as m3f
 import math
 import glob
-import m3.actuator_ec as m3sec
+from m3dev_tuning import M3Tuning
 
 
-class M3Proc:
-	comps = {'act': {'name': 'm3actuator_j0', 'type':m3s.M3Actuator }, 
-			'act_ec': {'name': 'm3actuator_ec_j0', 'type':m3sec.M3ActuatorEc}}
+class M3Proc(M3Tuning):
 
 	def __init__(self):
 		self.proxy = m3p.M3RtProxy()
@@ -53,22 +51,25 @@ class M3Proc:
 	
 		self.proxy.start()
 		
-		for k,v in self.comps.items():
-			# accomplishes this: self.act=m3s.M3Actuator(self.comp_name)
-			setattr(self, k, v['type'](v['name']) )
-			self.comps[k]['comp'] = getattr(self,k)
-			self.proxy.subscribe_status(getattr(self,k))
-			self.proxy.publish_command(getattr(self,k)) 
-			self.proxy.publish_param(getattr(self,k)) 
-			self.proxy.make_operational(v['name'])
+		self.get_component('m3_actuator')
+		self.start_components(['act','act_ec','pwr'],None)
+		
+#		for k,v in self.comps.items():
+#			# accomplishes this: self.act=m3s.M3Actuator(self.comp_name)
+#			setattr(self, k, v['type'](v['name']) )
+#			self.comps[k]['comp'] = getattr(self,k)
+#			self.proxy.subscribe_status(getattr(self,k))
+#			self.proxy.publish_command(getattr(self,k)) 
+#			self.proxy.publish_param(getattr(self,k)) 
+#			self.proxy.make_operational(v['name'])
 			
-		pwr_rt=m3t.get_actuator_ec_pwr_component_name(self.comps['act_ec']['name'])
-		pwr_ec=pwr_rt.replace('m3pwr','m3pwr_ec')
-		pr=m3f.create_component(pwr_rt)
-		self.proxy.publish_command(pr)
-		self.proxy.make_operational(pwr_rt)
-		self.proxy.make_operational(pwr_ec)
-		pr.set_motor_power_on()
+#		pwr_rt=m3t.get_actuator_ec_pwr_component_name(self.comps['act_ec']['name'])
+#		pwr_ec=pwr_rt.replace('m3pwr','m3pwr_ec')
+#		pr=m3f.create_component(pwr_rt)
+#		self.proxy.publish_command(pr)
+#		self.proxy.make_operational(pwr_rt)
+#		self.proxy.make_operational(pwr_ec)
+#		pr.set_motor_power_on()
 			
 
 		self.proxy.step()

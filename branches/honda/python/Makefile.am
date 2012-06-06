@@ -140,7 +140,8 @@ dist_bin_SCRIPTS = \
 	scripts/tutorials/m3_tutorial_4.py\
 	scripts/dev/m3dev_actuator_ec_tuning2.py\
 	scripts/dev/m3dev_actuator_tuning.py\
-	scripts/dev/m3dev_ctrl_simple_tuning.py
+	scripts/dev/m3dev_ctrl_simple_tuning.py\
+	scripts/dev/m3dev_tuning.py
 	
 
 

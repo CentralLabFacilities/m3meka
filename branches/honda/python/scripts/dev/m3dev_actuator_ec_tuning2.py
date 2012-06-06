@@ -104,7 +104,7 @@ class M3Proc:
 		self.gui.add('M3GuiTree',   'Status',    (self,'status_dict'),[],[],m3g.M3GuiRead,column=2)
 		self.gui.add('M3GuiTree',   'Param',   (self,'param_dict'),[],[],m3g.M3GuiWrite,column=3)
 		self.gui.add('M3GuiModes',  'Mode',      (self,'mode'),range(len(self.actuator_ec)),[['off','pwm','torque','current','brake'],1],m3g.M3GuiWrite)
-		self.gui.add('M3GuiSliders','pwmDesire', (self,'pwm_desire'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite) 
+		self.gui.add('M3GuiSliders','pwmDesire', (self,'pwm_desire'),range(len(self.actuator_ec)),[-1000,1000],m3g.M3GuiWrite) 
 		self.gui.add('M3GuiSliders','currentDesire', (self,'current_desire'),range(len(self.actuator_ec)),[-2500,2500],m3g.M3GuiWrite) 
 		self.gui.add('M3GuiToggle', 'Save',      (self,'save'),[],[['On','Off']],m3g.M3GuiWrite)
 		self.gui.add('M3GuiToggle', 'Scope',      (self,'do_scope'),[],[['On','Off']],m3g.M3GuiWrite)

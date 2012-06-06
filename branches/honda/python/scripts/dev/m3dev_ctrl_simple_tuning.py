@@ -110,14 +110,24 @@ class M3Proc:
 		torque_max = 40.0
 
 		self.param_dict=self.proxy.get_param_dict()
+		
+		print str(self.param_dict)
 
+		self.modes = mec._CTRL_SIMPLE_MODE.values_by_number
+		self.mode_names = [self.modes[i].name for i in sorted(self.modes.keys())]
+		
+		self.trajs = mec._CTRL_SIMPLE_TRAJ_MODE.values_by_number
+		self.traj_names = [self.trajs[i].name for i in sorted(self.trajs.keys())]
 
 		self.gui.add('M3GuiTree',   'Status',	(self,'status_dict'),[],[],m3g.M3GuiRead,column=2)
 		self.gui.add('M3GuiTree',   'Param',	(self,'param_dict'),[],[],m3g.M3GuiWrite,column=3)
 		
-		self.gui.add('M3GuiModes',  'Mode',		(self,'mode'),range(1),[['Off','Current','Theta','Torque','Torque_LC'],1],m3g.M3GuiWrite)
+		self.gui.add('M3GuiModes',  'Mode',		(self,'mode'),range(1),[self.mode_names,1],m3g.M3GuiWrite)
 																			
-		self.gui.add('M3GuiModes',  'Traj',		(self,'traj'),range(1),[[	'Off','Current Square','Current Sine','Theta Square','Theta Sine','Torque Square','Torque Sine','TorqueLC Square','TorqueLC Sine'],1],m3g.M3GuiWrite)
+		self.gui.add('M3GuiModes',  'Traj',		(self,'traj'),range(1),[self.traj_names,1],m3g.M3GuiWrite)
+#		self.gui.add('M3GuiModes',  'Mode',		(self,'mode'),range(1),[['Off','Current','Theta','Torque','Torque_LC'],1],m3g.M3GuiWrite)
+																			
+#		self.gui.add('M3GuiModes',  'Traj',		(self,'traj'),range(1),[[	'Off','Current Square','Current Sine','Theta Square','Theta Sine','Torque Square','Torque Sine','TorqueLC Square','TorqueLC Sine'],1],m3g.M3GuiWrite)
 		
 		self.gui.add('M3GuiSliders','Current',	(self,'current'),range(1),	[-current_max,current_max],m3g.M3GuiWrite)
 		self.gui.add('M3GuiSliders','Theta',		(self,'theta'),range(1),[-theta_max,theta_max],m3g.M3GuiWrite)
@@ -189,9 +199,10 @@ class M3Proc:
 #			self.ctrl.set_mode_theta()
 #			self.ctrl.set_theta(self.theta[0])
 #			
-#		elif self.mode[0]==mec.CTRL_MODE_TORQUE:
-#			self.ctrl.set_mode_torque()
-#			self.ctrl.set_torque(self.torque[0])
+		elif self.mode[0]==mec.CTRL_MODE_TORQUE:
+			print "kp: " + str(self.ctrl.param.pid_torque.k_p)
+			self.ctrl.set_mode_torque()
+			self.ctrl.set_torque(self.torque[0])
 #			
 #		elif self.mode[0]==mec.CTRL_MODE_TORQUE_LC:
 #			self.ctrl.set_mode_torque_lc()
