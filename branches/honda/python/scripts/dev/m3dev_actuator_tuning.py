@@ -37,6 +37,7 @@ from m3dev_tuning import M3Tuning
 class M3Proc(M3Tuning):
 
 	def __init__(self):
+		M3Tuning.__init__(self)
 		self.proxy = m3p.M3RtProxy()
 		self.gui = m3g.M3Gui(stride_ms=125)
 		self.cnt=0
@@ -51,7 +52,7 @@ class M3Proc(M3Tuning):
 	
 		self.proxy.start()
 		
-		self.get_component('m3_actuator')
+		self.get_component('m3actuator')
 		self.start_components(['act','act_ec','pwr'],None)
 		
 #		for k,v in self.comps.items():
@@ -211,7 +212,7 @@ if __name__ == '__main__':
 	t=M3Proc()
 	try:
 		t.start()
-	except (KeyboardInterrupt,EOFError):
+	except: #(KeyboardInterrupt,EOFError):
 		pass
 	t.stop()
 

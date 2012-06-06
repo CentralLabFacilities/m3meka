@@ -11,10 +11,10 @@ import m3.pwr as m3power
 class M3Tuning:
   
 	def __init__(self):
-		self.comps = {'act': {'name': 'm3dev_actuator_', 'type':m3a.M3RwActuator, 'child_name':'act_ec_component' }, 
-		'act_ec': {'name': 'm3dev_actuator_ec_', 'type':m3aec.M3RwActuatorEc, 'child_name':None},
-		'ctrl': {'name': 'm3dev_ctrl_simple_', 'type':m3cs.M3RwCtrlSimple, 'child_name':'act_component'},
-		'pwr': {'name': 'm3rw_pwr', 'type': m3power.M3Pwr}}
+		self.comps = {'act': {'name': 'm3actuator_ma15', 'type':m3a.M3Actuator, 'child_name':'act_ec_component' }, 
+		'act_ec': {'name': 'm3actuator_ec_ma15', 'type':m3aec.M3ActuatorEc, 'child_name':None},
+		'ctrl': {'name': 'm3ctrl_simple_ma15', 'type':m3cs.M3CtrlSimple, 'child_name':'act_component'},
+		'pwr': {'name': 'm3pwr_pwr023', 'type': m3power.M3Pwr}}
 #		'arm' : {'name': 'm3rw_arm_ra0', 'type': m3arm.M3RwArm, 'child_name':'chain_component'},
 #		'chain': {'name': 'm3rw_joint_chain', 'type': m3jc.M3RwJointChain, 'child_name':'joint_components'},
 #		'joint': {'name': 'm3rw_joint', 'type': m3j.M3RwJoint, 'child_name':'control_component'},
