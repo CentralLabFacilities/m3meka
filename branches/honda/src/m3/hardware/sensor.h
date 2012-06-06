@@ -20,8 +20,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef M3_SENSOR_H
 #define M3_SENSOR_H
 
-#include "m3/toolbox/toolbox.h"
-#include "m3rt/base/m3ec_def.h"
+#include "../toolbox/toolbox.h"
+#include <m3rt/base/m3ec_def.h>
 #include <kdl/frames.hpp>
 #include <Eigen/Core>
 

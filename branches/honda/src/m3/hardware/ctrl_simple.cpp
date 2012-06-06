@@ -72,7 +72,7 @@ bool M3CtrlSimple::ReadConfig(const char * filename)
 	doc["param"]["traj_torque"] >> ParamTrajTorque();
 	
 	doc["param"]["pid_theta"] >> ParamPidTheta();
-	doc["param"]["pid_joint_torque"] >> ParamPidTorque();
+	doc["param"]["pid_torque"] >> ParamPidTorque();
 
 	return true;
 } // end ReadConfig

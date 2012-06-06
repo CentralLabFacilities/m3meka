@@ -21,13 +21,13 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define M3_ACTUATOR_H
 
 #include "m3rt/base/component.h"
-#include "m3/hardware/actuator.pb.h"
-#include <m3/hardware/actuator_ec.pb.h>
-#include "m3/hardware/actuator_ec.h"
-#include "m3/hardware/sensor.h"
-#include "m3/hardware/motor.h"
-#include "m3/toolbox/toolbox.h"
-#include "m3/toolbox/dfilter.h"
+#include "actuator.pb.h"
+#include "actuator_ec.pb.h"
+#include "actuator_ec.h"
+#include "sensor.h"
+#include "motor.h"
+#include "../toolbox/toolbox.h"
+#include "../toolbox/dfilter.h"
 #include <google/protobuf/message.h>
 
 namespace m3

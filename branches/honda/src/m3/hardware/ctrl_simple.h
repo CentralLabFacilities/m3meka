@@ -25,8 +25,8 @@
 
 #include <google/protobuf/message.h>
 #include <m3rt/base/component.h>
-#include <m3/toolbox/toolbox.h>
-#include <m3/toolbox/dfilter.h>
+#include "../toolbox/toolbox.h"
+#include "../toolbox/dfilter.h"
 #include "ctrl_simple.pb.h"
 #include "actuator.h"
 #include "actuator.pb.h"
