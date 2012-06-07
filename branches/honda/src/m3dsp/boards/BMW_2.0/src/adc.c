@@ -262,18 +262,25 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA2Interrupt(void)
 
     }*/
 
+    adc_raw[ADC_TEMP_AMB] = dma_buf_ptr[ADC_TEMP_AMB];//*ADC_NUM_SAMPLES];
+    tmp = adc_raw[ADC_TEMP_AMB] - (adc_zero[ADC_TEMP_AMB]>>ADC_Q_FORM);
+    adc_filter((int *)&adc_meas[ADC_TEMP_AMB], tmp, 0x1 );
+
+    adc_raw[ADC_TEMP_BOARD] = dma_buf_ptr[ADC_TEMP_BOARD];//*ADC_NUM_SAMPLES];
+    tmp = adc_raw[ADC_TEMP_BOARD] - (adc_zero[ADC_TEMP_BOARD]>>ADC_Q_FORM);
+    adc_filter((int *)&adc_meas[ADC_TEMP_BOARD], tmp, 0x1 );
+
+
     adc_raw[ADC_CURRENT_A] = dma_buf_ptr[ADC_CURRENT_A];//*ADC_NUM_SAMPLES];
     tmp = adc_raw[ADC_CURRENT_A] - (adc_zero[ADC_CURRENT_A]>>ADC_Q_FORM);
-    adc_filter((int *)&adc_meas[ADC_CURRENT_A], tmp, 0x8 );
+    adc_filter((int *)&adc_meas[ADC_CURRENT_A], tmp, 0x4 );
 
     adc_raw[ADC_CURRENT_B] = dma_buf_ptr[ADC_CURRENT_B];//*ADC_NUM_SAMPLES];
     tmp = adc_raw[ADC_CURRENT_B] - (adc_zero[ADC_CURRENT_B]>>ADC_Q_FORM);
-    adc_filter((int *)&adc_meas[ADC_CURRENT_B], tmp, 0x8 );
+    adc_filter((int *)&adc_meas[ADC_CURRENT_B], tmp, 0x4 );
 
     set_current_ab(adc_meas[ADC_CURRENT_A],adc_meas[ADC_CURRENT_B]);
 
-    adc_meas[ADC_TEMP_AMB] = dma_buf_ptr[ADC_TEMP_AMB];
-    adc_meas[ADC_TEMP_BOARD] = dma_buf_ptr[ADC_TEMP_BOARD];
     
     //hall_state = get_hall_state();
     //current_reading = *current_sensor[hall_state]*current_signs[hall_state];
