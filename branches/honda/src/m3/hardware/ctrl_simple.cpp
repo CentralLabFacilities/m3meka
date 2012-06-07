@@ -205,10 +205,10 @@ void M3CtrlSimple::StepCommand()
 	if (command.ctrl_mode()== CTRL_MODE_TORQUE_GC)
 	  desired_torque -= status.torque_gravity();
 	
-	if (command.ctrl_mode() != ctrl_mode_last)
+	if ((command.ctrl_mode() != ctrl_mode_last) || !act->IsMotorPowerSlewedOn())
 	{
-		pid_torque.ResetIntegrator();
-		pid_theta.ResetIntegrator();
+		ResetIntegrators();
+		
 	}
 	ctrl_mode_last = command.ctrl_mode();
 	

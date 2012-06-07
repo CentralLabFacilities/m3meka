@@ -383,7 +383,7 @@ void  M3ActuatorEc::StepStatus()
 	error_printed = true;
       }
     }
-    
+    status.set_motor_power_slewed_on(motor_power_slewed_on);
   //}
 }
 
@@ -569,7 +569,8 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 		pwr_scale=1.0;
 	    else
 		pwr_scale=0.0;
-		pwm_scale=1.0;
+	    motor_power_slewed_on = true;
+	    pwm_scale=1.0;
 	}
 	else
 	{
@@ -587,6 +588,10 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 			pwm_slew.Reset(0);
 			pwm_scale=0;
 		}
+		if (pwr_scale >= 0.98)
+		  motor_power_slewed_on = true;
+		else
+		  motor_power_slewed_on = false;
 	}
 	
 	
@@ -611,6 +616,10 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	
 	if (command.mode()==ACTUATOR_EC_MODE_PWM) //Overwrite
 		ax->t_desire=CLAMP((int)((mReal)command.t_desire()*pwr_scale*pwm_scale),-1*ax->pwm_max,ax->pwm_max);
+
+	if (command.mode()==ACTUATOR_EC_MODE_CURRENT) //Overwrite
+		command.set_current_desired(((mReal)command.current_desired())*pwr_scale);
+
 	
 	if (IsVersion(DEFAULT)||IsVersion(ISS))
 	{

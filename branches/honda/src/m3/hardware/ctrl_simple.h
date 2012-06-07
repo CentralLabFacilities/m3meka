@@ -78,6 +78,8 @@ class M3CtrlSimple: public  m3rt::M3Component
 		
 		int64_t GetTimestamp()			{return GetBaseStatus()->timestamp();}
 		
+		void ResetIntegrators(){pid_torque.ResetIntegrator();pid_theta.ResetIntegrator();}
+		
 		google::protobuf::Message * GetCommand(){return &command;}
 		google::protobuf::Message * GetStatus(){return &status;}
 		google::protobuf::Message * GetParam(){return &param;}

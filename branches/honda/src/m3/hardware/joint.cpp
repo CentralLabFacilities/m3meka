@@ -312,9 +312,10 @@ void M3Joint::StepCommand()
 	if(IsStateError())
 	{
 		if (IsVersion(IQ))
-		  act->SetDesiredControlMode(ACTUATOR_MODE_OFF);
-		else
 		  ctrl_simple->SetDesiredControlMode(CTRL_MODE_OFF);
+		else
+		  act->SetDesiredControlMode(ACTUATOR_MODE_OFF);
+		  
 		return;
 	}
 	
@@ -328,8 +329,12 @@ void M3Joint::StepCommand()
 		jerk_joint.Startup(GetTimestamp(), GetThetaDeg());
 		tq_switch=GetTorque();
 		q_switch=GetThetaDeg();
-		pwm_switch=GetPwmCmd();
+		pwm_switch=GetPwmCmd();		
+		ctrl_simple->ResetIntegrators();
 	}
+	
+	if (!act->IsMotorPowerSlewedOn())
+	    ctrl_simple->ResetIntegrators();
 	
 	if (IsVersion(IQ)) { 
 	  

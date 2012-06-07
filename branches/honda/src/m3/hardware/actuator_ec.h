@@ -39,7 +39,8 @@ using namespace std;
 
 class M3ActuatorEc : public  m3rt::M3ComponentEc{
 	public:
-		M3ActuatorEc():ignore_pwm_slew(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),pwm_ff(0),pwm_max_ext(0),error_printed(false),tmp_cnt(0),m3rt::M3ComponentEc()
+		M3ActuatorEc():ignore_pwm_slew(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),
+			      pwm_ff(0),pwm_max_ext(0),error_printed(false),tmp_cnt(0),motor_power_slewed_on(false),m3rt::M3ComponentEc()
 		{
 			memset(&exs,0,sizeof(M3ActPdoV2StatusExt));
 			memset(&exc,0,sizeof(M3ActPdoV2CmdExt));
@@ -74,6 +75,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		
 		bool IsMotorPowerOn(){return pwr->IsMotorPowerOn();}
 		void SetMotorEnable(int on){pwr->SetMotorEnable(on);}
+		bool IsMotorPowerSlewedOn(){return motor_power_slewed_on;}
 		void SetZeroEncoder(){param.set_config(param.config()|ACTUATOR_EC_CONFIG_CALIB_QEI_MANUAL);}
 		void ClrZeroEncoder(){param.set_config(param.config()&~ACTUATOR_EC_CONFIG_CALIB_QEI_MANUAL);}
 		void SetLimitSwitchNegZeroEncoder(){param.set_config(param.config()|ACTUATOR_EC_CONFIG_CALIB_QEI_LIMITSWITCH_NEG);}
@@ -133,7 +135,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		M3ActPdoV1Cmd  acc;
 		M3SeaPdoV0Cmd  scc;
 		bool error_printed;
-		
+		bool motor_power_slewed_on;
 		int toggle;
 		
 };

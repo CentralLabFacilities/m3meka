@@ -75,6 +75,7 @@ message M3ActuatorEcStatus{
 	optional int32				flags=18;				//Reserved
 	optional int32				current_ma=19;				//Calibrated on amp (1 mA precision)
 	optional int32				motor_pos = 20;			// motor pos in hall effect transition counts
+	optional bool				motor_power_slewed_on = 21;			//Disable brake if present
 }
 
 message M3ActuatorEcCommand{
