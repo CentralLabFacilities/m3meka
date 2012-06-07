@@ -11,9 +11,9 @@ import m3.pwr as m3power
 class M3Tuning:
   
 	def __init__(self):
-		self.comps = {'act': {'name': 'm3actuator_ma15', 'type':m3a.M3Actuator, 'child_name':'act_ec_component' }, 
-		'act_ec': {'name': 'm3actuator_ec_ma15', 'type':m3aec.M3ActuatorEc, 'child_name':None},
-		'ctrl': {'name': 'm3ctrl_simple_ma15', 'type':m3cs.M3CtrlSimple, 'child_name':'act_component'},
+		self.comps = {'act': {'name': 'm3actuator_ma15_', 'type':m3a.M3Actuator, 'child_name':'act_ec_component' }, 
+		'act_ec': {'name': 'm3actuator_ec_ma15_', 'type':m3aec.M3ActuatorEc, 'child_name':None},
+		'ctrl': {'name': 'm3ctrl_simple_ma15_', 'type':m3cs.M3CtrlSimple, 'child_name':'act_component'},
 		'pwr': {'name': 'm3pwr_pwr023', 'type': m3power.M3Pwr}}
 #		'arm' : {'name': 'm3rw_arm_ra0', 'type': m3arm.M3RwArm, 'child_name':'chain_component'},
 #		'chain': {'name': 'm3rw_joint_chain', 'type': m3jc.M3RwJointChain, 'child_name':'joint_components'},
@@ -75,8 +75,8 @@ class M3Tuning:
 		
 		if 'pwr' in component_list:
 			print 'making power operational'
-			self.proxy.make_operational(self.pwr.get_actuator_ec_name())
-			self.pwr.set_mode_on()	
+			#self.proxy.make_operational(self.pwr.get_actuator_ec_name())
+			self.pwr.set_motor_power_on()	
 		self.proxy.step()
 
 	def get_children_components(self,comp_name):

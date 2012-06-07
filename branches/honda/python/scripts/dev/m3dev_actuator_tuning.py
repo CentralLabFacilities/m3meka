@@ -53,7 +53,9 @@ class M3Proc(M3Tuning):
 		self.proxy.start()
 		
 		self.get_component('m3actuator')
+		print "starting components"
 		self.start_components(['act','act_ec','pwr'],None)
+		print "done starting components"
 		
 #		for k,v in self.comps.items():
 #			# accomplishes this: self.act=m3s.M3Actuator(self.comp_name)
