@@ -37,9 +37,9 @@ import m3.actuator as m3a
 import m3.pwr as m3power
 
 class M3Proc:
-	comps = {'act': {'name': 'm3actuator_ma15_j2', 'type':m3a.M3Actuator }, 
-			'act_ec': {'name': 'm3actuator_ec_ma15_j2', 'type':m3aec.M3ActuatorEc},
-			'ctrl': {'name': 'm3ctrl_simple_ma15_j2', 'type':m3cs.M3CtrlSimple}}#,
+	comps = {'act': {'name': 'm3actuator_ma15_j6', 'type':m3a.M3Actuator }, 
+			'act_ec': {'name': 'm3actuator_ec_ma15_j6', 'type':m3aec.M3ActuatorEc},
+			'ctrl': {'name': 'm3ctrl_simple_ma15_j6', 'type':m3cs.M3CtrlSimple}}#,
 #			'pwr': {'name': 'm3pwr_ec_pwr026', 'type':m3power.M3Pwr}}
 
 

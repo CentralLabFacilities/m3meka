@@ -24,6 +24,7 @@ import m3.omnibase
 import m3.ledx2xn_ec
 import m3.led_matrix_ec
 import m3.head_s2csp_ctrl
+import m3.ctrl_simple
 
 ######################
 
@@ -68,6 +69,7 @@ component_map['m3joint_zlift'] = m3.joint_zlift.M3JointZLift
 component_map['m3omnibase'] = m3.omnibase.M3OmniBase
 component_map['m3ledx2xn_ec'] = m3.ledx2xn_ec.M3LedX2XNEc
 component_map['m3led_matrix_ec'] = m3.led_matrix_ec.M3LedMatrixEc
+component_map['m3ctrl_simple'] = m3.ctrl_simple.M3CtrlSimple
 
     #'m3hand_ua': m3.hand_ua.M3HandUA,
     #'m3taxel_array_ec': m3skin.taxel_array_ec.M3TaxelArrayEc,

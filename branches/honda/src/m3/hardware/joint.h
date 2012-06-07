@@ -139,6 +139,7 @@ class M3Joint: public m3rt::M3Component
 		int brake_off_cmd;
 		int brake_type;
 		bool disable_pwm_ramp;
+		int pnt_cnt;
 };
 
 

@@ -42,6 +42,7 @@ class M3Dynamatics : public m3rt::M3Component
 		{
 			RegisterVersion("default",DEFAULT);	//RBL
 			RegisterVersion("iss",ISS);		//ISS. Safe as DEFAULT
+			//RegisterVersion("iq",IQ);
 		}
 		~M3Dynamatics()
 		{

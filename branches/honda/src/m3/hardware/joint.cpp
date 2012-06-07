@@ -182,6 +182,7 @@ void M3Joint::Shutdown()
 
 void M3Joint::StepStatus()
 {
+	pnt_cnt++;
 	if (IsStateError())
 		return;
 	status.set_flags(act->GetFlags());
@@ -371,6 +372,11 @@ void M3Joint::StepCommand()
 						param.kq_d(),
 						param.kq_i_limit(),
 						param.kq_i_range());
+				if (pnt_cnt%200==0) {		
+					M3_DEBUG("actuator: %s\n", GetName().c_str());
+					M3_DEBUG("tq_des: %f\n",tq_des);
+					M3_DEBUG("des: %f\n\n",des);
+				}
 				stiffness=CLAMP(command.q_stiffness(),0.0,1.0);
 				gravity=GetTorqueGravity()*param.kq_g();
 				//Ramp in from torque at switch-over point

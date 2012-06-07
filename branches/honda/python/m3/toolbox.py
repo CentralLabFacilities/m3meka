@@ -91,6 +91,19 @@ def get_joint_actuator_component_name(name):
                 print 'Config file not present:',get_component_config_filename(name),'for',name
                 return
         return config['actuator_component']
+        
+def get_joint_ctrl_component_name(name):	
+        if get_component_config_type(name) == 'm3joint_slave':
+                return ""
+        config= None	
+        try:
+                f=file(get_component_config_filename(name),'r')
+                config= yaml.safe_load(f.read())
+        except (IOError, EOFError):
+                print 'Config file not present:',get_component_config_filename(name),'for',name
+                return
+        return config['control_component']
+
 
 def get_chain_dynamatics_component_name(name):		
         config= None	
