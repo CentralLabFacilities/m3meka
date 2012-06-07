@@ -96,6 +96,7 @@ void M3CtrlSimple::Startup()
 		SetStateSafeOp();
 	else
 		SetStateError();
+	ctrl_mode_last = CTRL_MODE_BRAKE;
 }
 
 void M3CtrlSimple::Shutdown()
@@ -203,6 +204,13 @@ void M3CtrlSimple::StepCommand()
 	
 	if (command.ctrl_mode()== CTRL_MODE_TORQUE_GC)
 	  desired_torque -= status.torque_gravity();
+	
+	if (command.ctrl_mode() != ctrl_mode_last)
+	{
+		pid_torque.ResetIntegrator();
+		pid_theta.ResetIntegrator();
+	}
+	ctrl_mode_last = command.ctrl_mode();
 	
 	//Handle Inner Control Loops
 	switch(command.ctrl_mode())

@@ -104,6 +104,7 @@ class M3CtrlSimple: public  m3rt::M3Component
 		
 		M3Actuator * act;
 		string	act_name;
+		CTRL_SIMPLE_MODE ctrl_mode_last;
 		
 		int pnt_cnt;
 };
