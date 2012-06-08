@@ -17,10 +17,10 @@
 
 import time
 import os
-import roslib; roslib.load_manifest('m3_toolbox_ros')
+import roslib; roslib.load_manifest('m3_defs_ros')
 import rospy
 import m3.component_factory as m3f
-#from sensor_msgs.msg import JointState
+from sensor_msgs.msg import JointState
 from roslib.msg import Header
 import subprocess
         

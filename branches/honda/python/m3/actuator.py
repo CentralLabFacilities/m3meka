@@ -40,6 +40,8 @@ class M3Actuator(M3Component):
         self.command.pwm_desired=p
     def set_torque_mNm(self, t):
         self.command.tq_desired=t
+    def set_i_desired(self, i):
+        self.command.i_desired = i
     def set_control_mode(self,m):
         self.command.ctrl_mode=m
     def set_mode_off(self):

@@ -199,7 +199,7 @@ class M3Proc(M3Tuning):
 				
 		elif self.mode[0] == 1: #Current
 			self.act.set_mode(mec.ACTUATOR_MODE_CURRENT)
-			self.act.set_i_desired(self.current_desired[0])
+			self.act.set_i_desired(self.current_desired[0]*1000.0)
 		else:
 			self.act.set_mode(mec.ACTUATOR_MODE_OFF)
 		

@@ -35,16 +35,18 @@ import m3.ctrl_simple as m3cs
 import m3.actuator_ec as m3aec
 import m3.actuator as m3a
 import m3.pwr as m3power
+from m3dev_tuning import M3Tuning
 
-class M3Proc:
-	comps = {'act': {'name': 'm3actuator_ma15_j1', 'type':m3a.M3Actuator }, 
-			'act_ec': {'name': 'm3actuator_ec_ma15_j1', 'type':m3aec.M3ActuatorEc},
-			'ctrl': {'name': 'm3ctrl_simple_ma15_j1', 'type':m3cs.M3CtrlSimple}}#,
+class M3Proc(M3Tuning):
+#	comps = {'act': {'name': 'm3actuator_ma15_j0', 'type':m3a.M3Actuator }, 
+#			'act_ec': {'name': 'm3actuator_ec_ma15_j0', 'type':m3aec.M3ActuatorEc},
+#			'ctrl': {'name': 'm3ctrl_simple_ma15_j0', 'type':m3cs.M3CtrlSimple}}#,
 #			'pwr': {'name': 'm3pwr_ec_pwr026', 'type':m3power.M3Pwr}}
 
 
 
 	def __init__(self):
+		M3Tuning.__init__(self)
 		self.proxy = m3p.M3RtProxy()
 		self.gui = m3g.M3Gui(stride_ms=125)
 		self.cnt=0
@@ -58,15 +60,21 @@ class M3Proc:
 	def start(self):
 		self.proxy.start()
 
-		for k,v in self.comps.items():
-			# accomplishes this: self.act=m3s.M3Actuator(self.comp_name)
-			setattr(self, k, v['type'](v['name']) )
-			self.comps[k]['comp'] = getattr(self,k)
-			self.proxy.subscribe_status(getattr(self,k))
-			self.proxy.publish_command(getattr(self,k)) 
-			self.proxy.publish_param(getattr(self,k)) 
-			self.proxy.make_operational(v['name'])
-			
+		self.get_component('m3actuator')
+		print "starting components"
+		self.start_components(['ctrl','act','act_ec'],None)
+		print "done starting components"
+		
+
+#		for k,v in self.comps.items():
+#			# accomplishes this: self.act=m3s.M3Actuator(self.comp_name)
+#			setattr(self, k, v['type'](v['name']) )
+#			self.comps[k]['comp'] = getattr(self,k)
+#			self.proxy.subscribe_status(getattr(self,k))
+#			self.proxy.publish_command(getattr(self,k)) 
+#			self.proxy.publish_param(getattr(self,k)) 
+#			self.proxy.make_operational(v['name'])
+#			
 		pwr_rt=m3t.get_actuator_ec_pwr_component_name(self.comps['act_ec']['name'])
 		pwr_ec=pwr_rt.replace('m3pwr','m3pwr_ec')
 		pr=m3f.create_component(pwr_rt)
