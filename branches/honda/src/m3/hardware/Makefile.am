@@ -47,37 +47,38 @@ libm3hardwareinclude_HEADERS = \
 	pwr_ec.pb.h\
 	actuator_ec.h\
 	actuator_ec.pb.h\
+	actuator_ec.proto\
+	ctrl_simple.pb.h\
+	async_io.pb.h\
+	robot_monitor.pb.h\
+	ledx2xn_ec.pb.h\
+	led_matrix_ec.pb.h\
+	ledx2_ec.pb.h\
+	tactile_pps22_ec.pb.h\
+	loadx6_ec.pb.h\
+	loadx6.pb.h\
+	loadx1_ec.pb.h\
+	loadx1.pb.h\
+	joint.pb.h\
 	joint.h\
 	actuator_virtual.h\
 	joint_slave.h\
-	joint.pb.h\
 	sensor.h\
 	transmission.h\
 	loadx1.h\
-	loadx1.pb.h\
 	loadx1_ec.h\
-	loadx1_ec.pb.h\
 	loadx6.h\
 	loadx6_virtual.h\
-	loadx6.pb.h\
 	loadx6_ec.h\
-	loadx6_ec.pb.h\
 	tactile_pps22_ec.h\
-	tactile_pps22_ec.pb.h\
 	ledx2_ec.h\
-	ledx2_ec.pb.h\
-	led_matrix_ec.pb.h\
 	led_matrix_ec.h\
 	joint_zlift.h\
 	ledx2xn_ec.h\
-	ledx2xn_ec.pb.h\
 	robot_monitor.h\
-	robot_monitor.pb.h\
 	async_io.h\
-	actuator_ec.proto\
-	async_io.pb.h\
-	ctrl_simple.h\
-	ctrl_simple.pb.h
+	ctrl_simple.h
+
 	
 clean-local:
 	rm -f *.pb.*
@@ -263,6 +264,8 @@ libm3hardware_la_SOURCES = \
 	joint.pb.cpp\
 	ledx2xn_ec.pb.cpp\
 	led_matrix_ec.pb.cpp\
+	ctrl_simple.pb.cpp\
+	log_test.pb.cpp\
  	pwr_ec.cpp\
 	pwr.cpp\
 	pwr_virtual.cpp\
@@ -286,10 +289,8 @@ libm3hardware_la_SOURCES = \
 	ledx2xn_ec.cpp\
 	robot_monitor.cpp\
 	async_io.cpp\
-	log_test.pb.cpp\
 	log_test.cpp\
 	factory_proxy.cpp\
-	ctrl_simple.pb.cpp\
 	ctrl_simple.cpp
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////
