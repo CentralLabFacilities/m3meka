@@ -40,7 +40,8 @@ using namespace std;
 class M3ActuatorEc : public  m3rt::M3ComponentEc{
 	public:
 		M3ActuatorEc():ignore_pwm_slew(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),
-			      pwm_ff(0),pwm_max_ext(0),error_printed(false),tmp_cnt(0),motor_power_slewed_on(false),m3rt::M3ComponentEc()
+			      pwm_ff(0),pwm_max_ext(0),error_printed(false),tmp_cnt(0),motor_power_slewed_on(false),
+			      tq_err_cnt(0),qei_err_cnt(0), m3rt::M3ComponentEc()
 		{
 			memset(&exs,0,sizeof(M3ActPdoV2StatusExt));
 			memset(&exc,0,sizeof(M3ActPdoV2CmdExt));
@@ -137,7 +138,8 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		bool error_printed;
 		bool motor_power_slewed_on;
 		int toggle;
-		
+		int qei_err_cnt;
+		int tq_err_cnt;
 };
 
 

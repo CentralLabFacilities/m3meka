@@ -305,7 +305,45 @@ void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
     
     status.set_current_ma(ax->current_ma);
     status.set_debug(ax->debug);
-    status.set_adc_torque(ax->adc_torque);
+    
+    //tq_old = status.adc_torque();
+    int tq_diff = ABS(ax->adc_torque - status.adc_torque());
+    
+    if (tq_diff > 40)
+    {
+      tq_err_cnt++;
+    }
+    else
+    {
+      status.set_adc_torque(ax->adc_torque);
+      tq_err_cnt = 0;
+    }
+    
+    if (tq_err_cnt > 2)
+    {
+      tq_err_cnt = 0;
+      status.set_adc_torque(ax->adc_torque);
+    }
+    
+    if (ABS(ax->qei_on - status.qei_on()) > 50)
+    {
+      qei_err_cnt++;
+    }
+    else
+    {
+      status.set_qei_on(ax->qei_on);
+      qei_err_cnt = 0;
+    }
+    
+    if (qei_err_cnt > 2)
+    {
+      qei_err_cnt = 0;
+      status.set_qei_on(ax->qei_on);
+    }
+    
+    //status.set_adc_torque(ax->adc_torque);
+    //status.set_qei_on(ax->qei_on);  
+      
     status.set_torque_err_cnt(ax->torque_err_cnt);
     status.set_adc_ext_temp(ax->adc_ext_temp); 
     status.set_adc_amp_temp(ax->adc_amp_temp);
@@ -314,7 +352,7 @@ void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
     status.set_adc_current_a(ax->adc_current_a);
     status.set_adc_current_b(ax->adc_current_b);
     status.set_pwm_cmd(ax->pwm_cmd);	
-    status.set_qei_on(ax->qei_on);
+    
     status.set_qei_period(ax->qei_period);
     status.set_qei_rollover(ax->qei_rollover);
     status.set_qei_err_cnt(ax->qei_err_cnt);
