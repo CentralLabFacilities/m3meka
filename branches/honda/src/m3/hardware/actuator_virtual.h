@@ -34,6 +34,7 @@ class M3ActuatorVirtual : public M3Actuator
 	public:
 		M3ActuatorVirtual():joint(0){}	
 		virtual bool IsMotorPowerOn(){return true;}
+		virtual bool IsMotorPowerSlewedOn(){return true;}
 	protected:
 		void Startup();
 		void Shutdown();

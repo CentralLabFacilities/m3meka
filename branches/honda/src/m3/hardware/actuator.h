@@ -55,7 +55,7 @@ class M3Actuator : public m3rt::M3Component
 		void SetDesiredTorque(mReal val){ command.set_tq_desired(val);}
 		void SetDesiredCurrent(mReal val){ command.set_i_desired(val);}
 		void SetBrakeOff(bool off){command.set_brake_off(off);}
-		bool IsMotorPowerSlewedOn(){return ecc->IsMotorPowerSlewedOn();}
+		virtual bool IsMotorPowerSlewedOn(){return ecc->IsMotorPowerSlewedOn();}
 		mReal GetDesiredTorque(){return command.tq_desired();}
 		mReal GetMotorTemp(){return status.motor_temp();}
 		mReal GetAmpTemp(){return status.amp_temp();}

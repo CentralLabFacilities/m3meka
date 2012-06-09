@@ -224,7 +224,7 @@ class M3Proc:
 	def step(self):
 		self.proxy.step()
 
-		print 'Arm: ',self.get_arm_mode_name()
+		#print 'Arm: ',self.get_arm_mode_name()
 		apply(self.arm_mode_methods[self.arm_mode[0]])
 		if self.get_arm_mode_name()!='Square' and self.get_arm_mode_name()!='Circle' and self.get_arm_mode_name()!='TrajA':
 			self.via_traj_first=True
@@ -283,9 +283,17 @@ class M3Proc:
 		if self.via_traj_first and len(self.via_traj[self.get_arm_mode_name()]):
 			self.via_traj_first=False
 			theta_0 = self.bot.get_theta_deg(self.arm_name)[:]	
-			vias=[theta_0]+self.via_traj[self.get_arm_mode_name()]+[theta_0] #start and stop at current pos	
+			vias=[list(theta_0)]+self.via_traj[self.get_arm_mode_name()]+[list(theta_0)] #start and stop at current pos
+			print '-------'
+			print vias
+			print '-------'
+			idx = 0
 			for v in vias:
-				self.bot.add_splined_traj_via_deg(self.arm_name, v,[self.velocity[0]]*self.ndof)				
+				#if idx == 0 or idx == len(vias)-1:
+				#	self.bot.add_splined_traj_via_deg(self.arm_name, v,[self.velocity[0]/10.0]*self.ndof)				
+				#else:
+				self.bot.add_splined_traj_via_deg(self.arm_name, v,[self.velocity[0]]*self.ndof)
+				idx += 1
 		if  self.bot.is_splined_traj_complete(self.arm_name):
 			self.via_traj_first=True
 
