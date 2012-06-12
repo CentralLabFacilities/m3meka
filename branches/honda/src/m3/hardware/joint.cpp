@@ -196,7 +196,7 @@ void M3Joint::StepStatus()
 	status.set_theta(trans->GetThetaJointDeg());
 	status.set_thetadot(trans->GetThetaDotJointDeg());
 	status.set_thetadotdot(trans->GetThetaDotDotJointDeg());
-	status.set_torque(trans->GetTorqueJoint());
+	status.set_torque(trans->GetTorqueJoint()); ;  // TODO: Make GetTorque nNm again
 	status.set_torquedot(trans->GetTorqueDotJoint());
 }
 
@@ -327,9 +327,11 @@ void M3Joint::StepCommand()
 		pwm_on_slew.Reset(0.0);
 		q_slew.Reset(GetThetaDeg());
 		jerk_joint.Startup(GetTimestamp(), GetThetaDeg());
-		tq_switch=GetTorque();
+		tq_switch=GetTorque()*1000;  // TODO: Make GetTorque nNm again
+		
+		M3_INFO("tq_switch: %f\n", tq_switch);
 		q_switch=GetThetaDeg();
-		pwm_switch=GetPwmCmd();		
+		pwm_switch=GetPwmCmd();
 		ctrl_simple->ResetIntegrators();
 	}
 	
@@ -355,7 +357,8 @@ void M3Joint::StepCommand()
 				mReal des=trans->GetThetaDesActuatorDeg();
 				StepBrake(des,trans->GetThetaActuatorDeg());
 				//Do PID in actuator space so result is direct PWM
-				ctrl_simple->SetDesiredControlMode(CTRL_MODE_THETA);
+				//ctrl_simple->SetDesiredControlMode(CTRL_MODE_THETA);
+				ctrl_simple->SetDesiredControlMode(CTRL_MODE_OFF); // TODO:  Remimplement mode theta, theta_mj
 				ctrl_simple->SetDesiredTheta(DEG2RAD(des));
 				break;
 			}
@@ -386,10 +389,13 @@ void M3Joint::StepCommand()
 				gravity=GetTorqueGravity()*param.kq_g();
 				//Ramp in from torque at switch-over point
 				mReal tq_on, tq_out;
-				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
+				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME); 
+				//tq_on = 1.0;
 				tq_out=tq_on*(stiffness*tq_des-gravity)+(1.0-tq_on)*tq_switch;
+				//tq_out = tq_switch;
+				//tq_out = stiffness*tq_des-gravity;
 				//Send out
-				trans->SetTorqueDesJoint(tq_out/1000.0);				
+				trans->SetTorqueDesJoint(tq_out/1000.0);	//TODO: convert back to mNm	
 				
 				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
 				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
@@ -434,7 +440,8 @@ void M3Joint::StepCommand()
 			case JOINT_MODE_OFF:
 			case JOINT_MODE_PWM: // no longer used 
 			default:
-				act->SetDesiredControlMode(ACTUATOR_MODE_OFF);
+				ctrl_simple->SetDesiredControlMode(CTRL_MODE_OFF);
+				//act->SetDesiredControlMode(ACTUATOR_MODE_OFF);
 				mReal des; //dummy
 				StepBrake(des,0);
 				break;
