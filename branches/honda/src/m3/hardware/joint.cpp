@@ -328,8 +328,6 @@ void M3Joint::StepCommand()
 		q_slew.Reset(GetThetaDeg());
 		jerk_joint.Startup(GetTimestamp(), GetThetaDeg());
 		tq_switch=GetTorque()*1000;  // TODO: Make GetTorque nNm again
-		
-		M3_INFO("tq_switch: %f\n", tq_switch);
 		q_switch=GetThetaDeg();
 		pwm_switch=GetPwmCmd();
 		ctrl_simple->ResetIntegrators();
