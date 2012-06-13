@@ -17,10 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "m3/hardware/actuator.h"
-#include "m3rt/base/m3rt_def.h"
-#include "m3rt/base/component_factory.h"
-#include "inttypes.h"
+#include "actuator.h"
+#include <m3rt/base/m3rt_def.h>
+#include <m3rt/base/component_factory.h>
+#include <inttypes.h>
 
 namespace m3{
 	
@@ -49,6 +49,7 @@ void M3Actuator::Shutdown()
 
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool M3Actuator::ReadConfig(const char * filename)
@@ -61,7 +62,7 @@ bool M3Actuator::ReadConfig(const char * filename)
 		return false;
 	GetYamlDoc(filename, doc);
 	
-	if (IsVersion(ISS))
+	if (IsVersion(ISS) || IsVersion(IQ))
 	{
 		ex_sense.ReadConfig(doc["calib"]["ext_temp"]);
 	}
@@ -71,7 +72,7 @@ bool M3Actuator::ReadConfig(const char * filename)
 		doc["param"]["max_current"] >> max_current;
 		ex_sense.ReadConfig(doc["calib"]["motor_temp"]); //motor_temp renamed ext_temp
 	}
-	if (IsVersion(DEFAULT) || IsVersion(ISS))
+	if (IsVersion(DEFAULT) || IsVersion(ISS) || IsVersion(IQ))
 	{
 		doc["ec_component"] >> ecc_name;
 		doc["ignore_bounds"] >> val;
@@ -84,12 +85,28 @@ bool M3Actuator::ReadConfig(const char * filename)
 		{
 			safe_pwm_limit = (bool) 0;
 		} 
+		try
+		{
+			doc["use_i_torque_ctrl"] >> val;
+			use_i_torque_ctrl = (bool) val;
+		} catch(YAML::TypedKeyNotFound<string> e) 
+		{
+			use_i_torque_ctrl = (bool) 0;
+		} 
 		doc["param"]["max_amp_temp"] >> mval;
 		param.set_max_amp_temp(mval);
 		doc["param"]["max_tq"] >> mval;
 		param.set_max_tq(mval);
 		doc["param"]["min_tq"] >> mval;
 		param.set_min_tq(mval);
+		try               
+		{
+			doc["param"]["max_i"] >> mval;
+			param.set_max_i(mval);
+		} catch(YAML::TypedKeyNotFound<string> e) 
+		{
+			param.set_max_i(0.0);
+		} 
 		motor.ReadConfig(doc["calib"]["motor"]);	
 		q_sense.ReadConfig( doc["calib"]["theta"]);
 		tq_sense.ReadConfig(doc["calib"]["torque"]);
@@ -114,11 +131,24 @@ bool M3Actuator::ReadConfig(const char * filename)
 			encoder_calib_req=0;
 		} 
 	}
-	if (IsVersion(ISS))
+	if (IsVersion(ISS) || IsVersion(IQ))
 	{
 		doc["param"]["max_amp_current"] >> mval;
 		param.set_max_amp_current(mval);
 		
+	}
+	if (IsVersion(IQ))
+	{
+	      doc["param"]["pid_current"]["k_p"] >> mval;
+	      ParamPIDTorque()->set_k_p(mval);
+	      doc["param"]["pid_current"]["k_i"] >> mval;
+	      ParamPIDTorque()->set_k_i(mval);
+	      doc["param"]["pid_current"]["k_d"] >> mval;
+	      ParamPIDTorque()->set_k_d(mval);
+	      doc["param"]["pid_current"]["k_i_limit"] >> mval;
+	      ParamPIDTorque()->set_k_i_limit(mval);
+	      doc["param"]["pid_current"]["k_i_range"] >> mval;
+	      ParamPIDTorque()->set_k_i_range(mval);
 	}
 	return true;
 }
@@ -142,10 +172,10 @@ void M3Actuator::StepStatus()
 	if (IsStateError())
 		return;
 	 
-	if (IsVersion(DEFAULT) || IsVersion(ISS))
+	if (IsVersion(DEFAULT) || IsVersion(ISS) || IsVersion(IQ))
 	{
 		M3ActuatorEcStatus * ecs = (M3ActuatorEcStatus * )(ecc->GetStatus());
-		
+
 		
 		//Calibrate Raw Data
 		
@@ -191,12 +221,15 @@ void M3Actuator::StepStatus()
 		if (!ecc->IsMotorPowerOn()) //Force zero-reading when off to ignore small bias errors.
 		  i_sense.SetZero();
 		motor.Step(i_sense.GetCurrent_mA(), GetPwmCmd(), GetThetaDotDeg()*60.0/360.0, ex_sense.GetTempC());//Compute motor 
-				
+		
+		//printf("current: %f\n",ecs->current_ma());
+		status.set_current(i_sense.GetCurrent_A());
 		status.set_amp_temp(amp_temp_avg.Step(at_sense.GetTempC()));
+		status.set_ext_temp(ex_sense.GetTempC());
 		status.set_motor_temp(motor.GetWindingTemp());
 		status.set_ambient_temp(motor.GetAmbientTemp());
 		status.set_case_temp(motor.GetCaseTemp());
-		status.set_current(motor.GetCurrentRMS());
+		
 		status.set_power(motor.GetPowerElec());
 		//if (tmp_cnt%100==0)
 		 // M3_INFO("%s: %f %f\n",GetName().c_str(),ex_sense.GetTempC(),motor.GetWindingTemp());
@@ -234,7 +267,7 @@ void M3Actuator::StepOverloadDetect()
 			overload_cnt++;
 	}
 	
-	if (IsVersion(ISS))
+	if (IsVersion(ISS) || IsVersion(IQ))
 	{
 		if (!ignore_bounds&& motor.GetWindingTemp()>(motor.GetMaxWindingTemp()))
 			overload_cnt++;
@@ -258,7 +291,7 @@ void M3Actuator::StepOverloadDetect()
 			M3_ERR("Motor temp %f (C) | Threshold of %f (C) \n",GetMotorTemp(),max_motor_temp);
 			M3_ERR("Motor winding temp %f (C) | Threshold of %f \n",motor.GetWindingTemp(),motor.GetMaxWindingTemp());
 		}
-		if (IsVersion(ISS))
+		if (IsVersion(ISS) || IsVersion(IQ))
 		{
 			M3_ERR("Motor winding temp %f (C) | Threshold of %f (C)\n",motor.GetWindingTemp(),motor.GetMaxWindingTemp());
 			M3_ERR("Amplifier current %f |Threshold of %f (mA)\n",motor.GetCurrentContinuous(),param.max_amp_current());
@@ -274,61 +307,118 @@ void M3Actuator::StepCommand()
 
 	M3ActuatorEcCommand * ec_command = (M3ActuatorEcCommand *)ecc->GetCommand();
 	M3ActuatorEcParam * ec_param = (M3ActuatorEcParam *)ecc->GetParam();
-	ec_command->set_brake_off(command.brake_off());
 	
+				
 	if(IsStateError())
 	{
 		ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
 		return;
 	}
 	
-	switch(command.ctrl_mode())
-	{
-		case ACTUATOR_MODE_OFF:
-			ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
-			break;
-		case ACTUATOR_MODE_PWM:
-			ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
-			ec_command->set_t_desire(pwm_dither.Step(command.pwm_desired()));
-			break;
-		case ACTUATOR_MODE_TORQUE:		
+	if (IsVersion(IQ)) { // new style is simple pass through, with limit checking
+		status.set_mode_cmd(command.ctrl_mode());
+		switch (command.ctrl_mode())
 		{
-			mReal tq_mNm=command.tq_desired();
-			if (tq_sense.IsFFCurrentCtrl())
+			case ACTUATOR_MODE_OFF:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
+			case ACTUATOR_MODE_PWM:
+				ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
+				ec_command->set_pwm_desired(pwm_dither.Step(command.pwm_desired()));
+				break;
+			case ACTUATOR_MODE_TORQUE:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
+			case ACTUATOR_MODE_CURRENT:
 			{
-			  ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
-			  tq_mNm=CLAMP(tq_mNm,param.min_tq(),param.max_tq()); //Clamped on DSP as well...
-			  ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm,&i_sense));
-			} else {
-			  ec_command->set_mode(ACTUATOR_EC_MODE_TORQUE);
-			  int raw_t_max= tq_sense.mNmToTicks(param.max_tq());
-			  int raw_t_min= tq_sense.mNmToTicks(param.min_tq());
-			  if (raw_t_min>raw_t_max) //Can be reversed depending on calibration
-			  {
-				  int tmp=raw_t_min;
-				  raw_t_min=raw_t_max;
-				  raw_t_max=tmp;
-			  }
-			  //Overwrite the raw  params with the calibrated values
-			  ec_param->set_t_max(raw_t_max);
-			  ec_param->set_t_min(raw_t_min);			  
-			  tq_mNm=CLAMP(tq_mNm,param.min_tq(),param.max_tq()); //Clamped on DSP as well...
-			  status.set_torque_error(tq_mNm-status.torque());
-			  ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm));
-			  if (ecc->UseTorqueFF())
-			      ecc->SetTorqueFF(motor.mNmToPwm(tq_mNm));
-			      
-			  //if (tmp_cnt++%100==0)
-			  //	M3_INFO("tmax %d tmin %d des %d\n",(int)ec_param->t_max(),
-			  //		(int)ec_param->t_min(),
-			  //		 (int)ec_command->t_desire());
+				ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
+				mReal i_mA=CLAMP(command.i_desired(),-1*param.max_i(),param.max_i())*1000.0; 
+				ec_command->set_current_desired(i_mA);
+				status.set_i_cmd(i_mA/1000.0);
+				break;
 			}
-			break;
+			case ACTUATOR_MODE_BRAKE:
+				ec_command->set_mode(ACTUATOR_EC_MODE_BRAKE);
+				break;
+			default:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
 		}
-		default:
-			ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
-			break;
-	};
+	
+	} else { // Legacy, no supported on BMW,MAX2 versions 2.0
+		ec_command->set_brake_off(command.brake_off());
+		
+		switch(command.ctrl_mode())
+		{
+			case ACTUATOR_MODE_OFF:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
+			case ACTUATOR_MODE_PWM:
+				ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
+				ec_command->set_t_desire(pwm_dither.Step(command.pwm_desired()));
+				break;
+			case ACTUATOR_MODE_TORQUE:		
+			{
+				mReal tq_mNm=command.tq_desired();
+				tq_mNm=CLAMP(tq_mNm,param.min_tq(),param.max_tq());
+				
+				if (use_i_torque_ctrl && IsVersion(IQ)) //Do torque control here, command current
+				{
+				mReal i_mA = pid_torque.Step(GetTorque(),
+							GetTorqueDot(),
+							tq_mNm,
+							ParamPIDTorque()->k_p(), 
+							ParamPIDTorque()->k_i(),
+							ParamPIDTorque()->k_d(),
+							ParamPIDTorque()->k_i_limit(),
+							ParamPIDTorque()->k_i_range());
+					ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
+					i_mA=CLAMP(i_mA,-1*param.max_i(),param.max_i()); 
+					ec_command->set_t_desire(i_sense.mAtoTicks(i_mA));
+				}
+				else if (tq_sense.IsFFCurrentCtrl()) //Fake a torque by commanding a voltage
+				{
+				ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
+				ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm,&i_sense));
+				} else 
+				{
+				ec_command->set_mode(ACTUATOR_EC_MODE_TORQUE); //Do torque control on DSP
+				int raw_t_max= tq_sense.mNmToTicks(param.max_tq());
+				int raw_t_min= tq_sense.mNmToTicks(param.min_tq());
+				if (raw_t_min>raw_t_max) //Can be reversed depending on calibration
+				{
+					int tmp=raw_t_min;
+					raw_t_min=raw_t_max;
+					raw_t_max=tmp;
+				}
+				//Overwrite the raw  params with the calibrated values
+				ec_param->set_t_max(raw_t_max);
+				ec_param->set_t_min(raw_t_min);			  
+				status.set_torque_error(tq_mNm-status.torque());
+				ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm));
+				if (ecc->UseTorqueFF())
+					ecc->SetTorqueFF(motor.mNmToPwm(tq_mNm));
+				}
+				break;
+			}
+			case ACTUATOR_MODE_CURRENT:
+				if ( IsVersion(IQ)) 
+				{
+				ec_command->set_mode(ACTUATOR_EC_MODE_CURRENT);
+				mReal i_mA=CLAMP(command.i_desired(),-1*param.max_i(),param.max_i()); 
+				ec_command->set_t_desire(i_sense.mAtoTicks(i_mA));
+				}
+				else //Previous versions don't support current mode
+				{
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				ec_command->set_t_desire(0);
+				}
+				break;
+			default:
+				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
+				break;
+		};
+	}
 }
 
-}
+} // namespace

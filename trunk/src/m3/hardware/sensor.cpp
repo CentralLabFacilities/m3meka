@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "m3/hardware/sensor.h"
+#include "sensor.h"
 
 namespace m3{
 	
@@ -167,6 +167,10 @@ int M3CurrentSensor::mAtoTicks(mReal milliamps)
     if (type==LINEAR_AMP_VIA_DAC)
     {
 	  return int((milliamps - cb_bias) * (1.0/cb_scale) * (1.0/(cb_amp_mA_per_mV * cb_dac_mV_per_tick)));
+    } 
+    if (type==DSP_TICKS)
+    {
+      return int((milliamps - cb_bias) * (1.0/cb_scale));
     } 
     return 0;
 }
@@ -397,6 +401,7 @@ void M3TempSensor::ReadConfig(const YAML::Node & doc)
 	if (t.compare("adc_poly")==0){type=ADC_POLY;}
 	if (t.compare("adc_linear_3V3")==0){type=ADC_LINEAR_3V3;}
 	if (t.compare("adc_linear_5V")==0){type=ADC_LINEAR_5V;}
+	if (t.compare("dsp_calib")==0){type=DSP_CALIB;}
 	doc["cb_scale"]>>cb_scale;
 	doc["cb_bias"]>>cb_bias;
 	if (type==ADC_POLY) //Older format v0.0-v0.5
@@ -439,6 +444,10 @@ void M3TempSensor::Step(mReal ticks)
 		mReal bias = 25.0-(cb_mV_at_25C/cb_mV_per_C); //C
 		val = mV/cb_mV_per_C + bias;
 		val= val*cb_scale+cb_bias;
+	}
+	if (type == DSP_CALIB)
+	{
+		val = ticks*cb_scale + cb_bias;
 	}
 }
 

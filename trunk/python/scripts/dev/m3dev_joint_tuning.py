@@ -50,7 +50,11 @@ class M3Proc:
         joint_names=m3t.user_select_components_interactive(joint_names)
         actuator_ec_names=[]
         actuator_names=[]
+        ctrl_names=[]
         for n in joint_names:
+            ctrl = m3t.get_joint_ctrl_component_name(n)
+            if ctrl != "":
+                ctrl_names.append(ctrl)
             actuator = m3t.get_joint_actuator_component_name(n)
             if actuator != "":
                 actuator_names.append(actuator)
@@ -63,6 +67,7 @@ class M3Proc:
         self.joint=[]
         self.actuator_ec=[]
         self.actuator=[]
+        self.ctrl=[]
 
         for n in actuator_ec_names:
             c=m3f.create_component(n)
@@ -80,6 +85,14 @@ class M3Proc:
                 self.actuator.append(c)
                 self.proxy.subscribe_status(self.actuator[-1])
                 self.proxy.publish_param(self.actuator[-1]) 
+                
+        for n in ctrl_names:
+            print "creating" + n
+            c=m3f.create_component(n)
+            if c is not None:
+                self.ctrl.append(c)
+                self.proxy.subscribe_status(self.ctrl[-1])
+                self.proxy.publish_param(self.ctrl[-1]) 
 
         for n in joint_names:
             c=m3f.create_component(n)

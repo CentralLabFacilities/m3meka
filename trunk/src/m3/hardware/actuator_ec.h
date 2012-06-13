@@ -31,7 +31,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/hardware/m3ec_pdo_v1_def.h"
 #include "m3/hardware/m3ec_pdo_v2_def.h"
 #include "m3/hardware/m3ec_pdo_v3_def.h"
-
+#include "m3/hardware/m3ec_pdo_v4_def.h"
 
 namespace m3{
 using namespace std;
@@ -39,7 +39,9 @@ using namespace std;
 
 class M3ActuatorEc : public  m3rt::M3ComponentEc{
 	public:
-		M3ActuatorEc():ignore_pwm_slew(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),pwm_ff(0),pwm_max_ext(0),error_printed(false),m3rt::M3ComponentEc()
+		M3ActuatorEc():ignore_pwm_slew(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),
+			      pwm_ff(0),pwm_max_ext(0),error_printed(false),tmp_cnt(0),motor_power_slewed_on(false),
+			      tq_err_cnt(0),qei_err_cnt(0), m3rt::M3ComponentEc()
 		{
 			memset(&exs,0,sizeof(M3ActPdoV2StatusExt));
 			memset(&exc,0,sizeof(M3ActPdoV2CmdExt));
@@ -56,6 +58,11 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 			RegisterPdo("actx2_pdo_v1", ACTX2_PDO_V1);	//RBL 
 			RegisterPdo("actx3_pdo_v1", ACTX3_PDO_V1);	//RBL 
 			RegisterPdo("actx4_pdo_v1", ACTX4_PDO_V1);	//RBL 
+			
+			RegisterPdo("actx1_pdo_v4", ACTX1_PDO_V4);	//IQ 
+			RegisterPdo("actx2_pdo_v4", ACTX2_PDO_V4);	//IQ 
+			RegisterPdo("actx3_pdo_v4", ACTX3_PDO_V4);	//IQ 
+			
 			RegisterPdo("tactx2_pdo_v1", TACTX2_PDO_V1);	//RBL 
 			RegisterPdo("actx1_pdo_v2", ACTX1_PDO_V2);	//ISS 
 			RegisterPdo("actx2_pdo_v2", ACTX2_PDO_V2);	//ISS 
@@ -66,8 +73,10 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		google::protobuf::Message * GetCommand(){return &command;}
 		google::protobuf::Message * GetStatus(){return &status;}
 		google::protobuf::Message * GetParam(){return &param;}
+		
 		bool IsMotorPowerOn(){return pwr->IsMotorPowerOn();}
 		void SetMotorEnable(int on){pwr->SetMotorEnable(on);}
+		bool IsMotorPowerSlewedOn(){return motor_power_slewed_on;}
 		void SetZeroEncoder(){param.set_config(param.config()|ACTUATOR_EC_CONFIG_CALIB_QEI_MANUAL);}
 		void ClrZeroEncoder(){param.set_config(param.config()&~ACTUATOR_EC_CONFIG_CALIB_QEI_MANUAL);}
 		void SetLimitSwitchNegZeroEncoder(){param.set_config(param.config()|ACTUATOR_EC_CONFIG_CALIB_QEI_LIMITSWITCH_NEG);}
@@ -92,16 +101,19 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		void SetStatusFromPdoV1(unsigned char * data);
 		void SetStatusFromPdoV2(unsigned char * data);
 		void SetStatusFromPdoV3(unsigned char * data);
+		void SetStatusFromPdoV4(unsigned char * data);
 		void SetPdoFromCommand(unsigned char * data);
 		bool LinkDependentComponents();
 		void ResetCommandPdo(unsigned char * pdo);
+		void SetPdoV4FromPdoV1Command(unsigned char * data);
 		void SetPdoV2FromPdoV1Command(unsigned char * data);
 		void SetPdoV0FromPdoV1Command(unsigned char * data);
 		void StepStatus();
 	protected:
 		enum {GMB_PDO_V0,ACTX1_PDO_V1, ACTX2_PDO_V1, ACTX3_PDO_V1, ACTX4_PDO_V1, TACTX2_PDO_V1,
 		      ACTX1_PDO_V2, ACTX2_PDO_V2, ACTX3_PDO_V2, ACTX4_PDO_V2,SEA_PDO_V0,
-		      ACTX1_PDO_V3};
+		      ACTX1_PDO_V3,
+		      ACTX1_PDO_V4, ACTX2_PDO_V4, ACTX3_PDO_V4,};
 		enum {DEFAULT,ISS, ESP, IQ};
 		M3BaseStatus * GetBaseStatus();
 		M3ActuatorEcStatus status;
@@ -124,9 +136,10 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		M3ActPdoV1Cmd  acc;
 		M3SeaPdoV0Cmd  scc;
 		bool error_printed;
-		
+		bool motor_power_slewed_on;
 		int toggle;
-		
+		int qei_err_cnt;
+		int tq_err_cnt;
 };
 
 

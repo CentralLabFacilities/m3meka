@@ -130,6 +130,14 @@ bool M3Joint::ReadConfig(const char * filename)
 	{
 		brake_type=BRAKE_NONE;
 	} 
+	
+	try 
+	{
+		doc["control_component"] >> ctrl_simple_name;		
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		ctrl_simple_name="";
+	} 
 	return true;
 }
 
@@ -143,6 +151,15 @@ bool M3Joint::LinkDependentComponents()
 	}
 	if (!trans->LinkDependentComponents(factory))
 		return false;
+	
+	if (IsVersion(IQ))
+	{
+	  ctrl_simple=(M3CtrlSimple*) factory->GetComponent(ctrl_simple_name);
+	  if (ctrl_simple==NULL)
+	  {
+		  M3_INFO("M3CtrlSimple component %s not found for component %s\n",ctrl_simple_name.c_str(),GetName().c_str());		
+	  }
+	}
 	return true;
 }
 
@@ -165,6 +182,7 @@ void M3Joint::Shutdown()
 
 void M3Joint::StepStatus()
 {
+	pnt_cnt++;
 	if (IsStateError())
 		return;
 	status.set_flags(act->GetFlags());
@@ -178,7 +196,7 @@ void M3Joint::StepStatus()
 	status.set_theta(trans->GetThetaJointDeg());
 	status.set_thetadot(trans->GetThetaDotJointDeg());
 	status.set_thetadotdot(trans->GetThetaDotDotJointDeg());
-	status.set_torque(trans->GetTorqueJoint());
+	status.set_torque(trans->GetTorqueJoint()); ;  // TODO: Make GetTorque nNm again
 	status.set_torquedot(trans->GetTorqueDotJoint());
 }
 
@@ -286,9 +304,18 @@ void M3Joint::StepCommand()
 {
 	if (!act || IsStateSafeOp())
 		return;
+	
+	if (IsVersion(IQ) && !ctrl_simple)
+		return;
+	
+	
 	if(IsStateError())
 	{
-		act->SetDesiredControlMode(ACTUATOR_MODE_OFF);
+		if (IsVersion(IQ))
+		  ctrl_simple->SetDesiredControlMode(CTRL_MODE_OFF);
+		else
+		  act->SetDesiredControlMode(ACTUATOR_MODE_OFF);
+		  
 		return;
 	}
 	
@@ -300,132 +327,248 @@ void M3Joint::StepCommand()
 		pwm_on_slew.Reset(0.0);
 		q_slew.Reset(GetThetaDeg());
 		jerk_joint.Startup(GetTimestamp(), GetThetaDeg());
-		tq_switch=GetTorque();
+		tq_switch=GetTorque()*1000;  // TODO: Make GetTorque nNm again
 		q_switch=GetThetaDeg();
 		pwm_switch=GetPwmCmd();
+		ctrl_simple->ResetIntegrators();
 	}
 	
-	act->SetDesiredControlMode(ACTUATOR_MODE_OFF);//default
+	if (!act->IsMotorPowerSlewedOn())
+	    ctrl_simple->ResetIntegrators();
 	
-	switch(command.ctrl_mode())
-	{
-		case JOINT_MODE_PWM:
+	if (IsVersion(IQ)) { 
+	  
+		ctrl_simple->SetDesiredControlMode(CTRL_MODE_OFF);
+		
+		switch(command.ctrl_mode())
 		{
-			//Ramp in from pwm at switch-over point
-			mReal pwm_des=command.pwm_desired();
-			StepBrake(pwm_des,0);			
-			mReal pwm_on, pwm_out;
-			pwm_on=pwm_on_slew.Step(1.0,1.0/MODE_PWM_ON_SLEW_TIME);
-			pwm_out=pwm_on*pwm_des+(1.0-pwm_on)*pwm_switch;
-			//Send out
-			act->SetDesiredControlMode(ACTUATOR_MODE_PWM);
-			if (disable_pwm_ramp)
-			  act->SetDesiredPwm(command.pwm_desired());
-			else
-			  act->SetDesiredPwm((int)pwm_out);;
-			break;
-		}
-		case JOINT_MODE_THETA:
-		case JOINT_MODE_THETA_MJ:
-		{
-			if (!IsEncoderCalibrated())
+			
+			case JOINT_MODE_THETA:
+			case JOINT_MODE_THETA_MJ:
 			{
-			 // M3_INFO("Not calib %s\n",GetName().c_str());
-			  break;
+				if (!IsEncoderCalibrated())
+				{
+				// M3_INFO("Not calib %s\n",GetName().c_str());
+				  break;
+				}
+				CalcThetaDesiredSmooth();
+				mReal des=trans->GetThetaDesActuatorDeg();
+				StepBrake(des,trans->GetThetaActuatorDeg());
+				//Do PID in actuator space so result is direct PWM
+				//ctrl_simple->SetDesiredControlMode(CTRL_MODE_THETA);
+				ctrl_simple->SetDesiredControlMode(CTRL_MODE_OFF); // TODO:  Remimplement mode theta, theta_mj
+				ctrl_simple->SetDesiredTheta(DEG2RAD(des));
+				break;
 			}
-			CalcThetaDesiredSmooth();
-			mReal des=trans->GetThetaDesActuatorDeg();
-			StepBrake(des,trans->GetThetaActuatorDeg());
-			//Do PID in actuator space so result is direct PWM
-			mReal pwm =pid_theta.Step(trans->GetThetaActuatorDeg(),
-						trans->GetThetaDotActuatorDeg(),
-						des,
-						param.kt_p(),
-						param.kt_i(),
-						param.kt_d(),
-						param.kt_i_limit(),
-						param.kt_i_range());
-			act->SetDesiredControlMode(ACTUATOR_MODE_PWM);
-			//Ramp in from pwm at switch-over point
-			mReal pwm_on, pwm_out;
-			pwm_on=pwm_on_slew.Step(1.0,1.0/MODE_PWM_ON_SLEW_TIME);
-			pwm_out=pwm_on*pwm+(1.0-pwm_on)*pwm_switch;
-			act->SetDesiredPwm((int)pwm_out);
-			/*if (tmp_cnt++%100==0)
+			case JOINT_MODE_THETA_GC:
+			case JOINT_MODE_THETA_GC_MJ:
 			{
-				M3_INFO("des %3.2f sen: %3.2f pid: %3.2f out: %3.2f\n",des,trans->GetThetaActuatorDeg(),
-					pwm,pwm_out);
-			}*/
-			break;
-		}
-		case JOINT_MODE_THETA_GC:
-		case JOINT_MODE_THETA_GC_MJ:
+				if (!IsEncoderCalibrated())
+				  break;
+				mReal stiffness,gravity,tq_des;
+				CalcThetaDesiredSmooth();
+				mReal des=trans->GetThetaDesJointDeg();
+				StepBrake(des,trans->GetThetaJointDeg());
+				//Do PID in joint space
+				tq_des =pid_theta_gc.Step(trans->GetThetaJointDeg(),
+						trans->GetThetaDotJointDeg(),
+						des,
+						param.kq_p(),
+						param.kq_i(),
+						param.kq_d(),
+						param.kq_i_limit(),
+						param.kq_i_range());
+				/*if (pnt_cnt%200==0) {		
+					M3_DEBUG("actuator: %s\n", GetName().c_str());
+					M3_DEBUG("tq_des: %f\n",tq_des);
+					M3_DEBUG("des: %f\n\n",des);
+				}*/
+				stiffness=CLAMP(command.q_stiffness(),0.0,1.0);
+				gravity=GetTorqueGravity()*param.kq_g();
+				//Ramp in from torque at switch-over point
+				mReal tq_on, tq_out;
+				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME); 
+				//tq_on = 1.0;
+				tq_out=tq_on*(stiffness*tq_des-gravity)+(1.0-tq_on)*tq_switch;
+				//tq_out = tq_switch;
+				//tq_out = stiffness*tq_des-gravity;
+				//Send out
+				trans->SetTorqueDesJoint(tq_out/1000.0);	//TODO: convert back to mNm	
+				
+				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
+				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
+				
+				break;
+			}
+			case JOINT_MODE_TORQUE_GC:			
+			{
+			      if (!IsEncoderCalibrated())
+				  break;
+				mReal tq_on, tq_out,gravity;
+				mReal tq_des=command.tq_desired();
+				StepBrake(tq_des,trans->GetTorqueJoint());
+				gravity=GetTorqueGravity()*param.kq_g();
+				//Ramp in from torque at switch-over point
+				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
+				tq_out=tq_on*(tq_des-gravity)+(1.0-tq_on)*tq_switch;
+				//Send out
+				trans->SetTorqueDesJoint(tq_out/1000.0);				
+				
+				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
+				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
+				
+				break;
+			}
+			case JOINT_MODE_TORQUE:
+			{		  
+				mReal tq_on,tq_out;
+				//Ramp in from torque at switch-over point
+				mReal tq_des=command.tq_desired();
+				StepBrake(tq_des,trans->GetTorqueJoint());
+				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
+				tq_out=tq_on*tq_des+(1.0-tq_on)*tq_switch;
+				//Send out
+				trans->SetTorqueDesJoint(tq_out/1000.0);
+				
+				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
+				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
+								
+				break;
+			}
+			case JOINT_MODE_OFF:
+			case JOINT_MODE_PWM: // no longer used 
+			default:
+				ctrl_simple->SetDesiredControlMode(CTRL_MODE_OFF);
+				//act->SetDesiredControlMode(ACTUATOR_MODE_OFF);
+				mReal des; //dummy
+				StepBrake(des,0);
+				break;
+		};
+	} else { // Legacy, no supported on BMW,MAX2 versions 2.0
+	
+		act->SetDesiredControlMode(ACTUATOR_MODE_OFF);//default
+		
+		switch(command.ctrl_mode())
 		{
-			if (!IsEncoderCalibrated())
-			  break;
-			mReal stiffness,gravity,tq_des;
-			CalcThetaDesiredSmooth();
-			mReal des=trans->GetThetaDesJointDeg();
-			StepBrake(des,trans->GetThetaJointDeg());
-			//Do PID in joint space
-			tq_des =pid_theta_gc.Step(trans->GetThetaJointDeg(),
-					trans->GetThetaDotJointDeg(),
-					des,
-					param.kq_p(),
-					param.kq_i(),
-					param.kq_d(),
-					param.kq_i_limit(),
-					param.kq_i_range());
-			stiffness=CLAMP(command.q_stiffness(),0.0,1.0);
-			gravity=GetTorqueGravity()*param.kq_g();
-			//Ramp in from torque at switch-over point
-			mReal tq_on, tq_out;
-			tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
-			tq_out=tq_on*(stiffness*tq_des-gravity)+(1.0-tq_on)*tq_switch;
-			//Send out
-			trans->SetTorqueDesJoint(tq_out);
-			act->SetDesiredControlMode(ACTUATOR_MODE_TORQUE);
-			act->SetDesiredTorque(trans->GetTorqueDesActuator());
-			break;
-		}
-		case JOINT_MODE_TORQUE_GC:			
-		{
-		      if (!IsEncoderCalibrated())
-			  break;
-			mReal tq_on, tq_out,gravity;
-			mReal tq_des=command.tq_desired();
-			StepBrake(tq_des,trans->GetTorqueJoint());
-			gravity=GetTorqueGravity()*param.kq_g();
-			//Ramp in from torque at switch-over point
-			tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
-			tq_out=tq_on*(tq_des-gravity)+(1.0-tq_on)*tq_switch;
-			//Send out
-			trans->SetTorqueDesJoint(tq_out);
-			act->SetDesiredControlMode(ACTUATOR_MODE_TORQUE);
-			act->SetDesiredTorque(trans->GetTorqueDesActuator());
-			break;
-		}
-		case JOINT_MODE_TORQUE:
-		{		  
-			mReal tq_on,tq_out;
-			//Ramp in from torque at switch-over point
-			mReal tq_des=command.tq_desired();
-			StepBrake(tq_des,trans->GetTorqueJoint());
-			tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
-			tq_out=tq_on*tq_des+(1.0-tq_on)*tq_switch;
-			//Send out
-			trans->SetTorqueDesJoint(tq_out);
-			act->SetDesiredControlMode(ACTUATOR_MODE_TORQUE);
-			act->SetDesiredTorque(trans->GetTorqueDesActuator());			
-			break;
-		}
-		case JOINT_MODE_OFF:
-		default:
-			act->SetDesiredControlMode(ACTUATOR_MODE_OFF);
-			mReal des; //dummy
-			StepBrake(des,0);
-			break;
-	};
+			case JOINT_MODE_PWM:
+			{
+				//Ramp in from pwm at switch-over point
+				mReal pwm_des=command.pwm_desired();
+				StepBrake(pwm_des,0);			
+				mReal pwm_on, pwm_out;
+				pwm_on=pwm_on_slew.Step(1.0,1.0/MODE_PWM_ON_SLEW_TIME);
+				pwm_out=pwm_on*pwm_des+(1.0-pwm_on)*pwm_switch;
+				//Send out
+				act->SetDesiredControlMode(ACTUATOR_MODE_PWM);
+				if (disable_pwm_ramp)
+				  act->SetDesiredPwm(command.pwm_desired());
+				else
+				  act->SetDesiredPwm((int)pwm_out);;
+				break;
+			}
+			case JOINT_MODE_THETA:
+			case JOINT_MODE_THETA_MJ:
+			{
+				if (!IsEncoderCalibrated())
+				{
+				// M3_INFO("Not calib %s\n",GetName().c_str());
+				  break;
+				}
+				CalcThetaDesiredSmooth();
+				mReal des=trans->GetThetaDesActuatorDeg();
+				StepBrake(des,trans->GetThetaActuatorDeg());
+				//Do PID in actuator space so result is direct PWM
+				mReal pwm =pid_theta.Step(trans->GetThetaActuatorDeg(),
+							trans->GetThetaDotActuatorDeg(),
+							des,
+							param.kt_p(),
+							param.kt_i(),
+							param.kt_d(),
+							param.kt_i_limit(),
+							param.kt_i_range());
+				act->SetDesiredControlMode(ACTUATOR_MODE_PWM);
+				//Ramp in from pwm at switch-over point
+				mReal pwm_on, pwm_out;
+				pwm_on=pwm_on_slew.Step(1.0,1.0/MODE_PWM_ON_SLEW_TIME);
+				pwm_out=pwm_on*pwm+(1.0-pwm_on)*pwm_switch;
+				act->SetDesiredPwm((int)pwm_out);
+				/*if (tmp_cnt++%100==0)
+				{
+					M3_INFO("des %3.2f sen: %3.2f pid: %3.2f out: %3.2f\n",des,trans->GetThetaActuatorDeg(),
+						pwm,pwm_out);
+				}*/
+				break;
+			}
+			case JOINT_MODE_THETA_GC:
+			case JOINT_MODE_THETA_GC_MJ:
+			{
+				if (!IsEncoderCalibrated())
+				  break;
+				mReal stiffness,gravity,tq_des;
+				CalcThetaDesiredSmooth();
+				mReal des=trans->GetThetaDesJointDeg();
+				StepBrake(des,trans->GetThetaJointDeg());
+				//Do PID in joint space
+				tq_des =pid_theta_gc.Step(trans->GetThetaJointDeg(),
+						trans->GetThetaDotJointDeg(),
+						des,
+						param.kq_p(),
+						param.kq_i(),
+						param.kq_d(),
+						param.kq_i_limit(),
+						param.kq_i_range());
+				stiffness=CLAMP(command.q_stiffness(),0.0,1.0);
+				gravity=GetTorqueGravity()*param.kq_g();
+				//Ramp in from torque at switch-over point
+				mReal tq_on, tq_out;
+				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
+				tq_out=tq_on*(stiffness*tq_des-gravity)+(1.0-tq_on)*tq_switch;
+				//Send out
+				trans->SetTorqueDesJoint(tq_out);
+				act->SetDesiredControlMode(ACTUATOR_MODE_TORQUE);
+				act->SetDesiredTorque(trans->GetTorqueDesActuator());
+				break;
+			}
+			case JOINT_MODE_TORQUE_GC:			
+			{
+			      if (!IsEncoderCalibrated())
+				  break;
+				mReal tq_on, tq_out,gravity;
+				mReal tq_des=command.tq_desired();
+				StepBrake(tq_des,trans->GetTorqueJoint());
+				gravity=GetTorqueGravity()*param.kq_g();
+				//Ramp in from torque at switch-over point
+				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
+				tq_out=tq_on*(tq_des-gravity)+(1.0-tq_on)*tq_switch;
+				//Send out
+				trans->SetTorqueDesJoint(tq_out);
+				act->SetDesiredControlMode(ACTUATOR_MODE_TORQUE);
+				act->SetDesiredTorque(trans->GetTorqueDesActuator());
+				break;
+			}
+			case JOINT_MODE_TORQUE:
+			{		  
+				mReal tq_on,tq_out;
+				//Ramp in from torque at switch-over point
+				mReal tq_des=command.tq_desired();
+				StepBrake(tq_des,trans->GetTorqueJoint());
+				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
+				tq_out=tq_on*tq_des+(1.0-tq_on)*tq_switch;
+				//Send out
+				trans->SetTorqueDesJoint(tq_out);
+				act->SetDesiredControlMode(ACTUATOR_MODE_TORQUE);
+				act->SetDesiredTorque(trans->GetTorqueDesActuator());			
+				break;
+			}
+			case JOINT_MODE_OFF:
+			default:
+				act->SetDesiredControlMode(ACTUATOR_MODE_OFF);
+				mReal des; //dummy
+				StepBrake(des,0);
+				break;
+		};
+	}
+	
 	mode_last=(int)command.ctrl_mode();
 }
 

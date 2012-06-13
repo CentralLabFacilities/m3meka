@@ -20,6 +20,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <m3rt/base/component.h>
 #include <m3/robots/humanoid.h>
+#include <m3/robots/humanoid_shm.h>
 ///////////////////////////////////////////////////////
 extern "C" 
 {
@@ -27,11 +28,14 @@ extern "C"
 //These names should match the create_xxx() and destroy_xxx() function names.
 //They should also match the names used for component definition in m3_config.yml 
 #define M3HUMANOID_TYPE_NAME	"m3humanoid"
+#define M3HUMANOID_SHM_TYPE_NAME	"m3humanoid_shm"
 ///////////////////////////////////////////////////////
 //Creators
 m3rt::M3Component * create_m3humanoid(){return new m3::M3Humanoid;}
+m3rt::M3Component * create_m3humanoid_shm(){return new m3::M3HumanoidShm;}
 //Deletors
 void destroy_m3humanoid(m3rt::M3Component* c) {delete c;}
+void destroy_m3humanoid_shm(m3rt::M3Component* c) {delete c;}
 ///////////////////////////////////////////////////////
 class M3FactoryProxy 
 { 
@@ -40,6 +44,8 @@ public:
 	{
 		m3rt::creator_factory[M3HUMANOID_TYPE_NAME] =	create_m3humanoid;
 		m3rt::destroyer_factory[M3HUMANOID_TYPE_NAME] =  destroy_m3humanoid;
+		m3rt::creator_factory[M3HUMANOID_SHM_TYPE_NAME] =	create_m3humanoid_shm;
+		m3rt::destroyer_factory[M3HUMANOID_SHM_TYPE_NAME] =  destroy_m3humanoid_shm;
 	}
 };
 ///////////////////////////////////////////////////////

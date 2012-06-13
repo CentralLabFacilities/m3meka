@@ -107,7 +107,7 @@ class M3Proc:
 		self.gui.add('M3GuiSliders','tqDesire',  (self,'t_desire_b'),range(len(self.actuator_ec)),[tl,tu],m3g.M3GuiWrite)
 		self.gui.add('M3GuiSliders','pwmDesireA', (self,'pwm_desire_a'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite) 
 		self.gui.add('M3GuiSliders','pwmDesireB', (self,'pwm_desire_b'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite)
-		self.gui.add('M3GuiSliders','currentDesireA', (self,'current_desire_a'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite) 
+		self.gui.add('M3GuiSliders','currentDesireA', (self,'current_desire_a'),range(len(self.actuator_ec)),[-100,100],m3g.M3GuiWrite) 
 		self.gui.add('M3GuiSliders','currentDesireB', (self,'current_desire_b'),range(len(self.actuator_ec)),[-3200,3200],m3g.M3GuiWrite) 
 		self.gui.add('M3GuiSliders','StepPeriod (ms) ', (self,'step_period'),range(len(self.actuator_ec)),[0,4000],m3g.M3GuiWrite) 
 		self.gui.add('M3GuiToggle', 'CyclePwm',      (self,'cycle_pwm'),[],[['On','Off']],m3g.M3GuiWrite)	

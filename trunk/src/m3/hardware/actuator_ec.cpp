@@ -72,6 +72,7 @@ void M3ActuatorEc::ResetCommandPdo(unsigned char * pdo)
 		return;
 	}
 	
+	
 	//V2
 	if (IsPdoVersion(ACTX1_PDO_V2))
 	{
@@ -100,6 +101,29 @@ void M3ActuatorEc::ResetCommandPdo(unsigned char * pdo)
 		memset(p,0,sizeof(M3ActPdoV2Cmd));	
 		return;
 	}
+	
+	//V4
+	if (IsPdoVersion(ACTX1_PDO_V4)) 
+	{
+		M3ActX1PdoV4Cmd * p = (M3ActX1PdoV4Cmd *) pdo;
+		memset(p,0,sizeof(M3ActX1PdoV4Cmd));	
+		return;
+	}
+	if (IsPdoVersion(ACTX2_PDO_V4))
+	{
+		M3ActX2PdoV4Cmd * ec = (M3ActX2PdoV4Cmd *) pdo;
+		M3ActPdoV4Cmd * p=&(ec->command[chid]);
+		memset(p,0,sizeof(M3ActPdoV4Cmd));	
+		return;
+	}
+	if (IsPdoVersion(ACTX3_PDO_V4))
+	{
+		M3ActX3PdoV4Cmd * ec = (M3ActX3PdoV4Cmd *) pdo;
+		M3ActPdoV4Cmd * p=&(ec->command[chid]);
+		memset(p,0,sizeof(M3ActPdoV4Cmd));	
+		return;
+	}
+	
 }
 
 void M3ActuatorEc::SetStatusFromPdoV0(unsigned char * data)
@@ -235,6 +259,110 @@ void M3ActuatorEc::SetStatusFromPdoV2(unsigned char * data)
       status.set_adc_current_b(exs.adc_current_b);
 }
 
+void M3ActuatorEc::SetStatusFromPdoV3(unsigned char * data)
+{
+    M3ActPdoV3Status * ax;
+    M3ActX1PdoV3Status * ec = (M3ActX1PdoV3Status *) data;
+    status.set_timestamp(ec->timestamp);
+    ax=&(ec->status[chid]);
+    status.set_qei_period(ax->qei_period);
+    status.set_qei_on(ax->qei_on);
+    status.set_qei_rollover(ax->qei_rollover);
+    status.set_debug(ax->debug);
+    status.set_adc_torque(ax->adc_torque);
+    status.set_adc_ext_temp(ax->adc_motor_temp); //Post RBL version renamed PDO motor_temp to ext_temp
+    status.set_adc_ext_a(0);
+    status.set_adc_ext_b(0);
+    status.set_adc_amp_temp(ax->adc_amp_temp);
+    status.set_adc_current_a(ax->adc_current_a);
+    status.set_adc_current_b(ax->adc_current_b);
+    status.set_pwm_cmd(ax->pwm_cmd);	
+    status.set_flags(ax->flags);
+    status.set_current_ma(ax->current_ma);
+}
+
+void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
+{
+    M3ActPdoV4Status * ax;
+    if (IsPdoVersion(ACTX1_PDO_V4))
+    {
+	    M3ActX1PdoV4Status * ec = (M3ActX1PdoV4Status *) data;
+	    status.set_timestamp(ec->timestamp);
+	    ax=&(ec->status[chid]);
+    }
+    if (IsPdoVersion(ACTX2_PDO_V4))
+    {
+	    M3ActX2PdoV4Status * ec = (M3ActX2PdoV4Status *) data;
+	    status.set_timestamp(ec->timestamp);
+	    ax=&(ec->status[chid]);
+    }
+    if (IsPdoVersion(ACTX3_PDO_V4))
+    {
+	    M3ActX3PdoV4Status * ec = (M3ActX3PdoV4Status *) data;
+	    status.set_timestamp(ec->timestamp);
+	    ax=&(ec->status[chid]);
+    }
+    
+    status.set_current_ma(ax->current_ma);
+    status.set_debug(ax->debug);
+    
+    //tq_old = status.adc_torque();
+    int tq_diff = ABS(ax->adc_torque - status.adc_torque());
+    
+    if (tq_diff > 40)
+    {
+      tq_err_cnt++;
+    }
+    else
+    {
+      status.set_adc_torque(ax->adc_torque);
+      tq_err_cnt = 0;
+    }
+    
+    if (tq_err_cnt > 2)
+    {
+      tq_err_cnt = 0;
+      status.set_adc_torque(ax->adc_torque);
+    }
+    
+    if (ABS(ax->qei_on - status.qei_on()) > 50)
+    {
+      qei_err_cnt++;
+    }
+    else
+    {
+      status.set_qei_on(ax->qei_on);
+      qei_err_cnt = 0;
+    }
+    
+    if (qei_err_cnt > 2)
+    {
+      qei_err_cnt = 0;
+      status.set_qei_on(ax->qei_on);
+    }
+    
+    //status.set_adc_torque(ax->adc_torque);
+    //status.set_qei_on(ax->qei_on);  
+      
+    status.set_torque_err_cnt(ax->torque_err_cnt);
+    status.set_adc_ext_temp(ax->adc_ext_temp); 
+    status.set_adc_amp_temp(ax->adc_amp_temp);
+    status.set_adc_ext_a(0);
+    status.set_adc_ext_b(0);
+    status.set_adc_current_a(ax->adc_current_a);
+    status.set_adc_current_b(ax->adc_current_b);
+    status.set_pwm_cmd(ax->pwm_cmd);	
+    
+    status.set_qei_period(ax->qei_period);
+    status.set_qei_rollover(ax->qei_rollover);
+    status.set_qei_err_cnt(ax->qei_err_cnt);
+    status.set_flags(ax->flags);
+	status.set_motor_pos(ax->motor_pos);
+    
+}
+
+
+
 void M3ActuatorEc::SetStatusFromPdo(unsigned char * data)
 {
   if (IsPdoVersion(SEA_PDO_V0))
@@ -255,6 +383,15 @@ void M3ActuatorEc::SetStatusFromPdo(unsigned char * data)
     
     if (IsPdoVersion(ACTX1_PDO_V3))
 	SetStatusFromPdoV3(data);
+    
+    if (IsPdoVersion(ACTX1_PDO_V1) || 
+	IsPdoVersion(ACTX2_PDO_V1) || 
+	IsPdoVersion(ACTX3_PDO_V1))
+	SetStatusFromPdoV1(data);
+	
+	if (IsPdoVersion(ACTX1_PDO_V4))
+		SetStatusFromPdoV4(data);
+	
 }
 
 
@@ -284,31 +421,11 @@ void  M3ActuatorEc::StepStatus()
 	error_printed = true;
       }
     }
-    
+    status.set_motor_power_slewed_on(motor_power_slewed_on);
   //}
 }
 
-void M3ActuatorEc::SetStatusFromPdoV3(unsigned char * data)
-{
-    M3ActPdoV3Status * ax;
-    M3ActX1PdoV3Status * ec = (M3ActX1PdoV3Status *) data;
-    status.set_timestamp(ec->timestamp);
-    ax=&(ec->status[chid]);
-    status.set_qei_period(ax->qei_period);
-    status.set_qei_on(ax->qei_on);
-    status.set_qei_rollover(ax->qei_rollover);
-    status.set_debug(ax->debug);
-    status.set_adc_torque(ax->adc_torque);
-    status.set_adc_ext_temp(ax->adc_motor_temp); //Post RBL version renamed PDO motor_temp to ext_temp
-    status.set_adc_ext_a(0);
-    status.set_adc_ext_b(0);
-    status.set_adc_amp_temp(ax->adc_amp_temp);
-    status.set_adc_current_a(ax->adc_current_a);
-    status.set_adc_current_b(ax->adc_current_b);
-    status.set_pwm_cmd(ax->pwm_cmd);	
-    status.set_flags(ax->flags);
-    status.set_current_ma(ax->current_ma);
-}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void M3ActuatorEc::SetPdoV0FromPdoV1Command(unsigned char * data)
@@ -328,6 +445,52 @@ void M3ActuatorEc::SetPdoV0FromPdoV1Command(unsigned char * data)
   ec->mode=acc.mode;
   ec->pwm_max=acc.pwm_max;
 }
+
+void M3ActuatorEc::SetPdoV4FromPdoV1Command(unsigned char * data)
+{
+    M3ActPdoV4Cmd * ax;
+    if (IsPdoVersion(ACTX1_PDO_V4))
+    {
+	    M3ActX1PdoV4Cmd* ec = (M3ActX1PdoV4Cmd *) data;
+	    ax=&(ec->command[chid]);
+    }
+    if (IsPdoVersion(ACTX2_PDO_V4))
+    {
+	    M3ActX2PdoV4Cmd* ec = (M3ActX2PdoV4Cmd *) data;
+	    ax=&(ec->command[chid]);
+    }
+    if (IsPdoVersion(ACTX3_PDO_V4))
+    {
+	    M3ActX3PdoV4Cmd* ec = (M3ActX3PdoV4Cmd *) data;
+	    ax=&(ec->command[chid]);
+    }
+    ax->config=acc.config;
+    ax->k_p=acc.k_p;
+    ax->k_i=acc.k_i;
+    ax->k_d=acc.k_d;
+    ax->k_p_shift=acc.k_p_shift;
+    ax->k_i_shift=acc.k_i_shift;
+    ax->k_d_shift=acc.k_d_shift;
+    ax->k_i_limit=acc.k_i_limit;
+    ax->t_desire=acc.t_desire;
+    ax->mode=acc.mode;
+    ax->qei_max=acc.qei_max;
+    ax->qei_min=acc.qei_min;
+    ax->pwm_max=acc.pwm_max;
+    
+    ax->current_desired = CLAMP(command.current_desired(),-32767,32767);
+	ax->pwm_desired = CLAMP(command.pwm_desired(),-32767,32767);
+	ax->bldc_mode = param.bldc_mode();
+    /*if (tmp_cnt++ == 100)
+    {
+      M3_DEBUG("pwm: %d\n", pwm_max_ext);
+      tmp_cnt = 0;
+    }*/
+    //ax->pwm_desired = acc.pwm_desired;
+    //ax->current_desired = acc.current_desired;
+}
+
+
 void M3ActuatorEc::SetPdoV2FromPdoV1Command(unsigned char * data)
 {
     //Copy V1 into V2 structures
@@ -395,6 +558,7 @@ void M3ActuatorEc::SetPdoV2FromPdoV1Command(unsigned char * data)
     axc.ext_start_idx=(axc.ext_start_idx+num_copy)%ext_sz; 
 }
 
+
 void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 {
 
@@ -403,6 +567,9 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	    IsPdoVersion(ACTX2_PDO_V2) || 
 	    IsPdoVersion(ACTX3_PDO_V2) || 
 	    IsPdoVersion(ACTX4_PDO_V2) ||
+	    IsPdoVersion(ACTX1_PDO_V4) || 
+	    IsPdoVersion(ACTX2_PDO_V4) || 
+	    IsPdoVersion(ACTX3_PDO_V4) || 
 	    IsPdoVersion(SEA_PDO_V0))
 	ax=&acc; //Fill in this temporary V1 PDO,then transfer to V0/V2 PDO
 	  
@@ -440,7 +607,8 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 		pwr_scale=1.0;
 	    else
 		pwr_scale=0.0;
-		pwm_scale=1.0;
+	    motor_power_slewed_on = true;
+	    pwm_scale=1.0;
 	}
 	else
 	{
@@ -458,6 +626,10 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 			pwm_slew.Reset(0);
 			pwm_scale=0;
 		}
+		if (pwr_scale >= 0.98)
+		  motor_power_slewed_on = true;
+		else
+		  motor_power_slewed_on = false;
 	}
 	
 	
@@ -468,19 +640,24 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	else
 		ax->config=ax->config & ~ACTUATOR_EC_CONFIG_BRAKE_OFF; 
 	
-	ax->k_p=CLAMP((int)((mReal)param.k_p()*pwr_scale),-32767,32767);
-	ax->k_i=CLAMP((int)((mReal)param.k_i()*pwr_scale),-32767,32767);
-	ax->k_d=CLAMP((int)((mReal)param.k_d()*pwr_scale),-32767,32767);
+	ax->k_p=CLAMP((int)((mReal)param.k_p()),-32767,32767);
+	ax->k_i=CLAMP((int)((mReal)param.k_i()),-32767,32767);
+	ax->k_d=CLAMP((int)((mReal)param.k_d()),-32767,32767);
 	ax->k_p_shift=CLAMP(param.k_p_shift(),-32767,32767);
 	ax->k_i_shift=CLAMP(param.k_i_shift(),-32767,32767);
 	ax->k_d_shift=CLAMP(param.k_d_shift(),-32767,32767);
 	ax->k_i_limit=CLAMP(param.k_i_limit(),-32767,32767);
 	ax->pwm_db=CLAMP(param.pwm_db(),-32767,32767);			
-	ax->pwm_max=(int)(CLAMP(MIN(pwm_max_ext,param.pwm_max()),0,32767)*pwr_scale);
+	ax->pwm_max=(int)(CLAMP(MIN(pwm_max_ext,param.pwm_max()),0,32767));
 	ax->t_desire=CLAMP(command.t_desire(),-32767,32767);
+
 	
 	if (command.mode()==ACTUATOR_EC_MODE_PWM) //Overwrite
 		ax->t_desire=CLAMP((int)((mReal)command.t_desire()*pwr_scale*pwm_scale),-1*ax->pwm_max,ax->pwm_max);
+
+	if (command.mode()==ACTUATOR_EC_MODE_CURRENT) //Overwrite
+		command.set_current_desired(((mReal)command.current_desired())*pwr_scale);
+
 	
 	if (IsVersion(DEFAULT)||IsVersion(ISS))
 	{
@@ -498,16 +675,23 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 		  ax->k_ff=(int)CLAMP(pwm_ff,-1*ax->pwm_max,ax->pwm_max);
 	  }
 	}
-
+	if (IsVersion(IQ)) //Deprecated
+	{
+	  ax->k_ff_zero=0;
+	  ax->k_ff_shift=0;	
+	  ax->k_ff=0;	
+	}
 	
 	ax->t_max=CLAMP(param.t_max(),-32767,32767);
 	ax->t_min=CLAMP(param.t_min(),-32767,32767);
 	
 	ax->qei_max=CLAMP(param.qei_max(),-32767,32767);
 	ax->qei_min=CLAMP(param.qei_min(),-32767,32767);
-	if (pwr_scale==0)
-		ax->mode=(int)ACTUATOR_EC_MODE_OFF;
-	else
+	
+	// TODO Lee commented this
+	//if (pwr_scale==0)
+	//	ax->mode=(int)ACTUATOR_EC_MODE_OFF;
+	//else
 		ax->mode=(int)command.mode();
 	
 	//toggle bit to give DSP a heartbeat signal
@@ -529,6 +713,11 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	if (IsPdoVersion(SEA_PDO_V0))
 		SetPdoV0FromPdoV1Command(data);
 	
+	if (IsPdoVersion(ACTX1_PDO_V4) || 
+	    IsPdoVersion(ACTX2_PDO_V4) || 
+	    IsPdoVersion(ACTX3_PDO_V4))
+		SetPdoV4FromPdoV1Command(data);
+		
 	//if (tmp_cnt++%100==0)
 	//M3_INFO("Pwm slew %f Pwr slew %f Mode %d des %d, t_desire %d\n",
 	//	  pwm_scale,pwr_scale,(int) command.mode(),(int)command.t_desire(), ax->t_desire);
@@ -595,8 +784,11 @@ bool M3ActuatorEc::ReadConfig(const char * filename)
 		ymlparam["pwm_max"] >> val;
 		param.set_pwm_max(val);
 		pwm_max_ext=val;
+
 		ymlparam["pwm_db"] >> val;
 		param.set_pwm_db(val);
+		ymlparam["bldc_mode"] >> val;
+		param.set_bldc_mode(val);
 		if (IsVersion(DEFAULT)||IsVersion(ISS))
 		{
 		  ymlparam["k_ff_zero"] >> val;

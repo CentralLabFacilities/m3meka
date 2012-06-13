@@ -85,7 +85,9 @@ pkgpython_PYTHON = \
 	m3/toolbox_ctrl.py\
 	m3/toolbox_beh.py\
 	m3/toolbox.py\
-	m3/trajectory.py
+	m3/trajectory.py\
+	m3/ctrl_simple.py\
+	m3/ctrl_simple_pb2.py
 
 #	m3/tactile_pps22_ec_pb2.py
 #	m3/tactile_pps22_ec.py
@@ -130,11 +132,17 @@ dist_bin_SCRIPTS = \
 	scripts/demo/m3_demo_poser.py\
 	scripts/demo/m3_demo_torque_shm.py\
 	scripts/demo/m3_demo_arm_a2r1.py\
+	scripts/demo/m3_demo_arm_a2r4.py\
 	scripts/demo/m3_demo_bimanual_torso_a2r2_t2r2.py\
 	scripts/demo/m3_demo_face_detect.py\
 	scripts/tutorials/m3_tutorial_1.py\
 	scripts/tutorials/m3_tutorial_2.py\
 	scripts/tutorials/m3_tutorial_3.py\
-	scripts/tutorials/m3_tutorial_4.py
+	scripts/tutorials/m3_tutorial_4.py\
+	scripts/dev/m3dev_actuator_ec_tuning2.py\
+	scripts/dev/m3dev_actuator_tuning.py\
+	scripts/dev/m3dev_ctrl_simple_tuning.py\
+	scripts/dev/m3dev_tuning.py
+	
 
 

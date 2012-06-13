@@ -35,6 +35,7 @@ libm3hardwareinclude_HEADERS = \
 	m3ec_pdo_v1_def.h\
 	m3ec_pdo_v2_def.h\
 	m3ec_pdo_v3_def.h\
+	m3ec_pdo_v4_def.h\
 	m3meka_ec_def.h\
 	motor.h\
 	actuator.h\
@@ -46,35 +47,38 @@ libm3hardwareinclude_HEADERS = \
 	pwr_ec.pb.h\
 	actuator_ec.h\
 	actuator_ec.pb.h\
+	actuator_ec.proto\
+	ctrl_simple.pb.h\
+	async_io.pb.h\
+	robot_monitor.pb.h\
+	ledx2xn_ec.pb.h\
+	led_matrix_ec.pb.h\
+	ledx2_ec.pb.h\
+	tactile_pps22_ec.pb.h\
+	loadx6_ec.pb.h\
+	loadx6.pb.h\
+	loadx1_ec.pb.h\
+	loadx1.pb.h\
+	joint.pb.h\
 	joint.h\
 	actuator_virtual.h\
 	joint_slave.h\
-	joint.pb.h\
 	sensor.h\
 	transmission.h\
 	loadx1.h\
-	loadx1.pb.h\
 	loadx1_ec.h\
-	loadx1_ec.pb.h\
 	loadx6.h\
 	loadx6_virtual.h\
-	loadx6.pb.h\
 	loadx6_ec.h\
-	loadx6_ec.pb.h\
 	tactile_pps22_ec.h\
-	tactile_pps22_ec.pb.h\
 	ledx2_ec.h\
-	ledx2_ec.pb.h\
-	led_matrix_ec.pb.h\
 	led_matrix_ec.h\
 	joint_zlift.h\
 	ledx2xn_ec.h\
-	ledx2xn_ec.pb.h\
 	robot_monitor.h\
-	robot_monitor.pb.h\
 	async_io.h\
-	actuator_ec.proto\
-	async_io.pb.h
+	ctrl_simple.h
+
 	
 clean-local:
 	rm -f *.pb.*
@@ -192,9 +196,16 @@ async_io.pb.cpp: async_io.proto
 	mv async_io.pb.cc async_io.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 async_io.proto
 
+ctrl_simple.pb.h: ctrl_simple.pb.cpp
+
+ctrl_simple.pb.cpp: ctrl_simple.proto
+	protoc -I$(prefix)/include/m3rt/base   -I./ --cpp_out=./ ctrl_simple.proto
+	mv ctrl_simple.pb.cc ctrl_simple.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 ctrl_simple.proto
 
 proto: actuator.pb.cpp pwr.pb.cpp pwr_ec.pb.cpp  actuator_ec.pb.cpp joint.pb.cpp loadx1.pb.cpp loadx1_ec.pb.cpp \
-	loadx6.pb.cpp loadx6_ec.pb.cpp tactile_pps22_ec.pb.cpp ledx2_ec.pb.cpp ledx2xn_ec.pb.cpp led_matrix_ec.pb.cpp robot_monitor.pb.cpp async_io.pb.cpp
+	loadx6.pb.cpp loadx6_ec.pb.cpp tactile_pps22_ec.pb.cpp ledx2_ec.pb.cpp ledx2xn_ec.pb.cpp led_matrix_ec.pb.cpp \
+	robot_monitor.pb.cpp async_io.pb.cpp ctrl_simple.pb.cpp
 
 
 proto_install: 
@@ -253,6 +264,8 @@ libm3hardware_la_SOURCES = \
 	joint.pb.cpp\
 	ledx2xn_ec.pb.cpp\
 	led_matrix_ec.pb.cpp\
+	ctrl_simple.pb.cpp\
+	log_test.pb.cpp\
  	pwr_ec.cpp\
 	pwr.cpp\
 	pwr_virtual.cpp\
@@ -276,9 +289,9 @@ libm3hardware_la_SOURCES = \
 	ledx2xn_ec.cpp\
 	robot_monitor.cpp\
 	async_io.cpp\
-	log_test.pb.cpp\
 	log_test.cpp\
-	factory_proxy.cpp
+	factory_proxy.cpp\
+	ctrl_simple.cpp
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////
 

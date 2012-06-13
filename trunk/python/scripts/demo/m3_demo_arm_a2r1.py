@@ -41,6 +41,8 @@ class M3Proc:
 	def start(self):
 		# ######## Setup Proxy and Components #########################
 		self.proxy.start()
+		self.current_first = True
+		
 		bot_name=m3t.get_robot_name()
 		if bot_name == "":
 			print 'Error: no robot components found:', bot_names
@@ -77,12 +79,12 @@ class M3Proc:
 		self.ndof=self.bot.get_num_dof(self.arm_name)
 		self.via_traj={}
 		self.via_traj_first=True
-
+		self.theta_curr = [0.0]*self.ndof
 		# ######## Square/Circle stuff #########################
 		if self.arm_name == 'right_arm':
-			self.center = [0.450, -0.25, -0.1745]				
+			self.center = [0.450, -0.28, -0.1745]				
 		else:
-			self.center = [0.450, 0.25, -0.1745]		
+			self.center = [0.450, 0.28, -0.1745]		
 		avail_chains = self.bot.get_available_chains()
 		for c in avail_chains:
 			if c == 'torso':
@@ -224,7 +226,7 @@ class M3Proc:
 	def step(self):
 		self.proxy.step()
 
-		print 'Arm: ',self.get_arm_mode_name()
+		#print 'Arm: ',self.get_arm_mode_name()
 		apply(self.arm_mode_methods[self.arm_mode[0]])
 		if self.get_arm_mode_name()!='Square' and self.get_arm_mode_name()!='Circle' and self.get_arm_mode_name()!='TrajA':
 			self.via_traj_first=True
@@ -268,7 +270,7 @@ class M3Proc:
 		self.hand.set_slew_rate_proportion([1.0]*5)
 		if self.hand_traj_first:
 			self.hand_traj_first=False
-			for pose_name in self.hand_data['postures'].keys():
+			for pose_name in self.hand_data['postures'].HoldUpkeys():
 				theta_des=self.hand_data['postures'][pose_name]
 				thetadot_avg=self.hand_data['thetadot_avg'][pose_name]
 				self.hand.add_splined_traj_via_deg(theta_des,thetadot_avg)
@@ -282,33 +284,42 @@ class M3Proc:
 		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*self.ndof)
 		if self.via_traj_first and len(self.via_traj[self.get_arm_mode_name()]):
 			self.via_traj_first=False
-			theta_0 = self.bot.get_theta_deg(self.arm_name)[:]	
-			vias=[theta_0]+self.via_traj[self.get_arm_mode_name()]+[theta_0] #start and stop at current pos	
+			theta_0 = self.bot.get_theta_deg(self.arm_name)[:]			
+			#vias = [list(theta_0)]+self.via_traj[self.get_arm_mode_name()]+[list(theta_0)] #start and stop at current pos
+			vias = [list(theta_0)]+self.via_traj[self.get_arm_mode_name()] #start current pos
+			idx = 0
 			for v in vias:
-				self.bot.add_splined_traj_via_deg(self.arm_name, v,[self.velocity[0]]*self.ndof)				
+				self.bot.add_splined_traj_via_deg(self.arm_name, v,[self.velocity[0]]*self.ndof)
+				idx += 1
 		if  self.bot.is_splined_traj_complete(self.arm_name):
-			self.via_traj_first=True
+			self.via_traj_first = True
+			self.via_traj_redo = True
 
 	def step_current(self):
 		if self.current_first:
 			self.current_first=False
 			self.theta_curr = self.bot.get_theta_deg(self.arm_name)[:]
-		self.bot.set_mode_theta_gc_mj(self.arm_name)
+			print 'new:', self.theta_curr
+		self.bot.set_mode_theta_gc(self.arm_name)
 		self.bot.set_theta_deg(self.arm_name,self.theta_curr)
 		self.bot.set_stiffness(self.arm_name,self.get_stiffness())
-		self.bot.set_thetadot_deg(self.arm_name,[20.0]*self.ndof)   
+		#self.bot.set_thetadot_deg(self.arm_name,[20.0]*self.ndof)
+		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*self.ndof)
+		
 
 	def step_zero(self):
-		self.bot.set_mode_theta_gc_mj(self.arm_name)
+		self.bot.set_mode_theta_gc(self.arm_name)
 		self.bot.set_theta_deg(self.arm_name,self.poses['zero'][self.arm_name])
 		self.bot.set_stiffness(self.arm_name,self.get_stiffness())
-		self.bot.set_thetadot_deg(self.arm_name,[20.0]*self.ndof)
+		#self.bot.set_thetadot_deg(self.arm_name,[20.0]*self.ndof)
+		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*self.ndof)
 
 	def step_hold_up(self):
-		self.bot.set_mode_theta_gc_mj(self.arm_name)
+		self.bot.set_mode_theta_gc(self.arm_name)
 		self.bot.set_theta_deg(self.arm_name,self.poses['holdup'][self.arm_name])
 		self.bot.set_stiffness(self.arm_name,self.get_stiffness())
-		self.bot.set_thetadot_deg(self.arm_name,[15.0]*self.ndof)
+		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*self.ndof)
+		#self.bot.set_thetadot_deg(self.arm_name,[15.0]*self.ndof)
 
 	def step_gravity(self):
 		self.bot.set_mode_theta_gc(self.arm_name)

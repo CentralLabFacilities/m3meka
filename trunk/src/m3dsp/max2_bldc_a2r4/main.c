@@ -18,7 +18,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-#include "p33fxxxx.h"
+#include <p33Fxxxx.h>
 #include "setup.h"
 
 //---------------------------------------------------------------
@@ -54,9 +54,11 @@ int main (void)
 
 	//Setup oscillator/ports/pins first
 	setup_oscillator();
-	setup_ports();
+	setup_ports();     
 	setup_peripheral_pin_select();
 	setup_interrupt_priorities();
+
+
 
 	//Blinking HB LED and Timestamp
 	#ifdef USE_DIO

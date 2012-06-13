@@ -25,6 +25,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/hardware/actuator_ec.pb.h"
 #include "m3/hardware/actuator.pb.h"
 #include "m3/hardware/actuator.h"
+#include "m3/hardware/ctrl_simple.h"
 #include "m3/hardware/transmission.h"
 #include "m3/toolbox/trajectory.h"
 #include <google/protobuf/message.h>
@@ -47,7 +48,7 @@ class M3Joint: public m3rt::M3Component
 {
 	public:
 		M3Joint(): m3rt::M3Component(JOINT_PRIORITY),brake_type(BRAKE_NONE),cpj(0),pwr_on_last(0),brake_off_cmd(0),mode_last(-1),trans(0),
-		  tq_switch(0), q_switch(0), pwm_switch(0), disable_pwm_ramp(false)
+		  tq_switch(0), q_switch(0), pwm_switch(0), disable_pwm_ramp(false), ctrl_simple(NULL)
 		{
 			RegisterVersion("default",DEFAULT);	//RBL. Now works with default case/ambient values
 			RegisterVersion("iss",ISS);		//ISS. Now displays motor-model case/ambient/motor temp values
@@ -129,13 +130,16 @@ class M3Joint: public m3rt::M3Component
 		M3Actuator * act;
 		M3Transmission * trans;
 		M3Joint * cpj;   //coupled joint component (present in derived classes only)
+		M3CtrlSimple * ctrl_simple;		
 		string act_name;
+		string ctrl_simple_name;
 		int mode_last;
 		int tmp_cnt;
 		int pwr_on_last;
 		int brake_off_cmd;
 		int brake_type;
 		bool disable_pwm_ramp;
+		int pnt_cnt;
 };
 
 
