@@ -1,10 +1,14 @@
 
 
-#include "setup.h"
+//#include "setup.h"
+#include "control_setup.h"
+#include "control_def.h"
 
+#include "state_machine.h"
 
 
 static enum dsp_state dsp = DSP_OFF;
+static enum dsp_state dsp_mode_last = DSP_RESET;
 
 int max_current_ma = 13000;
 int max_current_error_count_max = 10;
@@ -24,7 +28,7 @@ void step_state()
     if (limit_check(get_temperature_cC(ADC_AMP_TEMP), max_amp_temperature_cC,
             &max_amp_temperature_count, max_amp_temperature_count_max) )
         dsp = DSP_ERROR;
-    
+
 
     if (count<1000) {
         count++;
@@ -49,6 +53,11 @@ void step_state()
                 break;
         }
     }
+
+	if (dsp != dsp_mode_last) {
+		reset_current_integrator();
+	}
+	dsp_mode_last = dsp;
 
     switch (dsp) {
         case DSP_OFF:

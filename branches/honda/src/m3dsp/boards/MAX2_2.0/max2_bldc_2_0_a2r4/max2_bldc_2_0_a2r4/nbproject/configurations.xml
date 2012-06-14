@@ -24,6 +24,8 @@
       <itemPath>../../../control_lib/state_machine.h</itemPath>
       <itemPath>../../../control_lib/adc.h</itemPath>
       <itemPath>../../../control_lib/current.h</itemPath>
+      <itemPath>../../src/control_setup.h</itemPath>
+      <itemPath>../../../control_lib/control_def.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -70,6 +72,7 @@
     <Elem>../../../control_lib</Elem>
     <Elem>../../src</Elem>
     <Elem>..</Elem>
+    <Elem>../../control_lib</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

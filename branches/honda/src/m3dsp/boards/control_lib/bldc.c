@@ -19,13 +19,15 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef USE_BLDC
 
-#include "p33Fxxxx.h"
-#include "setup.h"
+//#include "p33Fxxxx.h"
+#include "control_setup.h"
+#include "control_def.h"
+
 #include "bldc.h"
-#include "ethercat.h"
-#include "timer3.h"
-#include "dio.h"
-#include "pwm.h"
+//#include "ethercat.h"
+//#include "timer3.h"
+//#include "dio.h"
+//#include "pwm.h"
 
 static volatile unsigned int bldc_fwd;
 //unsigned int bldc_hall_val;

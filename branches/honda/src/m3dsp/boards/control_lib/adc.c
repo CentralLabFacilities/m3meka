@@ -23,8 +23,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #ifdef USE_ADC
 
-#include "p33Fxxxx.h"
-#include "setup.h"
+#include "control_setup.h"
+#include "control_def.h"
+//#include "setup.h"
 #include "adc.h"
 
 
@@ -255,14 +256,14 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA2Interrupt(void)
     int tmp;
    // int pwm_current_control;
 
-
+	SetHeartbeatLED;
     dma_buf_ptr = current_dma_buf();
 
     
     for(i=0;i<3;i++) {
         adc_raw[i] = dma_buf_ptr[i];
         tmp = adc_raw[i] - (adc_zero[i]>>ADC_Q_FORM);
-        adc_filter((int *)&adc_meas[i], tmp, 0x8 );
+        adc_filter((int *)&adc_meas[i], tmp, 16 );
 
     }
     //adc_meas[ADC_AMP_TEMP] = dma_buf_ptr[ADC_AMP_TEMP];
@@ -284,7 +285,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA2Interrupt(void)
             set_pwm(0,0);
             break;
     }*/
-    
+
+	ClrHeartbeatLED;
     _DMA2IF = 0;		//Clear the flag
 }
 

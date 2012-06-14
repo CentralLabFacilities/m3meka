@@ -1,5 +1,5 @@
-#ifndef CURRENT2_H
-#define CURRENT2_H
+#ifndef CURRENT_H
+#define CURRENT_H
 
 // for Q6 format, multiplier is .4578 mA/tick
 // 32768*.4578 = 15001
@@ -22,6 +22,7 @@ void set_current_ab(int i_a, int i_b);
 int adc2ma(int adc);
 int ma2adc(int ma);
 int get_max_current_ma();
+void reset_current_integrator();
 
 #endif
 

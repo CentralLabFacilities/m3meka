@@ -23,7 +23,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "ethercat.h"
 #include "ethercat_def.h"
 #include "ethercat_slave_fsm.h"
-#include "current.h"
 
 ec_cmd_t  ec_cmd;
 ec_stat_t   ec_stat;

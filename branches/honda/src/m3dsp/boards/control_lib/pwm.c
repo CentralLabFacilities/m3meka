@@ -19,9 +19,11 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef USE_PWM
 
-
+#include "control_setup.h"
+#include "control_def.h"
 #include "pwm.h"
-#include "setup.h"
+#include "state_machine.h"
+
 
 unsigned int actual_pwm = 0;
 int pwm_cmd_buf[NUM_PWM_CH];

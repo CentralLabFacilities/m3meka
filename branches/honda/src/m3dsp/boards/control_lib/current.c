@@ -1,10 +1,14 @@
 
-#include "setup.h"
+//#include "setup.h"
+#include "control_setup.h"
+#include "control_def.h"
+
 #include "current.h"
 
 static int current_meas;
 static int current_desired;
 static int i_a, i_b;
+static long ki_sum = 0;
 
 #define MEAS_A &i_a
 #define MEAS_B &i_b
@@ -15,7 +19,6 @@ static const int current_signs[8] = CURRENT_SIGN_TABLE;
 
 int current_control()
 {
-    static long ki_sum = 0;
     int error = current_desired-current_meas;
     int command;
     const int kp = ec_cmd.command[0].k_p;
@@ -31,6 +34,11 @@ int current_control()
     command = (__builtin_mulss(-kp,error)>>(6+kp_shift)) - (ki_sum>>(6+ki_shift));
 
     return (command);
+}
+
+void reset_current_integrator()
+{
+	ki_sum = 0;
 }
 
 int get_current_ma()
