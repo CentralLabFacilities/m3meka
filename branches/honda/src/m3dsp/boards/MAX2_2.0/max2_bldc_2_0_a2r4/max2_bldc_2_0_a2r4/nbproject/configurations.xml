@@ -115,7 +115,8 @@
         <property key="enable-short-double" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
-        <property key="extra-include-directories" value="../../src"/>
+        <property key="extra-include-directories"
+                  value="../../src;../../../control_lib;..;../src"/>
         <property key="isolate-each-function" value="false"/>
         <property key="optimization-level" value="3"/>
         <property key="post-instruction-scheduling" value="default"/>

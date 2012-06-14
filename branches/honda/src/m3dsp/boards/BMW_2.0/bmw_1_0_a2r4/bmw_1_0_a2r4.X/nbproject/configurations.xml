@@ -23,6 +23,7 @@
       <itemPath>../../../MAX2_2.0/src/pwm.h</itemPath>
       <itemPath>../../../control_lib/pwm.h</itemPath>
       <itemPath>../../../control_lib/current.h</itemPath>
+      <itemPath>../../src/control_setup.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -106,7 +107,8 @@
         <property key="enable-short-double" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="true"/>
-        <property key="extra-include-directories" value=".."/>
+        <property key="extra-include-directories"
+                  value="..;../../../control_lib;../src"/>
         <property key="isolate-each-function" value="false"/>
         <property key="optimization-level" value="2"/>
         <property key="post-instruction-scheduling" value="default"/>

@@ -256,7 +256,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA2Interrupt(void)
 
     
     /*for(i=0;i<ADC_NUM_CH;i++) {
-        adc_raw[i] = dma_buf_ptr[i];//*ADC_NUM_SAMPLES];
+        adc_raw[i] = dma_buf_ptr[i];// *ADC_NUM_SAMPLES];
         tmp = adc_raw[i] - (adc_zero[i]>>ADC_Q_FORM);
         adc_filter((int *)&adc_meas[i], tmp, 0x8 );
 
