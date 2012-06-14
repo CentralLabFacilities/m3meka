@@ -16,7 +16,6 @@
       <itemPath>../../src/setup.h</itemPath>
       <itemPath>../../src/timer3.h</itemPath>
       <itemPath>../../src/warning.h</itemPath>
-      <itemPath>../../src/state_machine.h</itemPath>
       <itemPath>../../../../../m3/hardware/m3ec_pdo_v4_def.h</itemPath>
       <itemPath>../../../control_lib/bldc.h</itemPath>
       <itemPath>../../../MAX2_2.0/src/spi1Drv.h</itemPath>
@@ -24,6 +23,7 @@
       <itemPath>../../../control_lib/pwm.h</itemPath>
       <itemPath>../../../control_lib/current.h</itemPath>
       <itemPath>../../src/control_setup.h</itemPath>
+      <itemPath>../../../control_lib/state_machine.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -51,11 +51,11 @@
       <itemPath>../../src/main.c</itemPath>
       <itemPath>../../src/setup.c</itemPath>
       <itemPath>../../src/timer3.c</itemPath>
-      <itemPath>../../src/state_machine.c</itemPath>
       <itemPath>../../../control_lib/bldc.c</itemPath>
       <itemPath>../../../MAX2_2.0/src/spi1Drv.c</itemPath>
       <itemPath>../../../control_lib/pwm.c</itemPath>
       <itemPath>../../../control_lib/current.c</itemPath>
+      <itemPath>../../../control_lib/state_machine.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

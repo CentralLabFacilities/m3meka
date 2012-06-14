@@ -41,11 +41,11 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1445274692/state_machine.o ${OBJECTDIR}/_ext/1521885068/bldc.o ${OBJECTDIR}/_ext/1534020281/spi1Drv.o ${OBJECTDIR}/_ext/1521885068/pwm.o ${OBJECTDIR}/_ext/1521885068/current.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/adc.o.d ${OBJECTDIR}/_ext/1445274692/control.o.d ${OBJECTDIR}/_ext/1445274692/dio.o.d ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o.d ${OBJECTDIR}/_ext/1445274692/ethercat.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d ${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/setup.o.d ${OBJECTDIR}/_ext/1445274692/timer3.o.d ${OBJECTDIR}/_ext/1445274692/state_machine.o.d ${OBJECTDIR}/_ext/1521885068/bldc.o.d ${OBJECTDIR}/_ext/1534020281/spi1Drv.o.d ${OBJECTDIR}/_ext/1521885068/pwm.o.d ${OBJECTDIR}/_ext/1521885068/current.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1521885068/bldc.o ${OBJECTDIR}/_ext/1534020281/spi1Drv.o ${OBJECTDIR}/_ext/1521885068/pwm.o ${OBJECTDIR}/_ext/1521885068/current.o ${OBJECTDIR}/_ext/1521885068/state_machine.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1445274692/adc.o.d ${OBJECTDIR}/_ext/1445274692/control.o.d ${OBJECTDIR}/_ext/1445274692/dio.o.d ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o.d ${OBJECTDIR}/_ext/1445274692/ethercat.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o.d ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o.d ${OBJECTDIR}/_ext/1445274692/main.o.d ${OBJECTDIR}/_ext/1445274692/setup.o.d ${OBJECTDIR}/_ext/1445274692/timer3.o.d ${OBJECTDIR}/_ext/1521885068/bldc.o.d ${OBJECTDIR}/_ext/1534020281/spi1Drv.o.d ${OBJECTDIR}/_ext/1521885068/pwm.o.d ${OBJECTDIR}/_ext/1521885068/current.o.d ${OBJECTDIR}/_ext/1521885068/state_machine.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1445274692/state_machine.o ${OBJECTDIR}/_ext/1521885068/bldc.o ${OBJECTDIR}/_ext/1534020281/spi1Drv.o ${OBJECTDIR}/_ext/1521885068/pwm.o ${OBJECTDIR}/_ext/1521885068/current.o
+OBJECTFILES=${OBJECTDIR}/_ext/1445274692/adc.o ${OBJECTDIR}/_ext/1445274692/control.o ${OBJECTDIR}/_ext/1445274692/dio.o ${OBJECTDIR}/_ext/1445274692/encoder_vertx.o ${OBJECTDIR}/_ext/1445274692/ethercat.o ${OBJECTDIR}/_ext/1445274692/ethercat_appl.o ${OBJECTDIR}/_ext/1445274692/ethercat_hw.o ${OBJECTDIR}/_ext/1445274692/ethercat_slave_fsm.o ${OBJECTDIR}/_ext/1445274692/main.o ${OBJECTDIR}/_ext/1445274692/setup.o ${OBJECTDIR}/_ext/1445274692/timer3.o ${OBJECTDIR}/_ext/1521885068/bldc.o ${OBJECTDIR}/_ext/1534020281/spi1Drv.o ${OBJECTDIR}/_ext/1521885068/pwm.o ${OBJECTDIR}/_ext/1521885068/current.o ${OBJECTDIR}/_ext/1521885068/state_machine.o
 
 
 CFLAGS=
@@ -147,12 +147,6 @@ ${OBJECTDIR}/_ext/1445274692/timer3.o: ../../src/timer3.c  nbproject/Makefile-${
 	@${RM} ${OBJECTDIR}/_ext/1445274692/timer3.o.ok ${OBJECTDIR}/_ext/1445274692/timer3.o.err 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/timer3.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DUSE_ENCODER_VERTX -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_BLDC -DUSE_WATCHDOG -DBMW_1_0_A2R4 -DUSE_TIMER3 -I".." -I"../../../control_lib" -I"../src" -I"../../src" -O2 -funroll-loops -MMD -MF "${OBJECTDIR}/_ext/1445274692/timer3.o.d" -o ${OBJECTDIR}/_ext/1445274692/timer3.o ../../src/timer3.c  
 	
-${OBJECTDIR}/_ext/1445274692/state_machine.o: ../../src/state_machine.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/state_machine.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/state_machine.o.ok ${OBJECTDIR}/_ext/1445274692/state_machine.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/state_machine.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DUSE_ENCODER_VERTX -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_BLDC -DUSE_WATCHDOG -DBMW_1_0_A2R4 -DUSE_TIMER3 -I".." -I"../../../control_lib" -I"../src" -I"../../src" -O2 -funroll-loops -MMD -MF "${OBJECTDIR}/_ext/1445274692/state_machine.o.d" -o ${OBJECTDIR}/_ext/1445274692/state_machine.o ../../src/state_machine.c  
-	
 ${OBJECTDIR}/_ext/1521885068/bldc.o: ../../../control_lib/bldc.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1521885068 
 	@${RM} ${OBJECTDIR}/_ext/1521885068/bldc.o.d 
@@ -176,6 +170,12 @@ ${OBJECTDIR}/_ext/1521885068/current.o: ../../../control_lib/current.c  nbprojec
 	@${RM} ${OBJECTDIR}/_ext/1521885068/current.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1521885068/current.o.ok ${OBJECTDIR}/_ext/1521885068/current.o.err 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1521885068/current.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DUSE_ENCODER_VERTX -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_BLDC -DUSE_WATCHDOG -DBMW_1_0_A2R4 -DUSE_TIMER3 -I".." -I"../../../control_lib" -I"../src" -I"../../src" -O2 -funroll-loops -MMD -MF "${OBJECTDIR}/_ext/1521885068/current.o.d" -o ${OBJECTDIR}/_ext/1521885068/current.o ../../../control_lib/current.c  
+	
+${OBJECTDIR}/_ext/1521885068/state_machine.o: ../../../control_lib/state_machine.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1521885068 
+	@${RM} ${OBJECTDIR}/_ext/1521885068/state_machine.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1521885068/state_machine.o.ok ${OBJECTDIR}/_ext/1521885068/state_machine.o.err 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1521885068/state_machine.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DUSE_ENCODER_VERTX -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_BLDC -DUSE_WATCHDOG -DBMW_1_0_A2R4 -DUSE_TIMER3 -I".." -I"../../../control_lib" -I"../src" -I"../../src" -O2 -funroll-loops -MMD -MF "${OBJECTDIR}/_ext/1521885068/state_machine.o.d" -o ${OBJECTDIR}/_ext/1521885068/state_machine.o ../../../control_lib/state_machine.c  
 	
 else
 ${OBJECTDIR}/_ext/1445274692/adc.o: ../../src/adc.c  nbproject/Makefile-${CND_CONF}.mk
@@ -244,12 +244,6 @@ ${OBJECTDIR}/_ext/1445274692/timer3.o: ../../src/timer3.c  nbproject/Makefile-${
 	@${RM} ${OBJECTDIR}/_ext/1445274692/timer3.o.ok ${OBJECTDIR}/_ext/1445274692/timer3.o.err 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/timer3.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DUSE_ENCODER_VERTX -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_BLDC -DUSE_WATCHDOG -DBMW_1_0_A2R4 -DUSE_TIMER3 -I".." -I"../../../control_lib" -I"../src" -I"../../src" -O2 -funroll-loops -MMD -MF "${OBJECTDIR}/_ext/1445274692/timer3.o.d" -o ${OBJECTDIR}/_ext/1445274692/timer3.o ../../src/timer3.c  
 	
-${OBJECTDIR}/_ext/1445274692/state_machine.o: ../../src/state_machine.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/_ext/1445274692 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/state_machine.o.d 
-	@${RM} ${OBJECTDIR}/_ext/1445274692/state_machine.o.ok ${OBJECTDIR}/_ext/1445274692/state_machine.o.err 
-	@${FIXDEPS} "${OBJECTDIR}/_ext/1445274692/state_machine.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DUSE_ENCODER_VERTX -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_BLDC -DUSE_WATCHDOG -DBMW_1_0_A2R4 -DUSE_TIMER3 -I".." -I"../../../control_lib" -I"../src" -I"../../src" -O2 -funroll-loops -MMD -MF "${OBJECTDIR}/_ext/1445274692/state_machine.o.d" -o ${OBJECTDIR}/_ext/1445274692/state_machine.o ../../src/state_machine.c  
-	
 ${OBJECTDIR}/_ext/1521885068/bldc.o: ../../../control_lib/bldc.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1521885068 
 	@${RM} ${OBJECTDIR}/_ext/1521885068/bldc.o.d 
@@ -273,6 +267,12 @@ ${OBJECTDIR}/_ext/1521885068/current.o: ../../../control_lib/current.c  nbprojec
 	@${RM} ${OBJECTDIR}/_ext/1521885068/current.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1521885068/current.o.ok ${OBJECTDIR}/_ext/1521885068/current.o.err 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1521885068/current.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DUSE_ENCODER_VERTX -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_BLDC -DUSE_WATCHDOG -DBMW_1_0_A2R4 -DUSE_TIMER3 -I".." -I"../../../control_lib" -I"../src" -I"../../src" -O2 -funroll-loops -MMD -MF "${OBJECTDIR}/_ext/1521885068/current.o.d" -o ${OBJECTDIR}/_ext/1521885068/current.o ../../../control_lib/current.c  
+	
+${OBJECTDIR}/_ext/1521885068/state_machine.o: ../../../control_lib/state_machine.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1521885068 
+	@${RM} ${OBJECTDIR}/_ext/1521885068/state_machine.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1521885068/state_machine.o.ok ${OBJECTDIR}/_ext/1521885068/state_machine.o.err 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1521885068/state_machine.o.d" $(SILENT) -c ${MP_CC} $(MP_EXTRA_CC_PRE)  -g -omf=elf -x c -c -mcpu=$(MP_PROCESSOR_OPTION) -Wall -DEMBEDDED -DUSE_DIO -DUSE_ETHERCAT -DUSE_ENCODER_VERTX -DUSE_ADC -DUSE_PWM -DUSE_TIMESTAMP_DC -DUSE_BLDC -DUSE_WATCHDOG -DBMW_1_0_A2R4 -DUSE_TIMER3 -I".." -I"../../../control_lib" -I"../src" -I"../../src" -O2 -funroll-loops -MMD -MF "${OBJECTDIR}/_ext/1521885068/state_machine.o.d" -o ${OBJECTDIR}/_ext/1521885068/state_machine.o ../../../control_lib/state_machine.c  
 	
 endif
 

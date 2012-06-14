@@ -36,6 +36,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define ADC_CURRENT_B 8
 #define ADC_TEMP_AMB 6          
 #define ADC_TEMP_BOARD 0
+#define ADC_AMP_TEMP ADC_TEMP_BOARD
 //#define ADC_EXT 3			//SEAX2-1.2 is configured to take load-cell on the motor temp connector
 #define ADC_NUM_SAMPLES 2
 #define DMA_BUF_DEPTH 			ADC_NUM_SAMPLES*ADC_NUM_CH //32//128		//

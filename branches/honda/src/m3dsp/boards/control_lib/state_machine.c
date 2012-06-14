@@ -10,7 +10,7 @@
 static enum dsp_state dsp = DSP_OFF;
 static enum dsp_state dsp_mode_last = DSP_RESET;
 
-int max_current_ma = 13000;
+int max_current_ma = MAX_CURRENT_MA;
 int max_current_error_count_max = 10;
 int max_amp_temperature_cC = 8000;
 int max_amp_temperature_count_max = 10;
