@@ -39,5 +39,8 @@
 #define CURRENT_ADC_MULT    60191
 #define CURRENT_ADC_SHIFT   15
 
+#define CURRENT_SIGN_TABLE  {0,1,1,1,-1,1,-1,0}
+
+
 #endif
 

@@ -108,7 +108,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="true"/>
         <property key="extra-include-directories"
-                  value="..;../../../control_lib;../src"/>
+                  value="..;../../../control_lib;../src;../../src"/>
         <property key="isolate-each-function" value="false"/>
         <property key="optimization-level" value="2"/>
         <property key="post-instruction-scheduling" value="default"/>
