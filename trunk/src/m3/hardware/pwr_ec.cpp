@@ -108,6 +108,14 @@ void M3PwrEc::SetPdoFromCommand(unsigned char * data)
 			ec->config=ec->config | M3PWR_CONFIG_BUZZER; 
 		else
 			ec->config=ec->config & ~M3PWR_CONFIG_BUZZER; 
+		//toggle bit to give DSP a heartbeat signal
+		if (toggle == 0)
+		  toggle = M3ACT_CONFIG_EC_WD;
+		else if (toggle != 0)
+		{
+		  ec->config = ec->config | toggle;
+		  toggle = 0;
+		}
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
