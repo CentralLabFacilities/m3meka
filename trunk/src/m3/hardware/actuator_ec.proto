@@ -52,6 +52,7 @@ enum ACTUATOR_EC_CONFIG{
   ACTUATOR_EC_CONFIG_CALIB_QEI_LIMITSWITCH_NEG=2048;//Use limitswitch stop in -pwm direction to calibrate encoder
   ACTUATOR_EC_CONFIG_TORQUE_FF=4096; //Incorporate torque feed-forward term into the DSP PID Controller
   ACTUATOR_EC_CONFIG_CALIB_QEI_MANUAL=8192; //Zero encoder on low to high transition
+  ACTUATOR_EC_CONFIG_HAS_BRAKE=32768; //Set this bit if there is a brake on the actuator e.g. torso J1
 }
 
 message M3ActuatorEcStatus{

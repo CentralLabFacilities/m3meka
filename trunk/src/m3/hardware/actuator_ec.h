@@ -140,6 +140,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		int toggle;
 		int qei_err_cnt;
 		int tq_err_cnt;
+		bool has_brake;
 };
 
 

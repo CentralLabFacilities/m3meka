@@ -15,7 +15,7 @@ class M3Tuning:
 		self.comps = {'act': {'name': 'm3actuator_', 'type':m3a.M3Actuator, 'child_name':'act_ec_component' }, 
 		'act_ec': {'name': 'm3actuator_ec_', 'type':m3aec.M3ActuatorEc, 'child_name':None},
 		'ctrl': {'name': 'm3ctrl_simple_', 'type':m3cs.M3CtrlSimple, 'child_name':'act_component'},
-		'pwr': {'name': '', 'type': m3power.M3Pwr}}
+		'pwr': {'name': 'm3pwr_', 'type': m3power.M3Pwr}}
 		
 		parser = argparse.ArgumentParser()
 		parser.add_argument('-v','--verbose',action='store_true')
@@ -89,9 +89,16 @@ class M3Tuning:
 		self.proxy.step()
 
 	def get_children_components(self,comp_name,comp_type):
-		self.joint_suffix = comp_name.lstrip(self.comps[comp_type]['name'])   # more generic than comp_name[-2:]
+		if self.args.verbose: print "component name is " + str(comp_name)
+		if self.args.verbose: print "component type is " + comp_type
+		if self.args.verbose: print "component prefix is " + self.comps[comp_type]['name']
+		self.joint_suffix = comp_name.replace(self.comps[comp_type]['name'],"")   # more generic than comp_name[-2:]
+		if self.args.verbose: print "joint suffix is " + self.joint_suffix
 		for k in ['act','act_ec','ctrl']:
 			self.comps[k]['name'] = self.comps[k]['name'] + self.joint_suffix
+			
+		pwr_name = m3t.get_actuator_ec_pwr_component_name(self.comps['act_ec']['name'])
+		self.comps['pwr']['name'] = pwr_name
 			
 	def get_all_children_components():
 		child_dict = {}

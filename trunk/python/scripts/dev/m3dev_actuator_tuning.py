@@ -214,7 +214,8 @@ if __name__ == '__main__':
 	t=M3Proc()
 	try:
 		t.start()
-	except: #(KeyboardInterrupt,EOFError):
+	except Exception as e: #(KeyboardInterrupt,EOFError):
+		print "Exception " + str(e)
 		pass
 	t.stop()
 

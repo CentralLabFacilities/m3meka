@@ -34,6 +34,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 //V4 is for IQ version of actuator (current commanded)
 
+#define ACTUATOR_EC_CONFIG_HAS_BRAKE		32768 //Set this bit if there is a brake on the actuator e.g. torso J1
+
 typedef struct 
 {
 	int16_t		config;					//Reserved

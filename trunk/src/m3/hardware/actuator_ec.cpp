@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <m3/hardware/actuator_ec.h>
+#include "actuator_ec.h"
 #include "m3rt/base/component_factory.h"
 
 namespace m3{
@@ -358,6 +358,7 @@ void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
     status.set_qei_err_cnt(ax->qei_err_cnt);
     status.set_flags(ax->flags);
 	status.set_motor_pos(ax->motor_pos);
+	
     
 }
 
@@ -464,6 +465,8 @@ void M3ActuatorEc::SetPdoV4FromPdoV1Command(unsigned char * data)
 	    M3ActX3PdoV4Cmd* ec = (M3ActX3PdoV4Cmd *) data;
 	    ax=&(ec->command[chid]);
     }
+    if (has_brake)
+	    acc.config |= ACTUATOR_EC_CONFIG_HAS_BRAKE;
     ax->config=acc.config;
     ax->k_p=acc.k_p;
     ax->k_i=acc.k_i;
@@ -798,6 +801,14 @@ bool M3ActuatorEc::ReadConfig(const char * filename)
 		  ymlparam["k_ff"] >> val;
 		  param.set_k_ff(val);	
 		}
+		
+		try {
+		  doc["config"]["has_brake"] >> has_brake;
+		} catch (YAML::KeyNotFound &e) {
+		  has_brake = false;
+		  //M3_DEBUG("exception: %s\n", e.what() );
+		}
+		//M3_DEBUG("%s has_brake: %d\n", filename, has_brake);
 	}
 	return true;
 }
