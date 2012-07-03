@@ -7,12 +7,12 @@ factory_py_libs:
   - /usr/local/lib/python2.6/dist-packages/m3/m3meka_factory_proxy.py
 rt_components:
   pwr:
-    m3pwr_pwr026: m3pwr
-#    m3pwr_pwr023: m3pwr
-  sea:
+#    m3pwr_pwr012: m3pwr
+    m3pwr_pwr023: m3pwr_virtual
+#  sea:
 #   m3actuator_mt4_j1: m3actuator
-    m3ctrl_simple_j0: m3ctrl_simple
-    m3actuator_j0: m3actuator
+#    m3ctrl_simple_j0: m3ctrl_simple
+#    m3actuator_j0: m3actuator
 #    m3ctrl_simple_j1: m3ctrl_simple
 #    m3actuator_j1: m3actuator
 #    m3ctrl_simple_j2: m3ctrl_simple
@@ -35,6 +35,6 @@ ec_components:
 #    m3actuator_ec_j4: m3actuator_ec
 #    m3actuator_ec_j5: m3actuator_ec
 #    m3actuator_ec_j6: m3actuator_ec
-  pwr:
-    m3pwr_ec_pwr026: m3pwr_ec
+#  pwr:
+#    m3pwr_ec_pwr012: m3pwr_ec
 #    m3pwr_ec_pwr023: m3pwr_ec
