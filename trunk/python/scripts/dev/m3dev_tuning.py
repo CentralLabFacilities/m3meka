@@ -6,6 +6,7 @@ import m3.actuator_ec as m3aec
 import m3.actuator as m3a
 import m3.ctrl_simple as m3cs
 import m3.pwr as m3power
+import argparse
 
 
 class M3Tuning:
@@ -15,6 +16,10 @@ class M3Tuning:
 		'act_ec': {'name': 'm3actuator_ec_', 'type':m3aec.M3ActuatorEc, 'child_name':None},
 		'ctrl': {'name': 'm3ctrl_simple_', 'type':m3cs.M3CtrlSimple, 'child_name':'act_component'},
 		'pwr': {'name': '', 'type': m3power.M3Pwr}}
+		
+		parser = argparse.ArgumentParser()
+		parser.add_argument('-v','--verbose',action='store_true')
+		self.args = parser.parse_args()
 #		'arm' : {'name': 'm3rw_arm_ra0', 'type': m3arm.M3RwArm, 'child_name':'chain_component'},
 #		'chain': {'name': 'm3rw_joint_chain', 'type': m3jc.M3RwJointChain, 'child_name':'joint_components'},
 #		'joint': {'name': 'm3rw_joint', 'type': m3j.M3RwJoint, 'child_name':'control_component'},
@@ -45,7 +50,9 @@ class M3Tuning:
 		
 	# component list would be 'act','act_ec','ctrl','pwr'
 	def start_all_components(self,component_list,operational_list):
+		
 		for cname in self.cnames:
+			if self.args.verbose: print "starting component " + cname
 		# accomplishes this: self.act=m3s.M3Actuator(self.comp_name)
 			self.act_list[cname] = m3s.M3Actuator(cname)
 			setattr(self, k, v['type'](v['name']) )
@@ -64,6 +71,7 @@ class M3Tuning:
 		
 	def start_components(self,component_list,operational_list):
 		for k in component_list:
+			if self.args.verbose: print "starting component " + self.comps[k]['name']
 			v = self.comps[k]
 		# accomplishes this: self.act=m3s.M3Actuator(self.comp_name)
 			setattr(self, k, v['type'](v['name']) )
