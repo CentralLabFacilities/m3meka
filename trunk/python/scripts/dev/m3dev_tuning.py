@@ -11,10 +11,10 @@ import m3.pwr as m3power
 class M3Tuning:
   
 	def __init__(self):
-		self.comps = {'act': {'name': 'm3actuator_ma15_', 'type':m3a.M3Actuator, 'child_name':'act_ec_component' }, 
-		'act_ec': {'name': 'm3actuator_ec_ma15_', 'type':m3aec.M3ActuatorEc, 'child_name':None},
-		'ctrl': {'name': 'm3ctrl_simple_ma15_', 'type':m3cs.M3CtrlSimple, 'child_name':'act_component'},
-		'pwr': {'name': 'm3pwr_pwr023', 'type': m3power.M3Pwr}}
+		self.comps = {'act': {'name': 'm3actuator_', 'type':m3a.M3Actuator, 'child_name':'act_ec_component' }, 
+		'act_ec': {'name': 'm3actuator_ec_', 'type':m3aec.M3ActuatorEc, 'child_name':None},
+		'ctrl': {'name': 'm3ctrl_simple_', 'type':m3cs.M3CtrlSimple, 'child_name':'act_component'},
+		'pwr': {'name': '', 'type': m3power.M3Pwr}}
 #		'arm' : {'name': 'm3rw_arm_ra0', 'type': m3arm.M3RwArm, 'child_name':'chain_component'},
 #		'chain': {'name': 'm3rw_joint_chain', 'type': m3jc.M3RwJointChain, 'child_name':'joint_components'},
 #		'joint': {'name': 'm3rw_joint', 'type': m3j.M3RwJoint, 'child_name':'control_component'},
@@ -29,8 +29,9 @@ class M3Tuning:
 				print 'No ' + name + ' components found. Exiting...'
 				exit()	
 			self.comp_name = m3t.user_select_components_interactive(cnames,single=True)[0]
-		
-		self.get_children_components(self.comp_name)
+			
+		comp_type = [k for k, v in self.comps.iteritems() if self.comp_name.startswith(v['name'])][0]
+		self.get_children_components(self.comp_name, comp_type)
 		
 	def get_all_components(self,name):
 		self.cnames = self.proxy.get_available_components(name)
@@ -79,8 +80,8 @@ class M3Tuning:
 			self.pwr.set_motor_power_on()	
 		self.proxy.step()
 
-	def get_children_components(self,comp_name):
-		self.joint_suffix = comp_name[-2:]
+	def get_children_components(self,comp_name,comp_type):
+		self.joint_suffix = comp_name.lstrip(self.comps[comp_type]['name'])   # more generic than comp_name[-2:]
 		for k in ['act','act_ec','ctrl']:
 			self.comps[k]['name'] = self.comps[k]['name'] + self.joint_suffix
 			
