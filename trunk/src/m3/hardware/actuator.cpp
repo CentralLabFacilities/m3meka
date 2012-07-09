@@ -149,6 +149,12 @@ bool M3Actuator::ReadConfig(const char * filename)
 	      ParamPIDTorque()->set_k_i_limit(mval);
 	      doc["param"]["pid_current"]["k_i_range"] >> mval;
 	      ParamPIDTorque()->set_k_i_range(mval);
+	      
+	      try {
+		  doc["calib"]["torque"]["torque_shift"] >> torque_shift;
+	      } catch (YAML::KeyNotFound &e) {
+		  torque_shift = 1.0;
+	      }
 	}
 	return true;
 }
@@ -209,7 +215,7 @@ void M3Actuator::StepStatus()
 		status.set_thetadotdot(angle_df.GetThetaDotDot());
 		
 		//Torque
-		tq_sense.Step(ecs->adc_torque());
+		tq_sense.Step(ecs->adc_torque()/torque_shift);
 		status.set_torque(tq_sense.GetTorque_mNm());
 		status.set_torquedot(torquedot_df.Step(status.torque()));
 		
@@ -317,6 +323,7 @@ void M3Actuator::StepCommand()
 	
 	if (IsVersion(IQ)) { // new style is simple pass through, with limit checking
 		status.set_mode_cmd(command.ctrl_mode());
+		ec_command->set_brake_off(command.brake_off());
 		switch (command.ctrl_mode())
 		{
 			case ACTUATOR_MODE_OFF:

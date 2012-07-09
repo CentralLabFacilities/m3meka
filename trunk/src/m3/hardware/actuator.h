@@ -133,6 +133,7 @@ class M3Actuator : public m3rt::M3Component
 		long long old_ts_rtai;
 		int old_ticks;
 		bool old_is_calibrated;
+		mReal torque_shift;
 };
 
 
