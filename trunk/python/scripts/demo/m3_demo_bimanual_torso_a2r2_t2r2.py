@@ -80,6 +80,7 @@ class M3Proc:
 		self.bot.set_motor_power_on()
 		self.ndof=self.bot.get_num_dof(self.arm_name)
 		self.via_traj={}
+		self.via_traj_torso={}
 		self.via_traj_first=True
 
 		# ######## Square/Circle stuff #########################
@@ -183,6 +184,7 @@ class M3Proc:
 				f=file(fn,'r')
 				d=yaml.safe_load(f.read())
 				self.via_traj[k]=d[self.arm_name]['postures']
+				self.via_traj_torso[k]=d['torso']['postures']
 			except IOError:
 				print 'Via file',k,'not present. Skipping...'
 
@@ -190,13 +192,13 @@ class M3Proc:
 		# ######## Demo and GUI #########################
 		self.off=False
 		self.grasp=False
-		self.torso_mode_names=['Off','Zero','ZeroForce']
+		self.torso_mode_names=['Off','Zero','ZeroForce','FollowArmTraj']
 		self.arm_mode_names=['Off','Gravity','Zero','Current','HoldUp','Square','Circle','TrajA']#,'ZeroForce']
 		self.hand_mode_names=['Off','Open','Grasp',]
 		self.arm_mode_methods=[self.step_off,self.step_gravity,self.step_zero,self.step_current,self.step_hold_up,self.step_via_traj,
 				       self.step_via_traj,self.step_via_traj,self.step_zero_force]
 		self.hand_mode_methods=[self.step_hand_off,self.step_hand_open,self.step_hand_grasp]
-		self.torso_mode_methods=[self.step_torso_off,self.step_torso_zero,self.step_torso_zero_force]
+		self.torso_mode_methods=[self.step_torso_off,self.step_torso_zero,self.step_torso_zero_force,self.step_torso_follow_traj]
 		self.arm_mode=[0]
 		self.torso_mode=[0]
 		self.hand_mode=[0]
@@ -269,14 +271,29 @@ class M3Proc:
 		self.bot.set_mode_splined_traj_gc(self.arm_name)
 		self.bot.set_stiffness(self.arm_name, self.get_stiffness())
 		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*self.ndof)
+		
+		if self.have_torso_follow_traj:
+			self.bot.set_mode_splined_traj_gc('torso')
+			self.bot.set_stiffness('torso', [0.75,0.75,0.75])
+			self.bot.set_slew_rate_proportion('torso',[1.0]*self.bot.get_num_dof('torso'))
+		
 		if self.via_traj_first and len(self.via_traj[self.get_arm_mode_name()]):
 			self.via_traj_first=False
 			theta_0 = self.bot.get_theta_deg(self.arm_name)[:]	
-			vias=[theta_0]+self.via_traj[self.get_arm_mode_name()]+[theta_0] #start and stop at current pos	
+			vias=[theta_0]+self.via_traj[self.get_arm_mode_name()]#start at current pos	
 			for v in vias:
-				self.bot.add_splined_traj_via_deg(self.arm_name, v,[self.velocity[0]]*self.ndof)				
+				self.bot.add_splined_traj_via_deg(self.arm_name, v,[self.velocity[0]]*self.ndof)
+			if self.have_torso_follow_traj and len(self.via_traj_torso[self.get_arm_mode_name()]):
+				theta_0 = self.bot.get_theta_deg('torso')[:]	
+				vias=[theta_0]+self.via_traj[self.get_arm_mode_name()] #start at current pos	
+				for v in vias:
+					self.bot.add_splined_traj_via_deg('torso', v,[self.velocity[0]]*self.bot.get_num_dof('torso'))
 		if  self.bot.is_splined_traj_complete(self.arm_name):
-			self.via_traj_first=True
+			if self.have_torso_follow_traj:
+				if self.bot.is_splined_traj_complete('torso'):
+					self.via_traj_first=True
+			else:
+				self.via_traj_first=True
 
 	def step_current(self):
 		if self.current_first:
@@ -289,16 +306,24 @@ class M3Proc:
 
 	def step_torso_off(self):
 		self.bot.set_mode_off('torso')
+		self.have_torso_follow_traj = False
+		
 	def step_torso_zero(self):
 		self.bot.set_mode_theta_gc_mj('torso')
 		self.bot.set_theta_deg('torso',[0,0,0])
 		self.bot.set_stiffness('torso',[0.75,0.75,0.75])
 		self.bot.set_thetadot_deg('torso',[5.0,5.0,5.0])
+		self.have_torso_follow_traj = False
+		
 	def step_torso_zero_force(self):
 		self.bot.set_mode_theta_gc_mj('torso')
 		self.bot.set_theta_deg('torso',[0,0,0])
 		self.bot.set_stiffness('torso',[0.0,0.0,0.0])
 		self.bot.set_thetadot_deg('torso',[5.0,5.0,5.0])
+		self.have_torso_follow_traj = False
+		
+	def step_torso_follow_traj(self):
+		self.have_torso_follow_traj = True
 		
 	def step_zero(self):
 		self.bot.set_mode_theta_gc_mj(self.arm_name)
