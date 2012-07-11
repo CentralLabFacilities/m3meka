@@ -345,7 +345,10 @@ void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
     //status.set_qei_on(ax->qei_on);  
       
     status.set_torque_err_cnt(ax->torque_err_cnt);
-    status.set_adc_ext_temp(ax->adc_ext_temp); 
+    if (override_ext_temp)
+      status.set_adc_ext_temp(((M3ActuatorEcStatus*)override_ext_temp_act_ec->GetStatus())->adc_ext_temp()); 
+    else
+      status.set_adc_ext_temp(ax->adc_ext_temp); 
     status.set_adc_amp_temp(ax->adc_amp_temp);
     status.set_adc_ext_a(0);
     status.set_adc_ext_b(0);
@@ -736,6 +739,17 @@ bool M3ActuatorEc::LinkDependentComponents()
 	{
 		M3_INFO("M3Pwr component %s not found for component %s. Proceeding without it...\n",pwr_name.c_str(),GetName().c_str());
 	}
+	
+	if (override_ext_temp)
+	{
+	  override_ext_temp_act_ec = (M3ActuatorEc*) factory->GetComponent(override_ext_temp_act_ec_name);
+	  if (override_ext_temp_act_ec==NULL)
+	  {
+		  M3_INFO("M3ActuatorEc component %s not found for component %s although configured for ext_temp. Proceeding without it...\n", override_ext_temp_act_ec_name.c_str(),GetName().c_str());
+		  override_ext_temp = false;
+	  }
+	}
+	
 	return true;
 }
 
@@ -807,6 +821,14 @@ bool M3ActuatorEc::ReadConfig(const char * filename)
 		} catch (YAML::KeyNotFound &e) {
 		  has_brake = false;
 		  //M3_DEBUG("exception: %s\n", e.what() );
+		}
+		
+		override_ext_temp = true;
+		try {
+		  doc["config"]["over_ride_ext_temp"] >> override_ext_temp_act_ec_name;		  
+		} catch (YAML::KeyNotFound &e) {
+		  override_ext_temp_act_ec_name = "";
+		  override_ext_temp = false;		  		  
 		}
 		//M3_DEBUG("%s has_brake: %d\n", filename, has_brake);
 	}
