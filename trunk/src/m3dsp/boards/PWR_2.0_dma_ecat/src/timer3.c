@@ -90,6 +90,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _T3Interrupt(void) {
 #endif
 	irq_cnt++;
 #endif
+
+        asm("clrwdt");
 }
 
 #endif
