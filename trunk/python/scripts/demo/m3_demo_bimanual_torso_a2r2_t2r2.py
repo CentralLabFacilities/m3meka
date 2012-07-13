@@ -287,7 +287,7 @@ class M3Proc:
 				theta_0 = self.bot.get_theta_deg('torso')[:]	
 				vias=[theta_0]+self.via_traj[self.get_arm_mode_name()] #start at current pos	
 				for v in vias:
-					self.bot.add_splined_traj_via_deg('torso', v,[self.velocity[0]]*self.bot.get_num_dof('torso'))
+					self.bot.add_splined_traj_via_deg('torso', v,[self.velocity[0]/2.0]*self.bot.get_num_dof('torso'))
 		if  self.bot.is_splined_traj_complete(self.arm_name):
 			if self.have_torso_follow_traj:
 				if self.bot.is_splined_traj_complete('torso'):
