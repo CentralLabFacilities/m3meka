@@ -121,14 +121,8 @@ void isr_update_input_pdo(void)
 
 /////////////////////////////////////////////////////////////////////////////////////
 #if defined M3_LOADX6_A2R1 || defined M3_LOADX6_A2R2 || defined M3_LOADX6_A2R3
-/*    	ec_stat.adc_load_0=get_avg_adc(3);
-	ec_stat.adc_load_1=get_avg_adc(4);
-	ec_stat.adc_load_2=get_avg_adc(5);
-        ec_stat.adc_load_3=get_avg_adc(6);
-        ec_stat.adc_load_4=get_avg_adc(7);
-        ec_stat.adc_load_5=get_avg_adc(8);*/
-        ec_stat.adc_load_0=get_avg_adc(2);
-	ec_stat.adc_load_1=get_avg_adc(1);
+        ec_stat.adc_load_0=get_avg_adc(1);
+	ec_stat.adc_load_1=get_avg_adc(2);
 	ec_stat.adc_load_2=get_avg_adc(3);
         ec_stat.adc_load_3=get_avg_adc(4);
         ec_stat.adc_load_4=get_avg_adc(5);
