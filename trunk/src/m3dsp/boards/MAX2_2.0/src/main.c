@@ -74,7 +74,7 @@ int main (void)
 	
 	//Motor control PWM
 	#ifdef USE_PWM
-	setup_pwm();
+	//setup_pwm();
 	#endif
 	
 	//Brushless motor

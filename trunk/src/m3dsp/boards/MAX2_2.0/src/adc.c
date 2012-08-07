@@ -255,6 +255,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _DMA2Interrupt(void)
     int tmp;
    // int pwm_current_control;
 
+    ToggleHeartbeatLED();
 
     dma_buf_ptr = current_dma_buf();
 
