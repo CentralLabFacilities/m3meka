@@ -39,5 +39,10 @@ void reset_force_brake_on();
 #define SetBrakeOn		LATBbits.LATB1=0;
 #endif
 
+#ifdef M3_ELMO_Z1R1
+#define SetBrakeOff 	LATCbits.LATC2=1; //RC2	OUTPUT	PIN27	Brake enable
+#define SetBrakeOn		LATCbits.LATC2=0;
+#endif
+
 #endif
 #endif

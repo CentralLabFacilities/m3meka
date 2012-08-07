@@ -23,6 +23,7 @@
       <itemPath>../../src/dac.h</itemPath>
       <itemPath>../../src/encoder_qei.h</itemPath>
       <itemPath>../../src/encoder_vertx.h</itemPath>
+      <itemPath>../../src/brake.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -57,6 +58,7 @@
       <itemPath>../../src/spi1Drv.c</itemPath>
       <itemPath>../../src/dac.c</itemPath>
       <itemPath>../../src/encoder_qei.c</itemPath>
+      <itemPath>../../src/brake.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -97,7 +99,7 @@
       <C30>
         <property key="optimization-level" value="3"/>
         <property key="preprocessor-macros"
-                  value="EMBEDDED;USE_DIO;USE_ADC;USE_TIMESTAMP_DC;USE_ETHERCAT;USE_TIMER3;USE_CONTROL;USE_DAC;USE_ENCODER_QEI;USE_ACTX1_PDO_V2;M3_ELMO_B1R1;USE_ENCODER_VERTX"/>
+                  value="EMBEDDED;USE_DIO;USE_ADC;USE_TIMESTAMP_DC;USE_ETHERCAT;USE_TIMER3;USE_CONTROL;USE_DAC;USE_ENCODER_QEI;USE_ACTX1_PDO_V2;M3_ELMO_Z1R1;USE_ENCODER_VERTX;USE_BRAKE"/>
         <property key="code-model" value="default"/>
         <property key="const-model" value="default"/>
         <property key="enable-procedural-abstraction" value="false"/>
@@ -125,8 +127,8 @@
         <property key="list-source" value="false"/>
         <property key="list-assembly" value="false"/>
         <property key="relax" value="false"/>
-        <property key="warning-level" value="emit-warnings"/>
         <property key="extra-include-directories-for-preprocessor" value=""/>
+        <property key="warning-level" value="emit-warnings"/>
         <property key="list-section-info" value="false"/>
         <property key="omit-forms" value="false"/>
         <property key="list-symbols" value="false"/>
@@ -154,23 +156,23 @@
         <property key="enable-handles" value="true"/>
         <property key="enable-data-init" value="true"/>
         <property key="secure-flash" value="no_flash"/>
-        <property key="report-memory-usage" value="true"/>
-        <property key="boot-write-protect" value="no_write_protect"/>
-        <property key="boot-flash" value="no_flash"/>
         <property key="generate-cross-reference-file" value="false"/>
+        <property key="boot-flash" value="no_flash"/>
+        <property key="boot-write-protect" value="no_write_protect"/>
+        <property key="report-memory-usage" value="true"/>
         <property key="input-libraries" value=""/>
         <property key="secure-ram" value="no_ram"/>
         <property key="enable-check-sections" value="false"/>
         <property key="enable-default-isr" value="true"/>
         <property key="symbol-stripping" value=""/>
         <property key="boot-ram" value="no_ram"/>
-        <property key="secure-eeprom" value="no_eeprom"/>
         <property key="extra-lib-directories" value="../../misc;"/>
+        <property key="secure-eeprom" value="no_eeprom"/>
       </C30-LD>
       <C30Global>
         <property key="fast-math" value="false"/>
-        <property key="output-file-format" value="elf"/>
         <property key="legacy-libc" value="false"/>
+        <property key="output-file-format" value="elf"/>
       </C30Global>
       <ICD3PlatformTool>
         <property key="tracecontrol.select" value="0"/>

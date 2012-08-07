@@ -325,68 +325,6 @@ void step_ctrl_pid(int chid,int des)
     step_amp_out(chid,des); //des should be dac ticks already, ff_current_ctrl
     return;
 #endif
-	M3ActPdoV1Cmd * g = &(gains.command[chid]);
-	M3ActPdoV1Cmd * d = &(ec_cmd.command[chid]);
-	int ddes = CLAMP(des,d->t_min,d->t_max);
-	int s=0;
-
-
-
-#if defined M3_DAC_0_1 || defined M3_ELMO_RNA_R0 
-		if (d->config&M3ACT_CONFIG_TORQUE_SMOOTH)
-			s= get_avg_adc_torque();
-	else
-			s=adc_raw[ADC_EXT];
-#endif
-
-	t_error = (ddes-s);
-	
-	//Proportional term
-	p_term[chid] = ((long)((long)g->k_p * (t_error>>g->k_p_shift)));//(t_error&(~mask))))>>gains.k_p_shift;   
-	
-	//Integral term
-/*#ifdef M3_MAX2_BDC_A2R3
-	t_error_sum[chid] += (g->k_i *t_error)>>g->k_i_shift;
-	t_error_sum[chid]=CLAMP(t_error_sum[chid], -g->k_i_limit, g->k_i_limit);
-	i_term[chid] = t_error_sum[chid];//(t_error_sum[chid]>>g->k_i_shift);
-#else*/
-	t_error_sum[chid] += t_error;
-	t_error_sum[chid]=CLAMP(t_error_sum[chid], -g->k_i_limit, g->k_i_limit);
-	i_term[chid] = g->k_i * (t_error_sum[chid]>>g->k_i_shift);
-//#endif
-	//Derivative term
-	//Note: should actually normalize for time, but discretization is an issue...
-	int tdi=td_idx[chid];
-
-	torque_dot[chid]= torque_dot[chid] - torque_delta[chid][tdi];
-	torque_delta[chid][tdi] = s-torque_prev[chid];
-	torque_prev[chid] = s;
-	torque_dot[chid]=torque_dot[chid]+torque_delta[chid][tdi];
-	td_idx[chid]=INC_MOD(tdi,NUM_TORQUE_DOT_SAMPLES);
-	d_term[chid] = ((long)(g->k_d * torque_dot[chid]))>>g->k_d_shift;  
-	ec_debug[chid]=(int)d_term[chid];
-
-	//ec_debug[chid]=d_term[chid];
-	//Feedforward term
-	ff_term[chid]=0;
-//Newer boards get FeedForward term from host
-	if (d->config&M3ACT_CONFIG_TORQUE_FF)
-	  ff_term[chid] = g->k_ff;
-//Older boards use this form of FeedForward
-#if !(defined M3_MAX2_BDC_T2R3 || defined M3_MAX2_BLDC_T2R3 || defined M3_MAX2_BDC_A2R3 || defined M3_MAX2_BLDC_A2R3  \
-	|| defined M3_BMW_A2R3 || defined M3_HB2_H2R3_J0J1 || defined M3_HB2_H2R3_J2J3J4)
-	else
-	  ff_term[chid] = g->k_ff*((ddes-g->k_ff_zero)>>g->k_ff_shift);
-#endif
-	result=p_term[chid]+i_term[chid]+d_term[chid]+ff_term[chid];
-	//ec_debug[chid]=ff_term[chid];
-	
-#if !(defined M3_DAC_0_1 || defined M3_ELMO_RNA_R0 || defined M3_ELMO_B1R1 || defined M3_ELMO_Z1R1)
-	result=CLAMP(result,-PWM_MAX_DUTY,PWM_MAX_DUTY);
-#else
-	result=CLAMP(result,-DAC_MAX_DUTY,DAC_MAX_DUTY);
-#endif
-	step_amp_out(chid,(int)result);
 }
 
 
