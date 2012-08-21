@@ -208,10 +208,15 @@ void M3Actuator::StepStatus()
 		old_is_calibrated = IsEncoderCalibrated();
 		angle_df.Step(q_sense.GetThetaDeg(),ecs->timestamp());
 		status.set_theta(angle_df.GetTheta());
-		mReal td=angle_df.GetThetaDot();
-		//if (ABS(td)<2.0)
-		//  td=0.0;
-		status.set_thetadot(td);
+		if (q_sense.IsTypeQEI())
+		{
+		    status.set_thetadot(q_sense.GetThetaDotDeg());
+		} else {
+		    mReal td=angle_df.GetThetaDot();
+		    //if (ABS(td)<2.0)
+		    //  td=0.0;
+		    status.set_thetadot(td);
+		}
 		status.set_thetadotdot(angle_df.GetThetaDotDot());
 		
 		//Torque

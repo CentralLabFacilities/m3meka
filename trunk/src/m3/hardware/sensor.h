@@ -38,7 +38,10 @@ class M3AngleSensor
 		M3AngleSensor():tmp_cnt(0),val(0){}
 		virtual void Step(int qei_on, int qei_period, int qei_rollover);
 		virtual mReal GetThetaDeg();
+		virtual mReal GetThetaDotDeg(){return velocity;}
 		virtual mReal GetThetaRad(){return DEG2RAD(GetThetaDeg());}
+		virtual mReal GetThetaDotRad(){return DEG2RAD(GetThetaDotDeg());}
+		virtual bool IsTypeQEI(){return (type==QEI);}
 		virtual void ReadConfig(const YAML::Node & doc);
 	protected:
 		enum { NONE, VERTX_14_BIT, MA3_12_BIT, MA3_10_BIT, MA3_12_BIT_POLY, QEI };
@@ -48,6 +51,7 @@ class M3AngleSensor
 		mReal cb_ticks_per_rollover;
 		vector<mReal> cb_theta;
 		mReal val;
+		mReal velocity;
 		int type;
 		int tmp_cnt;		
 };

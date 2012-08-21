@@ -72,7 +72,11 @@ void M3AngleSensor::Step(int qei_on, int qei_period, int qei_rollover)
 		unsigned int high=((unsigned short)qei_rollover<<16);
 		int ticks = high|low;		
 		val = 360.0*(mReal(ticks)/cb_ticks_per_rev);
-		val= val*cb_scale+cb_bias;		
+		val= val*cb_scale+cb_bias;	
+		mReal secs = qei_period*1.0/(40000000.0/8.0);
+		velocity = (360.0/8192.0)/secs; // TODO: make these params in yaml
+		if (ABS(velocity) < 7)
+		  velocity = 0.0;
 		return;
 	}
 	if (type==VERTX_14_BIT )
