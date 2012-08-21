@@ -62,7 +62,8 @@ libm3vehicles_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/../stacks/ros_comm/tools/rosconsole/lib \
 	-L$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/lib
 
-libm3vehicles_la_CPPFLAGS =   -I../chains -I../toolbox -I../hardware -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) -I$(eigen_dir) -ffast-math -pipe -mhard-float \
+libm3vehicles_la_CPPFLAGS =   -I../chains -I../toolbox -I../hardware -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) -ffast-math -pipe -mhard-float \
+	$(EIGEN2_CFLAGS) \
 	-I$(ros_dir)/core/roscpp/include \
 	-I$(top_srcdir)/ros/m3meka_msgs/srv_gen/cpp/include \
 	-I$(top_srcdir)/ros/m3meka_msgs/msg_gen/cpp/include \
