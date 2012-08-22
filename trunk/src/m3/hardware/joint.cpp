@@ -331,11 +331,15 @@ void M3Joint::StepCommand()
 		tq_switch=GetTorque()*1000;  // TODO: Make GetTorque nNm again
 		q_switch=GetThetaDeg();
 		pwm_switch=GetPwmCmd();
-		ctrl_simple->ResetIntegrators();
+		if (IsVersion(IQ)) { 
+		  ctrl_simple->ResetIntegrators();
+		}
+	}
+	if (IsVersion(IQ)) { 
+	  if (!act->IsMotorPowerSlewedOn())
+	      ctrl_simple->ResetIntegrators();	 
 	}
 	
-	if (!act->IsMotorPowerSlewedOn())
-	    ctrl_simple->ResetIntegrators();
 	
 	if (IsVersion(IQ)) { 
 	  
@@ -552,6 +556,7 @@ void M3Joint::StepCommand()
 				mReal tq_on,tq_out;
 				//Ramp in from torque at switch-over point
 				mReal tq_des=command.tq_desired();
+				
 				StepBrake(tq_des,trans->GetTorqueJoint());
 				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
 				tq_out=tq_on*tq_des+(1.0-tq_on)*tq_switch;
@@ -559,6 +564,14 @@ void M3Joint::StepCommand()
 				trans->SetTorqueDesJoint(tq_out);
 				act->SetDesiredControlMode(ACTUATOR_MODE_TORQUE);
 				act->SetDesiredTorque(trans->GetTorqueDesActuator());			
+				
+				/*if (tmp_cnt++ == 100)
+				{
+				    M3_DEBUG("tq_des: %f\n", tq_des);
+				    M3_DEBUG("tq_out: %f\n", tq_out);
+				    M3_DEBUG("tq_act: %f\n", trans->GetTorqueDesActuator());
+				    tmp_cnt = 0;
+				}*/
 				break;
 			}
 			case JOINT_MODE_OFF:
@@ -575,3 +588,4 @@ void M3Joint::StepCommand()
 
 
 }
+

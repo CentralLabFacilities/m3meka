@@ -319,6 +319,13 @@ void M3Actuator::StepCommand()
 	M3ActuatorEcCommand * ec_command = (M3ActuatorEcCommand *)ecc->GetCommand();
 	M3ActuatorEcParam * ec_param = (M3ActuatorEcParam *)ecc->GetParam();
 	
+	/*if (tmp_cnt++  == 100)
+	{
+	  M3_DEBUG("tq_mNm: %f\n", command.tq_desired());
+	 // M3_DEBUG("tq_ec: %d\n", tq_sense.mNmToTicks(tq_mNm,&i_sense));				  
+	  tmp_cnt = 0;
+	}*/
+	
 				
 	if(IsStateError())
 	{
@@ -374,6 +381,8 @@ void M3Actuator::StepCommand()
 				mReal tq_mNm=command.tq_desired();
 				tq_mNm=CLAMP(tq_mNm,param.min_tq(),param.max_tq());
 				
+				
+				
 				if (use_i_torque_ctrl && IsVersion(IQ)) //Do torque control here, command current
 				{
 				mReal i_mA = pid_torque.Step(GetTorque(),
@@ -392,6 +401,12 @@ void M3Actuator::StepCommand()
 				{
 				ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
 				ec_command->set_t_desire(tq_sense.mNmToTicks(tq_mNm,&i_sense));
+				/*if (tmp_cnt++  == 100)
+				{
+				  M3_DEBUG("tq_mNm: %f\n", tq_mNm);
+				  M3_DEBUG("tq_ec: %f\n", tq_sense.mNmToTicks(tq_mNm,&i_sense));				  
+				  tmp_cnt = 0;
+				}*/
 				} else 
 				{
 				ec_command->set_mode(ACTUATOR_EC_MODE_TORQUE); //Do torque control on DSP
