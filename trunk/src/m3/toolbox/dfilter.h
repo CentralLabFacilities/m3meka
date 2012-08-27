@@ -146,7 +146,7 @@ namespace m3
 			M3SensorFilter():x(0),xdot(0),xdotdot(0),type(NONE){}
 			~M3SensorFilter(){}
 			bool ReadConfig(const YAML::Node & doc);
-			void Step(mReal qraw, uint64_t timestamp);
+			void Step(mReal qraw, mReal qdotraw);
 			void Reset();
 			mReal GetX(){return x;}
 			mReal GetXDot(){return xdot;}

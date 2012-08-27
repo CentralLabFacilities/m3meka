@@ -206,9 +206,9 @@ void M3Actuator::StepStatus()
 		  angle_df.Reset();		 
 		}
 		old_is_calibrated = IsEncoderCalibrated();
-		angle_df.Step(q_sense.GetThetaDeg(),ecs->timestamp());
+		angle_df.Step(q_sense.GetThetaDeg(),q_sense.GetThetaDotDeg());
 		status.set_theta(angle_df.GetTheta());
-		if (q_sense.IsTypeQEI())
+		/*if (q_sense.IsTypeQEI())
 		{
 		    status.set_thetadot(q_sense.GetThetaDotDeg());
 		} else {
@@ -216,7 +216,11 @@ void M3Actuator::StepStatus()
 		    //if (ABS(td)<2.0)
 		    //  td=0.0;
 		    status.set_thetadot(td);
-		}
+		}*/
+		mReal td=angle_df.GetThetaDot();
+		    //if (ABS(td)<2.0)
+		    //  td=0.0;
+		status.set_thetadot(td);
 		status.set_thetadotdot(angle_df.GetThetaDotDot());
 		
 		//Torque

@@ -11,7 +11,9 @@
 namespace m3
 {
 	using namespace std;
-	void M3SensorFilter::Step(mReal qraw, uint64_t timestamp)	
+	
+	
+	void M3SensorFilter::Step(mReal qraw, mReal qdotraw)	
 	{
 		x=0;
 		xdot=0;
@@ -27,12 +29,12 @@ namespace m3
 			x=x_df.Step(qraw);
 			xdot=xdot_df.Step(qraw);
 			xdotdot=xdotdot_df.Step(xdot);
-		}
+		}		
 		if (type==DF_APERIODIC)
 		{
 			x=x_df.Step(qraw);
-			xdot=xdot_df.Step(xdot_aperiodic.Step(qraw, timestamp));
-			xdotdot=xdotdot_df.Step(xdot);
+			xdot=xdot_df.Step(qdotraw);
+			xdotdot=xdotdot_df.Step(qdotraw);
 		}
 		if (type==POLY_LEAST_SQUARES)
 		{

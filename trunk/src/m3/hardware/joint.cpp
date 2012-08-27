@@ -568,7 +568,9 @@ void M3Joint::StepCommand()
 				/*if (tmp_cnt++ == 100)
 				{
 				    M3_DEBUG("tq_des: %f\n", tq_des);
-				    M3_DEBUG("tq_out: %f\n", tq_out);
+				    M3_DEBUG("tq_on: %f\n", tq_on);
+				    M3_DEBUG("tq_switch: %f\n", tq_switch);
+				    M3_DEBUG("tq_out: %f\n", tq_out);				    
 				    M3_DEBUG("tq_act: %f\n", trans->GetTorqueDesActuator());
 				    tmp_cnt = 0;
 				}*/

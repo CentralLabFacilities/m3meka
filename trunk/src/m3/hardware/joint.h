@@ -48,7 +48,7 @@ class M3Joint: public m3rt::M3Component
 {
 	public:
 		M3Joint(): m3rt::M3Component(JOINT_PRIORITY),brake_type(BRAKE_NONE),cpj(0),pwr_on_last(0),brake_off_cmd(0),mode_last(-1),trans(0),
-		  tq_switch(0), q_switch(0), pwm_switch(0), disable_pwm_ramp(false), ctrl_simple(NULL)
+		  tq_switch(0), q_switch(0), pwm_switch(0), disable_pwm_ramp(false), ctrl_simple(NULL),tmp_cnt(0)
 		{
 			RegisterVersion("default",DEFAULT);	//RBL. Now works with default case/ambient values
 			RegisterVersion("iss",ISS);		//ISS. Now displays motor-model case/ambient/motor temp values

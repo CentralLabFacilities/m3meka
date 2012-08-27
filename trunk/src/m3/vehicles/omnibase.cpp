@@ -131,7 +131,7 @@ void M3Omnibase::StepCasterCtrl()
 						 //mReal d, mReal i_limit, mReal i_range);	
 	  pcv_cmd.steer_torque_desired_Nm[i] = pid_steer_theta[i].Step(
 	    RAD2DEG(pcv_status.steer_angle_rad[i]), RAD2DEG(pcv_status.steer_velocity_rad[i]), command.steer_theta_desired(i),param.ks_p(),
-	    param.ks_d(), 0.0, param.ks_i_limit(),param.ks_i_range());    	 	    
+	    param.ks_i(), param.ks_d(), param.ks_i_limit(),param.ks_i_range());    	 	    
 	    pcv_cmd.roll_torque_desired_Nm[i] = command.roll_torque_desired(i);
 	    	    
 	  break;	  
