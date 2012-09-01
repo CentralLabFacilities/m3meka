@@ -23,11 +23,19 @@ m3_dir = $(top_srcdir)/src
 m3rt_dir = $(prefix)/include/m3rt
 m3rtb_dir = $(prefix)/include/m3rt/base
 ros_dir = /opt/ros/cturtle/ros
+rtai_inc = $(RTAI_DIR)/include
+rtai_lib = $(RTAI_DIR)/lib
+
+
+
 libm3vehiclesincludedir = $(includedir)/m3/vehicles
 libm3vehiclesinclude_HEADERS = \
 	vehicle.h\
 	omnibase.h\
-	omnibase.pb.h
+	omnibase.pb.h\
+	omnibase_shm.h\
+	omnibase_shm_sds.h\
+	omnibase_shm.pb.h
 	
 
 clean-local:
@@ -40,7 +48,12 @@ omnibase.pb.cpp: omnibase.proto
 	mv omnibase.pb.cc omnibase.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base  -I../toolbox -I../chains -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 omnibase.proto	
 	
-proto: omnibase.pb.cpp
+omnibase_shm.pb.cpp: omnibase_shm.proto
+	protoc -I$(prefix)/include/m3rt/base  -I../toolbox -I../chains -I../hardware -I./ --cpp_out=./ omnibase_shm.proto
+	mv omnibase_shm.pb.cc omnibase_shm.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base  -I../toolbox -I../chains -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 omnibase_shm.proto	
+
+proto: omnibase.pb.cpp omnibase_shm.pb.cpp
 
 proto_install: 
 	if test -d $(includedir)/m3; then echo '' ; else mkdir $(includedir)/m3;fi
@@ -60,7 +73,8 @@ libm3vehicles_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/lib \
 	-L$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/lib \
 	-L$(ros_dir)/../stacks/ros_comm/tools/rosconsole/lib \
-	-L$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/lib
+	-L$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/lib \
+	-L$(rtai_lib)
 
 libm3vehicles_la_CPPFLAGS =   -I../chains -I../toolbox -I../hardware -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_dir) -ffast-math -pipe -mhard-float \
 	$(EIGEN2_CFLAGS) \
@@ -77,9 +91,16 @@ libm3vehicles_la_CPPFLAGS =   -I../chains -I../toolbox -I../hardware -I$(m3_dir)
 	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/include \
 	-I$(ros_dir)/../stacks/ros_comm/tools/rosconsole/include \
 	-I$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/src\
-	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include
+	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include\
+	-I$(rtai_inc) \
+	-D__RTAI__
+
+
+
 libm3vehicles_la_SOURCES = \
+	omnibase_shm.pb.cpp\
 	omnibase.pb.cpp\
 	omnibase.cpp\
+	omnibase_shm.cpp\
 	vehicle.cpp\
 	factory_proxy.cpp
