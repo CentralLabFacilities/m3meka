@@ -94,6 +94,51 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
       }
     }
+    
+    for (int i = 0; i < bot->GetNdof(TORSO); i++)
+    {       
+      if (shm_timeout)
+      {	
+	bot->SetModeOff(TORSO, i);
+      } else{
+	bot->SetThetaDeg(TORSO, i, command_from_sds.torso.q_desired[i]);
+	bot->SetSlewRate(TORSO, i, command_from_sds.torso.slew_rate_q_desired[i]);
+	bot->SetTorque_mNm(TORSO, i, command_from_sds.torso.tq_desired[i]);
+	bot->SetStiffness(TORSO, i, command_from_sds.torso.q_stiffness[i]);
+	((M3HumanoidCommand*)bot->GetCommand())->mutable_torso()->set_ctrl_mode(i, command_from_sds.torso.ctrl_mode[i]);
+	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
+      }
+    }
+    
+    for (int i = 0; i < bot->GetNdof(LEFT_ARM); i++)
+    {       
+      if (shm_timeout)
+      {	
+	bot->SetModeOff(LEFT_ARM, i);
+      } else{
+	bot->SetThetaDeg(LEFT_ARM, i, command_from_sds.left_arm.q_desired[i]);
+	bot->SetSlewRate(LEFT_ARM, i, command_from_sds.left_arm.slew_rate_q_desired[i]);
+	bot->SetTorque_mNm(LEFT_ARM, i, command_from_sds.left_arm.tq_desired[i]);
+	bot->SetStiffness(LEFT_ARM, i, command_from_sds.left_arm.q_stiffness[i]);
+	((M3HumanoidCommand*)bot->GetCommand())->mutable_left_arm()->set_ctrl_mode(i, command_from_sds.left_arm.ctrl_mode[i]);
+	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
+      }
+    }
+    
+    for (int i = 0; i < bot->GetNdof(HEAD); i++)
+    {       
+      if (shm_timeout)
+      {	
+	bot->SetModeOff(HEAD, i);
+      } else{
+	bot->SetThetaDeg(HEAD, i, command_from_sds.head.q_desired[i]);
+	bot->SetSlewRate(HEAD, i, command_from_sds.head.slew_rate_q_desired[i]);
+	bot->SetTorque_mNm(HEAD, i, command_from_sds.head.tq_desired[i]);
+	bot->SetStiffness(HEAD, i, command_from_sds.head.q_stiffness[i]);
+	((M3HumanoidCommand*)bot->GetCommand())->mutable_head()->set_ctrl_mode(i, command_from_sds.head.ctrl_mode[i]);
+	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
+      }
+    }
   }
   
   if (right_hand)
@@ -108,6 +153,22 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_desired(i, command_from_sds.right_hand.q_desired[i]);
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_slew_rate(i, command_from_sds.right_hand.slew_rate_q_desired[i]);    
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_tq_desired(i, command_from_sds.right_hand.tq_desired[i]);      
+	}
+      }	      
+  }
+  
+  if (left_hand)
+  { 
+      for (int i = 0; i < left_hand->GetNumDof(); i++)
+      {
+	if (shm_timeout)
+	{	
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);
+	} else{	  	  
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.left_hand.ctrl_mode[i]);      
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_desired(i, command_from_sds.left_hand.q_desired[i]);
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_slew_rate(i, command_from_sds.left_hand.slew_rate_q_desired[i]);    
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_tq_desired(i, command_from_sds.left_hand.tq_desired[i]);      
 	}
       }	      
   }
@@ -128,6 +189,27 @@ void M3HumanoidShm::SetSdsFromStatus(unsigned char * data)
       status_to_sds.right_arm.thetadot[i] = bot->GetThetaDotDeg(RIGHT_ARM,i);
       status_to_sds.right_arm.torque[i] = bot->GetTorque_mNm(RIGHT_ARM,i);      
     }
+    
+    for (int i = 0; i < bot->GetNdof(LEFT_ARM); i++)
+    {          
+      status_to_sds.left_arm.theta[i] = bot->GetThetaDeg(LEFT_ARM,i);
+      status_to_sds.left_arm.thetadot[i] = bot->GetThetaDotDeg(LEFT_ARM,i);
+      status_to_sds.left_arm.torque[i] = bot->GetTorque_mNm(LEFT_ARM,i);      
+    }
+    
+    for (int i = 0; i < bot->GetNdof(TORSO); i++)
+    {          
+      status_to_sds.torso.theta[i] = bot->GetThetaDeg(TORSO,i);
+      status_to_sds.torso.thetadot[i] = bot->GetThetaDotDeg(TORSO,i);
+      status_to_sds.torso.torque[i] = bot->GetTorque_mNm(TORSO,i);      
+    }
+    
+    for (int i = 0; i < bot->GetNdof(HEAD); i++)
+    {          
+      status_to_sds.head.theta[i] = bot->GetThetaDeg(HEAD,i);
+      status_to_sds.head.thetadot[i] = bot->GetThetaDotDeg(HEAD,i);
+      status_to_sds.head.torque[i] = bot->GetTorque_mNm(HEAD,i);      
+    }
   }
     
   if (right_hand)
@@ -140,11 +222,29 @@ void M3HumanoidShm::SetSdsFromStatus(unsigned char * data)
       }
   }
   
+  if (left_hand)
+  { 
+      for (int i = 0; i < left_hand->GetNumDof(); i++)
+      {	
+	status_to_sds.left_hand.theta[i] = left_hand->GetThetaDeg(i);
+	status_to_sds.left_hand.thetadot[i] = left_hand->GetThetaDotDeg(i);
+	status_to_sds.left_hand.torque[i] = left_hand->GetTorque(i);
+      }
+  }
+  
   if (right_loadx6)
   {
     for (int i = 0; i < 6; i++)
     {      
       status_to_sds.right_loadx6.wrench[i] = right_loadx6->GetWrench(i);
+    }
+  }
+  
+  if (left_loadx6)
+  {
+    for (int i = 0; i < 6; i++)
+    {      
+      status_to_sds.left_loadx6.wrench[i] = left_loadx6->GetWrench(i);
     }
   }
   

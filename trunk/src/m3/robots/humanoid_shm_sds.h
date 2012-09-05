@@ -30,6 +30,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 typedef struct 
 {
   JOINT_ARRAY_MODE	ctrl_mode[MAX_NDOF];
+  JOINT_ARRAY_MODE	smooth_mode[MAX_NDOF];
   mReal			tq_desired[MAX_NDOF];
   mReal			q_desired[MAX_NDOF];
   mReal			slew_rate_q_desired[MAX_NDOF];
@@ -52,16 +53,25 @@ typedef struct
 typedef struct
 {
   int64_t	timestamp;
+  M3JntArrayShmSdsStatus head;    
+  M3JntArrayShmSdsStatus torso;    
   M3JntArrayShmSdsStatus right_arm;    
   M3JntArrayShmSdsStatus right_hand;
   M3LoadX6ShmSdsStatus right_loadx6;
+  M3JntArrayShmSdsStatus left_arm;    
+  M3JntArrayShmSdsStatus left_hand;
+  M3LoadX6ShmSdsStatus left_loadx6;
 }M3HumanoidShmSdsStatus;
 
 typedef struct
 {
   int64_t	timestamp;
+  M3JntArrayShmSdsCommand head;
+  M3JntArrayShmSdsCommand torso;    
   M3JntArrayShmSdsCommand right_arm;    
-  M3JntArrayShmSdsCommand right_hand;  
+  M3JntArrayShmSdsCommand right_hand;
+  M3JntArrayShmSdsCommand left_arm;    
+  M3JntArrayShmSdsCommand left_hand;  
 }M3HumanoidShmSdsCommand;
 
 #endif

@@ -17,25 +17,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef M3HUMANOID_SHM_H
-#define M3HUMANOID_SHM_H
+#ifndef M3JOINT_ZLIFT_SHM_H
+#define M3JOINT_ZLIFT_SHM_H
 
 #include <m3rt/base/component_shm.h>
-#include "humanoid_shm.pb.h"
-#include "humanoid_shm_sds.h"
-#include "m3/robots/humanoid.h"
-#include "m3/hardware/loadx6.h"
-#include "m3/chains/hand.h"
+#include "joint_zlift_shm.pb.h"
+#include "joint_zlift_shm_sds.h"
+#include "m3/hardware/joint_zlift.h"
+
 
 namespace m3{
 using namespace std;
 using namespace m3rt;
 
 
-class M3HumanoidShm : public  m3::M3CompShm{
+class M3JointZLiftShm : public  m3::M3CompShm{
 	public:
-		M3HumanoidShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),bot(NULL),
-		right_hand(NULL),right_loadx6(NULL),tmp_cnt(0),left_hand(NULL),left_loadx6(NULL)
+		M3JointZLiftShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),zlift(NULL)
 		{		  
 		  RegisterVersion("default",DEFAULT);		  
 		}
@@ -51,24 +49,20 @@ class M3HumanoidShm : public  m3::M3CompShm{
 		bool LinkDependentComponents();
 		void ResetCommandSds(unsigned char * sds);
 		void Startup();		
-		bool RosPublish(Publisher * pub);
-		Publisher RosInitPublish(NodeHandle * node_handle);
+		
 		
 		enum {DEFAULT};
 		M3BaseStatus * GetBaseStatus();		
-		M3HumanoidShmCommand command;
-		M3HumanoidShmParam param;
-		M3HumanoidShmStatus status;
-		M3Humanoid * bot;
-		M3LoadX6 * right_loadx6;
-		M3Hand * right_hand;
-		M3LoadX6 * left_loadx6;
-		M3Hand * left_hand;
-		M3HumanoidShmSdsCommand command_from_sds;
-		M3HumanoidShmSdsStatus status_to_sds;
+		M3JointZLiftShmCommand command;
+		M3JointZLiftShmParam param;
+		M3JointZLiftShmStatus status;
+		M3JointZLift * zlift;
+		
+		M3JointZLiftShmSdsCommand command_from_sds;
+		M3JointZLiftShmSdsStatus status_to_sds;
 		int sds_status_size;
 		int sds_cmd_size;	
-		string bot_name, right_hand_name, right_loadx6_name, left_hand_name, left_loadx6_name;;
+		string zlift_name;
 		int64_t timeout;
 		int tmp_cnt;		
 		bool startup_motor_pwr_on;

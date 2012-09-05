@@ -20,6 +20,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <m3rt/base/component.h>
 #include <m3/vehicles/omnibase.h>
+#include <m3/vehicles/omnibase_shm.h>
 ///////////////////////////////////////////////////////
 extern "C" 
 {
@@ -27,11 +28,14 @@ extern "C"
 //These names should match the create_xxx() and destroy_xxx() function names.
 //They should also match the names used for component definition in m3_config.yml 
 #define M3OMNIBASE_TYPE_NAME	"m3omnibase"
+#define M3OMNIBASE_SHM_TYPE_NAME	"m3omnibase_shm"
 ///////////////////////////////////////////////////////
 //Creators
 m3rt::M3Component * create_m3omnibase(){return new m3::M3Omnibase;}
+m3rt::M3Component * create_m3omnibase_shm(){return new m3::M3OmnibaseShm;}
 //Deletors
 void destroy_m3omnibase(m3rt::M3Component* c) {delete c;}
+void destroy_m3omnibase_shm(m3rt::M3Component* c) {delete c;}
 ///////////////////////////////////////////////////////
 class M3FactoryProxy 
 { 
@@ -40,6 +44,9 @@ public:
 	{
 		m3rt::creator_factory[M3OMNIBASE_TYPE_NAME] =	create_m3omnibase;
 		m3rt::destroyer_factory[M3OMNIBASE_TYPE_NAME] =  destroy_m3omnibase;
+		
+		m3rt::creator_factory[M3OMNIBASE_SHM_TYPE_NAME] =	create_m3omnibase_shm;
+		m3rt::destroyer_factory[M3OMNIBASE_SHM_TYPE_NAME] =  destroy_m3omnibase_shm;
 	}
 };
 ///////////////////////////////////////////////////////

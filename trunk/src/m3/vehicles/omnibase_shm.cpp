@@ -73,44 +73,23 @@ void M3OmnibaseShm::SetCommandFromSds(unsigned char * data)
     int64_t dt = GetBaseStatus()->timestamp()-command_from_sds.timestamp; // microseconds
     bool shm_timeout = ABS(dt) > (timeout*1000);    
        
-  /*if (bot != NULL)
+    
+  
+    
+  if (omnibase != NULL)
   {
     if (shm_timeout)
-      bot->SetMotorPowerOff();
-    else
-      bot->SetMotorPowerOn();
-    
-    for (int i = 0; i < bot->GetNdof(RIGHT_ARM); i++)
-    {       
-      if (shm_timeout)
-      {	
-	bot->SetModeOff(RIGHT_ARM, i);
-      } else{
-	bot->SetThetaDeg(RIGHT_ARM, i, command_from_sds.right_arm.q_desired[i]);
-	bot->SetSlewRate(RIGHT_ARM, i, command_from_sds.right_arm.slew_rate_q_desired[i]);
-	bot->SetTorque_mNm(RIGHT_ARM, i, command_from_sds.right_arm.tq_desired[i]);
-	bot->SetStiffness(RIGHT_ARM, i, command_from_sds.right_arm.q_stiffness[i]);
-	((M3OmnibaseCommand*)bot->GetCommand())->mutable_right_arm()->set_ctrl_mode(i, command_from_sds.right_arm.ctrl_mode[i]);
-	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
-      }
+    {
+      ((M3OmnibaseCommand*)omnibase->GetCommand())->set_ctrl_mode(OMNIBASE_CTRL_OFF);
+    } else {
+        ((M3OmnibaseCommand*)omnibase->GetCommand())->set_ctrl_mode(OMNIBASE_CTRL_OPSPACE_TRAJ);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_traj_mode(OMNIBASE_TRAJ_JOYSTICK);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_x(command_from_sds.x_velocity);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_y(command_from_sds.y_velocity);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_yaw(command_from_sds.yaw_velocity);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_button(0);
     }
   }
-  
-  if (right_hand)
-  { 
-      for (int i = 0; i < right_hand->GetNumDof(); i++)
-      {
-	if (shm_timeout)
-	{	
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);
-	} else{	  	  
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.right_hand.ctrl_mode[i]);      
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_desired(i, command_from_sds.right_hand.q_desired[i]);
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_slew_rate(i, command_from_sds.right_hand.slew_rate_q_desired[i]);    
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_tq_desired(i, command_from_sds.right_hand.tq_desired[i]);      
-	}
-      }	      
-  }*/
   
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,6 +98,15 @@ void M3OmnibaseShm::SetCommandFromSds(unsigned char * data)
 void M3OmnibaseShm::SetSdsFromStatus(unsigned char * data)
 {  
   status_to_sds.timestamp = GetBaseStatus()->timestamp(); 
+  
+  status_to_sds.x = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_position(0);
+  status_to_sds.y = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_position(1);
+  status_to_sds.yaw = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_position(2);
+  
+  status_to_sds.x_dot = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_velocity(0);
+  status_to_sds.y_dot = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_velocity(1);
+  status_to_sds.yaw_dot = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_velocity(2);
+  
   
   /*if (bot)
   {

@@ -17,37 +17,32 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef M3OMNIBASE_SHM_SDS_H
-#define M3OMNIBASE_SHM_SDS_H
+#ifndef M3JOINT_ZLIFT_SHM_SDS_H
+#define M3JOINT_ZLIFT_SHM_SDS_H
 
 #include <m3rt/base/m3rt_def.h>
 #include <m3rt/base/m3ec_def.h>
 //#include "m3/vehicles/omnibase_shm.pb.h"
-
-#define MAX_NDOF 12  // per limb
 
 
 typedef struct 
 {
 //  JOINT_ARRAY_MODE	ctrl_mode[MAX_NDOF];
   int64_t	timestamp;
-  mReal			x_velocity;
-  mReal			y_velocity;
-  mReal			yaw_velocity;
-  //unsigned int			ctrl_mode;
-  //unsigned int			traj_mode;
-}M3OmnibaseShmSdsCommand;
+  mReal			position;
+  mReal			velocity;
+  mReal			stiffness;
+  int			control_mode;
+  int			smoothing_mode;
+}M3JointZLiftShmSdsCommand;
 
 
 typedef struct
 {    
     int64_t	timestamp;
-    mReal			x;			
-    mReal			y;
-   mReal			x_dot;			
-    mReal			y_dot;			
-    mReal			yaw;
-    mReal			yaw_dot;    
-}M3OmnibaseShmSdsStatus;
+    mReal			position;			
+    mReal			velocity;
+   mReal			effort;			    
+}M3JointZLiftShmSdsStatus;
 
 #endif
