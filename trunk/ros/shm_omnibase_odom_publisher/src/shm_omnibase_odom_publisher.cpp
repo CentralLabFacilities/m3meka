@@ -44,6 +44,8 @@
 #define OMNIBASE_NDOF 7
 
 #define CYCLE_TIME_SEC 4
+#define VEL_DECAY_TIME 1.0
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -59,12 +61,14 @@ static long step_cnt = 0;
 static void endme(int dummy) { end=1; }
 nav_msgs::Odometry odom_g;
 ros::Publisher odom_publisher_g;
-tf::TransformBroadcaster odom_broadcaster;
+ros::Subscriber cmd_sub_g;
+//tf::TransformBroadcaster odom_broadcaster;
 ////////////////////////////////////////////////////////////////////////////////////
 
 
 ///////  Periodic Control Loop:
 void StepShm();
+void commandCallback(const geometry_msgs::TwistConstPtr& msg);
 
 ///////////////////////////////
 
@@ -89,13 +93,13 @@ void StepShm(int cntr)
 
     
   // get from status
-  double x = 0.0;
-  double y = 0.0;
-  double th = 0.0;
+  double x = status.x;
+  double y = status.x;
+  double th = status.yaw;
   
-  double vx = 0.1;
-  double vy = -0.1;
-  double vth = 0.1;
+  double vx = status.x_dot;
+  double vy = status.y_dot;
+  double vth = status.yaw_dot;
   // get from status
   
   //since all odometry is 6DOF we'll need a quaternion created from yaw
@@ -113,7 +117,7 @@ void StepShm(int cntr)
     odom_trans.transform.rotation = odom_quat;
 
     //send the transform
-    odom_broadcaster.sendTransform(odom_trans);
+    //odom_broadcaster.sendTransform(odom_trans);
     
     odom_g.header.frame_id = "odom";
 
@@ -131,30 +135,40 @@ void StepShm(int cntr)
     
     odom_publisher_g.publish(odom_g);
     
-    
     /*if (cntr % 100 == 0)
       {	
 	if (1)
 	{
 	  printf("********************************\n");
-	  printf("timestamp: %ld\n", status.timestamp);
-	  for (int i = 0; i < RW_NDOF; i++)
+	  printf("timestamp: %ld\n", status.timestamp);	  
 	  {	    
-	    printf("JOINT %d\n", i);
+	    //printf("JOINT %d\n", i);
 	    printf("------------------------------\n");
-	    printf("cmd_theta: %f\n", status.theta[i]);
-	    printf("cmd_current: %f\n", status.thetadot[i]);
-	    printf("cmd_torque: %f\n", status.torque[i]);
-	    printf("cmd_torque_lc: %f\n", status.torquedot[i]);	  
-	    printf("motor_temp_winding: %f\n", status.current[i]);
-	    printf("motor_torque: %f\n", status.torque_gravity[i]);
+	    printf("X: %f\n", odom_g.pose.pose.position.x);
+	    printf("Y: %f\n", odom_g.pose.pose.position.y);
+	    printf("YAW: %f\n", th);
+	    printf("Vx: %f\n", odom_g.twist.twist.linear.x);	  
+	    printf("Vy: %f\n", odom_g.twist.twist.linear.y);
+	    printf("Va: %f\n", odom_g.twist.twist.angular.z);
 	     printf("------------------------------\n");
 	    printf("\n");
 	  }
 	}
       }*/
+    
+    //mReal velocity_delay_per_step = VEL_DECAY_TIME / RT_TASK_FREQUENCY_MEKA_OMNI_SHM
+    
+    
 }
 
+void commandCallback(const geometry_msgs::TwistConstPtr& msg)
+{
+  cmd.x_velocity = msg->linear.x;
+  cmd.y_velocity = msg->linear.y;
+  cmd.yaw_velocity = msg->angular.z;
+  cmd.ctrl_mode = 0;
+  cmd.traj_mode = 0;
+}
 
 
 ////////////////////////// RTAI PROCESS BOILERPLATE /////////////////////////////
@@ -230,7 +244,7 @@ static void* rt_system_thread(void * arg)
 			printf("Step %lld: Computation time of components is too long. Forcing all components to state SafeOp.\n",step_cnt);
 			printf("Previous period: %f. New period: %f\n", (double)count2nano(tick_period),(double)count2nano(dt));
  			tick_period=dt;
-			rt_task_make_periodic(task, end + tick_period,tick_period);			
+			//rt_task_make_periodic(task, end + tick_period,tick_period);			
 		}
 		step_cnt++;
 		if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_OMNI_SHM)
@@ -244,6 +258,7 @@ static void* rt_system_thread(void * arg)
 	return 0;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////////
 int main (int argc, char **argv)
 {	
@@ -251,12 +266,22 @@ int main (int argc, char **argv)
 	M3Sds * sys;
 	int cntr=0;
 	
-	ros::init(argc, argv, "odometry_publisher"); // initialize ROS node
+	rt_allow_nonroot_hrt();
+	
+	/*ros::init(argc, argv, "base_controller"); // initialize ROS node
   	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
   	spinner.start();
+        ros::NodeHandle root_handle;*/
+	
+	ros::init(argc, argv, "base_controller", ros::init_options::NoSigintHandler); // initialize ROS node
+	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
+	spinner.start();
         ros::NodeHandle root_handle;
-
-        odom_publisher_g = root_handle.advertise<nav_msgs::Odometry>("odom", 1, true);
+	ros::NodeHandle p_nh("~");
+	
+	cmd_sub_g = root_handle.subscribe<geometry_msgs::Twist>("command", 1, &commandCallback);
+	
+	odom_publisher_g = root_handle.advertise<nav_msgs::Odometry>("odom", 1, true);
 
 	signal(SIGINT, endme);
 

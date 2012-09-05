@@ -29,4 +29,5 @@ include_directories(../../../m3core/src/ ../../../m3rw/src/ /usr/realtime-2.6.32
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 rosbuild_add_executable(shm_omnibase_odom_publisher src/shm_omnibase_odom_publisher.cpp)
+rosbuild_add_executable(drive_base src/drive_base.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
