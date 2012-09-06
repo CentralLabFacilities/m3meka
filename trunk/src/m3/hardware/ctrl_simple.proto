@@ -50,6 +50,7 @@ message M3CtrlSimpleStatusCommand
 	optional double		current		= 2;	// (A)
 	optional double		torque		= 3;	// (Nm)
 	optional double		stiffness	= 4;	// (Nm/rad)
+	optional double		pwm			= 5;
 }
 
 

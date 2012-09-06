@@ -28,25 +28,20 @@ void setup_interrupt_priorities(void);
 
 void setup_interrupt_priorities(void)
 {
-	#ifndef USE_TIMER3
-	_T3IF = 0;
-	_T3IE = 0;
-	#endif	
 
 	//Higher number = Higher priority, from 1 to 7
 
 	//Ethercat Master AL interrupt on INT0
 	//Apps inherit Bootloader settings so need set here for Bootloader too.
 	//ToDo:FIX! (Will node more details if I want to fix this!)
-	_INT0IP = 3;	//Ethercat Interrupt
-	_INT2IP = 2;	//SYNC0 Interrupt
-	_AD1IP = 7;		//ADC conversion done 	
-	_T1IF = 0;
-	_T1IP = 3;		//Timer1 ToDo Remove?
-	
-	#ifdef USE_BLDC
-	_CNIP = 7; //Change notification for Hall 1-3
-	#endif	//#ifdef USE_BLDC
+	_CNIP	= 7;	// Change notification for Hall 1-3
+//	_AD1IP	= 7;	// ADC conversion done
+	_DMA1IP = 6;	// ADC dma
+	_T3IP	= 5;	// main timer loop
+	_INT0IP	= 3;	// Ethercat Interrupt
+	_INT2IP	= 2;	// SYNC0 Interrupt
+
+
 }
 
 void setup_oscillator(void)
@@ -129,38 +124,39 @@ void setup_ports(void)
 	*/
 
 	// Hardwired pins
-	TRISAbits.TRISA4 = 0;		//RA4	OUTPUT	PIN34	HEARTBEAT LED
-	TRISAbits.TRISA8 = 1;		//RA8	INPUT	PIN32	EEPROM_LOADED
-	TRISBbits.TRISB7 = 1;		//RB7	INPUT	PIN43	SPI_IRQ
-	TRISCbits.TRISC3 = 0;		//RC3	OUTPUT	PIN36	LATCH_1
-	TRISCbits.TRISC4 = 1;		//RC4	INPUT	PIN37	SYNC_0
-	TRISCbits.TRISC6 = 0;		//RC6	OUTPUT	PIN2	SPI_SEL
-	TRISCbits.TRISC7 = 0;		//RC7	OUTPUT	PIN3	SPI_CLK
-	TRISCbits.TRISC8 = 0;		//RC8	OUTPUT	PIN4	SPI_DO
-	TRISCbits.TRISC9 = 1;		//RC9	INPUT	PIN5	SPI_DI
+	TRISAbits.TRISA4	= 0;		//RA4	OUTPUT	PIN34	HEARTBEAT LED
+	TRISAbits.TRISA8	= 1;		//RA8	INPUT	PIN32	EEPROM_LOADED
+	TRISBbits.TRISB7	= 1;		//RB7	INPUT	PIN43	SPI_IRQ
+//	TRISBbits.TRISB10	= 1;		//RB10	INPUT	PIN8	PGM_PGD
+//	TRISBbits.TRISB11	= 1;		//RB10	INPUT	PIN8	PGM_PGD
+	TRISCbits.TRISC3	= 0;		//RC3	OUTPUT	PIN36	LATCH_1
+	TRISCbits.TRISC4	= 1;		//RC4	INPUT	PIN37	SYNC_0
+	TRISCbits.TRISC6	= 0;		//RC6	OUTPUT	PIN2	SPI_SEL
+	TRISCbits.TRISC7	= 0;		//RC7	OUTPUT	PIN3	SPI_CLK
+	TRISCbits.TRISC8	= 0;		//RC8	OUTPUT	PIN4	SPI_DO
+	TRISCbits.TRISC9	= 1;		//RC9	INPUT	PIN5	SPI_DI
 
-	TRISAbits.TRISA0 = 1;		//RA0	INPUT	PIN19	AN0/TEMPB
-	TRISAbits.TRISA1 = 1;		//RA1	INPUT	PIN20	AN1/ISENS (Board)
-	TRISCbits.TRISC0 = 1;		//RC0	INPUT	PIN25	AN6/TEMPA (Ambient)
 
-	TRISBbits.TRISB8 = 1;		//RB5	INPUT	PIN41	SPI_DIO_SEAS
-	TRISBbits.TRISB4 = 0;		//RB4	OUTPUT	PIN33	SPI_SS_SEAS/
-	TRISBbits.TRISB9 = 0;		//RB9	OUTPUT	PIN1	SPI_CLK_SEAS
+	TRISAbits.TRISA0	= 1;		//RA0	INPUT	PIN19	AN0	- Amp_tmp1
+	TRISAbits.TRISA1	= 1;		//RA1	INPUT	PIN20	AN1 - Amb_tmp
+	TRISBbits.TRISB0	= 1;		//RB0	INPUT	PIN21	AN2 - Amp_tmp2
+	TRISBbits.TRISB1	= 1;		//RB1	INPUT	PIN22	AN3 - nc
+	TRISBbits.TRISB2	= 1;		//RB2	INPUT	PIN23	AN4 - nc
 
-	TRISBbits.TRISB6 = 1;		//RB6	INPUT	PIN42	SPI_DIO_ENC
-	TRISBbits.TRISB3 = 0;		//RB3	OUTPUT	PIN24	SPI_SS_ENC/
-	TRISCbits.TRISC1 = 0;		//RC1	OUTPUT	PIN26	SPI_CLK_ENC
+	TRISBbits.TRISB5	= 1;		//RB5	INPUT	PIN41	SPI_DIO_ENCA (formerly SEA)
+	TRISCbits.TRISC2	= 0;		//RC2	OUTPUT	PIN27	SPI_SS_ENCA/
+	TRISCbits.TRISC0	= 0;		//RC0	OUTPUT	PIN25	SPI_CLK_ENCA
 
-	TRISBbits.TRISB0 = 1;		//RB0	INPUT	PIN21	RP0/CN4 (HALL1) 
-	TRISBbits.TRISB1 = 1;		//RB1	INPUT	PIN22	RP1/CN5 (HALL2)
-	TRISBbits.TRISB2 = 1;		//RB2	INPUT	PIN23	RP2/CN6 (HALL3)
+	TRISBbits.TRISB6	= 1;		//RB6	INPUT	PIN42	SPI_DIO_ENCB (formerly ENC)
+	TRISBbits.TRISB3	= 0;		//RB3	OUTPUT	PIN24	SPI_SS_ENCB/
+	TRISCbits.TRISC1	= 0;		//RC1	OUTPUT	PIN26	SPI_CLK_ENCB
 
-	TRISBbits.TRISB10 = 0;		//RB10	OUTPUT	PIN8	RP10_PWM	(Pwm)
-	TRISBbits.TRISB11 = 0;		//RB11	OUTPUT	PIN9	RP11_PWM	(Pwm)
-	TRISBbits.TRISB12 = 0;		//RB12	OUTPUT	PIN10	RP12_PWM	(Pwm)
-	TRISBbits.TRISB13 = 0;		//RB13	OUTPUT	PIN11	RP13_PWM	(Pwm)
-	TRISBbits.TRISB14 = 0;		//RB14	OUTPUT	PIN14	RP14_PWM	(Pwm)
-	TRISBbits.TRISB15 = 0;		//RB15	OUTPUT	PIN15	RP15_PWM	(Pwm)
+	TRISBbits.TRISB12	= 0;		//RB12	OUTPUT	PIN10	RP12_PWM	(Pwm)
+	TRISBbits.TRISB13	= 0;		//RB13	OUTPUT	PIN11	RP13_PWM	(Pwm)
+	TRISBbits.TRISB14	= 0;		//RB14	OUTPUT	PIN14	RP14_PWM	(Pwm)
+	TRISBbits.TRISB15	= 0;		//RB15	OUTPUT	PIN15	RP15_PWM	(Pwm)
+
+
 }
 
 //Note: If using bootloader, only the first call (Bootloader) works
@@ -186,7 +182,7 @@ void setup_peripheral_pin_select(void)
 	//SHOULD BE DISABLED AND MAPPED TO THIS PIN
 	//ALL UNUSED OUTPUTS GET MAPPED TO VSS
 	
-	#ifdef USE_ETHERCAT
+
 	////// Inputs  /////
 	//RPINR0bits.INT1R=19;	//(SYNC1) INT1 ON RP19 :					RPINR0
 	RPINR1bits.INT2R=20;	//(SYNC0) INT2 ON RP20 :					RPINR1	
@@ -196,7 +192,6 @@ void setup_peripheral_pin_select(void)
 	RPOR11bits.RP23R = 0b01000; //SPI CLOCK OUT ON RP23 :				RPOR11	
 	RPOR12bits.RP24R = 0b00111; //SPI DATA OUT ON RP24  :				RPOR12	
 
-	#endif
 	
 	//Lock ala datasheet
 	asm volatile (	"mov #0x742, w1 \n"

@@ -17,7 +17,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef USE_CURRENT
 
 #include "setup.h"
 #include "current.h"
@@ -122,6 +121,7 @@ void reset_current_buf()
 
 void step_current()
 {
+#if 0
 	unsigned int z = 0;
 	static unsigned int zero_done = 0;
 	
@@ -239,6 +239,7 @@ void step_current()
 			reset_current_buf();//power turns off
 		}
 	}
+#endif
 }
 
 void setup_current()
@@ -264,4 +265,3 @@ void setup_current()
   	memset((long *)i_rms_cont_buf,0,sizeof(long)*I_RMS_CONT_BUF_SZ);
 }
 
-#endif //USE_CURRENT

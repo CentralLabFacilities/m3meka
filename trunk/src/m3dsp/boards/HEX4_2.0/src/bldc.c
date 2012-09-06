@@ -17,7 +17,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef USE_BLDC
 
 //#include "p33Fxxxx.h"
 #include "setup.h"
@@ -132,4 +131,3 @@ void setup_bldc(void)
 	_CNIF = 0;					//Clear change-notification Interrupt Status Flag
 	_CNIE = 1;					//Enable change notification interrupt
 }
-#endif

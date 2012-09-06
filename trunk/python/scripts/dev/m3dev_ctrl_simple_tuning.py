@@ -203,9 +203,9 @@ class M3Proc(M3Tuning):
 			self.ctrl.set_mode_current()
 			self.ctrl.set_current(self.current[0])
 			
-#		elif self.mode[0]==mec.CTRL_MODE_THETA:
-#			self.ctrl.set_mode_theta()
-#			self.ctrl.set_theta(self.theta[0])
+		elif self.mode[0]==mec.CTRL_MODE_THETA:
+			self.ctrl.set_mode_theta()
+			self.ctrl.set_theta(self.theta[0])
 #			
 		elif self.mode[0]==mec.CTRL_MODE_TORQUE:
 			print "kp: " + str(self.ctrl.param.pid_torque.k_p)

@@ -20,7 +20,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __PWM_H__
 #define __PWM_H__ 
 
-#ifdef USE_PWM
 
 //TPWM=TCY(PTPER+1)*(PTMR Prescale)=(1/40M)*(1599+1)*1=40us
 //Resolution=log(2*TPWM/TCY)/log(2)=log(2*400)/log(2)=9.6 bits
@@ -35,16 +34,21 @@ void setup_pwm();
 void set_pwm(int chid, int val);
 int pwm_cmd(int chid);
 
-#define PWM_TIMEBASE_CYC  1011 	//WAS 1599	//1011 = 40kHz
-#define PWM_HALF_PERIOD_CYC	PWM_TIMEBASE_CYC
-#define PWM_FULL_PERIOD_CYC	2*PWM_TIMEBASE_CYC
-#define PWM_MIN_DUTY 	5	//MAX2 has 100NS min pulse width. Each tick is 25ns, so min of 4
-#define PWM_MAX_DUTY   PWM_FULL_PERIOD_CYC-2*PWM_MIN_DUTY	//Never turn on 100%
-#define PWM_ADC_SYNC_TICKS	100	
-#define PWM_DEAD_CYC_A  6			//200
-#define PWM_DEAD_CYC_B  6			//200
-#define NUM_PWM_CH 1
-#define PWM_4Q
+#define PWM_TIMEBASE_CYC		1599
+#define PWM_HALF_PERIOD_CYC		PWM_TIMEBASE_CYC
+#define PWM_FULL_PERIOD_CYC		2*PWM_TIMEBASE_CYC
+#define PWM_MIN_DUTY			0	//BMW has 100NS min pulse width. Each tick is 25ns, so min of 4
+#define PWM_MAX_DUTY			PWM_FULL_PERIOD_CYC-2*PWM_MIN_DUTY	//Never turn on 100%
+#define PWM_ADC_SYNC_TICKS		250		//Trigger ADC conversion this many ticks after start of PWM period
+#define NUM_PWM_CH				2
+
+#define SetPwmDir1				LATBbits.LATB12 = 1
+#define ClrPwmDir1				LATBbits.LATB12 = 0
+#define PinPwmDir1				PORTBbits.RB12
+
+#define SetPwmDir2				LATBbits.LATB15 = 1
+#define ClrPwmDir2				LATBbits.LATB15 = 0
+#define PinPwmDir2				PORTBbits.RB15
 
 #endif
-#endif
+

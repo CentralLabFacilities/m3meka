@@ -55,6 +55,7 @@ void M3Actuator::Shutdown()
 bool M3Actuator::ReadConfig(const char * filename)
 {	
 	int val;
+	string str;
 	mReal mval;
 	YAML::Node doc;
 
@@ -139,22 +140,31 @@ bool M3Actuator::ReadConfig(const char * filename)
 	}
 	if (IsVersion(IQ))
 	{
-	      doc["param"]["pid_current"]["k_p"] >> mval;
-	      ParamPIDTorque()->set_k_p(mval);
-	      doc["param"]["pid_current"]["k_i"] >> mval;
-	      ParamPIDTorque()->set_k_i(mval);
-	      doc["param"]["pid_current"]["k_d"] >> mval;
-	      ParamPIDTorque()->set_k_d(mval);
-	      doc["param"]["pid_current"]["k_i_limit"] >> mval;
-	      ParamPIDTorque()->set_k_i_limit(mval);
-	      doc["param"]["pid_current"]["k_i_range"] >> mval;
-	      ParamPIDTorque()->set_k_i_range(mval);
-	      
-	      try {
-		  doc["calib"]["torque"]["torque_shift"] >> torque_shift;
-	      } catch (YAML::KeyNotFound &e) {
-		  torque_shift = 1.0;
-	      }
+		doc["param"]["pid_current"]["k_p"] >> mval;
+		ParamPIDTorque()->set_k_p(mval);
+		doc["param"]["pid_current"]["k_i"] >> mval;
+		ParamPIDTorque()->set_k_i(mval);
+		doc["param"]["pid_current"]["k_d"] >> mval;
+		ParamPIDTorque()->set_k_d(mval);
+		doc["param"]["pid_current"]["k_i_limit"] >> mval;
+		ParamPIDTorque()->set_k_i_limit(mval);
+		doc["param"]["pid_current"]["k_i_range"] >> mval;
+		ParamPIDTorque()->set_k_i_range(mval);
+
+		try {
+		doc["calib"]["torque"]["torque_shift"] >> torque_shift;
+		} catch (YAML::KeyNotFound &e) {
+		torque_shift = 1.0;
+		}
+		
+		try {
+			doc["calib"]["amp_control_input"] >> str;
+			if (str.compare("pwm") == 0)			{amp_control_input	= ACTUATOR_INPUT_PWM;}
+			else if (str.compare("current") == 0)	{amp_control_input	= ACTUATOR_INPUT_CURRENT;}
+		} catch (YAML::KeyNotFound &e) {
+			amp_control_input = ACTUATOR_INPUT_CURRENT;
+		}
+		
 	}
 	return true;
 }
@@ -316,6 +326,7 @@ void M3Actuator::StepOverloadDetect()
 }
 void M3Actuator::StepCommand()
 {
+	pnt_cnt++;
 	status.set_torque_error(0);
 	if (!ecc || IsStateSafeOp())
 		return;
@@ -330,12 +341,13 @@ void M3Actuator::StepCommand()
 	  tmp_cnt = 0;
 	}*/
 	
-				
+	
 	if(IsStateError())
 	{
 		ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
 		return;
 	}
+	
 	
 	if (IsVersion(IQ)) { // new style is simple pass through, with limit checking
 		status.set_mode_cmd(command.ctrl_mode());
@@ -347,7 +359,7 @@ void M3Actuator::StepCommand()
 				break;
 			case ACTUATOR_MODE_PWM:
 				ec_command->set_mode(ACTUATOR_EC_MODE_PWM);
-				ec_command->set_pwm_desired(pwm_dither.Step(command.pwm_desired()));
+				ec_command->set_t_desire(pwm_dither.Step(command.pwm_desired()));
 				break;
 			case ACTUATOR_MODE_TORQUE:
 				ec_command->set_mode(ACTUATOR_EC_MODE_OFF);
@@ -370,7 +382,7 @@ void M3Actuator::StepCommand()
 	
 	} else { // Legacy, no supported on BMW,MAX2 versions 2.0
 		ec_command->set_brake_off(command.brake_off());
-		
+
 		switch(command.ctrl_mode())
 		{
 			case ACTUATOR_MODE_OFF:

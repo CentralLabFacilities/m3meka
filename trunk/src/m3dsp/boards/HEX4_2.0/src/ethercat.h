@@ -21,7 +21,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __ETHERCAT_H__
 #define __ETHERCAT_H__ 
 
-#ifdef USE_ETHERCAT
 
 #include "setup.h"
 
@@ -43,16 +42,15 @@ extern int ec_flags[];
 extern  int ec_wd_expired;
 extern long ec_wd_timestamp;
 
-typedef M3ActX1PdoV3Status ec_stat_t;
-typedef M3ActX1PdoV3Cmd ec_cmd_t;
+typedef M3ActX2PdoV1Status	ec_stat_t;
+typedef M3ActX2PdoV1Cmd		ec_cmd_t;
 
-#define NUM_DBG_CH 1
+#define NUM_DBG_CH 2
 
-#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*2
+#define PDO_COMMAND_SIZE MAX_PDO_ENTRY_SIZE*3
 #define PDO_STATUS_SIZE MAX_PDO_ENTRY_SIZE*2
 
-extern ec_cmd_t  ec_cmd;
-extern ec_stat_t   ec_stat;
+extern ec_cmd_t		ec_cmd;
+extern ec_stat_t	ec_stat;
 
-#endif
 #endif

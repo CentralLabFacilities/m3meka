@@ -53,7 +53,6 @@
 ------	Includes
 ------ 
 -----------------------------------------------------------------------------------------*/
-#ifdef USE_ETHERCAT
 
 #define	_ECATSLV_	1
 #include "ethercat_slave_fsm.h"
@@ -855,4 +854,3 @@ void ECAT_Main(void)
 }
 /** @} */
 
-#endif

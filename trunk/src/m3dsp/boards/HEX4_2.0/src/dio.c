@@ -17,7 +17,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef USE_DIO
 
 #include "setup.h"
 #include "dio.h"
@@ -30,4 +29,3 @@ inline void ToggleHeartbeatLED(void)
 {
 	PinHeartbeatLED ^= 1;
 }
-#endif

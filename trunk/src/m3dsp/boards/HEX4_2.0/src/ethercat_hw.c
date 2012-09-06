@@ -18,7 +18,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // This file contains the interface to the ESC via SPI\n
-#ifdef USE_ETHERCAT
 
 #define	_ETHERCATHW_ 1
 #include "ethercat_hw.h"
@@ -550,5 +549,4 @@ TSYNCMAN * HW_GetSyncMan(UINT8 channel)
 	return &TmpSyncMan;
 }
 
-#endif
 

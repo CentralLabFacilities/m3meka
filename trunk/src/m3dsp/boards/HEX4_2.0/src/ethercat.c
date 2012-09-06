@@ -17,16 +17,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef USE_ETHERCAT
 
 #include "setup.h"
 #include "ethercat.h"
 #include "ethercat_def.h"
 #include "ethercat_slave_fsm.h"
-#include "current.h"
+#include "encoder_vertx.h"
 
-ec_cmd_t  ec_cmd;
-ec_stat_t   ec_stat;
+ec_cmd_t	ec_cmd;
+ec_stat_t	ec_stat;
 
 unsigned char pdo_cmd[PDO_COMMAND_SIZE];
 unsigned char pdo_stat[PDO_STATUS_SIZE];
@@ -35,6 +34,8 @@ int eeprom_loaded(void){return EEPROM_LOADED;}
 
 int ec_wd_expired;
 long ec_wd_timestamp;
+int ec_active;
+
 int ec_debug[NUM_DBG_CH];
 int ec_flags[NUM_DBG_CH];
 
@@ -52,18 +53,19 @@ void isr_reset_outputs(void)
 {
 }
 /////////////////////////////////////////////////////////////
-
 void isr_update_outputs(void)
 {
 	if ( EscAlEvent.Byte[1] & (PROCESS_OUTPUT_EVENT>>8) )	/* check if the watchdog should be reset */
 	{
 		bEcatFirstOutputsReceived = 1;						/* reset watchdog */
-		#ifdef EC_USE_WATCHDOG
+#ifdef EC_USE_WATCHDOG
 		ec_wd_timestamp = 0;//ECAT_TIMER_REG;
 		ec_wd=0;
-		#endif
+#endif
 		ISR_EscReadAccess( (unsigned char *) pdo_cmd, nEscAddrOutputData, nPdOutputSize );
+
 		memcpy((unsigned char *)&ec_cmd,pdo_cmd,sizeof(ec_cmd_t));
+
 	}
 }
 /////////////////////////////////////////////////////////////
@@ -71,49 +73,64 @@ void isr_update_outputs(void)
 void isr_update_inputs(void)
 {
 	unsigned long long dc_timestamp;
-	
-	#ifndef USE_SYNC0
+#ifndef USE_SYNC0
 	isr_update_input_pdo();
-	#endif
-
-	#ifdef USE_TIMESTAMP_DC
+#endif
+#ifdef USE_TIMESTAMP_DC
 	ISR_EscReadAccess((unsigned char*)&dc_timestamp, (unsigned int)EC_LATCH1_POS_EDG_ADDR, (unsigned int)8 );
-	ec_stat.timestamp=dc_timestamp;
-	#endif
-	
+	ec_stat.timestamp	= dc_timestamp;
+#else
+	ec_stat.timestamp	= 0;
+#endif
 	memcpy(pdo_stat,(unsigned char *)&ec_stat,sizeof(ec_stat_t));
 	ISR_EscWriteAccess( (UINT8 *) pdo_stat, nEscAddrInputData, nPdInputSize );
 	return;
 }
 
+
 void isr_update_input_pdo(void)
 {
-	#ifdef USE_ENCODER_VERTX
-	ec_stat.status[0].qei_period = vertx_error(VERTX_CH_SEAS);
-	ec_stat.status[0].qei_on = get_avg_vertx(VERTX_CH_ENC);
-	ec_stat.status[0].qei_rollover = vertx_error(VERTX_CH_ENC);
-	ec_stat.status[0].adc_torque = get_avg_vertx(VERTX_CH_SEAS);
-	#endif
 	
-	#ifdef USE_ADC
-	ec_stat.status[0].adc_motor_temp = get_avg_adc(ADC_TEMP_AMB);
-	ec_stat.status[0].adc_amp_temp = get_avg_adc(ADC_TEMP_BOARD);
-	ec_stat.status[0].adc_current_a = get_avg_adc(ADC_CURRENT);
-	ec_stat.status[0].adc_current_b = 0; 
-	#endif
-	
-	#ifdef USE_PWM
-	ec_stat.status[0].pwm_cmd=pwm_cmd(0);
-	#endif
+	ec_stat.status[0].qei_period	= 0;
+	ec_stat.status[1].qei_period	= 0;
+	ec_stat.status[0].qei_on		= get_avg_vertx(VERTX_CH_ENC_A);
+	ec_stat.status[1].qei_on		= get_avg_vertx(VERTX_CH_ENC_B);
+	ec_stat.status[0].qei_rollover	= vertx_error(VERTX_CH_ENC_A);
+	ec_stat.status[1].qei_rollover	= vertx_error(VERTX_CH_ENC_B);
+	ec_stat.status[0].adc_torque	= 0;
+	ec_stat.status[1].adc_torque	= 0;
 
-	#ifdef USE_CURRENT
-	ec_stat.status[0].flags=ec_flags[0]|current_fault_mom_flag()|current_fault_cont_flag()|M3ACT_FLAG_QEI_CALIBRATED; 
-	ec_stat.status[0].current_ma = get_current_ma();	
-	#else
-	ec_stat.status[0].flags=ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED; //No calibration required.
-	#endif
+#if 1
+	ec_stat.status[0].adc_motor_temp	= get_avg_adc(ADC_MOTOR_TEMP);
+	ec_stat.status[1].adc_motor_temp	= get_avg_adc(ADC_MOTOR_TEMP);
+	ec_stat.status[0].adc_amp_temp		= get_avg_adc(ADC_AMP_TEMP_A);
+	ec_stat.status[1].adc_amp_temp		= get_avg_adc(ADC_AMP_TEMP_B);
+#else
+	ec_stat.status[0].adc_motor_temp	= adc_raw[ADC_MOTOR_TEMP];
+	ec_stat.status[1].adc_motor_temp	= adc_raw[ADC_MOTOR_TEMP];
+	ec_stat.status[0].adc_amp_temp		= adc_raw[ADC_AMP_TEMP_A];
+	ec_stat.status[1].adc_amp_temp		= adc_raw[ADC_AMP_TEMP_B];
+#endif
+
+	ec_stat.status[0].adc_ext_a			= 0;
+	ec_stat.status[1].adc_ext_a			= 0;
+	ec_stat.status[0].adc_ext_b			= 0;
+	ec_stat.status[1].adc_ext_b			= 0;
+	ec_stat.status[0].adc_current_a		= 0;
+	ec_stat.status[1].adc_current_a		= 0;
+	ec_stat.status[0].adc_current_b		= 0;
+	ec_stat.status[1].adc_current_b		= 0;
+
+	ec_stat.status[0].pwm_cmd	= pwm_cmd(0);
+	ec_stat.status[1].pwm_cmd	= pwm_cmd(1);
+
+	ec_stat.status[0].debug	= ec_debug[0];
+	ec_stat.status[1].debug	= ec_debug[1];
+	ec_stat.status[0].flags	= ec_flags[0] | M3ACT_FLAG_QEI_CALIBRATED;
+	ec_stat.status[1].flags	= ec_flags[1] | M3ACT_FLAG_QEI_CALIBRATED;
 	
-	ec_stat.status[0].debug=ec_debug[0];
+	ec_stat.status[0].debug = 1234;
+	ec_stat.status[1].debug = 5678;
 }
 
 /////////////////////////////////////////////////////////////
@@ -122,35 +139,39 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT0Interrupt(void)
 {
 	//Interrupt service routine for the interrupts from the EtherCAT Slave Controller
 	//Do the processing of PDOs here
+	UINT8 dummy[2];
 
 	/* INTERRUPT_PROTECT_ENABLE acts as an atomic lock on the data. This can protect
 	against mode change blips, etc. However it causes priority issues, in particular it affects
 	the TIMER3 timing with VertX. Disabling it doesn't seem to affect performance.*/
 
+	//NOTE: TODO, Verify this behavior
+//	INTERRUPT_PROTECT_ENABLE; //For Elmo board which has QEI but no VertX encoder, disable interrupts to make timestamp copy atomic.
 
-//	INTERRUPT_PROTECT_ENABLE; //For Elmo board which has QEI but no VertX encoder, disable interrupts to make timestamp copy atomic.	//WAS
 	SPI_SEL = SPI_DEACTIVE;				/* SPI should be deactivated to interrupt a possible transmission */
 	ACK_ESC_INT;						/* reset the interrupt flag */
-	
+
 	ISR_GetInterruptRegister();			/* get the AL event in EscAlEvent */
-	#if DC_SUPPORTED 
+#if DC_SUPPORTED
 	if ( bDcSyncActive )				/* read the sync 0 status to acknowledge the SYNC interrupt */
 		ISR_EscReadAccess( dummy, ESC_ADDR_SYNC_STATUS, 2);
-	#endif
-	
+#endif
+
 	if (bSynchronMode)						/* Application is synchronized to DC-, SM2- or SM3-event */
-	{		
+	{
 		if ( bEcatOutputUpdateRunning )		// Get Process Outputs
-			isr_update_outputs();				// EtherCAT slave is in OPERATIONAL, update outputs 
+			isr_update_outputs();				// EtherCAT slave is in OPERATIONAL, update outputs
 		else
 			isr_reset_outputs();
 		if ( bEcatInputUpdateRunning )		//Update Process Inputs
 			isr_update_inputs();				/* EtherCAT slave is at least in SAFE-OPERATIONAL, update inputs */
 
-	}	
-
-//	INTERRUPT_PROTECT_DISABLE;		//WAS
+	}
+	//NOTE: TODO, Verify this behavior
+//	INTERRUPT_PROTECT_DISABLE;
+	ec_active=1;
 }
+
 
 #ifdef USE_SYNC0
 void __attribute__((__interrupt__, no_auto_psv)) _INT2Interrupt(void)
@@ -164,24 +185,26 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT2Interrupt(void)
 //	if ( bDcSyncActive )				/* read the sync 0 status to acknowledge the SYNC interrupt */
 //		ISR_EscReadAccess( dummy, ESC_ADDR_SYNC_STATUS, 2);
 
-	if (bSynchronMode)						/* Application is synchronized to DC-, SM2- or SM3-event */
-	{	
+if (bSynchronMode)						/* Application is synchronized to DC-, SM2- or SM3-event */
+	{
 		if ( bEcatInputUpdateRunning )		//Update PDO datastructure for INT0
-			isr_update_input_pdo();				/* EtherCAT slave is at least in SAFE-OPERATIONAL, update inputs */   
+			isr_update_input_pdo();				/* EtherCAT slave is at least in SAFE-OPERATIONAL, update inputs */
 	}
+	ec_active=1;
 }
 #endif
 
 /////////////////////////////////////////////////////////////
 void setup_ethercat(void)
-{  
+{
+	unsigned char tmp;
 	int i;
 	UINT8 u8PDICtrl = 0;
 
 	/* Hardcode PDO size for now*/
-	nPdInputSize=PDO_STATUS_SIZE;	
+	nPdInputSize=PDO_STATUS_SIZE;
 	nPdOutputSize=PDO_COMMAND_SIZE;
-	
+
 	// Initialize structs
 	memset((unsigned char *)&ec_stat,0,sizeof(ec_stat_t));
 	memset((unsigned char *)&ec_cmd,0,sizeof(ec_cmd_t));
@@ -196,6 +219,7 @@ void setup_ethercat(void)
 
 	ec_wd_expired=0;
 	ec_wd_timestamp=0;
+	ec_active=0;
 	//Setup SPI
 	setup_spi();
 
@@ -208,71 +232,69 @@ void setup_ethercat(void)
 
 
 	ACK_ESC_INT;				/* reset ESC interrupt */
-	
-	#ifdef USE_SYNC0
+#ifdef USE_SYNC0
 	ACK_SYNC_INT;  				/* RJK: reset INT2 for SYNC0 */
-	#endif
-	
-	#if DC_SUPPORTED
+#endif
+#if DC_SUPPORTED
 	ACK_ECAT_TIMER_INT;
 	DISABLE_ECAT_TIMER_INT;
-	#endif
-	
-	#if DC_SUPPORTED
-	//	ECAT_CAPTURE_CONFIG_REG = ESC_CAPTURE;
-	#endif
-	
+#endif
+#if DC_SUPPORTED
+//	ECAT_CAPTURE_CONFIG_REG = ESC_CAPTURE;
+#endif
+
+
 	//Make sure the ESC is booted completely
 	do
 	{
 		//Note: If PDI Type is SPI, DPRAM size could be changed in future (ASIC)
 		HW_EscReadAccess( (UINT8 *)(&u8PDICtrl), ESC_ADDR_PDICTRL, 1 );
 		//ToggleHeartbeatLED();
-	}while (u8PDICtrl != 5);
-	
-	HW_EscReadAccess(&nMaxSyncMan, ESC_ADDR_SYNCMANCHANNELS, 1 );
+	} while (u8PDICtrl != 5);
 
+	HW_EscReadAccess(&nMaxSyncMan, ESC_ADDR_SYNCMANCHANNELS, 1 );
 	HW_ResetIntMask(0);
 
 
-	#if AL_EVENT_ENABLED
+#if AL_EVENT_ENABLED
 	ENABLE_ESC_INT;
-	#ifdef USE_SYNC0
+#ifdef USE_SYNC0
 	ENABLE_SYNC_INT;   /* RJK: Enable INT2 for SYNC0  */
-	#endif
-	#endif	
-
+#endif
+#endif
 	///////////////////////////////////////////////////
-	//Prepare to run 
+	//Prepare to run
 	ECAT_Init();					//Initialize the EtherCAT Slave Interface
 }
 
+
+
 void setup_spi(void)
 {
-	/*	
-	Initialize and enable the SPI as: 
+		/*
+	Initialize and enable the SPI as:
 	* SPI-Master with clock Fosc/4=10Mhz
 	* High level of clock as idle state
-	* SPI_MODE == 3 
+	* SPI_MODE == 3
 	* LATE_SAMPLE = FALSE
 	* Save input data at middle of data output time
-	* Data transmitting on rising edge of SC 
-	*/
+	* Data transmitting on rising edge of SC
+*/
 
 	//The ET1200 should be configured to SPI Mode 3
-	//SPI_CLK is then max 50ns, or 20Mhz 
+	//SPI_CLK is then max 50ns, or 20Mhz
 	//FCSK = FCY/(PrimaryPrescale*SecondaryPrescale) = 40M/(4*2)=5Mhz
 
 	_SPI1IF=0; //Clear interrupt
 	_SPI1IE=0; //Disable interrupt
-	
+
 	SPI1CON1=0;
 	SPI1CON1bits.MSTEN=1;		//Act as SPI Master
 	SPI1CON1bits.PPRE=0b10;		// ((0b10, 4:1), (0b00, 64:1) (0b11,1:1) prescalar
 	SPI1CON1bits.SPRE=0b110;	// (0b111, 1:1),(0b110, 2:1) secondary scalar
     SPI1CON1bits.CKP=1;			//Idle state is high
     SPI1CON1bits.CKE=0;			//Data changes on clock transition from idle to active
-    SPI1CON1bits.SMP=0;			//Input data sampled at middle of data output time 
+    SPI1CON1bits.SMP=0;			//Input data sampled at middle of data output time
     SPI1CON1bits.MODE16=0;		//Communication is 8bit bytes
 
 	SPI1STATbits.SPIROV=0;	//Clear overflow flag
@@ -280,5 +302,3 @@ void setup_spi(void)
 	SPI_SEL = SPI_DEACTIVE; //Clear slave select (active low)
 	//_SPI1IE=1; //Enable interrupt
 }
-
-#endif

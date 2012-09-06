@@ -66,17 +66,21 @@ bool M3ActuatorVirtual::LinkDependentComponents()
 
 void M3ActuatorVirtual::StepStatus()
 {
+	pnt_cnt++;
+	
 	if (IsStateError())
 		return;
 	status.set_torque(command.tq_desired());
 	status.set_torquedot(torquedot_df.Step(GetTorque()));
 	status.set_flags(ACTUATOR_EC_FLAG_QEI_CALIBRATED);
 
+
 	if (joint != NULL)
 	{
 		M3Transmission * t=joint->GetTransmission();
 		if (t!=NULL)
 		{
+
 			angle_df.Step(t->GetThetaDesJointDeg(),0); //Note: should be GetThetaDesSensorDeg, not working. this OK so long as all angle sensors are collocated 1:1
 			status.set_theta(angle_df.GetTheta());
 			//status.set_theta(160);

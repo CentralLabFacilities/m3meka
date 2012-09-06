@@ -20,7 +20,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef _ENCODER_VERTX_H
 #define _ENCODER_VERTX_H
-#ifdef USE_ENCODER_VERTX
+
 
 //Setup for use with ContElec VERTX Absolute Encoder
 //http://www.novotechnik.com/products/rotary/non-contact_rotary.html
@@ -36,25 +36,25 @@ unsigned int get_avg_vertx(int ch);
 
 void step_vertx();
 
-#define VERTX_CH_A 0
-#define VERTX_CH_B 1
+#define VERTX_CH_A	0
+#define VERTX_CH_B	1
 
-#define VERTX_CH_SEAS VERTX_CH_A
-#define VERTX_CH_ENC VERTX_CH_B
+#define VERTX_CH_ENC_A	VERTX_CH_B //This hack makes channel 0 correspond to channel A without changing the rest of the code
+#define VERTX_CH_ENC_B	VERTX_CH_A
 #define VERTX_BOTH
 
 //ToDo set pins
-#define	BB_SPI_SS_A					LATBbits.LATB4		//RB4	OUTPUT	PIN33	SPI_SS_SEAS/
+#define	BB_SPI_SS_A					LATCbits.LATC2		//RC2	OUTPUT	PIN27	SPI_SS_SEAS/
 #define	BB_SPI_SS_B					LATBbits.LATB3		//RB3	OUTPUT	PIN24	SPI_SS_ENC/
-#define	BB_SPI_CLK_A				LATBbits.LATB9		//RB9	OUTPUT	PIN1	SPI_CLK_SEAS
+#define	BB_SPI_CLK_A				LATCbits.LATC0		//RC0	OUTPUT	PIN25	SPI_CLK_SEAS
 #define	BB_SPI_CLK_B				LATCbits.LATC1		//RC1	OUTPUT	PIN26	SPI_CLK_ENC
 #define	BB_SPI_DIO_A				LATBbits.LATB5		//RB5	INPUT	PIN41	SPI_DIO_SEAS
 #define	BB_SPI_DIO_B				LATBbits.LATB6		//RB6	INPUT	PIN42	SPI_DIO_ENC
-#define BB_PIN_SPI_DIO_A			PORTBbits.RB8
+#define BB_PIN_SPI_DIO_A			PORTBbits.RB5
 #define BB_PIN_SPI_DIO_B			PORTBbits.RB6
 
-#define BB_SPI_SET_MOSI_A	TRISBbits.TRISB8=0; ODCBbits.ODCB8=1; //Make pin output, open collector
-#define BB_SPI_SET_MISO_A	TRISBbits.TRISB8=1; ODCBbits.ODCB8=0; //Make pin input, non open collector
+#define BB_SPI_SET_MOSI_A	TRISBbits.TRISB5=0; ODCBbits.ODCB5=1; //Make pin output, open collector
+#define BB_SPI_SET_MISO_A	TRISBbits.TRISB5=1; ODCBbits.ODCB5=0; //Make pin input, non open collector
 #define BB_SPI_SET_MOSI_B	TRISBbits.TRISB6=0; ODCBbits.ODCB6=1; //Make pin output, open collector
 #define BB_SPI_SET_MISO_B	TRISBbits.TRISB6=1; ODCBbits.ODCB6=0; //Make pin input, non open collector
 
@@ -120,14 +120,14 @@ void step_vertx();
 
 #if defined VERTX_BOTH
 
-#define BB_SPI_SS_SET				BB_SPI_SS_A=1; BB_SPI_SS_B=1; 
-#define BB_SPI_SS_CLR				BB_SPI_SS_A=0; BB_SPI_SS_B=0; 
-#define BB_SPI_CLK_SET				BB_SPI_CLK_A=1; BB_SPI_CLK_B=1; 
-#define BB_SPI_CLK_CLR				BB_SPI_CLK_A=0; BB_SPI_CLK_B=0; 
-#define BB_SPI_DIO_SET				BB_SPI_DIO_A=1; BB_SPI_DIO_B=1; 
-#define BB_SPI_DIO_CLR				BB_SPI_DIO_A=0; BB_SPI_DIO_B=0; 
-#define BB_SPI_SET_MOSI		BB_SPI_SET_MOSI_A BB_SPI_SET_MOSI_B
-#define BB_SPI_SET_MISO		BB_SPI_SET_MISO_A BB_SPI_SET_MISO_B
+#define BB_SPI_SS_SET		BB_SPI_SS_A	=1;		BB_SPI_SS_B=1;
+#define BB_SPI_SS_CLR		BB_SPI_SS_A	=0;		BB_SPI_SS_B=0;
+#define BB_SPI_CLK_SET		BB_SPI_CLK_A=1;		BB_SPI_CLK_B=1;
+#define BB_SPI_CLK_CLR		BB_SPI_CLK_A=0;		BB_SPI_CLK_B=0;
+#define BB_SPI_DIO_SET		BB_SPI_DIO_A=1;		BB_SPI_DIO_B=1;
+#define BB_SPI_DIO_CLR		BB_SPI_DIO_A=0;		BB_SPI_DIO_B=0;
+#define BB_SPI_SET_MOSI		BB_SPI_SET_MOSI_A	BB_SPI_SET_MOSI_B
+#define BB_SPI_SET_MISO		BB_SPI_SET_MISO_A	BB_SPI_SET_MISO_B
 
 //Takes ~2500NS
 #define BB_SPI_BIT_OUT(x,y) {				\
@@ -151,5 +151,4 @@ void step_vertx();
 
 
 
-#endif
 #endif

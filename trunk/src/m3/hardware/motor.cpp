@@ -258,6 +258,8 @@ void M3MotorModel::StepModelV2(mReal i, mReal pwm, mReal rpm, mReal tmp)
 mReal  M3MotorModel::mNmToPwm(mReal mNm)
 {
     mReal i_a = (mNm/torque_constant)/gear_ratio;
+
+
     mReal duty = (i_a*winding_resistance+v_cemf)/nominal_voltage;
     duty=CLAMP(duty,-1.0,1.0);
     mReal pwm = duty*max_pwm_duty;

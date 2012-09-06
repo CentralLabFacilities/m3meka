@@ -31,7 +31,6 @@
 ------	Includes
 ------ 
 -----------------------------------------------------------------------------------------*/
-#ifdef USE_ETHERCAT
 #define	_ECATAPPL_ 1
 #include "ethercat_appl.h"
 #undef _ECATAPPL_
@@ -197,5 +196,5 @@ UINT8 APPL_StopOutputHandler(void)
 	return 0;
 }
 
-#endif
+
 /** @} */

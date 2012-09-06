@@ -21,7 +21,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _TIMER3_H
 #define _TIMER3_H
 
-#ifdef USE_TIMER3
 
 #define T3_US_PER_IRQ 500  //2Khz
 
@@ -31,5 +30,4 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 void setup_timer3(void);
 
-#endif
 #endif

@@ -21,7 +21,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __DIO_H__
 #define __DIO_H__ 
 
-#ifdef USE_DIO
 #include "setup.h"
 
 #define SetHeartbeatLED	LATAbits.LATA4=1
@@ -34,5 +33,4 @@ void ToggleHeartbeatLED(void);
 
 void setup_dio(void);
 
-#endif
 #endif

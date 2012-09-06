@@ -143,6 +143,7 @@ void M3CtrlSimple::StepCommand()
 	mReal	desired_theta;
 	mReal	desired_current;
 	mReal	desired_torque;
+	mReal	output;
 	
 	//Trajectories
 	mReal dt			= GetTimestamp()/1000000.0;//seconds
@@ -216,6 +217,8 @@ void M3CtrlSimple::StepCommand()
 	switch(command.ctrl_mode())
 	{
 		case CTRL_MODE_CURRENT:
+			if (act->GetAmpControlInput() != ACTUATOR_INPUT_CURRENT)
+				break;
 			act->SetDesiredControlMode(ACTUATOR_MODE_CURRENT);
 			act->SetDesiredCurrent(desired_current);
 			// update personal status
@@ -224,6 +227,9 @@ void M3CtrlSimple::StepCommand()
 		case CTRL_MODE_TORQUE:
 		//case CTRL_MODE_TORQUE_GC:
 			//PID
+			if (act->GetAmpControlInput() != ACTUATOR_INPUT_CURRENT)
+				break;
+			
 			desired_current = pid_torque.Step(GetJointTorque(),
 						  GetJointTorqueDot(),
 						  desired_torque,
@@ -232,6 +238,8 @@ void M3CtrlSimple::StepCommand()
 						  ParamPidTorque()->k_d(),
 						  ParamPidTorque()->k_i_limit(),
 						  ParamPidTorque()->k_i_range());
+						  
+			
 			act->SetDesiredControlMode(ACTUATOR_MODE_CURRENT);
 			act->SetDesiredCurrent(desired_current);
 			// update personal status
@@ -241,19 +249,33 @@ void M3CtrlSimple::StepCommand()
 		
 		case CTRL_MODE_THETA:
 			//PID
-			desired_current = pid_theta.Step(GetJointTheta(),
-						  GetJointThetaDot(),
-						  desired_theta,
-						  ParamPidTheta()->k_p(), 
-						  ParamPidTheta()->k_i(),
-						  ParamPidTheta()->k_d(),
-						  ParamPidTheta()->k_i_limit(),
-						  ParamPidTheta()->k_i_range());
-			act->SetDesiredControlMode(ACTUATOR_MODE_CURRENT);
-			act->SetDesiredCurrent(desired_current);
-			// update personal status
-			StatusCommand()->set_current(desired_current);
-			StatusCommand()->set_theta(desired_theta);
+			output = pid_theta.Step(GetJointTheta(),
+									GetJointThetaDot(),
+									desired_theta,
+									ParamPidTheta()->k_p(), 
+									ParamPidTheta()->k_i(),
+									ParamPidTheta()->k_d(),
+									ParamPidTheta()->k_i_limit(),
+									ParamPidTheta()->k_i_range());
+			
+		
+			if (act->GetAmpControlInput() == ACTUATOR_INPUT_PWM)
+			{
+				act->SetDesiredControlMode(ACTUATOR_MODE_PWM);
+				act->SetDesiredPwm((int)output);
+				
+				// update personal status
+				StatusCommand()->set_pwm(output);
+				StatusCommand()->set_theta(desired_theta);
+			}
+			else if (act->GetAmpControlInput() == ACTUATOR_INPUT_CURRENT)
+			{
+				act->SetDesiredControlMode(ACTUATOR_MODE_CURRENT);
+				act->SetDesiredCurrent(output);
+				// update personal status
+				StatusCommand()->set_current(output);
+				StatusCommand()->set_theta(desired_theta);
+			}
 			break;
 		case CTRL_MODE_BRAKE:
 			act->SetDesiredControlMode(ACTUATOR_MODE_BRAKE);

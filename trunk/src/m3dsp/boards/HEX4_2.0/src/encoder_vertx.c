@@ -17,8 +17,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef USE_ENCODER_VERTX
-
 #include "setup.h"
 #include "encoder_vertx.h"
 
@@ -213,4 +211,4 @@ void step_vertx()
 	vertx_idx=INC_MOD(vertx_idx,VERTX_NUM_SMOOTH);
 }
 
-#endif
+

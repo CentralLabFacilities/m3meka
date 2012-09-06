@@ -361,8 +361,9 @@ void M3Joint::StepCommand()
 				StepBrake(des,trans->GetThetaActuatorDeg());
 				//Do PID in actuator space so result is direct PWM
 				//ctrl_simple->SetDesiredControlMode(CTRL_MODE_THETA);
-				ctrl_simple->SetDesiredControlMode(CTRL_MODE_OFF); // TODO:  Remimplement mode theta, theta_mj
+				ctrl_simple->SetDesiredControlMode(CTRL_MODE_THETA);
 				ctrl_simple->SetDesiredTheta(DEG2RAD(des));
+								
 				break;
 			}
 			case JOINT_MODE_THETA_GC:
@@ -451,7 +452,7 @@ void M3Joint::StepCommand()
 		};
 	} else { // Legacy, no supported on BMW,MAX2 versions 2.0
 	
-		act->SetDesiredControlMode(ACTUATOR_MODE_OFF);//default
+//		act->SetDesiredControlMode(ACTUATOR_MODE_OFF);//default
 		
 		switch(command.ctrl_mode())
 		{
@@ -474,11 +475,15 @@ void M3Joint::StepCommand()
 			case JOINT_MODE_THETA:
 			case JOINT_MODE_THETA_MJ:
 			{
+				
+				
+					
 				if (!IsEncoderCalibrated())
 				{
-				// M3_INFO("Not calib %s\n",GetName().c_str());
-				  break;
+//					M3_INFO("Not calib %s\n",GetName().c_str());
+					break;
 				}
+				
 				CalcThetaDesiredSmooth();
 				mReal des=trans->GetThetaDesActuatorDeg();
 				StepBrake(des,trans->GetThetaActuatorDeg());
@@ -548,6 +553,7 @@ void M3Joint::StepCommand()
 				//Send out
 				trans->SetTorqueDesJoint(tq_out);
 				act->SetDesiredControlMode(ACTUATOR_MODE_TORQUE);
+
 				act->SetDesiredTorque(trans->GetTorqueDesActuator());
 				break;
 			}

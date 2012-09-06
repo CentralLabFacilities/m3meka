@@ -20,7 +20,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __CURRENT_H__
 #define __CURRENT_H__ 
 
-#ifdef USE_CURRENT
 
 void setup_current();
 void step_current();
@@ -55,5 +54,4 @@ enum
 #define AMP_MIN		2450
 #define AMP_MAX		2995
 
-#endif
 #endif

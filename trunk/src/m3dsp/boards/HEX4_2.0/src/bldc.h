@@ -20,7 +20,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef _BLDC_H
 #define _BLDC_H
-#ifdef USE_BLDC
 
 //Setup for use with BLDC commutation
 
@@ -34,4 +33,4 @@ extern unsigned int bldc_hall_val;
 
 #define BLDC_HALL_STATE (BLDC_HALL_3<<2)|(BLDC_HALL_2<<1)|BLDC_HALL_1
 #endif
-#endif
+

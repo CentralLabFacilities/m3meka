@@ -59,70 +59,26 @@ int main (void)
 	setup_peripheral_pin_select();
 	setup_interrupt_priorities();
 
-	//Blinking HB LED and Timestamp
-	#ifdef USE_DIO
 	setup_dio();
-	#endif
-	
-	//ToDo Used?
-	#ifdef USE_TIMER1 
-	setup_timer1(); //do before setup_pwm
-	#endif	//ToDo: there was a missing #endif, maybe that's why disabling Timer1 was breaking the code!
-	
-	//Motor control PWM
-	#ifdef USE_PWM
 	setup_pwm();
-	#endif
-	
-	//Brushless motor
-	#ifdef USE_BLDC
-	setup_bldc();
-	#endif
-		
-	//Torque PID and Current PID
-	#ifdef USE_CONTROL
 	setup_control();
-	#endif
-	
-	//Analog to Digital
-	#ifdef USE_ADC
 	setup_adc();
-        initDma0();					// Initialise the DMA controller to buffer ADC data in conversion order
-	#endif
-	
-	//Torso external ADC
-	#ifdef USE_ADC_SPI
-	setup_adc_spi();
-	#endif
-	
-	//Current measurment, control and limitation
-	#ifdef USE_CURRENT
-	setup_current();
-	#endif
-	
-	//VerteX SPI Encoder
-	#ifdef USE_ENCODER_VERTX
+	setup_dma1();					// Initialise the DMA controller to buffer ADC data in conversion order
+	setup_timer3();
+
 	setup_vertx();
-	#endif
 
 	//EtherCAT Communication
-	#ifdef USE_ETHERCAT
 	while (!eeprom_loaded())	//Wait until ESC is ready
 		SetHeartbeatLED;
 	setup_ethercat();
 	ClrHeartbeatLED;
-	#endif
 
 	setup_interrupt_priorities();
 
 	while(1)
 	{
-		if (i++%20001==0)
-		{
-			ToggleHeartbeatLED();
-		}
-		#if defined USE_ETHERCAT 
+
 		step_ethercat();
-		#endif
 	}
 }

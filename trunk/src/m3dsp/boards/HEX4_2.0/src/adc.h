@@ -21,24 +21,21 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define __ADC_H__ 
 #include "setup.h"
 
-#ifdef USE_ADC
 
-#define ADC_NUM_SMOOTH	32 		//Must be even
-#define ADC_SHIFT_SMOOTH 5 		//2^ADC_SHIFT_SMOOTH
-#define ADC_NUM_SMOOTH_FAST	16 	//Must be even				//ToDo Original HEX4 = 2
-#define ADC_SHIFT_SMOOTH_FAST 4 //2^ADC_SHIFT_SMOOTH_FAST	//ToDo Original HEX4 = 1
-#define ADC_NUM_CH 3 
-#define ADC_CURRENT 1
-#define ADC_TEMP_AMB 2
-#define ADC_TEMP_BOARD 0
-#define  MAX_CHNUM	 			2		// Highest Analog input number in Channel Scan
-#define  SAMP_BUFF_SIZE	 		8		// Size of the input buffer per analog input
+#define ADC_NUM_SMOOTH			32	// Must be even
+#define ADC_SHIFT_SMOOTH		5	// 2^ADC_SHIFT_SMOOTH
+#define ADC_NUM_SMOOTH_FAST		2	// Must be even
+#define ADC_SHIFT_SMOOTH_FAST	1	// 2^ADC_SHIFT_SMOOTH_FAST
+#define ADC_NUM_CH				3
+#define ADC_AMP_TEMP_A			0
+#define ADC_MOTOR_TEMP			1
+#define ADC_AMP_TEMP_B			2
 
+#define DMA_BUF_DEPTH	ADC_NUM_CH
 
+void setup_dma1(void);
 void setup_adc(void);
 unsigned int get_avg_adc(int idx);
 extern unsigned int adc_raw[];
-unsigned int get_avg_adc_torque();
 
-#endif
 #endif

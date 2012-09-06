@@ -78,9 +78,10 @@ class M3Proc(M3Tuning):
 		self.proxy.step()
 
 		#Create gui
-		self.mode=[0]
+		self.mode				= [0]
 		
-		self.current_desired=[0]
+		self.current_desired	= [0]
+		self.pwm_desired		= [0]
 		
 
 		#self.enable_ctrl_dev=[0]
@@ -111,7 +112,7 @@ class M3Proc(M3Tuning):
 		self.zero_joint_theta_last		= False
 		
 		current_max = 2.5
-
+		pwm_max = 200
 
 		self.param_dict = self.proxy.get_param_dict()
 #		self.joint_torque	= self.param_dict[self.comps['act']['name']]['calib']['torque']['cb_bias']
@@ -121,8 +122,9 @@ class M3Proc(M3Tuning):
 		self.gui.add('M3GuiTree',   'Status',		(self,'status_dict'),[],[],m3g.M3GuiRead,column=2)
 		self.gui.add('M3GuiTree',   'Param',		(self,'param_dict'),[],[],m3g.M3GuiWrite,column=3)
 
-		self.gui.add('M3GuiModes',  'Mode',			(self,'mode'),range(1),[['Off','Current'],1],m3g.M3GuiWrite)
+		self.gui.add('M3GuiModes',  'Mode',			(self,'mode'),range(1),[['Off','PWM','Current'],1],m3g.M3GuiWrite)
 
+		self.gui.add('M3GuiSliders','PWM (counts)',	(self,'pwm_desired'),range(1),[-pwm_max,pwm_max],m3g.M3GuiWrite)
 		self.gui.add('M3GuiSliders','Current (A)',	(self,'current_desired'),range(1),[-current_max,current_max],m3g.M3GuiWrite)
 
 		
@@ -142,7 +144,7 @@ class M3Proc(M3Tuning):
 		
 	def step(self):
 
-		print self.comps['act_ec']['comp'].status.timestamp
+#		print self.comps['act_ec']['comp'].status.timestamp
 
 		if self.do_scope and self.scope is None:
 			self.scope=m3t.M3Scope2(xwidth=100,yrange=None)
@@ -196,8 +198,12 @@ class M3Proc(M3Tuning):
 
 		if self.mode[0] == 0: #Off
 			self.act.set_mode(mec.ACTUATOR_MODE_OFF)
+			
+		elif self.mode[0] == 1: #Pwm
+			self.act.set_mode(mec.ACTUATOR_MODE_PWM)
+			self.act.set_pwm(self.pwm_desired[0])
 				
-		elif self.mode[0] == 1: #Current
+		elif self.mode[0] == 2: #Current
 			self.act.set_mode(mec.ACTUATOR_MODE_CURRENT)
 			self.act.set_i_desired(self.current_desired[0]*1000.0)
 		else:

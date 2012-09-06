@@ -20,7 +20,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 // Microcontroller specific settings for the EtherCAT Controller Interface
 #ifndef _ETHERCAT_HW_H_
 #define _ETHERCAT_HW_H_
-#ifdef USE_ETHERCAT
+
 
 #include "ethercat_def.h"
 #include <string.h>
@@ -171,7 +171,7 @@ PROTO   void ISR_GetInterruptRegister();
 #undef	PROTO
 //////////////////////////////////////////////////////////////////////////////////
 
-#endif
+
 #endif
 
 

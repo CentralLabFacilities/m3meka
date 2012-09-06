@@ -51,11 +51,13 @@ class M3Actuator : public m3rt::M3Component
 	public:
 		M3ActuatorParamPID *	ParamPIDTorque(){return param.mutable_pid_torque();}
 		void SetDesiredPwm(int val){command.set_pwm_desired(val);}
-		void SetDesiredControlMode(ACTUATOR_MODE val){command.set_ctrl_mode(val);}
+		void SetDesiredControlMode(ACTUATOR_MODE val){ command.set_ctrl_mode(val);}
 		void SetDesiredTorque(mReal val){ command.set_tq_desired(val);}
 		void SetDesiredCurrent(mReal val){ command.set_i_desired(val);}
 		void SetBrakeOff(bool off){command.set_brake_off(off);}
 		virtual bool IsMotorPowerSlewedOn(){return ecc->IsMotorPowerSlewedOn();}
+		
+		int GetAmpControlInput(){return amp_control_input;}
 		mReal GetDesiredTorque(){return command.tq_desired();}
 		mReal GetMotorTemp(){return status.motor_temp();}
 		mReal GetAmpTemp(){return status.amp_temp();}
@@ -75,12 +77,13 @@ class M3Actuator : public m3rt::M3Component
 		mReal GetTorqueDot(){return status.torquedot();}
 		int GetPwmCmd(){return status.pwm_cmd();}
 		int GetFlags(){return status.flags();}
+		
 		virtual int GetTicks(){
-		  if (!GetActuatorEc()) return 0;
-		    unsigned int low=(unsigned short)((M3ActuatorEcStatus*)ecc->GetStatus())->qei_on();
-		    unsigned int high=((unsigned short)((M3ActuatorEcStatus*)ecc->GetStatus())->qei_rollover()<<16);
-		    int ticks = high|low;
-		    return ticks;
+			if (!GetActuatorEc()) return 0;
+			unsigned int low=(unsigned short)((M3ActuatorEcStatus*)ecc->GetStatus())->qei_on();
+			unsigned int high=((unsigned short)((M3ActuatorEcStatus*)ecc->GetStatus())->qei_rollover()<<16);
+			int ticks = high|low;
+			return ticks;
 		}
 		
 		virtual void SetZeroEncoder(){if (GetActuatorEc()) ecc->SetZeroEncoder();}
@@ -134,6 +137,10 @@ class M3Actuator : public m3rt::M3Component
 		int old_ticks;
 		bool old_is_calibrated;
 		mReal torque_shift;
+		
+		int amp_control_input;
+		int pnt_cnt;
+		
 };
 
 

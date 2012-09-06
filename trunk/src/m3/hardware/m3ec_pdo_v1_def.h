@@ -47,7 +47,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define M3ACT_CONFIG_EC_WD 16384 //Toggle this bit for EtherCAT heartbeat/watchdog
 
 
-
 typedef struct 
 {
 	int16_t		config;					//Reserved
@@ -70,7 +69,7 @@ typedef struct
 	int16_t		k_ff;					//Feedforward gain, torque control
 	int16_t		pwm_db;					//Pwm deadband
 } M3ActPdoV1Cmd;
-
+// 38 bytes
 
 #define M3ACT_FLAG_POS_LIMITSWITCH 1
 #define M3ACT_FLAG_NEG_LIMITSWITCH 2
@@ -94,6 +93,7 @@ typedef struct
 	int16_t		qei_rollover;		//Encoder rollover counts (directional) -1|0|1 ...
 	int16_t		flags;				//Reserved
 }M3ActPdoV1Status;
+// 26 bytes
 
 ///////////////////////////////  M3ACT_PDO_V1 Multi-Channel /////////////////////////////////////////////////////
 
@@ -124,12 +124,15 @@ typedef struct
 	uint64_t    timestamp;		    //Time in us
 	M3ActPdoV1Status 	status[1];
 } M3ActX1PdoV1Status;
+// 34 bytes
 
 typedef struct
 {
 	uint64_t    timestamp;		    //Time in us
 	M3ActPdoV1Status 	status[2];
 } M3ActX2PdoV1Status;
+// 60 bytes
+
 
 typedef struct
 {

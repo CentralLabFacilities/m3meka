@@ -23,21 +23,19 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 ///////////////////////////////////////////////////////////////////
 
 //Configure the components to use with these compiler options
-//#define USE_PWM
-//#define USE_ENCODER_VERTX
-//#define USE_ADC
-//#define USE_CONTROL
-//#define USE_CURRENT
-//#define USE_ETHERCAT
-//#define USE_TIMER1
-//#define USE_DIO
+#define USE_PWM
+#define USE_ENCODER_VERTX
+#define USE_ADC
+#define USE_CONTROL
+#define USE_ETHERCAT
+#define USE_DIO
 //#define USE_SYNC0					//Use Sync0 EtherCAT IRQ
-//#define USE_TIMESTAMP_DC			//Use DC CLOCK Timestamp from LATCH
+#define USE_TIMESTAMP_DC			//Use DC CLOCK Timestamp from LATCH
 
 #include "p33FJ64MC204.h"
 #include "inttypes.h"
 #include <string.h>
-#include "../../../../m3/hardware/m3ec_pdo_v3_def.h"
+//#include "../../../../m3/hardware/m3ec_pdo_v3_def.h"
 #include "../../../../m3/hardware/m3ec_pdo_v1_def.h"
 
 #include "dio.h"
@@ -46,9 +44,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "pwm.h"
 #include "control.h"
 #include "adc.h"
-#include "current.h"
 #include "timer3.h"
-#include "bldc.h"
+
 
 //Status flags
 

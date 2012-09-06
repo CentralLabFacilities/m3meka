@@ -21,7 +21,6 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef _ECATSLV_H_
 #define _ECATSLV_H_
 
-#ifdef USE_ETHERCAT
 
 /*-----------------------------------------------------------------------------------------
 ------	
@@ -330,7 +329,7 @@ typedef struct
 	UINT16  bitLen;
 } TTYPELENGTH;
  
-#endif //_ECATSLV_H_
+
 
 /*-----------------------------------------------------------------------------------------
 ------	
