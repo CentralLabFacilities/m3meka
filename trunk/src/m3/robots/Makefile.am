@@ -34,8 +34,7 @@ libm3robotsinclude_HEADERS = \
 	robot.h\
 	humanoid.pb.h\
 	humanoid_shm.pb.h \
-	humanoid_shm.h\
-	humanoid_shm_sds.h
+	humanoid_shm.h
 
 clean-local:
 	rm -f *.pb.*
