@@ -164,6 +164,19 @@ clean-test-results/fast:
 .PHONY : clean-test-results/fast
 
 #=============================================================================
+# Target rules for targets named move_zlift
+
+# Build rule for target.
+move_zlift: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 move_zlift
+.PHONY : move_zlift
+
+# fast build rule for target.
+move_zlift/fast:
+	$(MAKE) -f CMakeFiles/move_zlift.dir/build.make CMakeFiles/move_zlift.dir/build
+.PHONY : move_zlift/fast
+
+#=============================================================================
 # Target rules for targets named rosbuild_precompile
 
 # Build rule for target.
@@ -307,6 +320,21 @@ tests/fast:
 .PHONY : tests/fast
 
 # target to build an object file
+src/move_zlift.o:
+	$(MAKE) -f CMakeFiles/move_zlift.dir/build.make CMakeFiles/move_zlift.dir/src/move_zlift.o
+.PHONY : src/move_zlift.o
+
+# target to preprocess a source file
+src/move_zlift.i:
+	$(MAKE) -f CMakeFiles/move_zlift.dir/build.make CMakeFiles/move_zlift.dir/src/move_zlift.i
+.PHONY : src/move_zlift.i
+
+# target to generate assembly for a file
+src/move_zlift.s:
+	$(MAKE) -f CMakeFiles/move_zlift.dir/build.make CMakeFiles/move_zlift.dir/src/move_zlift.s
+.PHONY : src/move_zlift.s
+
+# target to build an object file
 src/shm_zlift_controller.o:
 	$(MAKE) -f CMakeFiles/shm_zlift_controller.dir/build.make CMakeFiles/shm_zlift_controller.dir/src/shm_zlift_controller.o
 .PHONY : src/shm_zlift_controller.o
@@ -333,6 +361,7 @@ help:
 	@echo "... ROSBUILD_gensrv_lisp"
 	@echo "... clean-test-results"
 	@echo "... edit_cache"
+	@echo "... move_zlift"
 	@echo "... rebuild_cache"
 	@echo "... rosbuild_precompile"
 	@echo "... rosbuild_premsgsrvgen"
@@ -345,6 +374,9 @@ help:
 	@echo "... test-results"
 	@echo "... test-results-run"
 	@echo "... tests"
+	@echo "... src/move_zlift.o"
+	@echo "... src/move_zlift.i"
+	@echo "... src/move_zlift.s"
 	@echo "... src/shm_zlift_controller.o"
 	@echo "... src/shm_zlift_controller.i"
 	@echo "... src/shm_zlift_controller.s"

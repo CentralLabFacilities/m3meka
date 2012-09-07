@@ -29,5 +29,6 @@ include_directories(../m3ctrl_msgs/msg_gen/cpp/include/ ../../../m3core/src/ /us
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 rosbuild_add_executable(shm_zlift_controller src/shm_zlift_controller.cpp)
+rosbuild_add_executable(move_zlift src/move_zlift.cpp)
 #rosbuild_add_executable(drive_base src/drive_base.cpp)
 #target_link_libraries(example ${PROJECT_NAME})

@@ -268,7 +268,7 @@ int main (int argc, char **argv)
         ros::NodeHandle root_handle;
 	ros::NodeHandle p_nh("~");
 	
-	cmd_sub_g = root_handle.subscribe<m3ctrl_msgs::M3JointCmd>("command", 1, &commandCallback);
+	cmd_sub_g = root_handle.subscribe<m3ctrl_msgs::M3JointCmd>("/zlift_command", 1, &commandCallback);
 	
 	joint_state_g = GetInitialJointStateMessage();
 	zlift_publisher_g = root_handle.advertise<sensor_msgs::JointState>("zlift_state", 1, true);

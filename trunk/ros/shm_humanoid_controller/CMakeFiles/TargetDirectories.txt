@@ -3,6 +3,7 @@
 /home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller/CMakeFiles/ROSBUILD_gensrv_cpp.dir
 /home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller/CMakeFiles/ROSBUILD_gensrv_lisp.dir
 /home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller/CMakeFiles/clean-test-results.dir
+/home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller/CMakeFiles/move_humanoid.dir
 /home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller/CMakeFiles/rosbuild_precompile.dir
 /home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller/CMakeFiles/rosbuild_premsgsrvgen.dir
 /home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller/CMakeFiles/rospack_genmsg.dir

@@ -164,6 +164,19 @@ clean-test-results/fast:
 .PHONY : clean-test-results/fast
 
 #=============================================================================
+# Target rules for targets named move_humanoid
+
+# Build rule for target.
+move_humanoid: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 move_humanoid
+.PHONY : move_humanoid
+
+# fast build rule for target.
+move_humanoid/fast:
+	$(MAKE) -f CMakeFiles/move_humanoid.dir/build.make CMakeFiles/move_humanoid.dir/build
+.PHONY : move_humanoid/fast
+
+#=============================================================================
 # Target rules for targets named rosbuild_precompile
 
 # Build rule for target.
@@ -307,6 +320,21 @@ tests/fast:
 .PHONY : tests/fast
 
 # target to build an object file
+src/move_humanoid.o:
+	$(MAKE) -f CMakeFiles/move_humanoid.dir/build.make CMakeFiles/move_humanoid.dir/src/move_humanoid.o
+.PHONY : src/move_humanoid.o
+
+# target to preprocess a source file
+src/move_humanoid.i:
+	$(MAKE) -f CMakeFiles/move_humanoid.dir/build.make CMakeFiles/move_humanoid.dir/src/move_humanoid.i
+.PHONY : src/move_humanoid.i
+
+# target to generate assembly for a file
+src/move_humanoid.s:
+	$(MAKE) -f CMakeFiles/move_humanoid.dir/build.make CMakeFiles/move_humanoid.dir/src/move_humanoid.s
+.PHONY : src/move_humanoid.s
+
+# target to build an object file
 src/shm_humanoid_controller.o:
 	$(MAKE) -f CMakeFiles/shm_humanoid_controller.dir/build.make CMakeFiles/shm_humanoid_controller.dir/src/shm_humanoid_controller.o
 .PHONY : src/shm_humanoid_controller.o
@@ -333,6 +361,7 @@ help:
 	@echo "... ROSBUILD_gensrv_lisp"
 	@echo "... clean-test-results"
 	@echo "... edit_cache"
+	@echo "... move_humanoid"
 	@echo "... rebuild_cache"
 	@echo "... rosbuild_precompile"
 	@echo "... rosbuild_premsgsrvgen"
@@ -345,6 +374,9 @@ help:
 	@echo "... test-results"
 	@echo "... test-results-run"
 	@echo "... tests"
+	@echo "... src/move_humanoid.o"
+	@echo "... src/move_humanoid.i"
+	@echo "... src/move_humanoid.s"
 	@echo "... src/shm_humanoid_controller.o"
 	@echo "... src/shm_humanoid_controller.i"
 	@echo "... src/shm_humanoid_controller.s"

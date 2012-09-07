@@ -180,7 +180,7 @@ ROSPACK_EXE:FILEPATH=/opt/ros/fuerte/bin/rospack
 USERCONFIG:FILEPATH=USERCONFIG-NOTFOUND
 
 //Path to a file.
-_file_name:FILEPATH=/home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller/src/shm_humanoid_controller.cpp
+_file_name:FILEPATH=/home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller/src/move_humanoid.cpp
 
 //Value Computed by CMake
 shm_humanoid_controller_BINARY_DIR:STATIC=/home/meka/mekabot/ROS_API/m3meka/ros/shm_humanoid_controller
