@@ -160,6 +160,15 @@ void M3Omnibase::StepJoystickCtrl()
   pcv_cmd.joystick_yaw = command.joystick_yaw();
   pcv_cmd.joystick_button = command.joystick_button();  
   
+  if (tmp_cnt++ == 1000)
+  {
+   M3_DEBUG("but: %d\n",  pcv_cmd.joystick_button);
+   M3_DEBUG("x: %f\n",  pcv_cmd.joystick_x);
+   M3_DEBUG("y: %f\n",  pcv_cmd.joystick_y);
+   M3_DEBUG("yaw: %f\n",  pcv_cmd.joystick_yaw);
+   tmp_cnt = 0;
+  }
+  
 }
 
 void M3Omnibase::StepTrajGoalCtrl()

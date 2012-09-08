@@ -90,8 +90,17 @@ void M3OmnibaseShm::SetCommandFromSds(unsigned char * data)
 	((M3OmnibaseCommand*)omnibase->GetCommand())->set_traj_mode(OMNIBASE_TRAJ_JOYSTICK);
 	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_x(command_from_sds.x_velocity);
 	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_y(command_from_sds.y_velocity);
-	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_yaw(command_from_sds.yaw_velocity);
+	//((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_yaw(command_from_sds.yaw_velocity);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_yaw(1.0);
 	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_button(0);
+	
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_linear_acceleration(0.15);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_rotation_acceleration(30);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_linear_velocity(0.2);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_rotation_velocity(20);
+	
+	
+  
     }
   }
   
@@ -105,11 +114,11 @@ void M3OmnibaseShm::SetSdsFromStatus(unsigned char * data)
   
   status_to_sds.x = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_position(0);
   status_to_sds.y = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_position(1);
-  status_to_sds.yaw = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_position(2);
+  status_to_sds.yaw = DEG2RAD(((M3OmnibaseStatus*)omnibase->GetStatus())->global_position(2));
   
   status_to_sds.x_dot = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_velocity(0);
   status_to_sds.y_dot = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_velocity(1);
-  status_to_sds.yaw_dot = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_velocity(2);
+  status_to_sds.yaw_dot = DEG2RAD(((M3OmnibaseStatus*)omnibase->GetStatus())->global_velocity(2));
   
   
   /*if (bot)
