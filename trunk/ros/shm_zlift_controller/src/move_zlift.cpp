@@ -3,6 +3,10 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <m3ctrl_msgs/M3JointCmd.h>
+#include <m3/hardware/joint_mode_ros.pb.h>
+#include <m3/hardware/smoothing_mode.pb.h>
+
+
 
 class ZliftDriver
 {
@@ -41,9 +45,9 @@ public:
     std::cin.getline(cmd, 50);
     
     
-    zlift_cmd.control_mode[0] = 0;
-    zlift_cmd.smoothing_mode[0] = 0;
-    zlift_cmd.velocity[0] = 3.0;
+    zlift_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC;
+    zlift_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_SLEW;
+    zlift_cmd.velocity[0] = 2000.0;
     zlift_cmd.stiffness[0] = 1.0;
     zlift_cmd.header.stamp = ros::Time::now();
     zlift_cmd.header.frame_id = "zlift_cmd";
@@ -87,6 +91,10 @@ public:
       //publish the assembled command
       cmd_pub_.publish(zlift_cmd);
     }
+    
+    // put in mode off b4 quitting
+    zlift_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_OFF;
+    cmd_pub_.publish(zlift_cmd);
     return true;
   }
 

@@ -159,7 +159,7 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 {
     
   
-  for (int i = 0; i < msg->chain.size(); i++)
+  /*for (int i = 0; i < msg->chain.size(); i++)
   {
     int chain_idx = msg->chain_idx[i];
     if (msg->chain[i] == 0)
@@ -194,7 +194,7 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
       cmd.torso.ctrl_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->control_mode[i]; 
       cmd.torso.smooth_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->smoothing_mode[i]; 
     }    
-  }
+  }*/
   
       
 }

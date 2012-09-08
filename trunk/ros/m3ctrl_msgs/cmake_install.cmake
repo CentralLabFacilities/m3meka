@@ -1,4 +1,4 @@
-# Install script for directory: /home/meka/mekabot/ROS_API/m3meka/ros/m3ctrl_msgs
+# Install script for directory: /home/meka/mekabot/m3meka/ros/m3ctrl_msgs
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,7 +38,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/home/meka/mekabot/ROS_API/m3meka/ros/m3ctrl_msgs/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/home/meka/mekabot/m3meka/ros/m3ctrl_msgs/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/home/meka/mekabot/ROS_API/m3meka/ros/m3ctrl_msgs/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/home/meka/mekabot/m3meka/ros/m3ctrl_msgs/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

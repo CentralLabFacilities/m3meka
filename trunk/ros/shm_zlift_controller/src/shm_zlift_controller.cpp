@@ -39,9 +39,9 @@
 
 #define RT_TASK_FREQUENCY_MEKA_OMNI_SHM 100
 #define RT_TIMER_TICKS_NS_MEKA_OMNI_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_OMNI_SHM)		//Period of rt-timer 
-#define MEKA_ODOM_SHM "TSHMM"
-#define MEKA_ODOM_CMD_SEM "TSHMC"
-#define MEKA_ODOM_STATUS_SEM "TSHMS"
+#define MEKA_ODOM_SHM "ZSHMM"
+#define MEKA_ODOM_CMD_SEM "ZSHMC"
+#define MEKA_ODOM_STATUS_SEM "ZSHMS"
 #define MEKA_NDOF 1
 
 
@@ -117,18 +117,22 @@ void StepShm(int cntr)
 	}
       }
     
- 
+    /*cmd.position = 600;
+    cmd.velocity = 2000;
+    cmd.stiffness = 1.0;
+    cmd.control_mode = JOINT_MODE_ROS_THETA_GC;
+    cmd.smoothing_mode = SMOOTHING_MODE_SLEW;*/
    
 }
 
 void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 {
-            
+    
     cmd.position = msg->position[0];
     cmd.velocity = msg->velocity[0];
     cmd.stiffness = msg->stiffness[0];
-    cmd.control_mode = msg->control_mode[0];
-    cmd.smoothing_mode = msg->smoothing_mode[0];
+    cmd.control_mode = (JOINT_MODE_ROS)msg->control_mode[0];
+    cmd.smoothing_mode = (SMOOTHING_MODE)msg->smoothing_mode[0];
       
 }
 
