@@ -33,7 +33,7 @@ using namespace m3rt;
 
 class M3OmnibaseShm : public  m3::M3CompShm{
 	public:
-		M3OmnibaseShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),omnibase(NULL)
+		M3OmnibaseShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),omnibase(NULL),pwr(NULL)
 		{		  
 		  RegisterVersion("default",DEFAULT);		  
 		}
@@ -57,12 +57,14 @@ class M3OmnibaseShm : public  m3::M3CompShm{
 		M3OmnibaseShmParam param;
 		M3OmnibaseShmStatus status;
 		M3Omnibase * omnibase;
+		M3Pwr * pwr;
 		
 		M3OmnibaseShmSdsCommand command_from_sds;
 		M3OmnibaseShmSdsStatus status_to_sds;
 		int sds_status_size;
 		int sds_cmd_size;	
-		string omni_name;
+		
+		string omni_name, pwr_name;
 		int64_t timeout;
 		int tmp_cnt;		
 		bool startup_motor_pwr_on;

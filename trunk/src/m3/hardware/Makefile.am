@@ -76,8 +76,13 @@ libm3hardwareinclude_HEADERS = \
 	joint_zlift.h\
 	ledx2xn_ec.h\
 	robot_monitor.h\
-	async_io.h\
-	ctrl_simple.h
+	ctrl_simple.h\
+	smoothing_mode.pb.h\
+	joint_mode_ros.pb.h\
+	joint_zlift_shm.pb.h\
+	joint_zlift_shm_sds.h
+
+#	async_io.h
 
 	
 clean-local:
@@ -189,12 +194,12 @@ robot_monitor.pb.cpp: robot_monitor.proto
 	mv robot_monitor.pb.cc robot_monitor.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 robot_monitor.proto
 
-async_io.pb.h: async_io.pb.cpp
+#async_io.pb.h: async_io.pb.cpp
 
-async_io.pb.cpp: async_io.proto
-	protoc -I$(prefix)/include/m3rt/base   -I./ --cpp_out=./ async_io.proto
-	mv async_io.pb.cc async_io.pb.cpp
-	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 async_io.proto
+#async_io.pb.cpp: async_io.proto
+#	protoc -I$(prefix)/include/m3rt/base   -I./ --cpp_out=./ async_io.proto
+#	mv async_io.pb.cc async_io.pb.cpp
+#	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 async_io.proto
 
 ctrl_simple.pb.h: ctrl_simple.pb.cpp
 
@@ -203,9 +208,31 @@ ctrl_simple.pb.cpp: ctrl_simple.proto
 	mv ctrl_simple.pb.cc ctrl_simple.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 ctrl_simple.proto
 
+joint_zlift_shm.pb.h: joint_zlift_shm.pb.cpp
+
+joint_zlift_shm.pb.cpp: joint_zlift_shm.proto
+	protoc -I$(prefix)/include/m3rt/base   -I./ --cpp_out=./ joint_zlift_shm.proto
+	mv joint_zlift_shm.pb.cc joint_zlift_shm.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 joint_zlift_shm.proto
+
+joint_mode_ros.pb.h: joint_mode_ros.pb.cpp
+
+joint_mode_ros.pb.cpp: joint_mode_ros.proto
+	protoc -I$(prefix)/include/m3rt/base   -I./ --cpp_out=./ joint_mode_ros.proto
+	mv joint_mode_ros.pb.cc joint_mode_ros.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 joint_mode_ros.proto
+
+smoothing_mode.pb.h: smoothing_mode.pb.cpp
+
+smoothing_mode.pb.cpp: smoothing_mode.proto
+	protoc -I$(prefix)/include/m3rt/base   -I./ --cpp_out=./ smoothing_mode.proto
+	mv smoothing_mode.pb.cc smoothing_mode.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 smoothing_mode.proto
+
+
 proto: actuator.pb.cpp pwr.pb.cpp pwr_ec.pb.cpp  actuator_ec.pb.cpp joint.pb.cpp loadx1.pb.cpp loadx1_ec.pb.cpp \
 	loadx6.pb.cpp loadx6_ec.pb.cpp tactile_pps22_ec.pb.cpp ledx2_ec.pb.cpp ledx2xn_ec.pb.cpp led_matrix_ec.pb.cpp \
-	robot_monitor.pb.cpp async_io.pb.cpp ctrl_simple.pb.cpp
+	robot_monitor.pb.cpp ctrl_simple.pb.cpp joint_zlift_shm.pb.cpp smoothing_mode.pb.cpp joint_mode_ros.pb.cpp
 
 
 proto_install: 
@@ -215,7 +242,7 @@ proto_install:
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////
 lib_LTLIBRARIES = libm3hardware.la 
-libm3hardware_la_LIBADD = -lprotobuf -lm3toolbox -lorocos-kdl -lyaml-cpp -lm3base -lXmlRpc -lros -lroslib $(EIGEN2_LIBS)
+libm3hardware_la_LIBADD = -lprotobuf -lm3toolbox -lorocos-kdl -lyaml-cpp -lm3base -lXmlRpc -lros -lroslib $(EIGEN2_LIBS) -llxrt
 
 libm3hardware_la_LDFLAGS = -version-info 1:1:0 -module -L$(rtai_lib)  \
 	-L$(ros_dir)/core/roscpp/lib \
@@ -246,9 +273,13 @@ libm3hardware_la_CPPFLAGS =  -I$(rtai_inc) -I$(m3_dir) -I$(m3rt_dir) -I$(m3rtb_d
 	-I$(ros_dir)/../stacks/ros_comm/tools/rosconsole/include \
 	-I$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/src\
 	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include
+	-D__RTAI__
+
 
 
 libm3hardware_la_SOURCES = \
+	joint_mode_ros.pb.cpp\
+	smoothing_mode.pb.cpp\
 	actuator_ec.pb.cpp\
 	actuator.pb.cpp\
 	loadx1_ec.pb.cpp\
@@ -288,11 +319,15 @@ libm3hardware_la_SOURCES = \
 	led_matrix_ec.cpp\
 	ledx2xn_ec.cpp\
 	robot_monitor.cpp\
-	async_io.cpp\
 	log_test.cpp\
-	factory_proxy.cpp\
-	ctrl_simple.cpp
+	ctrl_simple.cpp\
+	joint_zlift_shm.pb.cpp\
+	joint_zlift_shm.cpp\
+	factory_proxy.cpp
+
+#	async_io.cpp
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 

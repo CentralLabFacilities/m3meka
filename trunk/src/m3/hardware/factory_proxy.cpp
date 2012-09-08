@@ -40,9 +40,10 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include <m3/hardware/robot_monitor.h>
 #include <m3/hardware/log_test.h>
 #ifdef __RTAI__
-#include <m3/hardware/async_io.h>
+//#include <m3/hardware/async_io.h>
 #endif
 #include <m3/hardware/ctrl_simple.h>
+#include <m3/hardware/joint_zlift_shm.h>
 
 ///////////////////////////////////////////////////////
 extern "C" 
@@ -73,6 +74,7 @@ extern "C"
 #define M3ASYNC_IO_TYPE_NAME "m3async_io"
 #define M3LOG_TEST_TYPE_NAME "m3log_test"
 #define M3CTRL_SIMPLE_NAME "m3ctrl_simple"
+#define M3JOINT_ZLIFT_SHM_TYPE_NAME "m3joint_zlift_shm"
 ///////////////////////////////////////////////////////
 //Creators
 
@@ -96,8 +98,9 @@ m3rt::M3Component * create_m3ledx2xn_ec(){return new m3::M3LedX2XNEc;}
 m3rt::M3Component * create_m3led_matrix_ec(){return new m3::M3LedMatrixEc;}
 m3rt::M3Component * create_m3robot_monitor(){return new m3::M3RobotMonitor;}
 m3rt::M3Component * create_m3log_test(){return new m3::M3MekaLogTest;}
+m3rt::M3Component * create_m3joint_zlift_shm(){return new m3::M3JointZLiftShm;}
 #ifdef __RTAI__
-m3rt::M3Component * create_m3async_io(){return new m3::M3AsyncIO;}
+//m3rt::M3Component * create_m3async_io(){return new m3::M3AsyncIO;}
 #endif
 m3rt::M3Component * create_m3ctrl_simple(){return new m3::M3CtrlSimple;}
 //Deletors
@@ -122,8 +125,9 @@ void destroy_m3ledx2xn_ec(m3rt::M3Component* c) {delete c;}
 void destroy_m3led_matrix_ec(m3rt::M3Component* c) {delete c;}
 void destroy_m3robot_monitor(m3rt::M3Component* c) {delete c;}
 void destroy_m3log_test(m3rt::M3Component* c) {delete c;}
+void destroy_m3joint_zlift_shm(m3rt::M3Component* c) {delete c;}
 #ifdef __RTAI__
-void destroy_m3async_io(m3rt::M3Component* c) {delete c;}
+//void destroy_m3async_io(m3rt::M3Component* c) {delete c;}
 #endif
 void destroy_m3ctrl_simple(m3rt::M3Component* c) {delete c;}
 ///////////////////////////////////////////////////////
@@ -189,14 +193,18 @@ public:
 		m3rt::creator_factory[M3ROBOT_MONITOR_TYPE_NAME] =	create_m3robot_monitor;
 		m3rt::destroyer_factory[M3ROBOT_MONITOR_TYPE_NAME] =  destroy_m3robot_monitor;
 #ifdef __RTAI__
-		m3rt::creator_factory[M3ASYNC_IO_TYPE_NAME] =	create_m3async_io;
-		m3rt::destroyer_factory[M3ASYNC_IO_TYPE_NAME] =  destroy_m3async_io;
+//		m3rt::creator_factory[M3ASYNC_IO_TYPE_NAME] =	create_m3async_io;
+//		m3rt::destroyer_factory[M3ASYNC_IO_TYPE_NAME] =  destroy_m3async_io;
 #endif
 		m3rt::creator_factory[M3LOG_TEST_TYPE_NAME] =	create_m3log_test;
 		m3rt::destroyer_factory[M3LOG_TEST_TYPE_NAME] =  destroy_m3log_test;
 		
 		m3rt::creator_factory[M3CTRL_SIMPLE_NAME] =	create_m3ctrl_simple;
 		m3rt::destroyer_factory[M3CTRL_SIMPLE_NAME] =  destroy_m3ctrl_simple;
+		
+		m3rt::creator_factory[M3JOINT_ZLIFT_SHM_TYPE_NAME] =	create_m3joint_zlift_shm;
+		m3rt::destroyer_factory[M3JOINT_ZLIFT_SHM_TYPE_NAME] =  destroy_m3joint_zlift_shm;
+
 	}
 	
 };

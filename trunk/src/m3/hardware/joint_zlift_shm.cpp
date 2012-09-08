@@ -80,15 +80,32 @@ void M3JointZLiftShm::SetCommandFromSds(unsigned char * data)
   {
     if (shm_timeout)
     {
-      ((M3JointCommand*)zlift->GetCommand())->set_ctrl_mode(JOINT_MODE_OFF);
+      ((M3JointCommand*)zlift->GetCommand())->set_ctrl_mode(JOINT_MODE_OFF);      
     } else {
-        ((M3JointCommand*)zlift->GetCommand())->set_ctrl_mode((JOINT_MODE)command_from_sds.control_mode);
-	zlift->SetDesiredThetaRad(command_from_sds.position);
-	zlift->SetDesiredThetaDotRad(command_from_sds.velocity);
-	zlift->SetDesiredStiffness(command_from_sds.stiffness);
-	//((M3JointCommand*)zlift->GetCommand())->set_smooth_mode(command_from_sds.smoothing_mode);
+	if (command_from_sds.control_mode == JOINT_MODE_ROS_OFF)
+	{
+	  ((M3JointCommand*)zlift->GetCommand())->set_ctrl_mode(JOINT_MODE_OFF);
+	}
+	else if (command_from_sds.control_mode == JOINT_MODE_ROS_THETA)
+	{
+	  ((M3JointCommand*)zlift->GetCommand())->set_ctrl_mode(JOINT_MODE_THETA);
+	}
+	else if (command_from_sds.control_mode == JOINT_MODE_ROS_THETA_GC)        
+	{
+  	  ((M3JointCommand*)zlift->GetCommand())->set_ctrl_mode(JOINT_MODE_THETA_GC);
+	  zlift->SetDesiredPos(command_from_sds.position);
+	  zlift->SetDesiredPosDot(command_from_sds.velocity);
+	  zlift->SetSlewRate(command_from_sds.velocity);	  
+	  zlift->SetDesiredStiffness(command_from_sds.stiffness);
+	  ((M3JointCommand*)zlift->GetCommand())->set_smoothing_mode(command_from_sds.smoothing_mode);
+	}
     }
   }
+  
+  /*M3_DEBUG("-----------\n");
+  M3_DEBUG("theta: %f\n", ((M3JointCommand*)zlift->GetCommand())->q_desired());
+  M3_DEBUG("mode: %d\n", (int)((M3JointCommand*)zlift->GetCommand())->ctrl_mode());  
+  M3_DEBUG("-----------\n");*/
   
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,9 +126,9 @@ void M3JointZLiftShm::SetSdsFromStatus(unsigned char * data)
   
   if (zlift)
   {
-    status_to_sds.position = zlift->GetThetaRad();			
-    status_to_sds.velocity = zlift->GetThetaDotRad();
-    status_to_sds.effort = zlift->GetTorque();        
+    status_to_sds.position = zlift->GetPos();			
+    status_to_sds.velocity = zlift->GetPosDot();
+    status_to_sds.effort = zlift->GetForce();        
   }
     
   

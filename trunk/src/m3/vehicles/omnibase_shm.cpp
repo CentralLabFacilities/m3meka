@@ -73,7 +73,11 @@ void M3OmnibaseShm::SetCommandFromSds(unsigned char * data)
     int64_t dt = GetBaseStatus()->timestamp()-command_from_sds.timestamp; // microseconds
     bool shm_timeout = ABS(dt) > (timeout*1000);    
        
-    
+    if (pwr != NULL)
+  {
+    if (startup_motor_pwr_on)
+	pwr->SetMotorEnable(true);      
+  }
   
     
   if (omnibase != NULL)
@@ -148,6 +152,19 @@ bool M3OmnibaseShm::LinkDependentComponents()
 {
 	tmp_cnt = 0;
 	
+	if (pwr_name.size()!=0)
+	{		
+	    
+		pwr=(M3Pwr*)factory->GetComponent(pwr_name);
+		
+		if (pwr==NULL)
+		{
+			M3_WARN("M3Pwr component %s declared for M3TorqueShm but could not be linked\n",
+					pwr_name.c_str());
+		    //return false;
+		}				
+	}
+	
 	if (omni_name.size()!=0)
 	{		
 		omnibase = (M3Omnibase*)factory->GetComponent(omni_name);
@@ -173,6 +190,22 @@ bool M3OmnibaseShm::ReadConfig(const char * filename)
 	GetYamlDoc(filename, doc);	
 		
 	doc["omnibase_component"] >> omni_name;
+	
+	try{
+	  doc["pwr_component"] >> pwr_name;	 
+	}
+	catch(YAML::KeyNotFound& e)
+	{	  
+	  pwr_name="";
+	}
+	
+	try{
+	  doc["startup_motor_pwr_on"]>>startup_motor_pwr_on;
+	}
+	catch(YAML::KeyNotFound& e)
+	{
+	  startup_motor_pwr_on=false;
+	}
 		
 	doc["timeout"] >> timeout;	
 	

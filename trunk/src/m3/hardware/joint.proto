@@ -19,6 +19,7 @@
 option optimize_for = SPEED;
 
 import "component_base.proto";
+import "smoothing_mode.proto";
 
 
 enum JOINT_MODE{	
@@ -79,5 +80,6 @@ message M3JointCommand{
     	optional double            	qdot_desired = 6;                               //Desired joint velocity (Deg)
 	optional double            	q_slew_rate = 7;                               //Rate (deg/S) to slew desired joint angle
     	optional bool			brake_off=8;					//Disable brake if present
+   	optional SMOOTHING_MODE     	smoothing_mode = 9;                                  //Desired control mode (M3SEA_MODE_OFF, etc)
 	
 }

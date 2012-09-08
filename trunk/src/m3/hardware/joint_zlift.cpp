@@ -48,6 +48,17 @@ void M3JointZLift::StepCommand()
 	if (act->GetActuatorEc()->IsAuxSwitchOn())
 	  command.set_q_desired(GetThetaDeg());
 	M3Joint::StepCommand();
+	
+	/*if( tmp_cnt++ == 1000)
+	{
+	M3_DEBUG("-----------\n");
+	M3_DEBUG("theta: %f\n", ((M3JointCommand*)GetCommand())->q_desired());
+	M3_DEBUG("slew: %f\n", ((M3JointCommand*)GetCommand())->q_slew_rate());
+	M3_DEBUG("stiff: %f\n", ((M3JointCommand*)GetCommand())->q_stiffness());
+	M3_DEBUG("mode: %d\n", (int)((M3JointCommand*)GetCommand())->ctrl_mode());  
+	M3_DEBUG("-----------\n");
+	tmp_cnt = 0;
+	}*/
 }
 
 }

@@ -292,8 +292,30 @@ bool M3HumanoidShm::LinkDependentComponents()
 		    //return false;
 		}				
 	}
+	
+	if (left_hand_name.size()!=0)
+	{
+		left_hand=(M3Hand*)factory->GetComponent(left_hand_name);//May be null if not on this robot model
+		if (left_hand==NULL)
+		{
+			M3_WARN("M3Hand component %s declared for M3BotShm but could not be linked\n",
+					left_hand_name.c_str());
+		    //return false;
+		}				
+	}
+	
+	if (left_loadx6_name.size()!=0)
+	{
+		left_loadx6=(M3LoadX6*)factory->GetComponent(left_loadx6_name);
+		if (left_loadx6==NULL)
+		{
+			M3_WARN("M3LoadX6 component %s declared for M3BotShm but could not be linked\n",
+					left_loadx6_name.c_str());
+		    //return false;
+		}				
+	}
 
-	if (right_loadx6 || right_hand || bot)
+	if (right_loadx6 || right_hand || bot || left_loadx6 || left_hand )
 	{	 
 	  return true;	  
 	} else {	  
@@ -328,6 +350,22 @@ bool M3HumanoidShm::ReadConfig(const char * filename)
 	
 	try{
 	  doc["right_loadx6_component"] >> right_loadx6_name;	
+	}
+	catch(YAML::KeyNotFound& e)
+	{
+	  right_loadx6_name="";
+	}
+	
+	try{
+	  doc["left_hand_component"] >> right_hand_name;	
+	}
+	catch(YAML::KeyNotFound& e)
+	{
+	  right_hand_name="";
+	}
+	
+	try{
+	  doc["left_loadx6_component"] >> right_loadx6_name;	
 	}
 	catch(YAML::KeyNotFound& e)
 	{

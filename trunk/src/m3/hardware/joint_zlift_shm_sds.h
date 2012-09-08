@@ -22,7 +22,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <m3rt/base/m3rt_def.h>
 #include <m3rt/base/m3ec_def.h>
-//#include "m3/vehicles/omnibase_shm.pb.h"
+#include "m3/hardware/joint_mode_ros.pb.h"
+#include "m3/hardware/smoothing_mode.pb.h"
 
 
 typedef struct 
@@ -32,8 +33,8 @@ typedef struct
   mReal			position;
   mReal			velocity;
   mReal			stiffness;
-  int			control_mode;
-  int			smoothing_mode;
+  JOINT_MODE_ROS			control_mode;
+  SMOOTHING_MODE			smoothing_mode;
 }M3JointZLiftShmSdsCommand;
 
 
