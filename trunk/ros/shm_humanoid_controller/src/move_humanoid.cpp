@@ -1,8 +1,11 @@
 #include <iostream>
 
 #include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
+
 #include <m3ctrl_msgs/M3JointCmd.h>
+#include "m3/hardware/joint_mode_ros.pb.h"
+#include "m3/robots/chain_name.h"
+#include "m3/hardware/smoothing_mode.pb.h"
 
 class HumanoidDriver
 {
@@ -18,7 +21,7 @@ public:
   {
     nh_ = nh;
     //set up the publisher for the cmd_vel topic
-    cmd_pub_ = nh_.advertise<m3ctrl_msgs::M3JointCmd>("/zlift_command", 1);
+    cmd_pub_ = nh_.advertise<m3ctrl_msgs::M3JointCmd>("/humanoid_command", 1);
   }
 
   //! Loop forever while sending drive commands based on keyboard input
@@ -40,10 +43,10 @@ public:
     std::cout << "Press any key to zero robot.\n";
     std::cin.getline(cmd, 50);
     
-    humanoid_cmd.chain[0] = 0;
+    humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM;
     humanoid_cmd.chain_idx[0] = 0;
-    humanoid_cmd.control_mode[0] = 0;
-    humanoid_cmd.smoothing_mode[0] = 0;
+    humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC;
+    humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_SLEW;
     humanoid_cmd.velocity[0] = 3.0;
     humanoid_cmd.stiffness[0] = 1.0;
     humanoid_cmd.position[0] = 0;

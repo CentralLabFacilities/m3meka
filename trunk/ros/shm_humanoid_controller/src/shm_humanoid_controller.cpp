@@ -29,6 +29,13 @@
 #include <rtai_nam2num.h>
 #include <rtai_registry.h>
 #include "m3/robots/humanoid_shm_sds.h"
+#include "m3/hardware/joint_mode_ros.pb.h"
+#include "m3/robots/chain_name.h"
+#include <string>
+#include <iomanip>
+#include <locale>
+#include <sstream>
+
 
 // Needed for ROS
 #include <ros/ros.h>
@@ -42,7 +49,7 @@
 #define MEKA_ODOM_SHM "TSHMM"
 #define MEKA_ODOM_CMD_SEM "TSHMC"
 #define MEKA_ODOM_STATUS_SEM "TSHMS"
-#define MEKA_NDOF_HEAD 5
+#define MEKA_NDOF_HEAD 0
 #define MEKA_NDOF_RIGHT_ARM 7
 #define MEKA_NDOF_LEFT_ARM 7
 #define MEKA_NDOF_TORSO 0
@@ -63,7 +70,6 @@ static int sds_status_size;
 static int sds_cmd_size;
 static long step_cnt = 0;
 static void endme(int dummy) { std::cout << "END\n"; end=1; }
-static const std::string JOINT_STATES_PUB_TOPIC="/humanoid_joint_states";
 sensor_msgs::JointState joint_state_g;
 m3ctrl_msgs::M3JointCmd joint_cmd_g;
 ros::Publisher publisher_g;
@@ -101,8 +107,8 @@ void StepShm(int cntr)
      int j = 0;
   for (int i = 0; i < MEKA_NDOF_RIGHT_ARM; i++)
   {
-    joint_state_g.position[j] = status.right_arm.theta[i];
-    joint_state_g.velocity[j] = status.right_arm.thetadot[i];
+    joint_state_g.position[j] = DEG2RAD(status.right_arm.theta[i]);
+    joint_state_g.velocity[j] = DEG2RAD(status.right_arm.thetadot[i]);
     joint_state_g.effort[j] = status.right_arm.torque[i];
     j++;
     
@@ -110,24 +116,24 @@ void StepShm(int cntr)
 
   for (int i = 0; i < MEKA_NDOF_LEFT_ARM; i++)
   {
-    joint_state_g.position[j] = status.left_arm.theta[i];
-    joint_state_g.velocity[j] = status.left_arm.thetadot[i];
+    joint_state_g.position[j] = DEG2RAD(status.left_arm.theta[i]);
+    joint_state_g.velocity[j] = DEG2RAD(status.left_arm.thetadot[i]);
     joint_state_g.effort[j] = status.left_arm.torque[i];
     j++;  
   }
 
   for (int i = 0; i < MEKA_NDOF_HEAD; i++)
   {
-    joint_state_g.position[j] = status.head.theta[i];
-    joint_state_g.velocity[j] = status.head.thetadot[i];
+    joint_state_g.position[j] = DEG2RAD(status.head.theta[i]);
+    joint_state_g.velocity[j] = DEG2RAD(status.head.thetadot[i]);
     joint_state_g.effort[j] = status.head.torque[i];
       j++;
   }
 
   for (int i = 0; i < MEKA_NDOF_TORSO; i++)
   {
-    joint_state_g.position[j] = status.torso.theta[i];
-    joint_state_g.velocity[j] = status.torso.thetadot[i];
+    joint_state_g.position[j] = DEG2RAD(status.torso.theta[i]);
+    joint_state_g.velocity[j] = DEG2RAD(status.torso.thetadot[i]);
     joint_state_g.effort[j] = status.torso.torque[i];
       j++;
   }
@@ -151,6 +157,11 @@ void StepShm(int cntr)
 	}
       }*/
     
+     /*cmd.right_arm.q_desired[0] = 0;
+      cmd.right_arm.slew_rate_q_desired[0] = 30;      
+      cmd.right_arm.q_stiffness[0] = 1.0; 
+      cmd.right_arm.ctrl_mode[0] = JOINT_ARRAY_MODE_THETA_GC; 
+      cmd.right_arm.smoothing_mode[0] = SMOOTHING_MODE_SLEW; */
  
    
 }
@@ -159,42 +170,73 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 {
     
   
-  /*for (int i = 0; i < msg->chain.size(); i++)
+  for (int i = 0; i < msg->chain.size(); i++)
   {
     int chain_idx = msg->chain_idx[i];
-    if (msg->chain[i] == 0)
+    if ((M3Chain)msg->chain[i] == RIGHT_ARM)
     {
+      if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_OFF)
+	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA)
+	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
+	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+      else
+	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+      
       cmd.right_arm.q_desired[chain_idx] = msg->position[i];
       cmd.right_arm.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
-      cmd.right_arm.q_stiffness[chain_idx] = msg->stiffness[i]; 
-      cmd.right_arm.ctrl_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->control_mode[i]; 
-      cmd.right_arm.smooth_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->smoothing_mode[i]; 
+      cmd.right_arm.q_stiffness[chain_idx] = msg->stiffness[i];       
+      cmd.right_arm.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
     } 
-    else if (msg->chain[i] == 0)
+    else if ((M3Chain)msg->chain[i] == LEFT_ARM)
     {
+      if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_OFF)
+	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA)
+	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
+	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+      else
+	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+
       cmd.left_arm.q_desired[chain_idx] = msg->position[i];
       cmd.left_arm.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
-      cmd.left_arm.q_stiffness[chain_idx] = msg->stiffness[i]; 
-      cmd.left_arm.ctrl_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->control_mode[i]; 
-      cmd.left_arm.smooth_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->smoothing_mode[i]; 
+      cmd.left_arm.q_stiffness[chain_idx] = msg->stiffness[i];       
+      cmd.left_arm.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
     } 
-    else if (msg->chain[i] == 0)
+    else if ((M3Chain)msg->chain[i] == HEAD)
     {
+      if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_OFF)
+	cmd.head.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA)
+	cmd.head.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
+	cmd.head.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+      else
+	cmd.head.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
       cmd.head.q_desired[chain_idx] = msg->position[i];
       cmd.head.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
-      cmd.head.q_stiffness[chain_idx] = msg->stiffness[i]; 
-      cmd.head.ctrl_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->control_mode[i]; 
-      cmd.head.smooth_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->smoothing_mode[i]; 
+      cmd.head.q_stiffness[chain_idx] = msg->stiffness[i];       
+      cmd.head.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
     }
-    else if (msg->chain[i] == 0)
+    else if ((M3Chain)msg->chain[i] == TORSO)
     {
+       if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_OFF)
+	cmd.torso.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA)
+	cmd.torso.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
+	cmd.torso.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+      else
+	cmd.torso.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
       cmd.torso.q_desired[chain_idx] = msg->position[i];
       cmd.torso.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
       cmd.torso.q_stiffness[chain_idx] = msg->stiffness[i]; 
       cmd.torso.ctrl_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->control_mode[i]; 
-      cmd.torso.smooth_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->smoothing_mode[i]; 
+      cmd.torso.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
     }    
-  }*/
+  }
   
       
 }
@@ -219,30 +261,49 @@ float64[] effort
   joint_state.position.resize(MEKA_NDOF_TOTAL,0.0);
   joint_state.velocity.resize(MEKA_NDOF_TOTAL,0.0);
   joint_state.effort.resize(MEKA_NDOF_TOTAL,0.0);
+  
+  
+  
 
   int j = 0;
   for (int i = 0; i < MEKA_NDOF_RIGHT_ARM; i++)
   {
-    joint_state.name[j] = "zlift_joint";
+    std::ostringstream convert;
+    std::string int_str; 
+    convert << i;
+    int_str = convert.str();
+    joint_state.name[j] = std::string("right_arm_j") + int_str;
     j++;
     
   }
 
   for (int i = 0; i < MEKA_NDOF_LEFT_ARM; i++)
   {
-    joint_state.name[j] = "zlift_joint";
+    std::ostringstream convert;
+    std::string int_str; 
+    convert << i;
+    int_str = convert.str();
+    joint_state.name[j] = std::string("left_arm_j") + int_str;
     j++;  
   }
 
   for (int i = 0; i < MEKA_NDOF_HEAD; i++)
   {
-    joint_state.name[j] = "zlift_joint";
+    std::ostringstream convert;
+    std::string int_str; 
+    convert << i;
+    int_str = convert.str();
+    joint_state.name[j] = std::string("head_j") + int_str;
       j++;
   }
 
   for (int i = 0; i < MEKA_NDOF_TORSO; i++)
   {
-    joint_state.name[j] = "zlift_joint";
+    std::ostringstream convert;
+    std::string int_str; 
+    convert << i;
+    int_str = convert.str();
+    joint_state.name[j] = std::string("torso_j") + int_str;
       j++;
   }
   
@@ -359,10 +420,10 @@ int main (int argc, char **argv)
         ros::NodeHandle root_handle;
 	ros::NodeHandle p_nh("~");
 	
-	cmd_sub_g = root_handle.subscribe<m3ctrl_msgs::M3JointCmd>("command", 1, &commandCallback);
+	cmd_sub_g = root_handle.subscribe<m3ctrl_msgs::M3JointCmd>("humanoid_command", 1, &commandCallback);
 	
 	joint_state_g = GetInitialJointStateMessage();
-	publisher_g = root_handle.advertise<sensor_msgs::JointState>("zlift_state", 1, true);
+	publisher_g = root_handle.advertise<sensor_msgs::JointState>("humanoid_state", 1, true);
 
 	signal(SIGINT, endme);
 
