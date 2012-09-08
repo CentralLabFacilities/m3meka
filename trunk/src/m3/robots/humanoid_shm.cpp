@@ -91,6 +91,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	bot->SetTorque_mNm(RIGHT_ARM, i, command_from_sds.right_arm.tq_desired[i]);
 	bot->SetStiffness(RIGHT_ARM, i, command_from_sds.right_arm.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_right_arm()->set_ctrl_mode(i, command_from_sds.right_arm.ctrl_mode[i]);
+	((M3HumanoidCommand*)bot->GetCommand())->mutable_right_arm()->set_smoothing_mode(i, command_from_sds.right_arm.smoothing_mode[i]);
 	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
       }
     }
@@ -106,6 +107,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	bot->SetTorque_mNm(TORSO, i, command_from_sds.torso.tq_desired[i]);
 	bot->SetStiffness(TORSO, i, command_from_sds.torso.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_torso()->set_ctrl_mode(i, command_from_sds.torso.ctrl_mode[i]);
+	((M3HumanoidCommand*)bot->GetCommand())->mutable_torso()->set_smoothing_mode(i, command_from_sds.torso.smoothing_mode[i]);
 	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
       }
     }
@@ -121,6 +123,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	bot->SetTorque_mNm(LEFT_ARM, i, command_from_sds.left_arm.tq_desired[i]);
 	bot->SetStiffness(LEFT_ARM, i, command_from_sds.left_arm.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_left_arm()->set_ctrl_mode(i, command_from_sds.left_arm.ctrl_mode[i]);
+	((M3HumanoidCommand*)bot->GetCommand())->mutable_left_arm()->set_smoothing_mode(i, command_from_sds.left_arm.smoothing_mode[i]);
 	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
       }
     }
@@ -136,6 +139,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	bot->SetTorque_mNm(HEAD, i, command_from_sds.head.tq_desired[i]);
 	bot->SetStiffness(HEAD, i, command_from_sds.head.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_head()->set_ctrl_mode(i, command_from_sds.head.ctrl_mode[i]);
+	((M3HumanoidCommand*)bot->GetCommand())->mutable_head()->set_smoothing_mode(i, command_from_sds.head.smoothing_mode[i]);
 	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
       }
     }
@@ -149,7 +153,8 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	{	
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);
 	} else{	  	  
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.right_hand.ctrl_mode[i]);      
+	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.right_hand.ctrl_mode[i]);
+	  //((M3JointArrayCommand*)right_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.right_hand.smoothing_mode[i]);      
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_desired(i, command_from_sds.right_hand.q_desired[i]);
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_slew_rate(i, command_from_sds.right_hand.slew_rate_q_desired[i]);    
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_tq_desired(i, command_from_sds.right_hand.tq_desired[i]);      
@@ -166,6 +171,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);
 	} else{	  	  
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.left_hand.ctrl_mode[i]);      
+	  //((M3JointArrayCommand*)left_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.left_hand.smoothing_mode[i]);      
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_desired(i, command_from_sds.left_hand.q_desired[i]);
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_slew_rate(i, command_from_sds.left_hand.slew_rate_q_desired[i]);    
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_tq_desired(i, command_from_sds.left_hand.tq_desired[i]);      

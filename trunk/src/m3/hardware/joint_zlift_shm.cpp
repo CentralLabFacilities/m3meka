@@ -92,13 +92,18 @@ void M3JointZLiftShm::SetCommandFromSds(unsigned char * data)
 	}
 	else if (command_from_sds.control_mode == JOINT_MODE_ROS_THETA_GC)        
 	{
-  	  ((M3JointCommand*)zlift->GetCommand())->set_ctrl_mode(JOINT_MODE_THETA_GC);
-	  zlift->SetDesiredPos(command_from_sds.position);
-	  zlift->SetDesiredPosDot(command_from_sds.velocity);
-	  zlift->SetSlewRate(command_from_sds.velocity);	  
-	  zlift->SetDesiredStiffness(command_from_sds.stiffness);
-	  ((M3JointCommand*)zlift->GetCommand())->set_smoothing_mode(command_from_sds.smoothing_mode);
+  	  ((M3JointCommand*)zlift->GetCommand())->set_ctrl_mode(JOINT_MODE_THETA_GC);	  
 	}
+	else
+	{
+  	  ((M3JointCommand*)zlift->GetCommand())->set_ctrl_mode(JOINT_MODE_OFF);	  
+	}
+
+	zlift->SetDesiredPos(command_from_sds.position);
+	zlift->SetDesiredPosDot(command_from_sds.velocity);
+	zlift->SetSlewRate(command_from_sds.velocity);	  
+	zlift->SetDesiredStiffness(command_from_sds.stiffness);
+	((M3JointCommand*)zlift->GetCommand())->set_smoothing_mode(command_from_sds.smoothing_mode);
     }
   }
   

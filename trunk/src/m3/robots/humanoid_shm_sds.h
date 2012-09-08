@@ -23,6 +23,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include <m3rt/base/m3rt_def.h>
 #include <m3rt/base/m3ec_def.h>
 #include "m3/chains/joint_array_mode.pb.h"
+#include "m3/hardware/smoothing_mode.pb.h"
 
 #define MAX_NDOF 12  // per limb
 
@@ -30,7 +31,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 typedef struct 
 {
   JOINT_ARRAY_MODE	ctrl_mode[MAX_NDOF];
-  JOINT_ARRAY_MODE	smooth_mode[MAX_NDOF];
+  SMOOTHING_MODE	smoothing_mode[MAX_NDOF];
   mReal			tq_desired[MAX_NDOF];
   mReal			q_desired[MAX_NDOF];
   mReal			slew_rate_q_desired[MAX_NDOF];

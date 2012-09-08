@@ -49,7 +49,6 @@ libm3hardwareinclude_HEADERS = \
 	actuator_ec.pb.h\
 	actuator_ec.proto\
 	ctrl_simple.pb.h\
-	async_io.pb.h\
 	robot_monitor.pb.h\
 	ledx2xn_ec.pb.h\
 	led_matrix_ec.pb.h\
@@ -83,6 +82,7 @@ libm3hardwareinclude_HEADERS = \
 	joint_zlift_shm_sds.h
 
 #	async_io.h
+#	async_io.pb.h
 
 	
 clean-local:
@@ -288,7 +288,6 @@ libm3hardware_la_SOURCES = \
 	robot_monitor.pb.cpp\
 	loadx6.pb.cpp\
 	ledx2_ec.pb.cpp\
-	async_io.pb.cpp\
 	pwr_ec.pb.cpp\
 	pwr.pb.cpp\
 	tactile_pps22_ec.pb.cpp\
@@ -326,7 +325,8 @@ libm3hardware_la_SOURCES = \
 	factory_proxy.cpp
 
 #	async_io.cpp
-	
+#	async_io.pb.cpp	
+
 #///////////////////////////////////////////////////////////////////////////////////////////////////
 
 

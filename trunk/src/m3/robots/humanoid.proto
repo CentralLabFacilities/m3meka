@@ -21,6 +21,7 @@ option optimize_for = SPEED;
 import "component_base.proto";
 import "joint_array_mode.proto";
 import "trajectory.proto";
+import "smoothing_mode.proto";
 
 message M3HumanoidStatus
 {
@@ -79,6 +80,7 @@ message M3BaseHumanoidCommand{
 	repeated double				qdot_desired = 6;				//Desired joint velocity (Deg)
 	repeated double				q_slew_rate = 7;			//Slew Rates (max ang velocity) for joints (Deg/sec)
 	repeated double				pwm_desired = 8;			
+	repeated SMOOTHING_MODE			smoothing_mode = 9;				//Desired arm control mode 
 }
 
 message M3BaseHumanoidParam

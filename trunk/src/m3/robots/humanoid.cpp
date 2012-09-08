@@ -141,7 +141,8 @@ void M3Humanoid::Startup()
 			command.mutable_right_arm()->add_q_stiffness(0);
 			command.mutable_right_arm()->add_q_slew_rate(0);
 			command.mutable_right_arm()->add_pwm_desired(0);
-			command.mutable_right_arm()->add_ctrl_mode(JOINT_ARRAY_MODE_OFF);
+			command.mutable_right_arm()->add_ctrl_mode(JOINT_ARRAY_MODE_OFF);			
+			command.mutable_right_arm()->add_smoothing_mode(SMOOTHING_MODE_OFF);
 		}
 		torque_shm_right_arm.resize(right_arm->GetNumDof());
 	}
@@ -198,6 +199,7 @@ void M3Humanoid::Startup()
 			command.mutable_left_arm()->add_q_slew_rate(0);
 			command.mutable_left_arm()->add_pwm_desired(0);
 			command.mutable_left_arm()->add_ctrl_mode(JOINT_ARRAY_MODE_OFF);
+			command.mutable_left_arm()->add_smoothing_mode(SMOOTHING_MODE_OFF);
 		}
 		torque_shm_left_arm.resize(left_arm->GetNumDof());
 	}
@@ -252,6 +254,7 @@ void M3Humanoid::Startup()
 			command.mutable_torso()->add_q_slew_rate(0);
 			command.mutable_torso()->add_pwm_desired(0);
 			command.mutable_torso()->add_ctrl_mode(JOINT_ARRAY_MODE_OFF);
+			command.mutable_torso()->add_smoothing_mode(SMOOTHING_MODE_OFF);
 		}
 		torque_shm_torso.resize(torso->GetNumDof());
 	}
@@ -312,6 +315,7 @@ void M3Humanoid::Startup()
 			command.mutable_head()->add_q_slew_rate(0);
 			command.mutable_head()->add_pwm_desired(0);
 			command.mutable_head()->add_ctrl_mode(JOINT_ARRAY_MODE_OFF);
+			command.mutable_head()->add_smoothing_mode(SMOOTHING_MODE_OFF);
 		}
 		left_eye_offset = head->GetLeftEyeOffset();
 		right_eye_offset = head->GetRightEyeOffset();
