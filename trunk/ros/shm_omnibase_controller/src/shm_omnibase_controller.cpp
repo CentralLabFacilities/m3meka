@@ -38,9 +38,9 @@
 
 #define RT_TASK_FREQUENCY_MEKA_OMNI_SHM 100
 #define RT_TIMER_TICKS_NS_MEKA_OMNI_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_OMNI_SHM)		//Period of rt-timer 
-#define MEKA_ODOM_SHM "TSHMM"
-#define MEKA_ODOM_CMD_SEM "TSHMC"
-#define MEKA_ODOM_STATUS_SEM "TSHMS"
+#define MEKA_ODOM_SHM "OSHMM"
+#define MEKA_ODOM_CMD_SEM "OSHMC"
+#define MEKA_ODOM_STATUS_SEM "OSHMS"
 #define OMNIBASE_NDOF 7
 
 #define CYCLE_TIME_SEC 4
@@ -94,7 +94,7 @@ void StepShm(int cntr)
     
   // get from status
   double x = status.x;
-  double y = status.x;
+  double y = status.y;
   double th = status.yaw;
   
   double vx = status.x_dot;
@@ -135,7 +135,27 @@ void StepShm(int cntr)
     
     odom_publisher_g.publish(odom_g);
     
-    /*if (cntr % 100 == 0)
+    if (cntr % 100 == 0)
+      {	
+	if (1)
+	{
+	  printf("********************************\n");
+	  printf("timestamp: %ld\n", status.timestamp);	  
+	  {	    
+	    //printf("JOINT %d\n", i);
+	    printf("------------------------------\n");
+	    printf("X: %f\n",status.x);
+	    printf("Y: %f\n", status.y);
+	    printf("YAW: %f\n", status.yaw);
+	    printf("Vx: %f\n", odom_g.twist.twist.linear.x);	  
+	    printf("Vy: %f\n", odom_g.twist.twist.linear.y);
+	    printf("Va: %f\n", odom_g.twist.twist.angular.z);
+	     printf("------------------------------\n");
+	    printf("\n");
+	  }
+	}
+      }
+      /*if (cntr % 100 == 0)
       {	
 	if (1)
 	{
@@ -158,6 +178,9 @@ void StepShm(int cntr)
     
     //mReal velocity_delay_per_step = VEL_DECAY_TIME / RT_TASK_FREQUENCY_MEKA_OMNI_SHM
     
+    cmd.x_velocity = 0.;
+  cmd.y_velocity = 0.;
+  cmd.yaw_velocity = 30;
     
 }
 
@@ -166,8 +189,8 @@ void commandCallback(const geometry_msgs::TwistConstPtr& msg)
   cmd.x_velocity = msg->linear.x;
   cmd.y_velocity = msg->linear.y;
   cmd.yaw_velocity = msg->angular.z;
-  cmd.ctrl_mode = 0;
-  cmd.traj_mode = 0;
+  //cmd.ctrl_mode = 0;
+  //cmd.traj_mode = 0;
 }
 
 
