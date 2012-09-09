@@ -17,15 +17,15 @@ public:
   {
     nh_ = nh;
     //set up the publisher for the cmd_vel topic
-    cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/command", 1);
+    cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("omnibase_command", 1);
   }
 
   //! Loop forever while sending drive commands based on keyboard input
   bool driveKeyboard()
   {
     std::cout << "Type a command and then press enter.  "
-      "Use '+' to move forward, 'l' to turn left, "
-      "'r' to turn right, '.' to exit.\n";
+      "Use '+' to move forward, '-' to move backwards, 'l' to turn left, "
+      "'r' to turn right, 's' to stop, '.' to exit.\n";
 
     //we will be sending commands of type "twist"
     geometry_msgs::Twist base_cmd;
@@ -34,7 +34,7 @@ public:
     while(nh_.ok()){
 
       std::cin.getline(cmd, 50);
-      if(cmd[0]!='+' && cmd[0]!='l' && cmd[0]!='r' && cmd[0]!='.')
+      if(cmd[0]!='+' && cmd[0]!='-' && cmd[0]!='l' && cmd[0]!='r' && cmd[0]!='.' && cmd[0]!='s')
       {
         std::cout << "unknown command:" << cmd << "\n";
         continue;
@@ -44,25 +44,49 @@ public:
       //move forward
       if(cmd[0]=='+'){
         base_cmd.linear.x = 0.25;
+	base_cmd.linear.y = 0.;
+	base_cmd.angular.z = 0.;
+      } 
+      //move back
+      if(cmd[0]=='-'){
+        base_cmd.linear.x = -0.25;
+	base_cmd.linear.y = 0.;
+	base_cmd.angular.z = 0.;
       } 
       //turn left (yaw) and drive forward at the same time
       else if(cmd[0]=='l'){
+	base_cmd.linear.x = 0.;
+	base_cmd.linear.y = 0.;
         base_cmd.angular.z = 0.75;
-        base_cmd.linear.x = 0.25;
+//        base_cmd.linear.x = 0.25;
       } 
       //turn right (yaw) and drive forward at the same time
       else if(cmd[0]=='r'){
+	base_cmd.linear.x = 0.;
+	base_cmd.linear.y = 0.;
         base_cmd.angular.z = -0.75;
-        base_cmd.linear.x = 0.25;
+//        base_cmd.linear.x = 0.25;
+      }
+      else if(cmd[0]=='s'){
+        base_cmd.linear.x = 0.;
+	base_cmd.linear.y = 0.;
+        base_cmd.angular.z = 0.;
       } 
       //quit
       else if(cmd[0]=='.'){
         break;
       }
+            
       
       //publish the assembled command
       cmd_vel_pub_.publish(base_cmd);
     }
+    
+    base_cmd.linear.x = 0.;
+	base_cmd.linear.y = 0.;
+        base_cmd.angular.z = 0.;
+	cmd_vel_pub_.publish(base_cmd);
+	
     return true;
   }
 
@@ -71,7 +95,7 @@ public:
 int main(int argc, char** argv)
 {
   //init the ROS node
-  ros::init(argc, argv, "robot_driver");
+  ros::init(argc, argv, "base_driver");
   ros::NodeHandle nh;
 
   RobotDriver driver(nh);

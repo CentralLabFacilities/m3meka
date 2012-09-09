@@ -176,21 +176,22 @@ void StepShm(int cntr)
 	}
       }*/
     
-    //mReal velocity_delay_per_step = VEL_DECAY_TIME / RT_TASK_FREQUENCY_MEKA_OMNI_SHM
-    
-    cmd.x_velocity = 0.;
-  cmd.y_velocity = 0.;
-  cmd.yaw_velocity = 30;
-    
+  
 }
 
 void commandCallback(const geometry_msgs::TwistConstPtr& msg)
 {
+  
+  
   cmd.x_velocity = msg->linear.x;
   cmd.y_velocity = msg->linear.y;
   cmd.yaw_velocity = msg->angular.z;
-  //cmd.ctrl_mode = 0;
-  //cmd.traj_mode = 0;
+  
+  	    printf("x: %f\n", cmd.x_velocity);	  
+	    printf("y: %f\n", cmd.y_velocity);
+	    printf("a: %f\n", cmd.yaw_velocity);
+
+  
 }
 
 
@@ -302,9 +303,9 @@ int main (int argc, char **argv)
         ros::NodeHandle root_handle;
 	ros::NodeHandle p_nh("~");
 	
-	cmd_sub_g = root_handle.subscribe<geometry_msgs::Twist>("command", 1, &commandCallback);
+	cmd_sub_g = root_handle.subscribe<geometry_msgs::Twist>("omnibase_command", 1, &commandCallback);
 	
-	odom_publisher_g = root_handle.advertise<nav_msgs::Odometry>("odom", 1, true);
+	odom_publisher_g = root_handle.advertise<nav_msgs::Odometry>("omnibase_odom", 1, true);
 
 	signal(SIGINT, endme);
 
