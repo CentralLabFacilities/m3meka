@@ -135,7 +135,7 @@ void StepShm(int cntr)
     
     odom_publisher_g.publish(odom_g);
     
-    if (cntr % 100 == 0)
+    /*if (cntr % 100 == 0)
       {	
 	if (1)
 	{
@@ -154,7 +154,8 @@ void StepShm(int cntr)
 	    printf("\n");
 	  }
 	}
-      }
+      }*/
+    
       /*if (cntr % 100 == 0)
       {	
 	if (1)
