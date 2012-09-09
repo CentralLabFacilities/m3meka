@@ -33,7 +33,8 @@ using namespace m3rt;
 
 class M3OmnibaseShm : public  m3::M3CompShm{
 	public:
-		M3OmnibaseShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),omnibase(NULL),pwr(NULL)
+		M3OmnibaseShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),omnibase(NULL),pwr(NULL),
+				  max_linear_acceleration(0.), max_rotation_acceleration(0.), max_linear_velocity(0.), max_rotation_velocity(0.)
 		{		  
 		  RegisterVersion("default",DEFAULT);		  
 		}
@@ -68,6 +69,10 @@ class M3OmnibaseShm : public  m3::M3CompShm{
 		int64_t timeout;
 		int tmp_cnt;		
 		bool startup_motor_pwr_on;
+		mReal max_linear_acceleration;
+		mReal max_rotation_acceleration;
+		mReal max_linear_velocity;
+		mReal max_rotation_velocity;
 };
 
 }

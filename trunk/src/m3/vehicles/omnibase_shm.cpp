@@ -90,14 +90,13 @@ void M3OmnibaseShm::SetCommandFromSds(unsigned char * data)
 	((M3OmnibaseCommand*)omnibase->GetCommand())->set_traj_mode(OMNIBASE_TRAJ_JOYSTICK);
 	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_x(command_from_sds.x_velocity);
 	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_y(command_from_sds.y_velocity);
-	//((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_yaw(command_from_sds.yaw_velocity);
-	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_yaw(1.0);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_yaw(command_from_sds.yaw_velocity);		
 	((M3OmnibaseCommand*)omnibase->GetCommand())->set_joystick_button(0);
 	
-	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_linear_acceleration(0.15);
-	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_rotation_acceleration(30);
-	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_linear_velocity(0.2);
-	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_rotation_velocity(20);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_linear_acceleration(max_linear_acceleration);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_rotation_acceleration(max_rotation_acceleration);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_linear_velocity(max_linear_velocity);
+	((M3OmnibaseCommand*)omnibase->GetCommand())->set_max_rotation_velocity(max_rotation_velocity);
 	
 	
   
@@ -216,7 +215,12 @@ bool M3OmnibaseShm::ReadConfig(const char * filename)
 	  startup_motor_pwr_on=false;
 	}
 		
-	doc["timeout"] >> timeout;	
+	doc["timeout"] >> timeout;
+	
+	doc["max_linear_acceleration"] >> max_linear_acceleration;	
+	doc["max_rotation_acceleration"] >> max_rotation_acceleration;	
+	doc["max_linear_velocity"] >> max_linear_velocity;	
+	doc["max_rotation_velocity"] >> max_rotation_velocity;	
 	
 	return true;
 }
