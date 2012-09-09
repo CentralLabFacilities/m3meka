@@ -135,7 +135,7 @@ class M3Humanoid(M3Robot):
 	proxy.make_operational_all()
 	proxy.step()
 	
-	
+
     def get_available_chains(self):
 	"""
 	Returns list of chains defined in humanoid config file.
@@ -2014,7 +2014,7 @@ class M3Humanoid(M3Robot):
 	:param ind: Index of joints.
 	:type ind: array_like, shape(len(theta)), optional
 	
-	:raises: 
+	:raises: chain
 	   M3Exception if chain is not supported or theta.shape is not (ndof) and
 	   theta.shape is not ind.shape and ind is not None.
 	  	
@@ -2048,6 +2048,36 @@ class M3Humanoid(M3Robot):
 	    chain_attr = getattr(self, chain)
 	    self.__assert_list_size(v, chain_attr.ndof)
 	self.set_float_array(self.get_command(chain).q_desired,v,ind)
+	
+    def set_theta_proportion(self, chain, v, ind=None):
+	thetas = []		
+	
+	
+	max_theta = self.get_joints_max_deg(chain)
+	min_theta = self.get_joints_min_deg(chain)
+	
+	if ind is not None:
+		self.__assert_list_size(v, len(ind))
+		for i in range(len(ind)):
+			thetas.append(max_theta[ind[i]] - min_theta[ind[i]])
+			thetas[-1] *= v[i]
+			thetas[-1] = min_theta[ind[i]] + thetas[-1]
+	else:			
+		self.__assert_list_size(v, self.num_dof)	
+		for i in range(len(v)):
+			thetas.append(max_theta[i] - min_theta[i])
+			thetas[-1] *= v[i]
+			thetas[-1] = min_theta[i] + thetas[-1]
+			print "desired theta " + str(i) + " = " + str(thetas[-1]) + ", " + str(v[i])
+		print
+		for i,th in enumerate(self.get_theta()):
+			print "measured theta " + str(i) + " = " + str(th) 
+		print
+	
+	
+	self.set_theta_deg(chain, thetas, ind)
+	#self.set_float_array(self.command.chain.desired_theta, thetas, ind)
+	
 	
     def set_thetadot_rad(self, chain, v , ind=None):
 	"""
