@@ -44,7 +44,7 @@
 #define OMNIBASE_NDOF 7
 
 #define CYCLE_TIME_SEC 4
-#define VEL_DECAY_TIME 1.0
+#define VEL_TIMEOUT_SEC 1.0
 
 
 
@@ -58,7 +58,8 @@ static M3OmnibaseShmSdsStatus status;
 static int sds_status_size;
 static int sds_cmd_size;
 static long step_cnt = 0;
-static void endme(int dummy) { end=1; }
+static void endme(int dummy) { std::cout << "END\n"; end=1; }
+static int64_t last_cmd_ts;
 nav_msgs::Odometry odom_g;
 ros::Publisher odom_publisher_g;
 ros::Subscriber cmd_sub_g;
@@ -135,12 +136,20 @@ void StepShm(int cntr)
     
     odom_publisher_g.publish(odom_g);
     
+    if (status.timestamp - last_cmd_ts > VEL_TIMEOUT_SEC * 1000000.0)
+    {
+      cmd.x_velocity = 0.;
+      cmd.y_velocity = 0.;
+      cmd.yaw_velocity = 0.;
+    }
+    
     /*if (cntr % 100 == 0)
       {	
 	if (1)
 	{
 	  printf("********************************\n");
-	  printf("timestamp: %ld\n", status.timestamp);	  
+	  printf("timestamp: %ld\n", (status.timestamp - last_cmd_ts)/1000000);
+	  //printf("to: %ld\n", VEL_TIMEOUT_NS);	  
 	  {	    
 	    //printf("JOINT %d\n", i);
 	    printf("------------------------------\n");
@@ -188,10 +197,11 @@ void commandCallback(const geometry_msgs::TwistConstPtr& msg)
   cmd.y_velocity = msg->linear.y;
   cmd.yaw_velocity = msg->angular.z;
   
-  	    printf("x: %f\n", cmd.x_velocity);	  
+  	    /*printf("x: %f\n", cmd.x_velocity);	  
 	    printf("y: %f\n", cmd.y_velocity);
-	    printf("a: %f\n", cmd.yaw_velocity);
-
+	    printf("a: %f\n", cmd.yaw_velocity);*/
+	    
+  last_cmd_ts = status.timestamp;
   
 }
 
@@ -213,7 +223,7 @@ static void* rt_system_thread(void * arg)
 	
 	memset(&cmd, 0, sds_cmd_size);
 	
-	task = rt_task_init_schmod(nam2num("TSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
+	task = rt_task_init_schmod(nam2num("OSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
 	rt_allow_nonroot_hrt();
 	if (task==NULL)
 	{
@@ -276,9 +286,9 @@ static void* rt_system_thread(void * arg)
 		  cntr = 0;
 		rt_task_wait_period();
 	}	
-	printf("Exiting RealTime Thread...\n",0);
-	rt_make_soft_real_time();
-	rt_task_delete(task);
+	printf("Exiting RealTime Thread...\n",0);	
+	rt_make_soft_real_time();	
+	rt_task_delete(task);	
 	sys_thread_active=0;
 	return 0;
 }
@@ -311,7 +321,7 @@ int main (int argc, char **argv)
 	signal(SIGINT, endme);
 
 	if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_ODOM_SHM),sizeof(M3Sds),USE_VMALLOC))
-		printf("Found shared memory starting torque_shm.");
+		printf("Found shared memory starting shm_omnibase_controller.");
 	else
 	{
 		printf("Rtai_malloc failure for %s\n",MEKA_ODOM_SHM);
@@ -341,10 +351,13 @@ int main (int argc, char **argv)
 	}
 	printf("Removing RT thread...\n",0);
 	sys_thread_end=1;
-	rt_thread_join(hst);
-	if (sys_thread_active)printf("Real-time thread did not shutdown correctly\n");
-	rt_task_delete(task);
-	rt_shm_free(nam2num(MEKA_ODOM_SHM));
+	//rt_thread_join(hst);	
+	usleep(1250000);	
+	if (sys_thread_active)printf("Real-time thread did not shutdown correctly\n");	
+	//rt_task_delete(task);	
+	rt_shm_free(nam2num(MEKA_ODOM_SHM));	
+	ros::shutdown();	
 	return 0;
 }
+
 

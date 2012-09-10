@@ -328,7 +328,7 @@ static void* rt_system_thread(void * arg)
 	
 	memset(&cmd, 0, sds_cmd_size);
 	
-	task = rt_task_init_schmod(nam2num("TSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
+	task = rt_task_init_schmod(nam2num("HSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
 	rt_allow_nonroot_hrt();
 	if (task==NULL)
 	{
@@ -428,7 +428,7 @@ int main (int argc, char **argv)
 	signal(SIGINT, endme);
 
 	if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_ODOM_SHM),sizeof(M3Sds),USE_VMALLOC))
-		printf("Found shared memory starting torque_shm.");
+		printf("Found shared memory starting shm_humanoid_controller.");
 	else
 	{
 		printf("Rtai_malloc failure for %s\n",MEKA_ODOM_SHM);

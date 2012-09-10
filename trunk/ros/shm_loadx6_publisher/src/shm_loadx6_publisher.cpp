@@ -349,7 +349,7 @@ static void* rt_system_thread(void * arg)
 	
 	memset(&cmd, 0, sds_cmd_size);
 	
-	task = rt_task_init_schmod(nam2num("TSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
+	task = rt_task_init_schmod(nam2num("LSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
 	rt_allow_nonroot_hrt();
 	if (task==NULL)
 	{
@@ -361,13 +361,13 @@ static void* rt_system_thread(void * arg)
 	if (!status_sem)
 	{
 		printf("Unable to find the %s semaphore.\n",MEKA_ODOM_STATUS_SEM);
-		rt_task_delete(task);
+		//rt_task_delete(task);
 		return 0;
 	}
 	if (!command_sem)
 	{
 		printf("Unable to find the %s semaphore.\n",MEKA_ODOM_CMD_SEM);
-		rt_task_delete(task);
+		//rt_task_delete(task);
 		return 0;
 	}
 	
@@ -450,7 +450,7 @@ int main (int argc, char **argv)
 	signal(SIGINT, endme);
 
 	if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_ODOM_SHM),sizeof(M3Sds),USE_VMALLOC))
-		printf("Found shared memory starting torque_shm.");
+		printf("Found shared memory starting shm_loadx6_controller.");
 	else
 	{
 		printf("Rtai_malloc failure for %s\n",MEKA_ODOM_SHM);
@@ -480,10 +480,12 @@ int main (int argc, char **argv)
 	}
 	printf("Removing RT thread...\n",0);
 	sys_thread_end=1;
-	rt_thread_join(hst);
+	//rt_thread_join(hst);
+	usleep(1250000);
 	if (sys_thread_active)printf("Real-time thread did not shutdown correctly\n");
-	rt_task_delete(task);
+	//rt_task_delete(task);
 	rt_shm_free(nam2num(MEKA_ODOM_SHM));
+	ros::shutdown();	
 	return 0;
 }
 
