@@ -163,7 +163,7 @@ void StepShm(int cntr)
     publisher_right_g.publish(right_wrench_g);
     publisher_left_g.publish(left_wrench_g);
     
-     if (cntr % 100 == 0)
+     /*if (cntr % 100 == 0)
       {	
 	if (1)
 	{
@@ -176,7 +176,7 @@ void StepShm(int cntr)
 	    printf("\n");
 	  }
 	}
-      }
+      }*/
     
      /*cmd.right_arm.q_desired[0] = 0;
       cmd.right_arm.slew_rate_q_desired[0] = 30;      

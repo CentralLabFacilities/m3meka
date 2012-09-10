@@ -458,10 +458,12 @@ int main (int argc, char **argv)
 	}
 	printf("Removing RT thread...\n",0);
 	sys_thread_end=1;
-	rt_thread_join(hst);
+	//rt_thread_join(hst);
+	usleep(1250000);	
 	if (sys_thread_active)printf("Real-time thread did not shutdown correctly\n");
-	rt_task_delete(task);
+	//rt_task_delete(task);
 	rt_shm_free(nam2num(MEKA_ODOM_SHM));
+	ros::shutdown();	
 	return 0;
 }
 

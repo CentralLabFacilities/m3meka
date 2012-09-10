@@ -100,7 +100,7 @@ void StepShm(int cntr)
 
     zlift_publisher_g.publish(joint_state_g);
     
-     if (cntr % 100 == 0)
+     /*if (cntr % 100 == 0)
       {	
 	if (1)
 	{
@@ -115,7 +115,7 @@ void StepShm(int cntr)
 	    printf("\n");
 	  }
 	}
-      }
+      }*/
     
     /*cmd.position = 600;
     cmd.velocity = 2000;
