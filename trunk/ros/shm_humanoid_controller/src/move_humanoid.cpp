@@ -48,7 +48,8 @@ public:
     humanoid_cmd.chain_idx[0] = 0; //J0
     humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC; //Compliant position mode
     humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_SLEW; //Smooth trajectory
-    humanoid_cmd.velocity[0] = 3.0; //Rad/s
+    //humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_MIN_JERK; //Smooth trajectory
+    humanoid_cmd.velocity[0] = 1.0; //Rad/s
     humanoid_cmd.stiffness[0] = 1.0; //0-1.0
     humanoid_cmd.position[0] = 0; //Desired position (Rad)
     humanoid_cmd.header.stamp = ros::Time::now();
@@ -70,11 +71,13 @@ public:
       
       //move forward
       if(cmd[0]=='+'){
-        humanoid_cmd.position[0] += 5.0 * 3.14/180.;
+        //humanoid_cmd.position[0] += 5.0 * 3.14/180.;
+	humanoid_cmd.position[0] += 10 * 3.14/180.;
       } 
       //turn left (yaw) and drive forward at the same time
       else if(cmd[0]=='-'){
-        humanoid_cmd.position[0] -= 5 * 3.14/180.;
+        //humanoid_cmd.position[0] -= 5 * 3.14/180.;
+	humanoid_cmd.position[0] -= 10 * 3.14/180.;
       } 
       //turn right (yaw) and drive forward at the same time
       else if(cmd[0]=='z'){
