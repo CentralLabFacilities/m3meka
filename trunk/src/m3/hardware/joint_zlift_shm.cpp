@@ -133,7 +133,8 @@ void M3JointZLiftShm::SetSdsFromStatus(unsigned char * data)
   {
     status_to_sds.position = zlift->GetPos();			
     status_to_sds.velocity = zlift->GetPosDot();
-    status_to_sds.effort = zlift->GetForce();        
+    status_to_sds.effort = zlift->GetForce();      
+    status_to_sds.calibrated = zlift->IsEncoderCalibrated();
   }
     
   

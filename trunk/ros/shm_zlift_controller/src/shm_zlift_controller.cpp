@@ -58,7 +58,7 @@ static M3JointZLiftShmSdsStatus status;
 static int sds_status_size;
 static int sds_cmd_size;
 static long step_cnt = 0;
-static void endme(int dummy) { std::cout << "END\n"; end=1; }
+static void endme(int dummy) {  end=1; }
 static const std::string JOINT_STATES_PUB_TOPIC="/zlift_joint_states";
 sensor_msgs::JointState joint_state_g;
 m3ctrl_msgs::M3JointCmd joint_cmd_g;
@@ -89,6 +89,12 @@ int64_t GetTimestamp()
 
 void StepShm(int cntr)
 {   
+
+    if (!status.calibrated)
+    {
+	printf("ZLift is not calibrated.  Please calibrate and run again.  Exiting.\n");
+	endme(1);
+    }
   
     SetTimestamp(GetTimestamp()); //Pass back timestamp as a heartbeat
 

@@ -89,6 +89,12 @@ int64_t GetTimestamp()
 void StepShm(int cntr)
 {   
     SetTimestamp(GetTimestamp()); //Pass back timestamp as a heartbeat
+    
+    if (!status.calibrated)
+    {
+	printf("Omnibase is not calibrated.  Please calibrate and run again.  Exiting.\n");
+	endme(1);
+    }
 
     odom_g.header.stamp = ros::Time::now();  
 

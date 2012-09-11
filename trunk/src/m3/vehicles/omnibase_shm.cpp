@@ -119,6 +119,15 @@ void M3OmnibaseShm::SetSdsFromStatus(unsigned char * data)
   status_to_sds.y_dot = ((M3OmnibaseStatus*)omnibase->GetStatus())->global_velocity(1);
   status_to_sds.yaw_dot = DEG2RAD(((M3OmnibaseStatus*)omnibase->GetStatus())->global_velocity(2));
   
+  bool calibrated = true;
+  
+  for (int i = 0; i < 4; i++)
+  {
+      if (!((M3OmnibaseStatus*)omnibase->GetStatus())->calibrated(i))
+	calibrated = false;
+  }
+  
+  status_to_sds.calibrated = calibrated;
   
   /*if (bot)
   {

@@ -48,6 +48,7 @@ typedef struct
     mReal			y_dot;			
     mReal			yaw;
     mReal			yaw_dot;    
+    bool			calibrated;
 }M3OmnibaseShmSdsStatus;
 
 #endif

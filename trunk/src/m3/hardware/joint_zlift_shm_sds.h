@@ -44,6 +44,7 @@ typedef struct
     mReal			position;			
     mReal			velocity;
    mReal			effort;			    
+   bool				calibrated;
 }M3JointZLiftShmSdsStatus;
 
 #endif

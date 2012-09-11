@@ -71,6 +71,18 @@ proxy.step()
 time.sleep(0.5)
 proxy.step()
 
+zlift_shm_names=proxy.get_available_components('m3joint_zlift_shm')
+if len(zlift_shm_names) > 0:
+  proxy.make_safe_operational(zlift_shm_names[0])
+
+omnibase_shm_names=proxy.get_available_components('m3omnibase_shm')
+if len(omnibase_shm_names) > 0:
+  proxy.make_safe_operational(omnibase_shm_names[0])
+
+humanoid_shm_names=proxy.get_available_components('m3humanoid_shm')
+if len(humanoid_shm_names) > 0:
+  proxy.make_safe_operational(humanoid_shm_names[0])
+
 
 #Calibrate ZLift
 if zlift is not None:
