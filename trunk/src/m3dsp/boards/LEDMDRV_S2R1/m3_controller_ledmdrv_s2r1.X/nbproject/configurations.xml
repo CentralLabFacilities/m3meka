@@ -4,20 +4,16 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>../../src/adc.h</itemPath>
-      <itemPath>../../src/adc_spi.h</itemPath>
-      <itemPath>../../src/control.h</itemPath>
-      <itemPath>../../src/dio.h</itemPath>
-      <itemPath>../../src/ethercat.h</itemPath>
-      <itemPath>../../src/ethercat_appl.h</itemPath>
-      <itemPath>../../src/ethercat_def.h</itemPath>
-      <itemPath>../../src/ethercat_esc.h</itemPath>
-      <itemPath>../../src/ethercat_hw.h</itemPath>
-      <itemPath>../../src/ethercat_slave_fsm.h</itemPath>
-      <itemPath>../../src/setup.h</itemPath>
-      <itemPath>../../src/timer3.h</itemPath>
-      <itemPath>../../src/warning.h</itemPath>
-      <itemPath>../../src/spi1Drv.h</itemPath>
+      <itemPath>../src/dio.h</itemPath>
+      <itemPath>../src/ethercat.h</itemPath>
+      <itemPath>../src/ethercat_appl.h</itemPath>
+      <itemPath>../src/ethercat_def.h</itemPath>
+      <itemPath>../src/ethercat_esc.h</itemPath>
+      <itemPath>../src/ethercat_hw.h</itemPath>
+      <itemPath>../src/ethercat_slave_fsm.h</itemPath>
+      <itemPath>../src/led_mdrv.h</itemPath>
+      <itemPath>../src/setup.h</itemPath>
+      <itemPath>../src/timer3.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LibraryFiles"
                    displayName="Library Files"
@@ -34,17 +30,15 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>../../src/dio.c</itemPath>
-      <itemPath>../../src/ethercat.c</itemPath>
-      <itemPath>../../src/ethercat_appl.c</itemPath>
-      <itemPath>../../src/ethercat_hw.c</itemPath>
-      <itemPath>../../src/ethercat_slave_fsm.c</itemPath>
-      <itemPath>../../src/main.c</itemPath>
-      <itemPath>../../src/setup.c</itemPath>
-      <itemPath>../../src/timer3.c</itemPath>
-      <itemPath>../../src/spi1Drv.c</itemPath>
-      <itemPath>../../src/adc.c</itemPath>
-      <itemPath>../../src/control.c</itemPath>
+      <itemPath>../src/dio.c</itemPath>
+      <itemPath>../src/ethercat.c</itemPath>
+      <itemPath>../src/ethercat_appl.c</itemPath>
+      <itemPath>../src/ethercat_hw.c</itemPath>
+      <itemPath>../src/ethercat_slave_fsm.c</itemPath>
+      <itemPath>../src/led_mdrv.c</itemPath>
+      <itemPath>../src/main.c</itemPath>
+      <itemPath>../src/setup.c</itemPath>
+      <itemPath>../src/timer3.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -53,7 +47,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>../</Elem>
+    <Elem>../../../../../../m3/src/m3dsp/</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -83,22 +77,23 @@
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
       </makeCustomizationType>
       <C30>
-        <property key="optimization-level" value="3"/>
+        <property key="optimization-level" value="0"/>
         <property key="preprocessor-macros"
-                  value="EMBEDDED;USE_ETHERCAT;USE_TIMER3;USE_DIO;USE_TIMESTAMP_DC;PWR_0_5;USE_CONTROL;USE_ADC"/>
+                  value="USE_LED_MDRV;EMBEDDED;USE_DIO;USE_ETHERCAT;M3_LEDMDRV_S2R1;USE_TIMER3"/>
         <property key="code-model" value="default"/>
         <property key="const-model" value="default"/>
         <property key="enable-procedural-abstraction" value="false"/>
         <property key="enable-ansi-warnings" value="false"/>
         <property key="enable-short-double" value="false"/>
-        <property key="extra-include-directories" value="../../src"/>
+        <property key="extra-include-directories"
+                  value="../../../../../../m3/src/m3dsp;"/>
         <property key="post-instruction-scheduling" value="default"/>
-        <property key="enable-unroll-loops" value="true"/>
+        <property key="enable-unroll-loops" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="data-model" value="default"/>
         <property key="isolate-each-function" value="false"/>
         <property key="enable-fatal-warnings" value="false"/>
-        <property key="enable-omit-frame-pointer" value="true"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
         <property key="enable-ansi-std" value="false"/>
         <property key="enable-all-warnings" value="true"/>
         <property key="pre-instruction-scheduling" value="default"/>
@@ -107,14 +102,15 @@
       </C30>
       <C30-AS>
         <property key="omit-debug-dirs" value="false"/>
-        <property key="extra-include-directories-for-assembler" value="..;"/>
+        <property key="extra-include-directories-for-assembler"
+                  value="../../../../../../m3/src/m3dsp;"/>
         <property key="preprocessor-macros" value=""/>
         <property key="list-file" value=""/>
         <property key="list-source" value="false"/>
         <property key="list-assembly" value="false"/>
         <property key="relax" value="false"/>
-        <property key="extra-include-directories-for-preprocessor" value=""/>
         <property key="warning-level" value="emit-warnings"/>
+        <property key="extra-include-directories-for-preprocessor" value=""/>
         <property key="list-section-info" value="false"/>
         <property key="omit-forms" value="false"/>
         <property key="list-symbols" value="false"/>
@@ -134,7 +130,8 @@
         <property key="stack-size" value=""/>
         <property key="linker-symbols" value=""/>
         <property key="trace-symbols" value=""/>
-        <property key="map-file" value="&quot;${DISTDIR}/pwr_0_5.X.${IMAGE_TYPE}.map&quot;"/>
+        <property key="map-file"
+                  value="&quot;${DISTDIR}/m3_controller_ledmdrv_s2r1.X.${IMAGE_TYPE}.map&quot;"/>
         <property key="enable-pack-data" value="true"/>
         <property key="boot-eeprom" value="no_eeprom"/>
         <property key="general-write-protect" value="no_write_protect"/>
@@ -142,16 +139,16 @@
         <property key="enable-data-init" value="true"/>
         <property key="secure-flash" value="no_flash"/>
         <property key="generate-cross-reference-file" value="false"/>
+        <property key="report-memory-usage" value="true"/>
         <property key="boot-flash" value="no_flash"/>
         <property key="boot-write-protect" value="no_write_protect"/>
-        <property key="report-memory-usage" value="true"/>
         <property key="input-libraries" value=""/>
         <property key="secure-ram" value="no_ram"/>
         <property key="enable-check-sections" value="false"/>
         <property key="enable-default-isr" value="true"/>
         <property key="symbol-stripping" value=""/>
         <property key="boot-ram" value="no_ram"/>
-        <property key="extra-lib-directories" value="..;"/>
+        <property key="extra-lib-directories" value="../../../../../../m3/src/m3dsp;"/>
         <property key="secure-eeprom" value="no_eeprom"/>
       </C30-LD>
       <C30Global>
