@@ -135,10 +135,10 @@ class M3Proc(M3Tuning):
 		self.gui.add('M3GuiModes',  'Traj',		(self,'traj'),range(1),[self.traj_names,1],m3g.M3GuiWrite)
 #		self.gui.add('M3GuiModes',  'Mode',		(self,'mode'),range(1),[['Off','Current','Theta','Torque','Torque_LC'],1],m3g.M3GuiWrite)
 																			
-#		self.gui.add('M3GuiModes',  'Traj',		(self,'traj'),range(1),[[	'Off','Current Square','Current Sine','Theta Square','Theta Sine','Torque Square','Torque Sine','TorqueLC Square','TorqueLC Sine'],1],m3g.M3GuiWrite)
+#		self.gui.add('M3GuiModes',  'Traj',		(self,'traj'),range(1),[['Off','Current Square','Current Sine','Theta Square','Theta Sine','Torque Square','Torque Sine','TorqueLC Square','TorqueLC Sine'],1],m3g.M3GuiWrite)
 		
-		self.gui.add('M3GuiSliders','Current',	(self,'current'),range(1),	[-current_max,current_max],m3g.M3GuiWrite)
-		self.gui.add('M3GuiSliders','Theta',		(self,'theta'),range(1),[-theta_max,theta_max],m3g.M3GuiWrite)
+		self.gui.add('M3GuiSliders','Current',		(self,'current'),range(1),	[-current_max,current_max],m3g.M3GuiWrite)
+		self.gui.add('M3GuiSliders','Theta(deg)',	(self,'theta'),range(1),[-theta_max,theta_max],m3g.M3GuiWrite)
 		self.gui.add('M3GuiSliders','Torque',		(self,'torque'),range(1),[-torque_max,torque_max],m3g.M3GuiWrite)
 		self.gui.add('M3GuiSliders','TorqueLC',		(self,'torque_lc'),range(1),[-torque_max,torque_max],m3g.M3GuiWrite)
 		
@@ -205,7 +205,7 @@ class M3Proc(M3Tuning):
 			
 		elif self.mode[0]==mec.CTRL_MODE_THETA:
 			self.ctrl.set_mode_theta()
-			self.ctrl.set_theta(self.theta[0])
+			self.ctrl.set_theta_deg(self.theta[0])
 #			
 		elif self.mode[0]==mec.CTRL_MODE_TORQUE:
 			print "kp: " + str(self.ctrl.param.pid_torque.k_p)
