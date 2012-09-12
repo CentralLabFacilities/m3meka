@@ -15,13 +15,15 @@
 
 #You should have received a copy of the GNU Lesser General Public License
 #along with M3.  If not, see <http://www.gnu.org/licenses/>.
+import roslib; roslib.load_manifest('kontrol')
+from kontrol.msg import Kontrol
 import time
 import os
-import roslib; roslib.load_manifest('kontrol')
+
 import rospy
 import subprocess
 from threading import Thread
-from kontrol.msg import Kontrol
+
 
 class M3KontrolThread(Thread):
     def __init__ (self,verbose=True):

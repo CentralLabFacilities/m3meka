@@ -20,6 +20,7 @@ import os
 from m3.toolbox import *
 import m3.humanoid_pb2 as mrt
 import m3.joint_array_mode_pb2 as mab
+import m3.smoothing_mode_pb2 as msm
 from m3.component import M3Component
 import m3.toolbox as m3t
 import m3.toolbox_ctrl as m3tc
@@ -1641,7 +1642,8 @@ class M3Humanoid(M3Robot):
 	    self.get_command(chain).q_stiffness.append(0)
 	    self.get_command(chain).q_slew_rate.append(0)
 	    self.get_command(chain).pwm_desired.append(0)
-	    self.get_command(chain).ctrl_mode.append(mab.JOINT_ARRAY_MODE_OFF)	
+	    self.get_command(chain).ctrl_mode.append(mab.JOINT_ARRAY_MODE_OFF)
+	    self.get_command(chain).smoothing_mode.append(msm.SMOOTHING_MODE_OFF)	
 				
     def set_motor_power_on(self):
 	"""
@@ -2063,16 +2065,17 @@ class M3Humanoid(M3Robot):
 			thetas[-1] *= v[i]
 			thetas[-1] = min_theta[ind[i]] + thetas[-1]
 	else:			
-		self.__assert_list_size(v, self.num_dof)	
+		chain_attr = getattr(self, chain)
+		self.__assert_list_size(v, chain_attr.ndof)		
 		for i in range(len(v)):
 			thetas.append(max_theta[i] - min_theta[i])
 			thetas[-1] *= v[i]
 			thetas[-1] = min_theta[i] + thetas[-1]
-			print "desired theta " + str(i) + " = " + str(thetas[-1]) + ", " + str(v[i])
-		print
-		for i,th in enumerate(self.get_theta()):
-			print "measured theta " + str(i) + " = " + str(th) 
-		print
+			#print "desired theta " + str(i) + " = " + str(thetas[-1]) + ", " + str(v[i])
+		#print
+		#for i,th in enumerate(self.get_theta_deg(chain)):
+		#	print "measured theta " + str(i) + " = " + str(th) 
+		#print
 	
 	
 	self.set_theta_deg(chain, thetas, ind)

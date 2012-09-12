@@ -21,7 +21,7 @@ import roslib; roslib.load_manifest('m3_defs_ros')
 import rospy
 import m3.component_factory as m3f
 from sensor_msgs.msg import JointState
-from roslib.msg import Header
+from std_msgs.msg import Header
 import subprocess
         
 class M3Viz:

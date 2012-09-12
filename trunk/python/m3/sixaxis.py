@@ -30,19 +30,19 @@ import subprocess
 
 class M3SixAxis:        
     def __init__(self):        
-        self.left = 5
-        self.right = 7
-        self.fwd = 4
-        self.back = 6
-        self.turn_left = 8
-        self.turn_right = 9
-        self.turn_left_2 = 10
-        self.turn_right_2 = 11
+        self.left = 11#5
+        self.right = 9#7
+        self.fwd = 8#4
+        self.back = 10#6
+        self.turn_left = 14#8
+        self.turn_right = 15#9
+        self.turn_left_2 = 12#10
+        self.turn_right_2 = 13#11
         
-        self.tri_but = 12
-        self.circ_but = 13
-        self.x_but = 14
-        self.sqr_but = 15
+        self.tri_but = 16#12
+        self.circ_but = 17#13
+        self.x_but = 18#14
+        self.sqr_but = 19#15
         
         self.scale_xy = 0.75
         self.scale_rot = 60.0

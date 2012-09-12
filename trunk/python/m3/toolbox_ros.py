@@ -26,12 +26,12 @@ import m3.toolbox as m3t
 import PyKDL as kdl
 import m3.viz as m3v
 import rospy
-import roslib; roslib.load_manifest('face_detector_mono')
+#import roslib; roslib.load_manifest('face_detector_mono')
 import roslib; roslib.load_manifest('m3_defs_ros')
 import roslib; roslib.load_manifest('m3_client')
-import roslib; roslib.load_manifest('mic_array')
-from face_detector_mono.msg import RectArray
-from mic_array.msg import MicArray
+#import roslib; roslib.load_manifest('mic_array')
+#from face_detector_mono.msg import RectArray
+#from mic_array.msg import MicArray
 from m3_client.msg import M3OmnibaseJoy
 import subprocess
 import os

@@ -461,6 +461,8 @@ void M3Joint::StepCommand()
 				//Ramp in from pwm at switch-over point
 				mReal pwm_des=command.pwm_desired();
 				StepBrake(pwm_des,0);			
+				//StepBrake(pwm_des,command.pwm_cmd());			
+				
 				mReal pwm_on, pwm_out;
 				pwm_on=pwm_on_slew.Step(1.0,1.0/MODE_PWM_ON_SLEW_TIME);
 				pwm_out=pwm_on*pwm_des+(1.0-pwm_on)*pwm_switch;

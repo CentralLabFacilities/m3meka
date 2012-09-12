@@ -77,6 +77,13 @@ class M3Proc:
 		self.proxy.make_operational_all()
 		self.bot.set_motor_power_on()
 		self.ndof=self.bot.get_num_dof(self.arm_name)
+		
+		humanoid_shm_names=self.proxy.get_available_components('m3humanoid_shm')
+		if len(humanoid_shm_names) > 0:
+		  self.proxy.make_safe_operational(humanoid_shm_names[0])
+
+
+		
 		self.via_traj={}
 		self.via_traj_first=True
 		self.theta_curr = [0.0]*self.ndof

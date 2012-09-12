@@ -193,14 +193,14 @@ class M3OmniBase(M3Vehicle):
 			proxy.step()
                         str_tqs = self.get_steer_torques()
 			rol_tqs = self.get_roll_torques()
-                        #print 'Steer Joint Tq at idx', idx, ':', str_tqs[idx]
-			#print 'Roll Joint Tq at idx', idx, ':', rol_tqs[idx]
-			#print 'Steer Tq at idx', idx_wiggle, ':', str_tqs[idx_wiggle]
-			#print '.'                        
+                        print 'Steer Joint Tq at idx', idx, ':', str_tqs[idx]
+			print 'Roll Joint Tq at idx', idx, ':', rol_tqs[idx]
+			print 'Steer Tq at idx', idx_wiggle, ':', str_tqs[idx_wiggle]
+			print '.'                        
 			theta_step = 2.0
 			theta_cnt += theta_step
 			theta_err = theta_des - self.get_steer_theta()[idx]
-			#print 'theta err:', theta_err
+			print 'theta err:', theta_err
 			if theta_err < 40.0:
 				theta += theta_step			
 			if time.time() - ts > time_out:
