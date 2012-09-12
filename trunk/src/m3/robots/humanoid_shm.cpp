@@ -88,6 +88,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
       } else{
 	bot->SetThetaDeg(RIGHT_ARM, i, RAD2DEG(command_from_sds.right_arm.q_desired[i]));
 	bot->SetSlewRate(RIGHT_ARM, i, RAD2DEG(command_from_sds.right_arm.slew_rate_q_desired[i]));
+	bot->SetThetaDotDeg(RIGHT_ARM, i, RAD2DEG(command_from_sds.right_arm.slew_rate_q_desired[i]));
 	bot->SetTorque_mNm(RIGHT_ARM, i, command_from_sds.right_arm.tq_desired[i]);
 	bot->SetStiffness(RIGHT_ARM, i, command_from_sds.right_arm.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_right_arm()->set_ctrl_mode(i, command_from_sds.right_arm.ctrl_mode[i]);
@@ -104,6 +105,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
       } else{
 	bot->SetThetaDeg(TORSO, i, RAD2DEG(command_from_sds.torso.q_desired[i]));
 	bot->SetSlewRate(TORSO, i, RAD2DEG(command_from_sds.torso.slew_rate_q_desired[i]));
+	bot->SetThetaDotDeg(TORSO, i, RAD2DEG(command_from_sds.torso.slew_rate_q_desired[i]));
 	bot->SetTorque_mNm(TORSO, i, command_from_sds.torso.tq_desired[i]);
 	bot->SetStiffness(TORSO, i, command_from_sds.torso.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_torso()->set_ctrl_mode(i, command_from_sds.torso.ctrl_mode[i]);
@@ -120,6 +122,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
       } else{
 	bot->SetThetaDeg(LEFT_ARM, i, RAD2DEG(command_from_sds.left_arm.q_desired[i]));
 	bot->SetSlewRate(LEFT_ARM, i, RAD2DEG(command_from_sds.left_arm.slew_rate_q_desired[i]));
+	bot->SetThetaDotDeg(LEFT_ARM, i, RAD2DEG(command_from_sds.left_arm.slew_rate_q_desired[i]));
 	bot->SetTorque_mNm(LEFT_ARM, i, command_from_sds.left_arm.tq_desired[i]);
 	bot->SetStiffness(LEFT_ARM, i, command_from_sds.left_arm.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_left_arm()->set_ctrl_mode(i, command_from_sds.left_arm.ctrl_mode[i]);
@@ -136,6 +139,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
       } else{
 	bot->SetThetaDeg(HEAD, i, RAD2DEG(command_from_sds.head.q_desired[i]));
 	bot->SetSlewRate(HEAD, i, RAD2DEG(command_from_sds.head.slew_rate_q_desired[i]));
+	bot->SetThetaDotDeg(HEAD, i, RAD2DEG(command_from_sds.head.slew_rate_q_desired[i]));
 	bot->SetTorque_mNm(HEAD, i, command_from_sds.head.tq_desired[i]);
 	bot->SetStiffness(HEAD, i, command_from_sds.head.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_head()->set_ctrl_mode(i, command_from_sds.head.ctrl_mode[i]);

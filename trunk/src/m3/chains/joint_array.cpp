@@ -89,6 +89,7 @@ void M3JointArray::Startup()
 		command.add_q_stiffness(0);
 		command.add_q_slew_rate(0);
 		command.add_ctrl_mode(JOINT_ARRAY_MODE_OFF);
+		command.add_smoothing_mode(SMOOTHING_MODE_OFF);
 		
 		status.add_motor_temp(0);
 		status.add_amp_temp(0);
@@ -164,7 +165,9 @@ void M3JointArray::StepCommand()
 			joints[i]->SetDesiredTorque(command.tq_desired(i));
 			joints[i]->SetDesiredStiffness(command.q_stiffness(i));
 			joints[i]->SetSlewRate(command.q_slew_rate(i));
-
+			joints[i]->SetDesiredSmoothingMode(command.smoothing_mode(i));
+			
+		
 			switch(command.ctrl_mode(i))
 			{										
 				case JOINT_ARRAY_MODE_OFF:

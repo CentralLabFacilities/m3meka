@@ -123,6 +123,7 @@ void M3OmnibaseShm::SetSdsFromStatus(unsigned char * data)
   
   for (int i = 0; i < 4; i++)
   {
+      //M3_DEBUG("uuu %d \n", i);
       if (!((M3OmnibaseStatus*)omnibase->GetStatus())->calibrated(i))
 	calibrated = false;
   }

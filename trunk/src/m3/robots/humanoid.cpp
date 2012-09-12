@@ -362,6 +362,7 @@ void M3Humanoid::StepCommand()
 			((M3JointArrayCommand*)torso->GetCommand())->set_tq_desired(i, command.torso().tq_desired(i));						
 			((M3JointArrayCommand*)torso->GetCommand())->set_ctrl_mode(i, command.torso().ctrl_mode(i));				
 		     }		     
+		     ((M3JointArrayCommand*)torso->GetCommand())->set_smoothing_mode(i, command.torso().smoothing_mode(i));				
 		    ((M3JointArrayCommand*)torso->GetCommand())->set_q_stiffness(i, command.torso().q_stiffness(i));		    
 		    ((M3JointArrayCommand*)torso->GetCommand())->set_q_desired(i, command.torso().q_desired(i));
 		    ((M3JointArrayCommand*)torso->GetCommand())->set_qdot_desired(i, command.torso().qdot_desired(i));
@@ -394,10 +395,11 @@ void M3Humanoid::StepCommand()
 			 ((M3JointArrayCommand*)head->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);	
 		       }
 		     } else {		       
-			((M3JointArrayCommand*)head->GetCommand())->set_q_desired(i, command.head().q_desired(i));			((M3JointArrayCommand*)head->GetCommand())->set_q_slew_rate(i, command.head().q_slew_rate(i));			
+			((M3JointArrayCommand*)head->GetCommand())->set_q_desired(i, command.head().q_desired(i));			
+			((M3JointArrayCommand*)head->GetCommand())->set_q_slew_rate(i, command.head().q_slew_rate(i));			
 			((M3JointArrayCommand*)head->GetCommand())->set_ctrl_mode(i, command.head().ctrl_mode(i));	
 		     }		
-		  		  
+		    ((M3JointArrayCommand*)head->GetCommand())->set_smoothing_mode(i, command.head().smoothing_mode(i));	  
 		    ((M3JointArrayCommand*)head->GetCommand())->set_tq_desired(i, command.head().tq_desired(i));		    
 		    ((M3JointArrayCommand*)head->GetCommand())->set_q_stiffness(i, command.head().q_stiffness(i));
 		    ((M3JointArrayCommand*)head->GetCommand())->set_qdot_desired(i, command.head().qdot_desired(i));		    
@@ -431,6 +433,7 @@ void M3Humanoid::StepCommand()
 			((M3JointArrayCommand*)right_arm->GetCommand())->set_ctrl_mode(i, command.right_arm().ctrl_mode(i));	
 						
 		    }		    
+		    ((M3JointArrayCommand*)right_arm->GetCommand())->set_smoothing_mode(i, command.right_arm().smoothing_mode(i));
 		    ((M3JointArrayCommand*)right_arm->GetCommand())->set_q_stiffness(i, command.right_arm().q_stiffness(i));		    
 		    ((M3JointArrayCommand*)right_arm->GetCommand())->set_q_desired(i, command.right_arm().q_desired(i));			
 		    ((M3JointArrayCommand*)right_arm->GetCommand())->set_qdot_desired(i, command.right_arm().qdot_desired(i));
@@ -463,7 +466,8 @@ void M3Humanoid::StepCommand()
 		    } else {
 			((M3JointArrayCommand*)left_arm->GetCommand())->set_tq_desired(i, command.left_arm().tq_desired(i));						
 			((M3JointArrayCommand*)left_arm->GetCommand())->set_ctrl_mode(i, command.left_arm().ctrl_mode(i));			
-		    }		    
+		    }	
+		    ((M3JointArrayCommand*)left_arm->GetCommand())->set_smoothing_mode(i, command.left_arm().smoothing_mode(i));
 		    ((M3JointArrayCommand*)left_arm->GetCommand())->set_q_stiffness(i, command.left_arm().q_stiffness(i));		    
 		    ((M3JointArrayCommand*)left_arm->GetCommand())->set_q_desired(i, command.left_arm().q_desired(i));
 		    ((M3JointArrayCommand*)left_arm->GetCommand())->set_qdot_desired(i, command.left_arm().qdot_desired(i));

@@ -62,6 +62,7 @@ class M3Joint: public m3rt::M3Component
 		void SetDesiredThetaDotRad(mReal val){command.set_qdot_desired(RAD2DEG(val));}
 		void SetDesiredStiffness(mReal val){command.set_q_stiffness(val);}
 		void SetDesiredControlMode(JOINT_MODE val){command.set_ctrl_mode(val);}
+		void SetDesiredSmoothingMode(SMOOTHING_MODE val){command.set_smoothing_mode(val);}
 		void SetDesiredTorque(mReal val){command.set_tq_desired(val);}
 		void SetSlewRate(mReal val){command.set_q_slew_rate(val);}
 		void SetBrakeOff(bool off){command.set_brake_off(off);}

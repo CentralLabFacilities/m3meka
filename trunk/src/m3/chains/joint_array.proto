@@ -20,6 +20,7 @@ option optimize_for = SPEED;
 import "component_base.proto";
 import "trajectory.proto";
 import "joint.proto";
+import "smoothing_mode.proto";
 import "joint_array_mode.proto";
 
 message M3JointArrayStatus
@@ -51,6 +52,7 @@ message M3JointArrayCommand{
 	repeated double 				pos_desired=7;				//Desired end pos (x,y,z,yaw,pitch,roll) (mm,rad)
 	repeated double				qdot_desired = 8;			//Desired joint angle (Deg)
 	repeated double				q_slew_rate = 9;			//Slew Rates (max ang velocity) for joints (Deg/sec)
+	repeated SMOOTHING_MODE			smoothing_mode = 10;				//Desired arm control mode 	
 }
 
 message M3JointArrayParam{

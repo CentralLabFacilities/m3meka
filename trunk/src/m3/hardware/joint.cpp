@@ -320,6 +320,14 @@ void M3Joint::StepCommand()
 		return;
 	}
 	
+	if (command.ctrl_mode() == JOINT_MODE_THETA && command.smoothing_mode() == SMOOTHING_MODE_MIN_JERK)
+	  command.set_ctrl_mode(JOINT_MODE_THETA_MJ);
+	
+	if (command.ctrl_mode() == JOINT_MODE_THETA_GC && command.smoothing_mode() == SMOOTHING_MODE_MIN_JERK)
+	{
+	  command.set_ctrl_mode(JOINT_MODE_THETA_GC_MJ);	  
+	}
+	
 	//Avoid pops
 	if (command.ctrl_mode()!=mode_last)
 	{

@@ -416,6 +416,7 @@ void M3Omnibase::Startup()
   
   for (int i = 0; i < motor_array->GetNumDof()/2; i++)
   {    
+    //M3_DEBUG("oo %d\n", i);
     status.add_steer_torque_desired(0);
     status.add_steer_torque_internal(0);
     status.add_steer_angle(0);
