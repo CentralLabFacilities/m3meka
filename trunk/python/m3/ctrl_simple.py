@@ -63,6 +63,8 @@ class M3CtrlSimple(M3Component):
 		self.command.desired_current = t
 	def set_theta(self, t):
 		self.command.desired_theta = t
+	def set_theta_deg(self, t):
+		self.command.desired_theta = t*math.pi/180.0
 	def set_torque(self, t):
 		self.command.desired_torque = t
 

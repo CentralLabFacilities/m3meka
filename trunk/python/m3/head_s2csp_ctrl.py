@@ -24,38 +24,46 @@ from m3.unit_conversion import *
 import Numeric as nu
 
 class M3HeadS2CSPCtrl(M3Component):
-    """Interface for smooth pursuit controller of an S2 head"""
-    def __init__(self,name,type='m3head_s2csp_ctrl'):
-        M3Component.__init__(self,name,type=type)
-        self.status=hpb.M3HeadS2CSPCtrlStatus()
-        self.command=hpb.M3HeadS2CSPCtrlCommand()
-        self.param=hpb.M3HeadS2CSPCtrlParam()
-        self.read_config()
-	for i in range(3):
-            self.command.target.append(0)
-            self.status.xe.append(0)
-    def enable(self):
-	self.command.enable=1
-    def disable(self):
-	self.command.enable=0
-    def update_status(self):
-        self.xe=nu.array(self.status.xe,nu.Float32)
-	self.theta_des=nu.array(self.status.theta_des,nu.Float32)
-    def set_slew_rate_proportion(self,joint,val):
-	self.param.slew_des[joint]=val
-    def get_slew_rate_proportion(self,joint):
-	return self.param.slew_des[joint]
-    def set_theta_j2_deg(self,x):
-	self.command.theta_des_j2=x
-    #Target is in the head-base frame
-    def set_target_head_base_frame(self,x):
-	self.command.target[0]=x[0]
-	self.command.target[1]=x[1]
-	self.command.target[2]=x[2]
-    #CSP frame is translation of head-base frame to neutral eye frame. Origin translates from CSP to head-base
-    def set_target_csp_frame(self,x):
-	self.command.target[0]=x[0]+self.param.origin[0]
-	self.command.target[1]=x[1]+self.param.origin[0]
-	self.command.target[2]=x[2]+self.param.origin[0]
+	"""Interface for smooth pursuit controller of an S2 head"""
+	def __init__(self,name,type='m3head_s2csp_ctrl'):
+			M3Component.__init__(self,name,type=type)
+			self.status=hpb.M3HeadS2CSPCtrlStatus()
+			self.command=hpb.M3HeadS2CSPCtrlCommand()
+			self.param=hpb.M3HeadS2CSPCtrlParam()
+			self.read_config()
+		for i in range(3):
+			self.command.target.append(0)
+			self.status.xe.append(0)
+	
+	def enable(self):
+		self.command.enable=1
+
+	def disable(self):
+		self.command.enable=0
+
+	def update_status(self):
+		self.xe=nu.array(self.status.xe,nu.Float32)
+		self.theta_des=nu.array(self.status.theta_des,nu.Float32)
+
+	def set_slew_rate_proportion(self,joint,val):
+		self.param.slew_des[joint]=val
+
+	def get_slew_rate_proportion(self,joint):
+		return self.param.slew_des[joint]
+
+	def set_theta_j2_deg(self,x):
+		self.command.theta_des_j2=x
+
+	#Target is in the head-base frame
+	def set_target_head_base_frame(self,x):
+		self.command.target[0]=x[0]
+		self.command.target[1]=x[1]
+		self.command.target[2]=x[2]
+
+	#CSP frame is translation of head-base frame to neutral eye frame. Origin translates from CSP to head-base
+	def set_target_csp_frame(self,x):
+		self.command.target[0]=x[0]+self.param.origin[0]
+		self.command.target[1]=x[1]+self.param.origin[0]
+		self.command.target[2]=x[2]+self.param.origin[0]
 
 	

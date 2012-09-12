@@ -204,6 +204,34 @@ class M3HeadToolboxS2UTA(M3HeadToolboxS2):
                 if abs(q_j4)>=end:
                         return min(q_j7,self.eyelid_q_max-r )
 
+
+# This reduces makes a variable soft limit on the eyelid of UTA head based on the eye tilt
+# Eye tilt is J4 ~+/-35 deg
+# Eye lid is  J7 ~0-180 deg (180 is closed)
+# When the tilt is outside of a threshold we reduce the eyelid below 180 so doesn't interfere with tilt
+class M3HeadToolboxS2ENS(M3HeadToolboxS2):
+        def __init__(self,name,bot):
+                M3HeadToolboxS2.__init__(self,name,bot)
+		
+                #pass in the name of the head component
+                print "(>'')> "+name
+                jl = m3t.get_chain_joint_limits(name)
+                self.eyelid_q_max=jl[7][1]
+		self.eqm_param=self.config['eqm_param']
+
+        def step_eyelids_limit(self,q_j4, q_j7):
+                start=self.eqm_param['eqm_j4_ramp_start']
+                end=self.eqm_param['eqm_j4_ramp_end']
+                r=self.eqm_param['eqm_j7_reduce']
+                if abs(q_j4)<start:
+                        return q_j7
+                if abs(q_j4)>=start and abs(q_j4)<end:
+                        scale=(abs(q_j4)-start)/(end-start) #goes from 0 to 1 in start to end
+                        return min(q_j7,self.eyelid_q_max-r*scale)
+                if abs(q_j4)>=end:
+                        return min(q_j7,self.eyelid_q_max-r )
+
+
 def spherical_to_cartesian(latitude,longitude,r=1.0):
 	#Define target on sphere 
 	#lat=0, long=0 corresponds to [1,0,0]
