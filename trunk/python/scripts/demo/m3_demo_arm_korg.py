@@ -69,17 +69,17 @@ class M3Proc:
 		
 		self.theta_curr = [0.0]*self.ndof
 		
-		zlift_shm_names=proxy.get_available_components('m3joint_zlift_shm')
+		zlift_shm_names=self.proxy.get_available_components('m3joint_zlift_shm')
 		if len(zlift_shm_names) > 0:
-		  proxy.make_safe_operational(zlift_shm_names[0])
+		  self.proxy.make_safe_operational(zlift_shm_names[0])
 
-		omnibase_shm_names=proxy.get_available_components('m3omnibase_shm')
+		omnibase_shm_names=self.proxy.get_available_components('m3omnibase_shm')
 		if len(omnibase_shm_names) > 0:
-		  proxy.make_safe_operational(omnibase_shm_names[0])
+		  self.proxy.make_safe_operational(omnibase_shm_names[0])
 
-		humanoid_shm_names=proxy.get_available_components('m3humanoid_shm')
+		humanoid_shm_names=self.proxy.get_available_components('m3humanoid_shm')
 		if len(humanoid_shm_names) > 0:
-		  proxy.make_safe_operational(humanoid_shm_names[0])
+		  self.proxy.make_safe_operational(humanoid_shm_names[0])
 		
 		print 'WARNING: Before raising E-Stop move a slider to initialize positions.'
 		

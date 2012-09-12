@@ -39,9 +39,9 @@ class M3OmniBaseJoy:
         #max_rot_acc = 30 # 100 for better    # deg/s^2
         
         max_lin_vel = 0.6  # m/s (0.6)
-        max_lin_acc = 0.2 #0.3 #0.4 # m/s^2  (0.2)  --- 1.0 gives really good performance but saturates motors...
+        max_lin_acc = 0.4 #0.2 #0.3 #0.4 # m/s^2  (0.2)  --- 1.0 gives really good performance but saturates motors...
         max_rot_vel = 35   # deg/s
-        max_rot_acc = 30 #60 # 100 for better    # deg/s^2
+        max_rot_acc = 60 #30 #60 # 100 for better    # deg/s^2
 
 
         #max_lin_vel = 0.25  # m/s (0.6)
