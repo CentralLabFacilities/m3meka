@@ -102,10 +102,12 @@ void M3HeadS2CSPCtrl::StepCommand()
 		  target_slew[2].Step(command.target(2),param.target_slew()));
 	
 	//Convert from head to eye frame		 
-	wTh=bot->GetHeadBase2WorldTransform();
-	xw=wTh*xh;
-	wTe=bot->GetRightEye2WorldTransform();
-	eTw=wTe.Inverse();
+	wTh = bot->GetHeadBase2WorldTransform();
+	xw = wTh*xh;
+	wTe = bot->GetRightEye2WorldTransform();
+		
+	eTw = wTe.Inverse();
+	
 	xe = eTw*xw;
 
 	mReal tl= sqrt(xe[0]*xe[0]+ xe[1]*xe[1]+ xe[2]*xe[2]); //length to target in camera frame

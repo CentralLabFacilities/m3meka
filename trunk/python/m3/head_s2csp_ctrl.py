@@ -26,11 +26,11 @@ import Numeric as nu
 class M3HeadS2CSPCtrl(M3Component):
 	"""Interface for smooth pursuit controller of an S2 head"""
 	def __init__(self,name,type='m3head_s2csp_ctrl'):
-			M3Component.__init__(self,name,type=type)
-			self.status=hpb.M3HeadS2CSPCtrlStatus()
-			self.command=hpb.M3HeadS2CSPCtrlCommand()
-			self.param=hpb.M3HeadS2CSPCtrlParam()
-			self.read_config()
+		M3Component.__init__(self,name,type=type)
+		self.status=hpb.M3HeadS2CSPCtrlStatus()
+		self.command=hpb.M3HeadS2CSPCtrlCommand()
+		self.param=hpb.M3HeadS2CSPCtrlParam()
+		self.read_config()
 		for i in range(3):
 			self.command.target.append(0)
 			self.status.xe.append(0)

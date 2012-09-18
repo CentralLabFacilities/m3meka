@@ -27,48 +27,48 @@ import copy
 import random
 import PyKDL
 
-                
+		
 class M3HeadToolboxS2:
-        def __init__(self,name,bot):
-                #pass in the name of the head component
+	def __init__(self,name,bot):
+		#pass in the name of the head component
 		self.bot=bot
-                c=m3t.get_component_config_filename(name)
-                self.config_name=c[:-4]+'_toolbox.yml'
-                try:
-                        f=file(self.config_name,'r')
-                        self.config= yaml.safe_load(f.read())
-                except (IOError, EOFError):
-                        print 'Config file not present:',self.config_name
-                        return
+		c=m3t.get_component_config_filename(name)
+		self.config_name=c[:-4]+'_toolbox.yml'
+		try:
+			f=file(self.config_name,'r')
+			self.config= yaml.safe_load(f.read())
+		except (IOError, EOFError):
+			print 'Config file not present:',self.config_name
+			return
 
-                self.joints=range(7) #lower 7Dof
-                self.joint_names={'NeckTilt':0,
-                                  'NeckPan':1,
-                                  'HeadRoll':2,
-                                  'HeadTilt':3,
-                                  'EyeTilt':4,
-                                  'EyePanRight':5,
-                                  'EyePanLeft':6}
+		self.joints=range(7) #lower 7Dof
+		self.joint_names={'NeckTilt':0,
+				  'NeckPan':1,
+				  'HeadRoll':2,
+				  'HeadTilt':3,
+				  'EyeTilt':4,
+				  'EyePanRight':5,
+				  'EyePanLeft':6}
 
-                fcr=m3t.get_m3_ros_config_path()+'cameras/'+self.config['right_camera_calibration']+'.yml'
-                fcl=m3t.get_m3_ros_config_path()+'cameras/'+self.config['left_camera_calibration']+'.yml'
-                try:
-                        f=file(fcr,'r')
-                        cr= yaml.safe_load(f.read())
-                except (IOError, EOFError):
-                        print 'Config file not present:',fcr
-                        return
-                try:
-                        f=file(fcl,'r')
-                        cl= yaml.safe_load(f.read())
-                except (IOError, EOFError):
-                        print 'Config file not present:',fcl
-                        return
-                pr=cr['projection_matrix']['data']
-                pl=cl['projection_matrix']['data']
-                #extract calibration data for camera. should really do this with ROS image_geometry package
-                self.camera_calib={'right':{'fx':pr[0],'fy':pr[5],'cx':pr[2],'cy':pr[6],'w':cr['image_width'],'h':cr['image_height']},\
-                                   'left':{'fx':pl[0],'fy':pl[5],'cx':pl[2],'cy':pl[6] ,'w':cl['image_width'],'h':cl['image_height']}}
+		fcr=m3t.get_m3_ros_config_path()+'cameras/'+self.config['right_camera_calibration']+'.yml'
+		fcl=m3t.get_m3_ros_config_path()+'cameras/'+self.config['left_camera_calibration']+'.yml'
+		try:
+			f=file(fcr,'r')
+			cr= yaml.safe_load(f.read())
+		except (IOError, EOFError):
+			print 'Config file not present:',fcr
+			return
+		try:
+			f=file(fcl,'r')
+			cl= yaml.safe_load(f.read())
+		except (IOError, EOFError):
+			print 'Config file not present:',fcl
+			return
+		pr=cr['projection_matrix']['data']
+		pl=cl['projection_matrix']['data']
+		#extract calibration data for camera. should really do this with ROS image_geometry package
+		self.camera_calib={'right':{'fx':pr[0],'fy':pr[5],'cx':pr[2],'cy':pr[6],'w':cr['image_width'],'h':cr['image_height']},\
+				   'left':{'fx':pl[0],'fy':pl[5],'cx':pl[2],'cy':pl[6] ,'w':cl['image_width'],'h':cl['image_height']}}
 
 
 	def image_2_head_base(self,eye,xi,r):
@@ -88,121 +88,121 @@ class M3HeadToolboxS2:
 		p_kdl = self.bot.list_to_kdl_vector(xw)
 		return nu.array(self.bot.kdl_to_list_vector(T_i*p_kdl),nu.Float)
 	
-        def image_2_world(self,eye,xi,r):
-                xe=self.image_2_eye(eye,xi,r)
-                return self.eye_2_world(eye,xe)
-        
-        def world_2_image(self,eye,xw):
-                xe=self.world_2_eye(eye,xw)
+	def image_2_world(self,eye,xi,r):
+		xe=self.image_2_eye(eye,xi,r)
+		return self.eye_2_world(eye,xe)
+	
+	def world_2_image(self,eye,xw):
+		xe=self.world_2_eye(eye,xw)
 		return self.eye_2_image(eye,xe)
-        
-        def eye_2_world(self,eye,xe):
-                return self.bot.eye_2_world(eye,xe)
-        
-        def world_2_eye(self,eye,xw):
-                return self.bot.world_2_eye(eye,xw)
-        
-        def image_2_eye(self,eye,xi,r=1.0):
-                #start of ray
-                p0=nu.array([0.0]*3) 
-                #direction of ray
-                f=(self.camera_calib[eye]['fx']+self.camera_calib[eye]['fy'])/2.0 #use avg focal
-                d=nu.array([f,self.camera_calib[eye]['cx']-xi[0],self.camera_calib[eye]['cy']-xi[1]])
-                d=d/math.sqrt(nu.dot(d,d)) #make unit length
+	
+	def eye_2_world(self,eye,xe):
+		return self.bot.eye_2_world(eye,xe)
+	
+	def world_2_eye(self,eye,xw):
+		return self.bot.world_2_eye(eye,xw)
+	
+	def image_2_eye(self,eye,xi,r=1.0):
+		#start of ray
+		p0=nu.array([0.0]*3) 
+		#direction of ray
+		f=(self.camera_calib[eye]['fx']+self.camera_calib[eye]['fy'])/2.0 #use avg focal
+		d=nu.array([f,self.camera_calib[eye]['cx']-xi[0],self.camera_calib[eye]['cy']-xi[1]])
+		d=d/math.sqrt(nu.dot(d,d)) #make unit length
 		
-                #centor of sphere
-                pc=nu.array([0,0,0])
-                pa,pb=intersection_ray_sphere(p0,d,pc,r)
-                if pa[0]>0: #x direction should be pointing to forward half of camera view
-                        return pa
-                if pb[0]>0:
-                        return pb 
-                return None #should not hit
-        
-        def eye_2_image(self,eye,p):
-                """pass in a p=[x,y,z] point in eye coords. return pixel coord."""
-                #map eye frame to image plane coords: eX->cZ,eY->cX eZ->cY
-                x=self.camera_calib[eye]['cx']-p[1]*self.camera_calib[eye]['fx']/p[0]
-                y=self.camera_calib[eye]['cy']-p[2]*self.camera_calib[eye]['fy']/p[0]
-                return [x,y]
+		#centor of sphere
+		pc=nu.array([0,0,0])
+		pa,pb=intersection_ray_sphere(p0,d,pc,r)
+		if pa[0]>0: #x direction should be pointing to forward half of camera view
+			return pa
+		if pb[0]>0:
+			return pb 
+		return None #should not hit
+	
+	def eye_2_image(self,eye,p):
+		"""pass in a p=[x,y,z] point in eye coords. return pixel coord."""
+		#map eye frame to image plane coords: eX->cZ,eY->cX eZ->cY
+		x=self.camera_calib[eye]['cx']-p[1]*self.camera_calib[eye]['fx']/p[0]
+		y=self.camera_calib[eye]['cy']-p[2]*self.camera_calib[eye]['fy']/p[0]
+		return [x,y]
 
 #Handle a fixed camera mounted to tool frame
 class M3HeadToolboxS2ISS(M3HeadToolboxS2):
-        def __init__(self,name,bot):
-                M3HeadToolboxS2.__init__(self,name,bot)
-                fcm=m3t.get_m3_ros_config_path()+'cameras/'+self.config['middle_camera_calibration']+'.yml'
-                try:
-                        f=file(fcm,'r')
-                        cm= yaml.safe_load(f.read())
-                except (IOError, EOFError):
-                        print 'Config file not present:',fcm
-                        return
-                pm=cm['projection_matrix']['data']
-                #extract calibration data for camera. should really do this with ROS image_geometry package
-                self.camera_calib['middle']={'fx':pm[0],'fy':pm[5],'cx':pm[2],'cy':pm[6],'w':cm['image_width'],'h':cm['image_height']}
-        
+	def __init__(self,name,bot):
+		M3HeadToolboxS2.__init__(self,name,bot)
+		fcm=m3t.get_m3_ros_config_path()+'cameras/'+self.config['middle_camera_calibration']+'.yml'
+		try:
+			f=file(fcm,'r')
+			cm= yaml.safe_load(f.read())
+		except (IOError, EOFError):
+			print 'Config file not present:',fcm
+			return
+		pm=cm['projection_matrix']['data']
+		#extract calibration data for camera. should really do this with ROS image_geometry package
+		self.camera_calib['middle']={'fx':pm[0],'fy':pm[5],'cx':pm[2],'cy':pm[6],'w':cm['image_width'],'h':cm['image_height']}
+	
 		P = self.bot.list_to_kdl_vector(self.config['middle_camera__translation_in_toolframe'])
 		R = self.bot.list_to_kdl_rotation(self.config['middle_camera_rotation_in_toolframe'])
 		self.tool_T_xe = PyKDL.Frame(R,P) #Fixed transform from middle eye frame to toolframe of head
 		self.xe_T_tool=self.tool_T_xe.Inverse()
 		
-        def world_2_eye(self,eye,xw):
-                if eye=='right' or 'eye'=='left':
-                        return M3HeadToolboxS2.world_2_eye(self,eye,xw)
-                if eye=='middle':
+	def world_2_eye(self,eye,xw):
+		if eye=='right' or 'eye'=='left':
+			return M3HeadToolboxS2.world_2_eye(self,eye,xw)
+		if eye=='middle':
 			xt=self.bot.world_2_tool('head', list(xw))
-                        xe = self.xe_T_tool * self.bot.self.list_to_kdl_vector(xt)
+			xe = self.xe_T_tool * self.bot.self.list_to_kdl_vector(xt)
 			return self.bot.kdl_to_list_vector(xe)
-        
-                
-        def eye_2_world(self,eye,xe):
-                if eye=='right' or 'eye'=='left':
-                        return M3HeadToolboxS2.eye_2_world(self,eye,xe)
-                if eye=='middle':
+	
+		
+	def eye_2_world(self,eye,xe):
+		if eye=='right' or 'eye'=='left':
+			return M3HeadToolboxS2.eye_2_world(self,eye,xe)
+		if eye=='middle':
 			xt = self.tool_T_xe * self.bot.list_to_kdl_vector(xe)
 			HT=self.bot.get_tool_2_world_transform('head')
 			xw=self.bot.tool_2_world('head', self.bot.kdl_to_list_vector(xt))
 			return self.bot.kdl_to_list_vector(xw)
-                        
-        def world_2_image(self,eye,xw):
-                if eye=='right' or 'eye'=='left':
-                        return M3HeadToolboxS2.world_2_image(self,eye,xw)
-                if eye=='middle':
-                        xe=self.world_2_eye(eye,xw,bot)
-                        return self.eye_2_image(eye,xe)
+			
+	def world_2_image(self,eye,xw):
+		if eye=='right' or 'eye'=='left':
+			return M3HeadToolboxS2.world_2_image(self,eye,xw)
+		if eye=='middle':
+			xe=self.world_2_eye(eye,xw,bot)
+			return self.eye_2_image(eye,xe)
 		
-        #Note: check class inheritance rules...can probably get rid of checks and do through mostly by inheritance
-        def image_2_world(self,eye,xi,r=1.0):
-                if eye=='right' or 'eye'=='left':
-                        return M3HeadToolboxS2.image_2_world(self,eye,xi,r)
-                if eye=='middle':
-                        xe=self.image_2_eye(eye,xi,r)
-                        return self.eye_2_world(eye,xe)
+	#Note: check class inheritance rules...can probably get rid of checks and do through mostly by inheritance
+	def image_2_world(self,eye,xi,r=1.0):
+		if eye=='right' or 'eye'=='left':
+			return M3HeadToolboxS2.image_2_world(self,eye,xi,r)
+		if eye=='middle':
+			xe=self.image_2_eye(eye,xi,r)
+			return self.eye_2_world(eye,xe)
  
 # This reduces makes a variable soft limit on the eyelid of UTA head based on the eye tilt
 # Eye tilt is J4 ~+/-35 deg
 # Eye lid is  J7 ~0-180 deg (180 is closed)
 # When the tilt is outside of a threshold we reduce the eyelid below 180 so doesn't interfere with tilt
 class M3HeadToolboxS2UTA(M3HeadToolboxS2):
-        def __init__(self,name,bot):
-                M3HeadToolboxS2.__init__(self,name,bot)
-		
-                #pass in the name of the head component
-                jl=m3t.get_chain_joint_limits(name)
-                self.eyelid_q_max=jl[7][1]
+	def __init__(self,name,bot):
+		M3HeadToolboxS2.__init__(self,name,bot)
+
+		#pass in the name of the head component
+		jl=m3t.get_chain_joint_limits(name)
+		self.eyelid_q_max=jl[7][1]
 		self.eqm_param=self.config['eqm_param']
 
-        def step_eyelids_limit(self,q_j4, q_j7):
-                start=self.eqm_param['eqm_j4_ramp_start']
-                end=self.eqm_param['eqm_j4_ramp_end']
-                r=self.eqm_param['eqm_j7_reduce']
-                if abs(q_j4)<start:
-                        return q_j7
-                if abs(q_j4)>=start and abs(q_j4)<end:
-                        scale=(abs(q_j4)-start)/(end-start) #goes from 0 to 1 in start to end
-                        return min(q_j7,self.eyelid_q_max-r*scale)
-                if abs(q_j4)>=end:
-                        return min(q_j7,self.eyelid_q_max-r )
+	def step_eyelids_limit(self,q_j4, q_j7):
+		start=self.eqm_param['eqm_j4_ramp_start']
+		end=self.eqm_param['eqm_j4_ramp_end']
+		r=self.eqm_param['eqm_j7_reduce']
+		if abs(q_j4)<start:
+			return q_j7
+		if abs(q_j4)>=start and abs(q_j4)<end:
+			scale=(abs(q_j4)-start)/(end-start) #goes from 0 to 1 in start to end
+			return min(q_j7,self.eyelid_q_max-r*scale)
+		if abs(q_j4)>=end:
+			return min(q_j7,self.eyelid_q_max-r )
 
 
 # This reduces makes a variable soft limit on the eyelid of UTA head based on the eye tilt
@@ -210,26 +210,26 @@ class M3HeadToolboxS2UTA(M3HeadToolboxS2):
 # Eye lid is  J7 ~0-180 deg (180 is closed)
 # When the tilt is outside of a threshold we reduce the eyelid below 180 so doesn't interfere with tilt
 class M3HeadToolboxS2ENS(M3HeadToolboxS2):
-        def __init__(self,name,bot):
-                M3HeadToolboxS2.__init__(self,name,bot)
-		
-                #pass in the name of the head component
-                print "(>'')> "+name
-                jl = m3t.get_chain_joint_limits(name)
-                self.eyelid_q_max=jl[7][1]
+	def __init__(self,name,bot):
+		M3HeadToolboxS2.__init__(self,name,bot)
+
+		#pass in the name of the head component
+		jl = m3t.get_chain_joint_limits(name)
+		self.eyelid_q_max=jl[7][1]
+		self.eyelid_q_min=jl[7][0]
 		self.eqm_param=self.config['eqm_param']
 
-        def step_eyelids_limit(self,q_j4, q_j7):
-                start=self.eqm_param['eqm_j4_ramp_start']
-                end=self.eqm_param['eqm_j4_ramp_end']
-                r=self.eqm_param['eqm_j7_reduce']
-                if abs(q_j4)<start:
-                        return q_j7
-                if abs(q_j4)>=start and abs(q_j4)<end:
-                        scale=(abs(q_j4)-start)/(end-start) #goes from 0 to 1 in start to end
-                        return min(q_j7,self.eyelid_q_max-r*scale)
-                if abs(q_j4)>=end:
-                        return min(q_j7,self.eyelid_q_max-r )
+	def step_eyelids_limit(self,q_j4, q_j7):
+		start=self.eqm_param['eqm_j4_ramp_start']
+		end=self.eqm_param['eqm_j4_ramp_end']
+		r=self.eqm_param['eqm_j7_reduce']
+		if abs(q_j4)<start:
+			return q_j7
+		if abs(q_j4)>=start and abs(q_j4)<end:
+			scale=(abs(q_j4)-start)/(end-start) #goes from 0 to 1 in start to end
+			return min(q_j7,self.eyelid_q_max-r*scale)
+		if abs(q_j4)>=end:
+			return min(q_j7,self.eyelid_q_max-r )
 
 
 def spherical_to_cartesian(latitude,longitude,r=1.0):
@@ -243,27 +243,27 @@ def spherical_to_cartesian(latitude,longitude,r=1.0):
 	return [x,y,z]
 
 def intersection_ray_sphere(p0,d,pc,r):
-        #http://www.csee.umbc.edu/~olano/435f02/ray-sphere.html
-        # p0: start of ray
-        # d: direction of ray
-        # pc: center of sphere
-        # r: radius of sphere
-        p0=nu.array(p0,nu.Float)
-        d=nu.array(d,nu.Float)
-        pc=nu.array(pc,nu.Float)
-        a=nu.dot(d,d)
-        b = 2*nu.dot(d,(p0-pc))
-        c = nu.dot((p0 - pc),(p0 - pc)) - r*r
-        discr=(b**2)-(4*a*c)
-        if discr<=0:
-                print 'No intersection for intersection_ray_sphere'
-                return None
-        
-        if discr>0: #two intersections
-                ta=(-b+math.sqrt(discr))/(2*a)
-                tb=(-b-math.sqrt(discr))/(2*a)
-                pa=ta*d+p0
-                pb=tb*d+p0
-                return pa,pb
-        
+	#http://www.csee.umbc.edu/~olano/435f02/ray-sphere.html
+	# p0: start of ray
+	# d: direction of ray
+	# pc: center of sphere
+	# r: radius of sphere
+	p0=nu.array(p0,nu.Float)
+	d=nu.array(d,nu.Float)
+	pc=nu.array(pc,nu.Float)
+	a=nu.dot(d,d)
+	b = 2*nu.dot(d,(p0-pc))
+	c = nu.dot((p0 - pc),(p0 - pc)) - r*r
+	discr=(b**2)-(4*a*c)
+	if discr<=0:
+		print 'No intersection for intersection_ray_sphere'
+		return None
+
+	if discr>0: #two intersections
+		ta=(-b+math.sqrt(discr))/(2*a)
+		tb=(-b-math.sqrt(discr))/(2*a)
+		pa=ta*d+p0
+		pb=tb*d+p0
+		return pa,pb
+	
     

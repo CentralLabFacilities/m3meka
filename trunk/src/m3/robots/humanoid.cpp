@@ -31,6 +31,7 @@ using namespace ros;
 
 bool M3Humanoid::LinkDependentComponents()
 {
+	
 	if (!M3Robot::LinkDependentComponents())
 		return false;
 	
@@ -66,7 +67,9 @@ bool M3Humanoid::LinkDependentComponents()
 
 	}
 	if (head_name.size()!=0)
-	{		
+	{	
+		
+		
 		head=(M3Head*)factory->GetComponent(head_name);
 		if (head!=NULL)
 			nl++;
@@ -88,7 +91,8 @@ bool M3Humanoid::LinkDependentComponents()
 void M3Humanoid::Startup()
 {	
 	M3Robot::Startup();
-
+	
+	
 	if(right_arm && right_arm->GetDynamatics())
 	{
 		for (int i=0; i<right_arm->GetNumDof(); i++)
@@ -260,7 +264,7 @@ void M3Humanoid::Startup()
 	}
 
 	if(head && head->GetDynamatics())
-	{			 
+	{	
 		for (int i=0; i<head->GetDynamatics()->GetNumDof(); i++)//head->GetNumDof()
 		{
 			status.mutable_head()->add_g(0);			
@@ -895,7 +899,7 @@ bool M3Humanoid::ReadConfig(const char * filename)
 	} catch(YAML::KeyNotFound& e) {		
 		h_node = NULL;
 	}
-	 
+	
 	vector<mReal> ra_rot;
 	vector<mReal> la_rot;
 	vector<mReal> t_rot;
@@ -945,10 +949,11 @@ bool M3Humanoid::ReadConfig(const char * filename)
 		h_rot = YamlReadVectorM((*h_node)["base_rotation_in_parent"]);
 		h_trans = YamlReadVectorM((*h_node)["base_translation_in_parent"]);
 		try {
-		  (*t_node)["force_shm_mode"] >>force_shm_head;
+		  (*h_node)["force_shm_mode"] >>force_shm_head;
 		} catch(YAML::KeyNotFound& e) {		
 			force_shm_head = false;
 		}
+
 	}
 	
 	try{
@@ -968,6 +973,7 @@ bool M3Humanoid::ReadConfig(const char * filename)
 	Rotation h_rot_kdl;
 	Vector h_vec_kdl;
 
+	
 	for(int i=0;i<ra_rot.size();i++) ra_rot_kdl.data[i] = ra_rot[i];
 	for(int i=0;i<ra_trans.size();i++) ra_vec_kdl[i] = ra_trans[i];
 	for(int i=0;i<la_rot.size();i++) la_rot_kdl.data[i] = la_rot[i];
@@ -980,6 +986,8 @@ bool M3Humanoid::ReadConfig(const char * filename)
 	right_arm_offset=Frame(ra_rot_kdl, ra_vec_kdl);
 	left_arm_offset=Frame(la_rot_kdl, la_vec_kdl);
 	torso_offset=Frame(t_rot_kdl, t_vec_kdl);
+
+
 	head_offset=Frame(h_rot_kdl, h_vec_kdl);
 
 	return true;
@@ -1317,6 +1325,7 @@ M3BaseHumanoidCommand * M3Humanoid::GetCmd(M3Chain chain)
       return command.mutable_right_arm();
     case LEFT_ARM:
       return command.mutable_left_arm();
+
     case TORSO:
       return command.mutable_torso();
     case HEAD:
