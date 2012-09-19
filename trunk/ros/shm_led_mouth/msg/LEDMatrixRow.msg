@@ -1,1 +1,1 @@
-LEDMatrixRGB column
+LEDMatrixRGB[] column

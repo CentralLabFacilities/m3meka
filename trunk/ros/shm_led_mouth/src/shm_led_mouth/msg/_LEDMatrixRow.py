@@ -10,7 +10,7 @@ class LEDMatrixRow(genpy.Message):
   _md5sum = "5a0313057dae76e530e4ef99ceb0eca4"
   _type = "shm_led_mouth/LEDMatrixRow"
   _has_header = False #flag to mark the presence of a Header object
-  _full_text = """LEDMatrixRGB column
+  _full_text = """LEDMatrixRGB[] column
 ================================================================================
 MSG: shm_led_mouth/LEDMatrixRGB
 uint32 r
@@ -18,7 +18,7 @@ uint32 g
 uint32 b
 """
   __slots__ = ['column']
-  _slot_types = ['shm_led_mouth/LEDMatrixRGB']
+  _slot_types = ['shm_led_mouth/LEDMatrixRGB[]']
 
   def __init__(self, *args, **kwds):
     """
@@ -38,9 +38,9 @@ uint32 b
       super(LEDMatrixRow, self).__init__(*args, **kwds)
       #message fields cannot be None, assign default values for those that are
       if self.column is None:
-        self.column = shm_led_mouth.msg.LEDMatrixRGB()
+        self.column = []
     else:
-      self.column = shm_led_mouth.msg.LEDMatrixRGB()
+      self.column = []
 
   def _get_types(self):
     """
@@ -54,8 +54,11 @@ uint32 b
     :param buff: buffer, ``StringIO``
     """
     try:
-      _x = self
-      buff.write(_struct_3I.pack(_x.column.r, _x.column.g, _x.column.b))
+      length = len(self.column)
+      buff.write(_struct_I.pack(length))
+      for val1 in self.column:
+        _x = val1
+        buff.write(_struct_3I.pack(_x.r, _x.g, _x.b))
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -66,12 +69,19 @@ uint32 b
     """
     try:
       if self.column is None:
-        self.column = shm_led_mouth.msg.LEDMatrixRGB()
+        self.column = None
       end = 0
-      _x = self
       start = end
-      end += 12
-      (_x.column.r, _x.column.g, _x.column.b,) = _struct_3I.unpack(str[start:end])
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      self.column = []
+      for i in range(0, length):
+        val1 = shm_led_mouth.msg.LEDMatrixRGB()
+        _x = val1
+        start = end
+        end += 12
+        (_x.r, _x.g, _x.b,) = _struct_3I.unpack(str[start:end])
+        self.column.append(val1)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -84,8 +94,11 @@ uint32 b
     :param numpy: numpy python module
     """
     try:
-      _x = self
-      buff.write(_struct_3I.pack(_x.column.r, _x.column.g, _x.column.b))
+      length = len(self.column)
+      buff.write(_struct_I.pack(length))
+      for val1 in self.column:
+        _x = val1
+        buff.write(_struct_3I.pack(_x.r, _x.g, _x.b))
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -97,12 +110,19 @@ uint32 b
     """
     try:
       if self.column is None:
-        self.column = shm_led_mouth.msg.LEDMatrixRGB()
+        self.column = None
       end = 0
-      _x = self
       start = end
-      end += 12
-      (_x.column.r, _x.column.g, _x.column.b,) = _struct_3I.unpack(str[start:end])
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      self.column = []
+      for i in range(0, length):
+        val1 = shm_led_mouth.msg.LEDMatrixRGB()
+        _x = val1
+        start = end
+        end += 12
+        (_x.r, _x.g, _x.b,) = _struct_3I.unpack(str[start:end])
+        self.column.append(val1)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill

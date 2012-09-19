@@ -28,22 +28,18 @@
 #include <m3rt/base/m3rt_def.h>
 #include <rtai_nam2num.h>
 #include <rtai_registry.h>
-#include "m3/hardware/joint_zlift_shm_sds.h"
+#include "m3/hardware/led_matrix_ec_shm_sds.h"
 
 // Needed for ROS
 #include <ros/ros.h>
-//#include <m3ctrl_msgs/M3JointCmd.h>
-//#include <sensor_msgs/JointState.h>
-//#include <tf/transform_broadcaster.h>
-#include "LEDMatrixCmd.msg"
+#include <shm_led_mouth/LEDMatrixCmd.h>
 
 
-#define RT_TASK_FREQUENCY_MEKA_OMNI_SHM 100
-#define RT_TIMER_TICKS_NS_MEKA_OMNI_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_OMNI_SHM)		//Period of rt-timer 
-#define MEKA_ODOM_SHM "ZSHMM"
-#define MEKA_ODOM_CMD_SEM "ZSHMC"
-#define MEKA_ODOM_STATUS_SEM "ZSHMS"
-#define MEKA_NDOF 1
+#define RT_TASK_FREQUENCY_MEKA_LED_SHM 100
+#define RT_TIMER_TICKS_NS_MEKA_LED_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_LED_SHM)		//Period of rt-timer 
+#define MEKA_LED_SHM "LSHMM"
+#define MEKA_LED_CMD_SEM "LSHMC"
+#define MEKA_LED_STATUS_SEM "LSHMS"
 
 
 #define CYCLE_TIME_SEC 4
@@ -54,15 +50,13 @@ static int sys_thread_active = 0;
 static int sys_thread_end=0;
 static int end=0;
 static int hst;
-static M3JointZLiftShmSdsCommand cmd;
-static M3JointZLiftShmSdsStatus status;
+static M3LedMatrixEcShmSdsCommand cmd;
+static M3LedMatrixEcShmSdsStatus status;
 static int sds_status_size;
 static int sds_cmd_size;
 static long step_cnt = 0;
 static void endme(int dummy) {  end=1; }
-sensor_msgs::JointState joint_state_g;
-m3ctrl_msgs::M3JointCmd joint_cmd_g;
-ros::Publisher zlift_publisher_g;
+
 ros::Subscriber cmd_sub_g;
 //tf::TransformBroadcaster odom_broadcaster;
 ////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +64,7 @@ ros::Subscriber cmd_sub_g;
 
 ///////  Periodic Control Loop:
 void StepShm();
-void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg);
+void commandCallback(const shm_led_mouth::LEDMatrixCmdConstPtr& msg);
 
 ///////////////////////////////
 
@@ -91,14 +85,7 @@ void StepShm(int cntr)
 {   
   
     SetTimestamp(GetTimestamp()); //Pass back timestamp as a heartbeat
-
-    joint_state_g.header.stamp = ros::Time::now();  
-    
-    joint_state_g.position[0] = status.position;
-    joint_state_g.velocity[0] = status.velocity;
-    joint_state_g.effort[0] = status.effort;
-
-    zlift_publisher_g.publish(joint_state_g);
+   
     
      /*if (cntr % 100 == 0)
       {	
@@ -125,15 +112,23 @@ void StepShm(int cntr)
    
 }
 
-void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
+void commandCallback(const shm_led_mouth::LEDMatrixCmdConstPtr& msg)
 {
-    
-    cmd.position = msg->position[0];
-    cmd.velocity = msg->velocity[0];
-    cmd.stiffness = msg->stiffness[0];
-    cmd.control_mode = (JOINT_MODE_ROS)msg->control_mode[0];
-    cmd.smoothing_mode = (SMOOTHING_MODE)msg->smoothing_mode[0];
-      
+  
+  cmd.enable = msg->enable;
+  
+    for (int i = 0; i < NUM_ROWS; i++)
+    {	        
+      for (int j = 0; j < NUM_COLS; j++)
+      {	
+	cmd.r[i][j] = msg->row[i].column[j].r;
+	cmd.b[i][j] = msg->row[i].column[j].b;
+	cmd.g[i][j] = msg->row[i].column[j].g;
+		
+      }
+    }
+
+        
 }
 
 
@@ -150,35 +145,35 @@ static void* rt_system_thread(void * arg)
 	printf("Starting real-time thread\n");
 		
 	
-	sds_status_size = sizeof(M3JointZLiftShmSdsStatus);
-	sds_cmd_size = sizeof(M3JointZLiftShmSdsCommand);
+	sds_status_size = sizeof(M3LedMatrixEcShmSdsStatus);
+	sds_cmd_size = sizeof(M3LedMatrixEcShmSdsCommand);
 	
 	memset(&cmd, 0, sds_cmd_size);
 	
-	task = rt_task_init_schmod(nam2num("ZSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
+	task = rt_task_init_schmod(nam2num("LSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
 	rt_allow_nonroot_hrt();
 	if (task==NULL)
 	{
-		printf("Failed to create RT-TASK TSHMP\n");
+		printf("Failed to create RT-TASK LSHMP\n");
 		return 0;
 	}
-	status_sem=(SEM*)rt_get_adr(nam2num(MEKA_ODOM_STATUS_SEM));
-	command_sem=(SEM*)rt_get_adr(nam2num(MEKA_ODOM_CMD_SEM));
+	status_sem=(SEM*)rt_get_adr(nam2num(MEKA_LED_STATUS_SEM));
+	command_sem=(SEM*)rt_get_adr(nam2num(MEKA_LED_CMD_SEM));
 	if (!status_sem)
 	{
-		printf("Unable to find the %s semaphore.\n",MEKA_ODOM_STATUS_SEM);
+		printf("Unable to find the %s semaphore.\n",MEKA_LED_STATUS_SEM);
 		rt_task_delete(task);
 		return 0;
 	}
 	if (!command_sem)
 	{
-		printf("Unable to find the %s semaphore.\n",MEKA_ODOM_CMD_SEM);
+		printf("Unable to find the %s semaphore.\n",MEKA_LED_CMD_SEM);
 		rt_task_delete(task);
 		return 0;
 	}
 	
 	
-	RTIME tick_period = nano2count(RT_TIMER_TICKS_NS_MEKA_OMNI_SHM); 
+	RTIME tick_period = nano2count(RT_TIMER_TICKS_NS_MEKA_LED_SHM); 
 	RTIME now = rt_get_time();
 	rt_task_make_periodic(task, now + tick_period, tick_period); 
 	mlockall(MCL_CURRENT | MCL_FUTURE);
@@ -214,7 +209,7 @@ static void* rt_system_thread(void * arg)
 			//rt_task_make_periodic(task, end + tick_period,tick_period);			
 		}
 		step_cnt++;
-		if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_OMNI_SHM)
+		if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_LED_SHM)
 		  cntr = 0;
 		rt_task_wait_period();
 	}	
@@ -247,18 +242,16 @@ int main (int argc, char **argv)
         ros::NodeHandle root_handle;
 	ros::NodeHandle p_nh("~");
 	
-	cmd_sub_g = root_handle.subscribe<m3ctrl_msgs::M3JointCmd>("/zlift_command", 1, &commandCallback);
+	cmd_sub_g = root_handle.subscribe<shm_led_mouth::LEDMatrixCmd>("/led_matrix_command", 1, &commandCallback);
 	
-	joint_state_g = GetInitialJointStateMessage();
-	zlift_publisher_g = root_handle.advertise<sensor_msgs::JointState>("zlift_state", 1, true);
-
+	
 	signal(SIGINT, endme);
 
-	if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_ODOM_SHM),sizeof(M3Sds),USE_VMALLOC))
+	if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_LED_SHM),sizeof(M3Sds),USE_VMALLOC))
 		printf("Found shared memory starting shm_zlift_controller.");
 	else
 	{
-		printf("Rtai_malloc failure for %s\n",MEKA_ODOM_SHM);
+		printf("Rtai_malloc failure for %s\n",MEKA_LED_SHM);
 		return 0;
 	}
 
@@ -274,7 +267,7 @@ int main (int argc, char **argv)
 	if (!sys_thread_active)
 	{
 		rt_task_delete(task);
-		rt_shm_free(nam2num(MEKA_ODOM_SHM));
+		rt_shm_free(nam2num(MEKA_LED_SHM));
 		printf("Startup of thread failed.\n",0);
 		return 0;
 	}
@@ -289,7 +282,7 @@ int main (int argc, char **argv)
 	usleep(1250000);
 	if (sys_thread_active)printf("Real-time thread did not shutdown correctly\n");
 	//rt_task_delete(task);
-	rt_shm_free(nam2num(MEKA_ODOM_SHM));
+	rt_shm_free(nam2num(MEKA_LED_SHM));
 	ros::shutdown();	
 	return 0;
 }

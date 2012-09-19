@@ -35,7 +35,7 @@ string frame_id
 
 ================================================================================
 MSG: shm_led_mouth/LEDMatrixRow
-LEDMatrixRGB column
+LEDMatrixRGB[] column
 ================================================================================
 MSG: shm_led_mouth/LEDMatrixRGB
 uint32 r
@@ -97,9 +97,11 @@ uint32 b
       length = len(self.row)
       buff.write(_struct_I.pack(length))
       for val1 in self.row:
-        _v1 = val1.column
-        _x = _v1
-        buff.write(_struct_3I.pack(_x.r, _x.g, _x.b))
+        length = len(val1.column)
+        buff.write(_struct_I.pack(length))
+        for val2 in val1.column:
+          _x = val2
+          buff.write(_struct_3I.pack(_x.r, _x.g, _x.b))
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -136,11 +138,17 @@ uint32 b
       self.row = []
       for i in range(0, length):
         val1 = shm_led_mouth.msg.LEDMatrixRow()
-        _v2 = val1.column
-        _x = _v2
         start = end
-        end += 12
-        (_x.r, _x.g, _x.b,) = _struct_3I.unpack(str[start:end])
+        end += 4
+        (length,) = _struct_I.unpack(str[start:end])
+        val1.column = []
+        for i in range(0, length):
+          val2 = shm_led_mouth.msg.LEDMatrixRGB()
+          _x = val2
+          start = end
+          end += 12
+          (_x.r, _x.g, _x.b,) = _struct_3I.unpack(str[start:end])
+          val1.column.append(val2)
         self.row.append(val1)
       return self
     except struct.error as e:
@@ -166,9 +174,11 @@ uint32 b
       length = len(self.row)
       buff.write(_struct_I.pack(length))
       for val1 in self.row:
-        _v3 = val1.column
-        _x = _v3
-        buff.write(_struct_3I.pack(_x.r, _x.g, _x.b))
+        length = len(val1.column)
+        buff.write(_struct_I.pack(length))
+        for val2 in val1.column:
+          _x = val2
+          buff.write(_struct_3I.pack(_x.r, _x.g, _x.b))
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -206,11 +216,17 @@ uint32 b
       self.row = []
       for i in range(0, length):
         val1 = shm_led_mouth.msg.LEDMatrixRow()
-        _v4 = val1.column
-        _x = _v4
         start = end
-        end += 12
-        (_x.r, _x.g, _x.b,) = _struct_3I.unpack(str[start:end])
+        end += 4
+        (length,) = _struct_I.unpack(str[start:end])
+        val1.column = []
+        for i in range(0, length):
+          val2 = shm_led_mouth.msg.LEDMatrixRGB()
+          _x = val2
+          start = end
+          end += 12
+          (_x.r, _x.g, _x.b,) = _struct_3I.unpack(str[start:end])
+          val1.column.append(val2)
         self.row.append(val1)
       return self
     except struct.error as e:
