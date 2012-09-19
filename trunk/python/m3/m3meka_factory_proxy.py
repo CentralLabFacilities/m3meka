@@ -23,7 +23,7 @@ import m3.dynamatics
 import m3.omnibase
 import m3.ledx2xn_ec
 import m3.led_matrix_ec
-import m3.head_s2csp_ctrl
+#import m3.head_s2csp_ctrl
 import m3.ctrl_simple
 
 ######################
@@ -64,7 +64,7 @@ component_map['m3loadx6'] = m3.loadx6.M3LoadX6
 component_map['m3loadx6_ec'] = m3.loadx6_ec.M3LoadX6Ec
 component_map['m3humanoid'] = m3.humanoid.M3Humanoid
 component_map['m3dynamatics'] = m3.dynamatics.M3Dynamatics
-component_map['m3head_s2csp_ctrl'] = m3.head_s2csp_ctrl.M3HeadS2CSPCtrl
+#component_map['m3head_s2csp_ctrl'] = m3.head_s2csp_ctrl.M3HeadS2CSPCtrl
 component_map['m3joint_zlift'] = m3.joint_zlift.M3JointZLift
 component_map['m3omnibase'] = m3.omnibase.M3OmniBase
 component_map['m3ledx2xn_ec'] = m3.ledx2xn_ec.M3LedX2XNEc
