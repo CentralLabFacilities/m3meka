@@ -46,16 +46,22 @@ public:
       }
     }
     
+
+    std::cout << "Press any key to cmd LED.\n";
+    std::cin.getline(cmd, 50);
     
     
     cmd_pub_.publish(led_matrix_cmd);
-    cmd_pub_.publish(led_matrix_cmd);
     
+        
     std::cout << "Press any key to stop LED.\n";
     std::cin.getline(cmd, 50);
     
+    led_matrix_cmd.header.stamp = ros::Time::now();
     led_matrix_cmd.enable = false;
     cmd_pub_.publish(led_matrix_cmd);
+    
+    
     return true;
   }
 

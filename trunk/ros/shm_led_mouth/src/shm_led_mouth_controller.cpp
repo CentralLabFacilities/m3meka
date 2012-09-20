@@ -117,21 +117,18 @@ void StepShm(int cntr)
 void commandCallback(const shm_led_mouth::LEDMatrixCmdConstPtr& msg)
 {
   
-
-    //cmd.enable = msg->enable;
-    cmd.enable = true;
+  //printf("cmd!\n");
+  
+    cmd.enable = msg->enable;
+    
   
     for (int i = 0; i < NUM_ROWS; i++)
     {	        
       for (int j = 0; j < NUM_COLS; j++)
       {	
-	/*cmd.r[i][j] = msg->row[i].column[j].r;
+	cmd.r[i][j] = msg->row[i].column[j].r;
 	cmd.b[i][j] = msg->row[i].column[j].b;
-	cmd.g[i][j] = msg->row[i].column[j].g;*/
-	cmd.r[i][j] = 40;
-	cmd.b[i][j] = 40;
-	cmd.g[i][j] = 40;
-		
+	cmd.g[i][j] = msg->row[i].column[j].g;		
       }
     }
 
