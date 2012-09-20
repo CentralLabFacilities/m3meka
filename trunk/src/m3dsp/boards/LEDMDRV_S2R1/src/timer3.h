@@ -26,7 +26,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define T3_TCKPS					1 //8:1 scalar, so 1 tick = 200ns, 5 ticks/1us
 #define T3_US_PER_IRQ				1000 //1000Hz
 #define T3_PR3						T3_US_PER_IRQ*5 //Ticks to interrupt at.
-#define LEDMDRV_IRQ_PER_TRIGGER		18 //100Hz
+#define LEDMDRV_IRQ_PER_TRIGGER		10//18 //100Hz
 
 
 void setup_timer3(void);
