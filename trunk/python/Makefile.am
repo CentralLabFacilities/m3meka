@@ -21,8 +21,6 @@ pkgpython_PYTHON = \
 	m3/actuator_ec_pb2.py\
 	m3/actuator.py\
 	m3/actuator_pb2.py\
-	m3/async_io.py\
-	m3/async_io_pb2.py\
 	m3/joint.py\
 	m3/joint_slave.py\
 	m3/ik_axis.py\
@@ -98,6 +96,9 @@ pkgpython_PYTHON = \
 #	m3rt/m3_skin0_eep.py
 #	m3/hand_ua.py
 #	m3/hand_ua_pb2.py
+#	m3/async_io.py
+#	m3/async_io_pb2.py
+
 
 dist_bin_SCRIPTS = \
 	scripts/m3rt/ps3joy.py\
