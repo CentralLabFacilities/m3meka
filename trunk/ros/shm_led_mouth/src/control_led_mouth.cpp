@@ -25,28 +25,34 @@ public:
   bool driveLED()
   {
     char cmd[50];
-     shm_led_mouth::LEDMatrixCmd led_matrix_cmd;
-     
+     shm_led_mouth::LEDMatrixCmd led_matrix_cmd;     
      
     led_matrix_cmd.row.resize(NUM_ROWS);
-              
+    
+    for (int i = 0; i < NUM_ROWS; i++)
+      led_matrix_cmd.row[i].column.resize(NUM_COLS);
     
     led_matrix_cmd.enable = true;
     led_matrix_cmd.header.stamp = ros::Time::now();
     led_matrix_cmd.header.frame_id = "led_matrix_cmd";
     
-    cmd_pub_.publish(led_matrix_cmd);
-
-    
-    while(nh_.ok()){
-
-      std::cin.getline(cmd, 50);
-      
-            
-      led_matrix_cmd.header.stamp = ros::Time::now();
-      //publish the assembled command
-      cmd_pub_.publish(led_matrix_cmd);
+    for (int i = 0; i < NUM_ROWS; i++)
+    {
+      for (int j = 0; j < NUM_COLS; j++)
+      {
+	led_matrix_cmd.row[i].column[j].r = 40;
+	led_matrix_cmd.row[i].column[j].b = 20;
+	led_matrix_cmd.row[i].column[j].g = 30;
+      }
     }
+    
+    
+    
+    cmd_pub_.publish(led_matrix_cmd);
+    cmd_pub_.publish(led_matrix_cmd);
+    
+    std::cout << "Press any key to stop LED.\n";
+    std::cin.getline(cmd, 50);
     
     led_matrix_cmd.enable = false;
     cmd_pub_.publish(led_matrix_cmd);

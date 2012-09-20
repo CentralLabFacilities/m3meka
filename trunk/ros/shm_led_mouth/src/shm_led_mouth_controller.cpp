@@ -109,21 +109,28 @@ void StepShm(int cntr)
     cmd.stiffness = 1.0;
     cmd.control_mode = JOINT_MODE_ROS_THETA_GC;
     cmd.smoothing_mode = SMOOTHING_MODE_SLEW;*/
-   
+    
+ 
+
 }
 
 void commandCallback(const shm_led_mouth::LEDMatrixCmdConstPtr& msg)
 {
   
-  cmd.enable = msg->enable;
+
+    //cmd.enable = msg->enable;
+    cmd.enable = true;
   
     for (int i = 0; i < NUM_ROWS; i++)
     {	        
       for (int j = 0; j < NUM_COLS; j++)
       {	
-	cmd.r[i][j] = msg->row[i].column[j].r;
+	/*cmd.r[i][j] = msg->row[i].column[j].r;
 	cmd.b[i][j] = msg->row[i].column[j].b;
-	cmd.g[i][j] = msg->row[i].column[j].g;
+	cmd.g[i][j] = msg->row[i].column[j].g;*/
+	cmd.r[i][j] = 40;
+	cmd.b[i][j] = 40;
+	cmd.g[i][j] = 40;
 		
       }
     }
