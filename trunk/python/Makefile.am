@@ -125,7 +125,6 @@ dist_bin_SCRIPTS = \
 	scripts/demo/m3_demo_gravity_comp.py\
 	scripts/demo/m3_demo_head_s1r1.py\
 	scripts/demo/m3_demo_head_s2r1.py\
-	scripts/demo/m3_demo_head_s2r2_cart.py\
 	scripts/demo/m3_demo_zlift_z1r1.py\
 	scripts/demo/m3_demo_hand_h2r1.py\
 	scripts/demo/m3_demo_hand_h2r2.py\
@@ -152,4 +151,4 @@ dist_bin_SCRIPTS = \
 	scripts/dev/m3dev_tuning.py
 	
 
-
+#	scripts/demo/m3_demo_head_s2r2_cart.py

@@ -21,6 +21,7 @@ import m3.toolbox as m3t
 import m3.toolbox_ctrl as m3tc
 import m3.joint_array_pb2 as mab
 import m3.joint_array_mode_pb2 as mam
+import m3.smoothing_mode_pb2 as msm
 import m3.joint_pb2 as mrt
 from m3.component import M3Component
 from m3.unit_conversion import *
@@ -64,6 +65,7 @@ class M3JointArray(M3Component):
             self.command.qdot_desired.append(0)
             self.command.q_stiffness.append(0)
 	    self.command.q_slew_rate.append(0)
+	    self.command.smoothing_mode.append(msm.SMOOTHING_MODE_OFF)
             self.command.ctrl_mode.append(mam.JOINT_ARRAY_MODE_OFF)
         
         self.motor_temp=nu.zeros(self.ndof,nu.Float32)
