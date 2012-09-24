@@ -27,7 +27,9 @@ enum M3Chain
   RIGHT_ARM=0,
   LEFT_ARM,
   TORSO,
-  HEAD
+  HEAD,
+  RIGHT_HAND,
+  LEFT_HAND
 };
 
 #endif
