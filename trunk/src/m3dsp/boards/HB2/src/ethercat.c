@@ -451,7 +451,7 @@ void setup_spi(void)
 	SPI1CON1=0;
 	SPI1CON1bits.MSTEN=1;		//Act as SPI Master
 	SPI1CON1bits.PPRE=0b10;		// ((0b10, 4:1), (0b00, 64:1) (0b11,1:1) prescalar
-	SPI1CON1bits.SPRE=0b110;	// (0b111, 1:1),(0b110, 2:1) secondary scalar
+	SPI1CON1bits.SPRE=0b111;	// (0b111, 1:1),(0b110, 2:1) secondary scalar
     SPI1CON1bits.CKP=1;			//Idle state is high
     SPI1CON1bits.CKE=0;			//Data changes on clock transition from idle to active
     SPI1CON1bits.SMP=0;			//Input data sampled at middle of data output time 
