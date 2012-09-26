@@ -242,19 +242,6 @@ rospack_gensrv/fast:
 .PHONY : rospack_gensrv/fast
 
 #=============================================================================
-# Target rules for targets named shm_omnibase_controller
-
-# Build rule for target.
-shm_omnibase_controller: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 shm_omnibase_controller
-.PHONY : shm_omnibase_controller
-
-# fast build rule for target.
-shm_omnibase_controller/fast:
-	$(MAKE) -f CMakeFiles/shm_omnibase_controller.dir/build.make CMakeFiles/shm_omnibase_controller.dir/build
-.PHONY : shm_omnibase_controller/fast
-
-#=============================================================================
 # Target rules for targets named test
 
 # Build rule for target.
@@ -334,21 +321,6 @@ src/drive_base.s:
 	$(MAKE) -f CMakeFiles/drive_base.dir/build.make CMakeFiles/drive_base.dir/src/drive_base.s
 .PHONY : src/drive_base.s
 
-# target to build an object file
-src/shm_omnibase_controller.o:
-	$(MAKE) -f CMakeFiles/shm_omnibase_controller.dir/build.make CMakeFiles/shm_omnibase_controller.dir/src/shm_omnibase_controller.o
-.PHONY : src/shm_omnibase_controller.o
-
-# target to preprocess a source file
-src/shm_omnibase_controller.i:
-	$(MAKE) -f CMakeFiles/shm_omnibase_controller.dir/build.make CMakeFiles/shm_omnibase_controller.dir/src/shm_omnibase_controller.i
-.PHONY : src/shm_omnibase_controller.i
-
-# target to generate assembly for a file
-src/shm_omnibase_controller.s:
-	$(MAKE) -f CMakeFiles/shm_omnibase_controller.dir/build.make CMakeFiles/shm_omnibase_controller.dir/src/shm_omnibase_controller.s
-.PHONY : src/shm_omnibase_controller.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -368,7 +340,6 @@ help:
 	@echo "... rospack_genmsg"
 	@echo "... rospack_genmsg_libexe"
 	@echo "... rospack_gensrv"
-	@echo "... shm_omnibase_controller"
 	@echo "... test"
 	@echo "... test-future"
 	@echo "... test-results"
@@ -377,9 +348,6 @@ help:
 	@echo "... src/drive_base.o"
 	@echo "... src/drive_base.i"
 	@echo "... src/drive_base.s"
-	@echo "... src/shm_omnibase_controller.o"
-	@echo "... src/shm_omnibase_controller.i"
-	@echo "... src/shm_omnibase_controller.s"
 .PHONY : help
 
 
