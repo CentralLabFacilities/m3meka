@@ -21,14 +21,14 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #uncomment if you have defined services
 #rosbuild_gensrv()
 
-include_directories(../m3ctrl_msgs/msg_gen/cpp/include/ ../../../m3core/src/ /usr/realtime-2.6.32.11-rtai-3.8.1/include)
+include_directories(../m3ctrl_msgs/msg_gen/cpp/include/ ../../../m3core/src/ /usr/realtime-2.6.32.11-rtai-3.8.1/include ../../src)
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
-rosbuild_add_executable(shm_zlift_controller src/shm_zlift_controller.cpp)
+#rosbuild_add_executable(shm_zlift_controller src/shm_zlift_controller.cpp)
 rosbuild_add_executable(move_zlift src/move_zlift.cpp)
 #rosbuild_add_executable(drive_base src/drive_base.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
