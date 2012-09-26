@@ -240,7 +240,7 @@ int main (int argc, char **argv)
   	spinner.start();
         ros::NodeHandle root_handle;*/
 	
-	ros::init(argc, argv, "base_controller", ros::init_options::NoSigintHandler); // initialize ROS node
+	ros::init(argc, argv, "led_controller", ros::init_options::NoSigintHandler); // initialize ROS node
 	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
 	spinner.start();
         ros::NodeHandle root_handle;

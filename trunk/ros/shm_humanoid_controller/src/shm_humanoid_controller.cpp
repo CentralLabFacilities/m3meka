@@ -49,11 +49,11 @@
 #define MEKA_ODOM_SHM "TSHMM"
 #define MEKA_ODOM_CMD_SEM "TSHMC"
 #define MEKA_ODOM_STATUS_SEM "TSHMS"
-#define MEKA_NDOF_HEAD 0
+#define MEKA_NDOF_HEAD 8
 #define MEKA_NDOF_RIGHT_ARM 7
-#define MEKA_NDOF_LEFT_ARM 7
+#define MEKA_NDOF_LEFT_ARM 0
 #define MEKA_NDOF_TORSO 0
-#define MEKA_NDOF_RIGHT_HAND 0
+#define MEKA_NDOF_RIGHT_HAND 5
 #define MEKA_NDOF_LEFT_HAND 0
 #define MEKA_NDOF_TOTAL MEKA_NDOF_HEAD + MEKA_NDOF_RIGHT_ARM + MEKA_NDOF_LEFT_ARM + MEKA_NDOF_TORSO + MEKA_NDOF_RIGHT_HAND + MEKA_NDOF_LEFT_HAND
 
@@ -252,7 +252,6 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
       cmd.torso.q_desired[chain_idx] = msg->position[i];
       cmd.torso.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
       cmd.torso.q_stiffness[chain_idx] = msg->stiffness[i]; 
-      cmd.torso.ctrl_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->control_mode[i]; 
       cmd.torso.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
     }      
     else if ((M3Chain)msg->chain[i] == RIGHT_HAND)
@@ -268,8 +267,7 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	cmd.right_hand.q_desired[chain_idx] = msg->position[i];
 	cmd.right_hand.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
 	cmd.right_hand.q_stiffness[chain_idx] = msg->stiffness[i]; 
-	cmd.right_hand.ctrl_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->control_mode[i]; 
-	cmd.right_hand.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
+	cmd.right_hand.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 	
     }      
     else if ((M3Chain)msg->chain[i] == LEFT_HAND)
     {
@@ -283,8 +281,7 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	  cmd.left_hand.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
 	cmd.left_hand.q_desired[chain_idx] = msg->position[i];
 	cmd.left_hand.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
-	cmd.left_hand.q_stiffness[chain_idx] = msg->stiffness[i]; 
-	cmd.left_hand.ctrl_mode[chain_idx] = (JOINT_ARRAY_MODE)msg->control_mode[i]; 
+	cmd.left_hand.q_stiffness[chain_idx] = msg->stiffness[i]; 	
 	cmd.left_hand.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
      }   
   }
@@ -485,7 +482,7 @@ int main (int argc, char **argv)
   	spinner.start();
         ros::NodeHandle root_handle;*/
 	
-	ros::init(argc, argv, "base_controller", ros::init_options::NoSigintHandler); // initialize ROS node
+	ros::init(argc, argv, "hum_controller", ros::init_options::NoSigintHandler); // initialize ROS node
 	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
 	spinner.start();
         ros::NodeHandle root_handle;

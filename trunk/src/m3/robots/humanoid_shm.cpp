@@ -151,17 +151,19 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
   
   if (right_hand)
   { 
+    
       for (int i = 0; i < right_hand->GetNumDof(); i++)
-      {
+      {	
 	if (shm_timeout)
 	{	
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);
-	} else{	  	  
+	} else{	 	  
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.right_hand.ctrl_mode[i]);
 	  //((M3JointArrayCommand*)right_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.right_hand.smoothing_mode[i]);      
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_desired(i, command_from_sds.right_hand.q_desired[i]);
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_slew_rate(i, command_from_sds.right_hand.slew_rate_q_desired[i]);    
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_tq_desired(i, command_from_sds.right_hand.tq_desired[i]);      
+	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_desired(i, RAD2DEG(command_from_sds.right_hand.q_desired[i]));
+	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_slew_rate(i, RAD2DEG(command_from_sds.right_hand.slew_rate_q_desired[i]));    
+	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_tq_desired(i, command_from_sds.right_hand.tq_desired[i]);
+	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_stiffness(i, command_from_sds.right_hand.q_stiffness[i]);      
 	}
       }	      
   }
@@ -176,9 +178,10 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	} else{	  	  
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.left_hand.ctrl_mode[i]);      
 	  //((M3JointArrayCommand*)left_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.left_hand.smoothing_mode[i]);      
-	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_desired(i, command_from_sds.left_hand.q_desired[i]);
-	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_slew_rate(i, command_from_sds.left_hand.slew_rate_q_desired[i]);    
-	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_tq_desired(i, command_from_sds.left_hand.tq_desired[i]);      
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_desired(i, RAD2DEG(command_from_sds.left_hand.q_desired[i]));
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_slew_rate(i, RAD2DEG(command_from_sds.left_hand.slew_rate_q_desired[i]));    
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_tq_desired(i, command_from_sds.left_hand.tq_desired[i]);
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_stiffness(i, command_from_sds.left_hand.q_stiffness[i]);      
 	}
       }	      
   }
@@ -367,11 +370,11 @@ bool M3HumanoidShm::ReadConfig(const char * filename)
 	}
 	
 	try{
-	  doc["left_hand_component"] >> right_hand_name;	
+	  doc["left_hand_component"] >> left_hand_name;	
 	}
 	catch(YAML::KeyNotFound& e)
 	{
-	  right_hand_name="";
+	  left_hand_name="";
 	}
 	
 	try{
