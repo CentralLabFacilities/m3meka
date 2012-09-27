@@ -44,7 +44,7 @@ public:
     std::cout << "Press any key to move to zero position.\n";
     std::cin.getline(cmd, 50);
     
-    humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM;
+    humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
     humanoid_cmd.chain_idx[0] = 0; //J0
     humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC; //Compliant position mode
     humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_SLEW; //Smooth trajectory
@@ -54,8 +54,13 @@ public:
     humanoid_cmd.position[0] = 0; //Desired position (Rad)
     humanoid_cmd.header.stamp = ros::Time::now();
     humanoid_cmd.header.frame_id = "humanoid_cmd";
+    
+    //printf("stiff: %d\n",humanoid_cmd.stiffness[0]);
+    
     cmd_pub_.publish(humanoid_cmd);
   
+    
+    
     std::cout << "Type a command and then press enter.  "
       "Use 'z' to go to middle, '+' to move up, '-' to move down, "
       "'.' to exit.\n";
