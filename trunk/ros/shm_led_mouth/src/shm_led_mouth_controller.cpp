@@ -252,7 +252,7 @@ int main (int argc, char **argv)
 	signal(SIGINT, endme);
 
 	if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_LED_SHM),sizeof(M3Sds),USE_VMALLOC))
-		printf("Found shared memory starting shm_zlift_controller.");
+		printf("Found shared memory starting shm_led_mouth_controller.");
 	else
 	{
 		printf("Rtai_malloc failure for %s\n",MEKA_LED_SHM);
