@@ -71,6 +71,7 @@ pkgpython_PYTHON = \
 	m3/ledx2xn_ec.py\
 	m3/ledx2xn_ec_pb2.py\
 	m3/m3_echub_eep.py\
+	m3/m3_1100hub_eep.py\
 	m3/m3_loadx6_eep.py\
 	m3/m3_pwr_eep.py\
 	m3/m3_actx1_eep.py\

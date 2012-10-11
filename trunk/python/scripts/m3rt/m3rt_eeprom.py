@@ -39,6 +39,7 @@ m3_product_codes={ 'm3_actx1':1010L,
 		  'm3_ledx2':1009L,
 		  'm3_bld':1007L,
 		  'm3_echub':1000L,
+		  'm3_echub4':1001L,
 		  'm3_pwr':1002L,
 		  'm3_loadx6':1003L,
 		  'm3_armh':1015L,
@@ -54,6 +55,9 @@ try:
 		code=int(raw_input())
 		if (code==m3_product_codes['m3_echub']):
 			from m3.m3_echub_eep import slave_cfg_dicts
+			fpfx='echub'
+		if (code==m3_product_codes['m3_echub4']):
+			from m3.m3_1100hub_eep import slave_cfg_dicts
 			fpfx='echub'
 		if (code==m3_product_codes['m3_pwr']):
 			from  m3.m3_pwr_eep import slave_cfg_dicts

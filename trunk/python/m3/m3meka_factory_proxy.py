@@ -29,7 +29,8 @@ import m3.ctrl_simple
 ######################
 
 
-import m3.m3_echub_eep 
+import m3.m3_echub_eep
+import m3.m3_1100hub_eep 
 import  m3.m3_pwr_eep 
 import  m3.m3_loadx6_eep  
 import  m3.m3_ledx2_eep  
@@ -82,10 +83,12 @@ m3meka_actx4 = 1013L
 m3meka_ledx2 = 1009L
 m3meka_bld = 1007L
 m3meka_echub = 1000L
+m3meka_echub4 = 1001L
 m3meka_pwr = 1002L
 m3meka_loadx6 = 1003L
 
 m3_fpfx[m3meka_echub] = 'echub'
+m3_fpfx[m3meka_echub4] = 'echub4'
 m3_fpfx[m3meka_pwr] = 'pwr'
 m3_fpfx[m3meka_loadx6] = 'loadx6'
 m3_fpfx[m3meka_ledx2] = 'ledx2'
@@ -103,6 +106,7 @@ m3_product_codes['m3_actx4'] = m3meka_actx4
 m3_product_codes['m3_ledx2'] = m3meka_ledx2
 m3_product_codes['m3_bld'] = m3meka_bld
 m3_product_codes['m3_echub'] = m3meka_echub
+m3_product_codes['m3_echub4'] = m3meka_echub4
 m3_product_codes['m3_pwr'] = m3meka_pwr
 m3_product_codes['m3_loadx6'] = m3meka_loadx6
 #m3_product_codes['m3_armh'] = 1015L
@@ -110,6 +114,7 @@ m3_product_codes['m3_loadx6'] = m3meka_loadx6
 #m3_product_codes['m3_tactx2'] = 1014L
 
 m3_eeprom_cfgs[m3meka_echub] = m3.m3_echub_eep.slave_cfg_dicts
+m3_eeprom_cfgs[m3meka_echub4] = m3.m3_1100hub_eep.slave_cfg_dicts
 m3_eeprom_cfgs[m3meka_pwr] = m3.m3_pwr_eep.slave_cfg_dicts
 m3_eeprom_cfgs[m3meka_loadx6] = m3.m3_loadx6_eep.slave_cfg_dicts
 m3_eeprom_cfgs[m3meka_ledx2] = m3.m3_ledx2_eep.slave_cfg_dicts
