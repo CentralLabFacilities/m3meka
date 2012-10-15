@@ -99,9 +99,9 @@ def get_joint_ctrl_component_name(name):
         try:
                 f=file(get_component_config_filename(name),'r')
                 config= yaml.safe_load(f.read())
-        except (IOError, EOFError):
+        except:
                 print 'Config file not present:',get_component_config_filename(name),'for',name
-                return
+                return ""
         return config['control_component']
 
 

@@ -804,8 +804,16 @@ bool M3ActuatorEc::ReadConfig(const char * filename)
 
 		ymlparam["pwm_db"] >> val;
 		param.set_pwm_db(val);
-		ymlparam["bldc_mode"] >> val;
+		
+		try
+		{
+			ymlparam["bldc_mode"] >> val;						
+		} catch(YAML::TypedKeyNotFound<string> e) 
+		{
+			val=0;
+		}
 		param.set_bldc_mode(val);
+		
 		if (IsVersion(DEFAULT)||IsVersion(ISS))
 		{
 		  ymlparam["k_ff_zero"] >> val;
