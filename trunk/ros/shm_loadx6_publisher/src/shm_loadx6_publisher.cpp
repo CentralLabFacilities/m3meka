@@ -390,9 +390,9 @@ static void* rt_system_thread(void * arg)
 		
 		StepShm(cntr);		
 		
-		rt_sem_wait(command_sem);		
+		/*rt_sem_wait(command_sem);		
 		memcpy(sds->cmd, &cmd, sds_cmd_size);		
-		rt_sem_signal(command_sem);
+		rt_sem_signal(command_sem);*/
 				
 		end_time = nano2count(rt_get_cpu_time_ns());
 		dt=end_time-start_time;
