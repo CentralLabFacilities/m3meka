@@ -48,9 +48,9 @@
 
 #define RT_TASK_FREQUENCY_MEKA_OMNI_SHM 100
 #define RT_TIMER_TICKS_NS_MEKA_OMNI_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_OMNI_SHM)		//Period of rt-timer 
-#define MEKA_ODOM_SHM "TSHMM"
-#define MEKA_ODOM_CMD_SEM "TSHMC"
-#define MEKA_ODOM_STATUS_SEM "TSHMS"
+#define MEKA_ODOM_SHM "XSHMM"
+#define MEKA_ODOM_CMD_SEM "XSHMC"
+#define MEKA_ODOM_STATUS_SEM "XSHMS"
 #define MEKA_NDOF_HEAD 0
 #define MEKA_NDOF_RIGHT_ARM 7
 #define MEKA_NDOF_LEFT_ARM 7
@@ -349,7 +349,7 @@ static void* rt_system_thread(void * arg)
 	
 	memset(&cmd, 0, sds_cmd_size);
 	
-	task = rt_task_init_schmod(nam2num("LSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
+	task = rt_task_init_schmod(nam2num("XSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
 	rt_allow_nonroot_hrt();
 	if (task==NULL)
 	{
