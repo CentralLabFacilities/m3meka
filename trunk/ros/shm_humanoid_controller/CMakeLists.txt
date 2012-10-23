@@ -28,6 +28,6 @@ include_directories(../m3ctrl_msgs/msg_gen/cpp/include/ ../../../m3core/src/ /us
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(shm_humanoid_controller src/shm_humanoid_controller.cpp)
+rosbuild_add_executable(shm_humanoid_controller src/shm_humanoid_controller.cpp)
 rosbuild_add_executable(move_humanoid src/move_humanoid.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
