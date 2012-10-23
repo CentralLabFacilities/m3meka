@@ -254,7 +254,7 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
       cmd.torso.q_stiffness[chain_idx] = msg->stiffness[i]; 
       cmd.torso.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
     }      
-    else if ((M3Chain)msg->chain[i] == RIGHT_HAND)
+    /*else if ((M3Chain)msg->chain[i] == RIGHT_HAND)
     {
 	if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_OFF)
 	  cmd.right_hand.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
@@ -283,7 +283,7 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	cmd.left_hand.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
 	cmd.left_hand.q_stiffness[chain_idx] = msg->stiffness[i]; 	
 	cmd.left_hand.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
-     }   
+     }   */
   }
   
       
