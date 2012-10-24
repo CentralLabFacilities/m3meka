@@ -35,6 +35,7 @@
 #include <iomanip>
 #include <locale>
 #include <sstream>
+#include <m3rt/base/toolbox.h>
 
 
 // Needed for ROS
@@ -42,24 +43,26 @@
 #include <m3ctrl_msgs/M3JointCmd.h>
 #include <sensor_msgs/JointState.h>
 #include <tf/transform_broadcaster.h>
-
+#include "yaml-cpp/yaml.h"
+#include <string.h>
 
 #define RT_TASK_FREQUENCY_MEKA_OMNI_SHM 100
 #define RT_TIMER_TICKS_NS_MEKA_OMNI_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_OMNI_SHM)		//Period of rt-timer 
 #define MEKA_ODOM_SHM "TSHMM"
 #define MEKA_ODOM_CMD_SEM "TSHMC"
 #define MEKA_ODOM_STATUS_SEM "TSHMS"
-#define MEKA_NDOF_HEAD 0
-#define MEKA_NDOF_RIGHT_ARM 7
-#define MEKA_NDOF_LEFT_ARM 7
-#define MEKA_NDOF_TORSO 0
-#define MEKA_NDOF_RIGHT_HAND 0
-#define MEKA_NDOF_LEFT_HAND 0
-#define MEKA_NDOF_TOTAL MEKA_NDOF_HEAD + MEKA_NDOF_RIGHT_ARM + MEKA_NDOF_LEFT_ARM + MEKA_NDOF_TORSO + MEKA_NDOF_RIGHT_HAND + MEKA_NDOF_LEFT_HAND
+static int MEKA_NDOF_HEAD;
+static int MEKA_NDOF_RIGHT_ARM;
+static int MEKA_NDOF_LEFT_ARM;
+static int MEKA_NDOF_TORSO;
+static int MEKA_NDOF_RIGHT_HAND;
+static int MEKA_NDOF_LEFT_HAND;
+static int MEKA_NDOF_TOTAL;// MEKA_NDOF_HEAD + MEKA_NDOF_RIGHT_ARM + MEKA_NDOF_LEFT_ARM + MEKA_NDOF_TORSO + MEKA_NDOF_RIGHT_HAND + MEKA_NDOF_LEFT_HAND
 
 
 #define CYCLE_TIME_SEC 4
 
+using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////////
 static int sys_thread_active = 0;
@@ -379,6 +382,40 @@ float64[] effort
   return joint_state;
 }
 
+bool GetEnvironmentVar(const char * var, string &s)
+{
+	char *p=getenv(var);
+	if (p!=NULL)
+	{
+		s.assign(p);
+		return true;
+	}
+	return false;
+}
+
+void GetYamlDoc(const char * filename, YAML::Node & doc)
+{	
+	string s(filename);
+	string path;
+	
+	if (GetEnvironmentVar("M3_ROBOT", path))
+	{		
+		path.append("/robot_config/");
+		path.append(s);
+	}
+	ifstream fin(path.c_str());
+	if (fin.fail())
+	{		
+		printf("could not read %s \n", path.c_str());	
+	}
+
+   	YAML::Parser parser(fin);
+   	
+   	parser.GetNextDocument(doc);
+	fin.close();
+	return;
+}
+
 ////////////////////////// RTAI PROCESS BOILERPLATE /////////////////////////////
 
 static void* rt_system_thread(void * arg)
@@ -389,7 +426,9 @@ static void* rt_system_thread(void * arg)
 	int cntr=0;
 	M3Sds * sds = (M3Sds *)arg;
 	printf("Starting real-time thread\n");
-		
+	
+	
+	
 	
 	sds_status_size = sizeof(status);
 	sds_cmd_size = sizeof(cmd);
@@ -474,6 +513,64 @@ int main (int argc, char **argv)
 	RT_TASK *task;
 	M3Sds * sys;
 	int cntr=0;
+	
+	YAML::Node doc;
+	GetYamlDoc("shm_humanoid_config.yml", doc);
+	
+	int ndof_total = 0;
+	int ndof;
+	
+	try {
+	  doc["ndof_chains"]["right_arm"] >> ndof;
+	} catch (YAML::KeyNotFound &e) {
+	  ndof = 0;	  
+	}
+	MEKA_NDOF_RIGHT_ARM = ndof;
+	ndof_total += ndof;
+	
+	try {
+	  doc["ndof_chains"]["left_arm"] >> ndof;
+	} catch (YAML::KeyNotFound &e) {
+	  ndof = 0;	  
+	}
+	MEKA_NDOF_LEFT_ARM = ndof;
+	ndof_total += ndof;
+	
+	try {
+	  doc["ndof_chains"]["torso"] >> ndof;
+	} catch (YAML::KeyNotFound &e) {
+	  ndof = 0;	  
+	}
+	MEKA_NDOF_TORSO = ndof;
+	ndof_total += ndof;
+	
+	try {
+	  doc["ndof_chains"]["head"] >> ndof;
+	} catch (YAML::KeyNotFound &e) {
+	  ndof = 0;	  
+	}
+	MEKA_NDOF_HEAD = ndof;
+	ndof_total += ndof;
+	
+	try {
+	  doc["ndof_chains"]["right_hand"] >> ndof;
+	} catch (YAML::KeyNotFound &e) {
+	  ndof = 0;	  
+	}
+	MEKA_NDOF_RIGHT_HAND = ndof;
+	ndof_total += ndof;
+	
+	try {
+	  doc["ndof_chains"]["left_hand"] >> ndof;
+	} catch (YAML::KeyNotFound &e) {
+	  ndof = 0;	  
+	}
+	MEKA_NDOF_LEFT_HAND = ndof;
+	ndof_total += ndof;
+	
+	MEKA_NDOF_TOTAL = ndof_total;
+	//printf("ndof: %d\n", ndof_total);
+	
 	
 	rt_allow_nonroot_hrt();
 	
