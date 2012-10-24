@@ -59,10 +59,8 @@ static int ndof_left_arm = 0;
 static int ndof_torso = 0;
 static int ndof_right_hand = 0;
 static int ndof_left_hand = 0;
-static int ndof_total = 0;// MEKA_NDOF_HEAD + MEKA_NDOF_RIGHT_ARM + MEKA_NDOF_LEFT_ARM + MEKA_NDOF_TORSO + MEKA_NDOF_RIGHT_HAND + MEKA_NDOF_LEFT_HAND
+static int ndof_total = 0;
 
-
-#define CYCLE_TIME_SEC 4
 
 using namespace std;
 
@@ -496,8 +494,7 @@ static void* rt_system_thread(void * arg)
 			//rt_task_make_periodic(task, end + tick_period,tick_period);			
 		}
 		step_cnt++;
-		if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_OMNI_SHM)
-		  cntr = 0;
+		
 		rt_task_wait_period();
 	}	
 	printf("Exiting RealTime Thread...\n",0);
