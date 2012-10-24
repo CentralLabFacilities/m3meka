@@ -35,29 +35,31 @@
 #include <iomanip>
 #include <locale>
 #include <sstream>
-#include <m3rt/base/toolbox.h>
-
+#include <iostream>
+#include <fstream>
+#include "yaml-cpp/yaml.h"
+//#include <m3rt/base/toolbox.h>
 
 // Needed for ROS
 #include <ros/ros.h>
 #include <m3ctrl_msgs/M3JointCmd.h>
 #include <sensor_msgs/JointState.h>
 #include <tf/transform_broadcaster.h>
-#include "yaml-cpp/yaml.h"
-#include <string.h>
+
 
 #define RT_TASK_FREQUENCY_MEKA_OMNI_SHM 100
 #define RT_TIMER_TICKS_NS_MEKA_OMNI_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_OMNI_SHM)		//Period of rt-timer 
 #define MEKA_ODOM_SHM "TSHMM"
 #define MEKA_ODOM_CMD_SEM "TSHMC"
 #define MEKA_ODOM_STATUS_SEM "TSHMS"
-static int MEKA_NDOF_HEAD;
-static int MEKA_NDOF_RIGHT_ARM;
-static int MEKA_NDOF_LEFT_ARM;
-static int MEKA_NDOF_TORSO;
-static int MEKA_NDOF_RIGHT_HAND;
-static int MEKA_NDOF_LEFT_HAND;
-static int MEKA_NDOF_TOTAL;// MEKA_NDOF_HEAD + MEKA_NDOF_RIGHT_ARM + MEKA_NDOF_LEFT_ARM + MEKA_NDOF_TORSO + MEKA_NDOF_RIGHT_HAND + MEKA_NDOF_LEFT_HAND
+
+static int ndof_head = 0;
+static int ndof_right_arm = 0;
+static int ndof_left_arm = 0;
+static int ndof_torso = 0;
+static int ndof_right_hand = 0;
+static int ndof_left_hand = 0;
+static int ndof_total = 0;// MEKA_NDOF_HEAD + MEKA_NDOF_RIGHT_ARM + MEKA_NDOF_LEFT_ARM + MEKA_NDOF_TORSO + MEKA_NDOF_RIGHT_HAND + MEKA_NDOF_LEFT_HAND
 
 
 #define CYCLE_TIME_SEC 4
@@ -110,7 +112,7 @@ void StepShm(int cntr)
     joint_state_g.header.stamp = ros::Time::now();  
     
      int j = 0;
-  for (int i = 0; i < MEKA_NDOF_RIGHT_ARM; i++)
+  for (int i = 0; i < ndof_right_arm; i++)
   {
     joint_state_g.position[j] = DEG2RAD(status.right_arm.theta[i]);
     joint_state_g.velocity[j] = DEG2RAD(status.right_arm.thetadot[i]);
@@ -119,7 +121,7 @@ void StepShm(int cntr)
     
   }
 
-  for (int i = 0; i < MEKA_NDOF_LEFT_ARM; i++)
+  for (int i = 0; i < ndof_left_arm; i++)
   {
     joint_state_g.position[j] = DEG2RAD(status.left_arm.theta[i]);
     joint_state_g.velocity[j] = DEG2RAD(status.left_arm.thetadot[i]);
@@ -127,7 +129,7 @@ void StepShm(int cntr)
     j++;  
   }
 
-  for (int i = 0; i < MEKA_NDOF_HEAD; i++)
+  for (int i = 0; i < ndof_head; i++)
   {
     joint_state_g.position[j] = DEG2RAD(status.head.theta[i]);
     joint_state_g.velocity[j] = DEG2RAD(status.head.thetadot[i]);
@@ -135,7 +137,7 @@ void StepShm(int cntr)
       j++;
   }
 
-  for (int i = 0; i < MEKA_NDOF_TORSO; i++)
+  for (int i = 0; i < ndof_torso; i++)
   {
     joint_state_g.position[j] = DEG2RAD(status.torso.theta[i]);
     joint_state_g.velocity[j] = DEG2RAD(status.torso.thetadot[i]);
@@ -143,7 +145,7 @@ void StepShm(int cntr)
       j++;
   }
   
-  for (int i = 0; i < MEKA_NDOF_RIGHT_HAND; i++)
+  for (int i = 0; i < ndof_right_hand; i++)
   {
     joint_state_g.position[j] = DEG2RAD(status.right_hand.theta[i]);
     joint_state_g.velocity[j] = DEG2RAD(status.right_hand.thetadot[i]);
@@ -151,7 +153,7 @@ void StepShm(int cntr)
       j++;
   }
   
-  for (int i = 0; i < MEKA_NDOF_LEFT_HAND; i++)
+  for (int i = 0; i < ndof_left_hand; i++)
   {
     joint_state_g.position[j] = DEG2RAD(status.left_hand.theta[i]);
     joint_state_g.velocity[j] = DEG2RAD(status.left_hand.thetadot[i]);
@@ -308,16 +310,16 @@ float64[] effort
   joint_state.header.stamp = ros::Time::now();
   joint_state.header.frame_id = "humanoid";
 
-  joint_state.name.resize(MEKA_NDOF_TOTAL);
-  joint_state.position.resize(MEKA_NDOF_TOTAL,0.0);
-  joint_state.velocity.resize(MEKA_NDOF_TOTAL,0.0);
-  joint_state.effort.resize(MEKA_NDOF_TOTAL,0.0);
+  joint_state.name.resize(ndof_total);
+  joint_state.position.resize(ndof_total,0.0);
+  joint_state.velocity.resize(ndof_total,0.0);
+  joint_state.effort.resize(ndof_total,0.0);
   
   
   
 
   int j = 0;
-  for (int i = 0; i < MEKA_NDOF_RIGHT_ARM; i++)
+  for (int i = 0; i < ndof_right_arm; i++)
   {
     std::ostringstream convert;
     std::string int_str; 
@@ -328,7 +330,7 @@ float64[] effort
     
   }
 
-  for (int i = 0; i < MEKA_NDOF_LEFT_ARM; i++)
+  for (int i = 0; i < ndof_left_arm; i++)
   {
     std::ostringstream convert;
     std::string int_str; 
@@ -338,7 +340,7 @@ float64[] effort
     j++;  
   }
 
-  for (int i = 0; i < MEKA_NDOF_HEAD; i++)
+  for (int i = 0; i < ndof_head; i++)
   {
     std::ostringstream convert;
     std::string int_str; 
@@ -348,7 +350,7 @@ float64[] effort
       j++;
   }
 
-  for (int i = 0; i < MEKA_NDOF_TORSO; i++)
+  for (int i = 0; i < ndof_torso; i++)
   {
     std::ostringstream convert;
     std::string int_str; 
@@ -358,7 +360,7 @@ float64[] effort
       j++;
   }
   
-  for (int i = 0; i < MEKA_NDOF_RIGHT_HAND; i++)
+  for (int i = 0; i < ndof_right_hand; i++)
   {
     std::ostringstream convert;
     std::string int_str; 
@@ -368,7 +370,7 @@ float64[] effort
       j++;
   }
   
-  for (int i = 0; i < MEKA_NDOF_LEFT_HAND; i++)
+  for (int i = 0; i < ndof_left_hand; i++)
   {
     std::ostringstream convert;
     std::string int_str; 
@@ -525,7 +527,7 @@ int main (int argc, char **argv)
 	} catch (YAML::KeyNotFound &e) {
 	  ndof = 0;	  
 	}
-	MEKA_NDOF_RIGHT_ARM = ndof;
+	ndof_right_arm = ndof;
 	ndof_total += ndof;
 	
 	try {
@@ -533,7 +535,7 @@ int main (int argc, char **argv)
 	} catch (YAML::KeyNotFound &e) {
 	  ndof = 0;	  
 	}
-	MEKA_NDOF_LEFT_ARM = ndof;
+	ndof_left_arm = ndof;
 	ndof_total += ndof;
 	
 	try {
@@ -541,7 +543,7 @@ int main (int argc, char **argv)
 	} catch (YAML::KeyNotFound &e) {
 	  ndof = 0;	  
 	}
-	MEKA_NDOF_TORSO = ndof;
+	ndof_torso = ndof;
 	ndof_total += ndof;
 	
 	try {
@@ -549,7 +551,7 @@ int main (int argc, char **argv)
 	} catch (YAML::KeyNotFound &e) {
 	  ndof = 0;	  
 	}
-	MEKA_NDOF_HEAD = ndof;
+	ndof_head = ndof;
 	ndof_total += ndof;
 	
 	try {
@@ -557,7 +559,7 @@ int main (int argc, char **argv)
 	} catch (YAML::KeyNotFound &e) {
 	  ndof = 0;	  
 	}
-	MEKA_NDOF_RIGHT_HAND = ndof;
+	ndof_right_hand = ndof;
 	ndof_total += ndof;
 	
 	try {
@@ -565,10 +567,10 @@ int main (int argc, char **argv)
 	} catch (YAML::KeyNotFound &e) {
 	  ndof = 0;	  
 	}
-	MEKA_NDOF_LEFT_HAND = ndof;
+	ndof_left_hand = ndof;
 	ndof_total += ndof;
 	
-	MEKA_NDOF_TOTAL = ndof_total;
+	ndof_total = ndof_total;
 	//printf("ndof: %d\n", ndof_total);
 	
 	
