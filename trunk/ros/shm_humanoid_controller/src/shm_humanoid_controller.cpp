@@ -516,7 +516,7 @@ int main (int argc, char **argv)
 	YAML::Node doc;
 	GetYamlDoc("shm_humanoid_config.yml", doc);
 	
-	int ndof_total = 0;
+	
 	int ndof;
 	
 	try {
@@ -566,8 +566,7 @@ int main (int argc, char **argv)
 	}
 	ndof_left_hand = ndof;
 	ndof_total += ndof;
-	
-	ndof_total = ndof_total;
+		
 	//printf("ndof: %d\n", ndof_total);
 	
 	
