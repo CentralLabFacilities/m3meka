@@ -336,7 +336,10 @@ void M3Joint::StepCommand()
 		pwm_on_slew.Reset(0.0);
 		q_slew.Reset(GetThetaDeg());
 		jerk_joint.Startup(GetTimestamp(), GetThetaDeg());
-		tq_switch=GetTorque()*1000;  // TODO: Make GetTorque nNm again
+		if (IsVersion(IQ)) 
+		  tq_switch=GetTorque()*1000;  // TODO: Make GetTorque nNm again
+		else
+		  tq_switch=GetTorque(); 
 		q_switch=GetThetaDeg();
 		pwm_switch=GetPwmCmd();
 		if (IsVersion(IQ)) { 
@@ -544,6 +547,7 @@ void M3Joint::StepCommand()
 				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME);
 				tq_out=tq_on*(stiffness*tq_des-gravity)+(1.0-tq_on)*tq_switch;
 				//Send out
+				
 				trans->SetTorqueDesJoint(tq_out);
 				act->SetDesiredControlMode(ACTUATOR_MODE_TORQUE);
 				act->SetDesiredTorque(trans->GetTorqueDesActuator());

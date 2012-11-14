@@ -102,7 +102,12 @@ def get_joint_ctrl_component_name(name):
         except:
                 print 'Config file not present:',get_component_config_filename(name),'for',name
                 return ""
-        return config['control_component']
+        ctrl = ""
+        try:
+		ctrl = config['control_component']
+	except:
+		ctrl = ""
+        return ctrl
 
 
 def get_chain_dynamatics_component_name(name):		

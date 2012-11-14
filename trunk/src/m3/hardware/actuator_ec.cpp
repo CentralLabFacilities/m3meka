@@ -646,15 +646,25 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	else
 		ax->config=ax->config & ~ACTUATOR_EC_CONFIG_BRAKE_OFF; 
 	
-	ax->k_p=CLAMP((int)((mReal)param.k_p()),-32767,32767);
-	ax->k_i=CLAMP((int)((mReal)param.k_i()),-32767,32767);
-	ax->k_d=CLAMP((int)((mReal)param.k_d()),-32767,32767);
+	if (IsVersion(IQ))
+	{
+	    ax->k_p=CLAMP((int)((mReal)param.k_p()),-32767,32767);
+	    ax->k_i=CLAMP((int)((mReal)param.k_i()),-32767,32767);
+	    ax->k_d=CLAMP((int)((mReal)param.k_d()),-32767,32767);
+	    ax->pwm_max=(int)(CLAMP(MIN(pwm_max_ext,param.pwm_max()),0,32767));
+	} else {
+	    ax->k_p=CLAMP((int)((mReal)param.k_p()*pwr_scale),-32767,32767);
+	    ax->k_i=CLAMP((int)((mReal)param.k_i()*pwr_scale),-32767,32767);
+	    ax->k_d=CLAMP((int)((mReal)param.k_d()*pwr_scale),-32767,32767);
+	    ax->pwm_max=(int)(CLAMP(MIN(pwm_max_ext,param.pwm_max()),0,32767)*pwr_scale);
+	}
+	
 	ax->k_p_shift=CLAMP(param.k_p_shift(),-32767,32767);
 	ax->k_i_shift=CLAMP(param.k_i_shift(),-32767,32767);
 	ax->k_d_shift=CLAMP(param.k_d_shift(),-32767,32767);
 	ax->k_i_limit=CLAMP(param.k_i_limit(),-32767,32767);
 	ax->pwm_db=CLAMP(param.pwm_db(),-32767,32767);			
-	ax->pwm_max=(int)(CLAMP(MIN(pwm_max_ext,param.pwm_max()),0,32767));
+	
 	ax->t_desire=CLAMP(command.t_desire(),-32767,32767);
 
 	

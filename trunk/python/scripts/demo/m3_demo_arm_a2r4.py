@@ -101,7 +101,7 @@ class M3Proc:
 		self.axis_demo = [0, 0, 1]
 
 		# ##### Generate square vias ############################
-		ik_vias=[]
+		'''ik_vias=[]
 		length_m = 25/ 100.0
 		resolution = 20
 		y_left = self.center[1] + length_m/2.0
@@ -153,7 +153,7 @@ class M3Proc:
 			else:
 				print 'WARNING: no IK solution found for via ', ikv
 		self.bot.set_theta_sim_deg(self.arm_name,[0]*self.bot.get_num_dof(self.arm_name))
-
+'''
 		# ##### Generate circle vias ############################
 		ik_vias=[]
 		diameter_m = 25.0 / 100.0
@@ -201,10 +201,10 @@ class M3Proc:
 		# ######## Demo and GUI #########################
 		self.off=False
 		self.grasp=False
-		self.arm_mode_names=['Off','Zero','Current','HoldUp','Square','Circle','TrajA']
+		self.arm_mode_names=['Off','Zero','Current','HoldUp','Circle','TrajA','Gravity']
 		self.hand_mode_names=['Off','Open','Grasp','Animation']
 		self.arm_mode_methods=[self.step_off,self.step_zero,self.step_current,self.step_hold_up,self.step_via_traj,
-				       self.step_via_traj,self.step_via_traj]
+				       self.step_via_traj,self.step_gravity]
 		self.hand_mode_methods=[self.step_hand_off,self.step_hand_open,self.step_hand_grasp,self.step_hand_animation]
 		self.arm_mode=[0]
 		self.hand_mode=[0]
@@ -329,7 +329,9 @@ class M3Proc:
 
 	def step_gravity(self):
 		self.bot.set_mode_theta_gc(self.arm_name)
-		self.bot.set_stiffness(self.arm_name,[0.0]*self.ndof)
+		self.bot.set_stiffness(self.arm_name,[0.0]*5)
+		self.bot.set_stiffness(self.arm_name,[0.8]*2,[5,6])
+		self.hand.set_slew_rate_proportion([1.0]*5)
 		return True
 
 	def step_off(self):
