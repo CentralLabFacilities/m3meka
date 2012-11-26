@@ -33,6 +33,8 @@ libm3robotsinclude_HEADERS = \
 	humanoid.h\
 	robot.h\
 	humanoid.pb.h\
+	haptic_demo.pb.h\
+	haptic_demo.h\
 	humanoid_shm.pb.h \
 	humanoid_shm_sds.h \
 	humanoid_shm.h
@@ -46,6 +48,14 @@ humanoid.pb.cpp: humanoid.proto
 	protoc -I$(prefix)/include/m3rt/base  -I../toolbox -I../chains -I../hardware -I./ --cpp_out=./ humanoid.proto
 	mv humanoid.pb.cc humanoid.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base  -I../toolbox -I../chains -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 humanoid.proto	
+
+haptic_demo.pb.h: haptic_demo.pb.cpp
+
+haptic_demo.pb.cpp: haptic_demo.proto
+	protoc -I$(prefix)/include/m3rt/base  -I../toolbox -I../chains -I../hardware -I./ --cpp_out=./ haptic_demo.proto
+	mv haptic_demo.pb.cc haptic_demo.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base  -I../toolbox -I../chains -I../hardware -I./ --python_out=$(top_srcdir)/python/m3 haptic_demo.proto	
+
 	
 humanoid_shm.pb.h: humanoid_shm.pb.cpp
 
@@ -54,7 +64,7 @@ humanoid_shm.pb.cpp: humanoid_shm.proto
 	mv humanoid_shm.pb.cc humanoid_shm.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base -I../toolbox -I../hardware -I../chains -I./ --python_out=$(top_srcdir)/python/m3 humanoid_shm.proto
 
-proto: humanoid.pb.cpp humanoid_shm.pb.cpp 
+proto: humanoid.pb.cpp humanoid_shm.pb.cpp  haptic_demo.pb.cpp
 
 proto_install: 
 	if test -d $(includedir)/m3; then echo '' ; else mkdir $(includedir)/m3;fi
@@ -104,7 +114,9 @@ libm3robots_la_CPPFLAGS =   -I../chains -I../toolbox -I../hardware -I$(m3_dir) -
 libm3robots_la_SOURCES = \
 	humanoid.pb.cpp\
 	humanoid_shm.pb.cpp\
+	haptic_demo.pb.cpp\
 	humanoid.cpp\
 	humanoid_shm.cpp\
 	robot.cpp\
+	haptic_demo.cpp\
 	factory_proxy.cpp

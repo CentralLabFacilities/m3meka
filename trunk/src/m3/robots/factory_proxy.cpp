@@ -21,6 +21,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include <m3rt/base/component.h>
 #include <m3/robots/humanoid.h>
 #include <m3/robots/humanoid_shm.h>
+#include <m3/robots/haptic_demo.h>
 ///////////////////////////////////////////////////////
 extern "C" 
 {
@@ -29,13 +30,16 @@ extern "C"
 //They should also match the names used for component definition in m3_config.yml 
 #define M3HUMANOID_TYPE_NAME	"m3humanoid"
 #define M3HUMANOID_SHM_TYPE_NAME	"m3humanoid_shm"
+#define M3HAPTIC_DEMO_TYPE_NAME	"m3haptic_demo"
 ///////////////////////////////////////////////////////
 //Creators
 m3rt::M3Component * create_m3humanoid(){return new m3::M3Humanoid;}
 m3rt::M3Component * create_m3humanoid_shm(){return new m3::M3HumanoidShm;}
+m3rt::M3Component * create_m3haptic_demo(){return new m3::M3HapticDemo;}
 //Deletors
 void destroy_m3humanoid(m3rt::M3Component* c) {delete c;}
 void destroy_m3humanoid_shm(m3rt::M3Component* c) {delete c;}
+void destroy_m3haptic_demo(m3rt::M3Component* c) {delete c;}
 ///////////////////////////////////////////////////////
 class M3FactoryProxy 
 { 
@@ -46,6 +50,8 @@ public:
 		m3rt::destroyer_factory[M3HUMANOID_TYPE_NAME] =  destroy_m3humanoid;
 		m3rt::creator_factory[M3HUMANOID_SHM_TYPE_NAME] =	create_m3humanoid_shm;
 		m3rt::destroyer_factory[M3HUMANOID_SHM_TYPE_NAME] =  destroy_m3humanoid_shm;
+		m3rt::creator_factory[M3HAPTIC_DEMO_TYPE_NAME] =	create_m3haptic_demo;
+		m3rt::destroyer_factory[M3HAPTIC_DEMO_TYPE_NAME] =  destroy_m3haptic_demo;
 	}
 };
 ///////////////////////////////////////////////////////

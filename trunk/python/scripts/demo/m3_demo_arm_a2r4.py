@@ -30,11 +30,16 @@ import m3.gui as m3g
 import m3.trajectory as m3jt
 import numpy as nu
 import yaml
+#import m3uta.example as me
+import m3.haptic_demo as me
 
 class M3Proc:
 	def __init__(self):
 		self.proxy = m3p.M3RtProxy()
 		self.gui = m3g.M3Gui(stride_ms=50)
+		
+		
+		
 	def stop(self):
 		self.proxy.stop()
 
@@ -42,6 +47,12 @@ class M3Proc:
 		# ######## Setup Proxy and Components #########################
 		self.proxy.start()
 		self.current_first = True
+		
+		#self.ex = me.M3Example('m3uta_example_ex0')
+		self.ex = me.M3HapticDemo('m3haptic_demo_hd0')
+		self.proxy.subscribe_status(self.ex)
+		self.proxy.publish_command(self.ex)
+
 		
 		bot_name=m3t.get_robot_name()
 		if bot_name == "":
@@ -157,7 +168,7 @@ class M3Proc:
 		# ##### Generate circle vias ############################
 		ik_vias=[]
 		diameter_m = 25.0 / 100.0
-		resolution = 20
+		resolution = 40
 		x = self.center[0]
 		for i in range(resolution*4 + 1):
 			dt = 2*nu.pi/(nu.float(resolution)*4)
@@ -201,23 +212,23 @@ class M3Proc:
 		# ######## Demo and GUI #########################
 		self.off=False
 		self.grasp=False
-		self.arm_mode_names=['Off','Zero','Current','HoldUp','Circle','TrajA','Gravity']
+		self.arm_mode_names=['Off','Zero','Current','HoldUp','Circle','TrajA','Gravity','Haptic']
 		self.hand_mode_names=['Off','Open','Grasp','Animation']
 		self.arm_mode_methods=[self.step_off,self.step_zero,self.step_current,self.step_hold_up,self.step_via_traj,
-				       self.step_via_traj,self.step_gravity]
+				       self.step_via_traj,self.step_gravity,self.step_haptic]
 		self.hand_mode_methods=[self.step_hand_off,self.step_hand_open,self.step_hand_grasp,self.step_hand_animation]
 		self.arm_mode=[0]
 		self.hand_mode=[0]
 		self.poses={'zero':  {'right_arm':[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],'left_arm':[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]},
 			    'holdup':{'right_arm':[56.0, 26.0, -8.0, 84.0, 119.0, -36.0, 2.0],'left_arm':[56.0, -26.0, 8.0, 84.0, -119.0, -36.0, -2.0]}}		
-		self.stiffness=[50]
+		self.stiffness=[85]
 		self.velocity=[25]
 		self.gui.add('M3GuiModes',  'Arm Mode',      (self,'arm_mode'),range(1),[self.arm_mode_names,1],m3g.M3GuiWrite,column=1)
 		self.gui.add('M3GuiToggle', 'ESTOP', (self,'off'),[],[['Arm Enabled','Arm Disabled']],m3g.M3GuiWrite,column=1)
 		if self.hand is not None:
 			self.gui.add('M3GuiToggle', 'Grasp', (self,'grasp'),[],[['GraspOpen','GraspClosed']],m3g.M3GuiWrite,column=1)
 			self.gui.add('M3GuiModes',  'Hand Mode',      (self,'hand_mode'),range(1),[self.hand_mode_names,1],m3g.M3GuiWrite,column=1)
-		self.gui.add('M3GuiSliders','Stiffness ', (self,'stiffness'),[0],[0,100],m3g.M3GuiWrite,column=1) 
+		self.gui.add('M3GuiSliders','Stiffness ', (self,'stiffness'),[0],[1,100],m3g.M3GuiWrite,column=1) 
 		self.gui.add('M3GuiSliders','Velocity ', (self,'velocity'),[0],[0,40],m3g.M3GuiWrite,column=1) 
 		self.gui.start(self.step)
 
@@ -245,9 +256,10 @@ class M3Proc:
 			if self.get_hand_mode_name()!='Animation':
 				self.hand_traj_first=True
 			apply(self.hand_mode_methods[self.hand_mode[0]])
-			
+		#self.proxy.step()
 
 	def step_hand_off(self):
+		
 		self.hand.set_mode_off()
 
 	def step_hand_open(self):
@@ -258,6 +270,7 @@ class M3Proc:
 		self.hand.set_theta_deg([0.0]*5)
 
 	def step_hand_grasp(self):
+		
 		self.hand.set_stiffness([0.8]*5)
 		self.hand.set_slew_rate_proportion([1.0]*5)
 		if self.grasp:
@@ -271,6 +284,7 @@ class M3Proc:
 			self.hand.set_theta_deg([90.0,0.0,0.0,0.0,0.0])
 
 	def step_hand_animation(self):
+		
 		self.hand.set_mode_splined_traj_gc([1,2,3,4])
 		self.hand.set_mode_splined_traj([0])
 		self.hand.set_stiffness([0.8]*5)
@@ -286,6 +300,7 @@ class M3Proc:
 			self.hand_traj_first=True
 
 	def step_via_traj(self):
+		self.ex.set_enable_off()
 		self.bot.set_mode_splined_traj_gc(self.arm_name)
 		self.bot.set_stiffness(self.arm_name, self.get_stiffness())
 		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*self.ndof)
@@ -303,6 +318,7 @@ class M3Proc:
 			self.via_traj_redo = True
 
 	def step_current(self):
+		self.ex.set_enable_off()
 		if self.current_first:
 			self.current_first=False
 			self.theta_curr = self.bot.get_theta_deg(self.arm_name)[:]			
@@ -314,6 +330,7 @@ class M3Proc:
 		
 
 	def step_zero(self):
+		self.ex.set_enable_off()
 		self.bot.set_mode_theta_gc(self.arm_name)
 		self.bot.set_theta_deg(self.arm_name,self.poses['zero'][self.arm_name])
 		self.bot.set_stiffness(self.arm_name,self.get_stiffness())
@@ -321,6 +338,7 @@ class M3Proc:
 		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*self.ndof)
 
 	def step_hold_up(self):
+		self.ex.set_enable_off()
 		self.bot.set_mode_theta_gc(self.arm_name)
 		self.bot.set_theta_deg(self.arm_name,self.poses['holdup'][self.arm_name])
 		self.bot.set_stiffness(self.arm_name,self.get_stiffness())
@@ -328,13 +346,22 @@ class M3Proc:
 		#self.bot.set_thetadot_deg(self.arm_name,[15.0]*self.ndof)
 
 	def step_gravity(self):
+		self.ex.set_enable_off()
 		self.bot.set_mode_theta_gc(self.arm_name)
-		self.bot.set_stiffness(self.arm_name,[0.0]*5)
-		self.bot.set_stiffness(self.arm_name,[0.8]*2,[5,6])
-		self.hand.set_slew_rate_proportion([1.0]*5)
+		#self.bot.set_theta_deg(self.arm_name,self.bot.get_theta_deg(self.arm_name)[:])
+		self.bot.set_theta_deg(self.arm_name,[0.0]*3,[4,5,6])
+		self.bot.set_stiffness(self.arm_name,[0.0]*4,[0,1,2,3])
+		self.bot.set_stiffness(self.arm_name,[0.7]*3,[4,5,6])
+		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*7)
 		return True
+	
+	def step_haptic(self):
+		self.ex.set_enable_on()
+		
+		
 
 	def step_off(self):
+		self.ex.set_enable_off()
 		self.bot.set_mode_off(self.arm_name)
 
 

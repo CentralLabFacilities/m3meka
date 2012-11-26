@@ -43,7 +43,8 @@ typedef struct
 {    
     mReal			theta[MAX_NDOF];			
     mReal			thetadot[MAX_NDOF];			
-    mReal			torque[MAX_NDOF];    
+    mReal			torque[MAX_NDOF];
+    mReal			jacobian[6][MAX_NDOF];
 }M3JntArrayShmSdsStatus;
 
 typedef struct
