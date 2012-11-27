@@ -49,9 +49,12 @@ class M3Proc:
 		self.current_first = True
 		
 		#self.ex = me.M3Example('m3uta_example_ex0')
-		self.ex = me.M3HapticDemo('m3haptic_demo_hd0')
-		self.proxy.subscribe_status(self.ex)
-		self.proxy.publish_command(self.ex)
+		demo_name = self.proxy.get_available_components('m3haptic_demo')
+		self.ex = None
+		if len(demo_name) > 0:
+			self.ex = me.M3HapticDemo(demo_name[0])		
+			self.proxy.subscribe_status(self.ex)
+			self.proxy.publish_command(self.ex)
 
 		
 		bot_name=m3t.get_robot_name()
@@ -300,7 +303,8 @@ class M3Proc:
 			self.hand_traj_first=True
 
 	def step_via_traj(self):
-		self.ex.set_enable_off()
+		if self.ex != None:
+			self.ex.set_enable_off()
 		self.bot.set_mode_splined_traj_gc(self.arm_name)
 		self.bot.set_stiffness(self.arm_name, self.get_stiffness())
 		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*self.ndof)
@@ -318,7 +322,8 @@ class M3Proc:
 			self.via_traj_redo = True
 
 	def step_current(self):
-		self.ex.set_enable_off()
+		if self.ex != None:
+			self.ex.set_enable_off()
 		if self.current_first:
 			self.current_first=False
 			self.theta_curr = self.bot.get_theta_deg(self.arm_name)[:]			
@@ -330,7 +335,8 @@ class M3Proc:
 		
 
 	def step_zero(self):
-		self.ex.set_enable_off()
+		if self.ex != None:
+			self.ex.set_enable_off()
 		self.bot.set_mode_theta_gc(self.arm_name)
 		self.bot.set_theta_deg(self.arm_name,self.poses['zero'][self.arm_name])
 		self.bot.set_stiffness(self.arm_name,self.get_stiffness())
@@ -338,7 +344,8 @@ class M3Proc:
 		self.bot.set_slew_rate_proportion(self.arm_name,[1.0]*self.ndof)
 
 	def step_hold_up(self):
-		self.ex.set_enable_off()
+		if self.ex != None:
+			self.ex.set_enable_off()
 		self.bot.set_mode_theta_gc(self.arm_name)
 		self.bot.set_theta_deg(self.arm_name,self.poses['holdup'][self.arm_name])
 		self.bot.set_stiffness(self.arm_name,self.get_stiffness())
@@ -346,7 +353,8 @@ class M3Proc:
 		#self.bot.set_thetadot_deg(self.arm_name,[15.0]*self.ndof)
 
 	def step_gravity(self):
-		self.ex.set_enable_off()
+		if self.ex != None:
+			self.ex.set_enable_off()
 		self.bot.set_mode_theta_gc(self.arm_name)
 		#self.bot.set_theta_deg(self.arm_name,self.bot.get_theta_deg(self.arm_name)[:])
 		self.bot.set_theta_deg(self.arm_name,[0.0]*3,[4,5,6])
@@ -356,12 +364,13 @@ class M3Proc:
 		return True
 	
 	def step_haptic(self):
-		self.ex.set_enable_on()
+		if self.ex != None:
+			self.ex.set_enable_on()
 		
 		
-
 	def step_off(self):
-		self.ex.set_enable_off()
+		if self.ex != None:
+			self.ex.set_enable_off()
 		self.bot.set_mode_off(self.arm_name)
 
 
