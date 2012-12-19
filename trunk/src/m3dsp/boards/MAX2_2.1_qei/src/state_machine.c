@@ -42,7 +42,7 @@ void step_state()
 	}
 	else if (wd_cnt > 10)					// if the status doesn't change for some cycles, we're hosed
 	{
-		ec_cmd.command[0].mode = DSP_OFF;
+		//ec_cmd.command[0].mode = DSP_OFF;
 	}
 
         switch (ec_cmd.command[0].mode) {

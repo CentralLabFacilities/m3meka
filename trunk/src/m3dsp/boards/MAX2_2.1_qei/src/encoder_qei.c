@@ -129,7 +129,7 @@ void step_qei()
 
 }
 
-void __attribute__((__interrupt__, no_auto_psv)) _QEIInterrupt(void)
+void __attribute__((__interrupt__, no_auto_psv)) _QEI1Interrupt(void)
 {	
 
 #if defined QEI_USE_INDEX
