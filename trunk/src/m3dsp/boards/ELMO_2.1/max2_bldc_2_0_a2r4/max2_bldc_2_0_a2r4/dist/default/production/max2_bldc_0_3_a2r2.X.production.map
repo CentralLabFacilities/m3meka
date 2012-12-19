@@ -83,26 +83,26 @@ Program Memory  [Origin = 0x200, Length = 0xa9fe]
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200                0xd0           0x138  (312)
-.text                        0x2d0              0x4528          0x67bc  (26556)
-.dinit                      0x47f8                0x64            0x96  (150)
-.text                       0x485c                0xd0           0x138  (312)
+.text                        0x2d0              0x461c          0x692a  (26922)
+.dinit                      0x48ec                0x76            0xb1  (177)
+.text                       0x4962                0xdc           0x14a  (330)
 
-                     Total program memory used (bytes):         0x6ac2  (27330) 41%
+                     Total program memory used (bytes):         0x6c5d  (27741) 42%
 
 
 Data Memory  [Origin = 0x800, Length = 0x2000]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-.nbss                        0x800                   0           0x36a  (874)
-.ndata                       0xb6a                   0             0xc  (12)
-.nbss                        0xb76                   0             0xe  (14)
-_409ed31050cb9bd0           0x2670                   0             0x8  (8)
-_409ed1c050cb9bd0           0x2678                   0             0x8  (8)
-_40a138c050cb9bd3           0x2680                   0            0x80  (128)
-_40a13a1050cb9bd3           0x2700                   0           0x100  (256)
+.nbss                        0x800                   0           0x37e  (894)
+.ndata                       0xb7e                   0            0x12  (18)
+.nbss                        0xb90                   0             0x6  (6)
+_409e50005069fd6f           0x2670                   0             0x8  (8)
+_409e4e705069fd6f           0x2678                   0             0x8  (8)
+_40a0b7005069fd72           0x2680                   0            0x80  (128)
+_40a0b8505069fd72           0x2700                   0           0x100  (256)
 
-                        Total data memory used (bytes):          0x514  (1300) 15%
+                        Total data memory used (bytes):          0x526  (1318) 16%
 
 
 Dynamic Memory Usage
@@ -110,98 +110,102 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0xb84                              0x1aec  (6892)
+stack                        0xb96                              0x1ada  (6874)
 
-                        Maximum dynamic memory (bytes):         0x1aec  (6892)
+                        Maximum dynamic memory (bytes):         0x1ada  (6874)
 
 
 External Symbols in Data Memory (by address):
 
                     0x0800                  _adc_buffer
-                    0x0900                  _watchdog_expired
-                    0x0902                  _irq_cnt
-                    0x0904                  _adc_meas
-                    0x090c                  _adc_idx_fast
-                    0x090e                  _adc_idx
-                    0x0910                  _adc_raw
-                    0x0918                  _pdo_stat
-                    0x0936                  _pdo_cmd
-                    0x0954                  _stat_ext_idx
-                    0x0956                  _ec_cmd_ext
-                    0x0976                  _ec_stat_ext
-                    0x0984                  _ec_stat_out
-                    0x09a2                  _ec_cmd_in
-                    0x09ba                  _ec_stat
-                    0x09dc                  _ec_cmd
-                    0x0a02                  _rcon_reg
-                    0x0a04                  _ec_wd_timestamp
-                    0x0a08                  _ec_wd_expired
-                    0x0a0a                  _ec_flags
-                    0x0a0c                  _tmp_debug
-                    0x0a0e                  _ec_debug
-                    0x0a10                  _result
-                    0x0a14                  _t_error
-                    0x0a16                  _gains
-                    0x0a3c                  _td_idx
-                    0x0a3e                  _torque_prev
-                    0x0a40                  _torque_dot
-                    0x0a44                  _t_error_sum
-                    0x0a48                  _ramp_idx
-                    0x0a4a                  _fsa_state
-                    0x0a4c                  _torque_delta
-                    0x0a8c                  _ff_term
-                    0x0a90                  _d_term
-                    0x0a94                  _i_term
-                    0x0a98                  _p_term
-                    0x0a9c                  _dac_cmd_val
-                    0x0a9e                  _dac_buffer
-                    0x0b1e                  _dac_idx_fast
-                    0x0b20                  _dac_idx
-                    0x0b22                  _bDcSyncActive
-                    0x0b24                  _nEscAddrInputData
-                    0x0b26                  _nEscAddrOutputData
-                    0x0b28                  _nStateTrans
-                    0x0b29                  _bWdActive
-                    0x0b2a                  _u16WdCounter
-                    0x0b2c                  _u16WdValue
-                    0x0b2e                  _nAlStatusCode
-                    0x0b2f                  _nAlStatusFailed
-                    0x0b30                  _nAlStatus
-                    0x0b31                  _nAlControl
-                    0x0b32                  _nMaxSyncMan
-                    0x0b33                  _bSynchronMode
-                    0x0b34                  _nPdOutputSize
-                    0x0b36                  _nPdInputSize
-                    0x0b38                  _bEcatFirstOutputsReceived
-                    0x0b39                  _bEcatInputUpdateRunning
-                    0x0b3a                  _bEcatOutputUpdateRunning
-                    0x0b3c                  _tx_idx
-                    0x0b3e                  _EscMbxReadEcatCtrl
-                    0x0b40                  _TmpSyncMan
-                    0x0b48                  _do_tx
-                    0x0b49                  _did_tx
-                    0x0b4a                  _did_rx
-                    0x0b4c                  _EscAlEvent
-                    0x0b50                  _EscAlControl
-                    0x0b52                  _bAlEventEnabled
-                    0x0b54                  _qei_index_cnt
-                    0x0b56                  _qei_calibrated
-                    0x0b58                  _qei_zero_last
-                    0x0b5a                  _qei_limitswitch_last
-                    0x0b5c                  _qei_calibration_req
-                    0x0b5e                  _qei_calibrate_flag_last
-                    0x0b60                  _qei_err
-                    0x0b62                  _qei_roll
-                    0x0b66                  _qei_pos
-                    0x0b6a                  _last_status
-                    0x0b6c                  _wd_cnt
-                    0x0b6e                  _adc_zero
-                    0x0b76                  _vertx_error_buffer
-                    0x0b78                  _vertx_buffer
-                    0x0b7c                  _vertx_idx
-                    0x0b7e                  _vertx_val
-                    0x0b80                  _bEcatWaitForInputUpdate
-                    0x0b82                  _tmp_cnt
+                    0x0900                  _irq_cnt
+                    0x0902                  _adc_meas
+                    0x090a                  _adc_idx_fast
+                    0x090c                  _adc_idx
+                    0x090e                  _adc_raw
+                    0x0916                  _pdo_stat
+                    0x0934                  _pdo_cmd
+                    0x0952                  _stat_ext_idx
+                    0x0954                  _ec_cmd_ext
+                    0x0974                  _ec_stat_ext
+                    0x0982                  _ec_stat_out
+                    0x09a0                  _ec_cmd_in
+                    0x09b8                  _ec_stat
+                    0x09da                  _ec_cmd
+                    0x0a00                  _rcon_reg
+                    0x0a02                  _ec_wd_timestamp
+                    0x0a06                  _ec_wd_expired
+                    0x0a08                  _ec_flags
+                    0x0a0a                  _tmp_debug
+                    0x0a0c                  _ec_debug
+                    0x0a0e                  _qei_freeze
+                    0x0a12                  _result
+                    0x0a16                  _t_error
+                    0x0a18                  _gains
+                    0x0a3e                  _td_idx
+                    0x0a40                  _torque_prev
+                    0x0a42                  _torque_dot
+                    0x0a46                  _t_error_sum
+                    0x0a4a                  _ramp_idx
+                    0x0a4c                  _fsa_state
+                    0x0a4e                  _torque_delta
+                    0x0a8e                  _ff_term
+                    0x0a92                  _d_term
+                    0x0a96                  _i_term
+                    0x0a9a                  _p_term
+                    0x0a9e                  _dac_cmd_val
+                    0x0aa0                  _dac_buffer
+                    0x0b20                  _dac_idx_fast
+                    0x0b22                  _dac_idx
+                    0x0b24                  _idx_offset
+                    0x0b26                  _qei_index_cnt
+                    0x0b28                  _qei_calibrated
+                    0x0b2a                  _qei_zero_last
+                    0x0b2c                  _qei_limitswitch_last
+                    0x0b2e                  _qei_calibration_req
+                    0x0b30                  _qei_calibrate_flag_last
+                    0x0b32                  _qei_err
+                    0x0b34                  _qei_roll
+                    0x0b38                  _qei_pos
+                    0x0b42                  _bDcSyncActive
+                    0x0b44                  _nEscAddrInputData
+                    0x0b46                  _nEscAddrOutputData
+                    0x0b48                  _nStateTrans
+                    0x0b49                  _bWdActive
+                    0x0b4a                  _u16WdCounter
+                    0x0b4c                  _u16WdValue
+                    0x0b4e                  _nAlStatusCode
+                    0x0b4f                  _nAlStatusFailed
+                    0x0b50                  _nAlStatus
+                    0x0b51                  _nAlControl
+                    0x0b52                  _nMaxSyncMan
+                    0x0b53                  _bSynchronMode
+                    0x0b54                  _nPdOutputSize
+                    0x0b56                  _nPdInputSize
+                    0x0b58                  _bEcatFirstOutputsReceived
+                    0x0b59                  _bEcatInputUpdateRunning
+                    0x0b5a                  _bEcatOutputUpdateRunning
+                    0x0b5c                  _tx_idx
+                    0x0b5e                  _EscMbxReadEcatCtrl
+                    0x0b60                  _TmpSyncMan
+                    0x0b68                  _do_tx
+                    0x0b69                  _did_tx
+                    0x0b6a                  _did_rx
+                    0x0b6c                  _EscAlEvent
+                    0x0b70                  _EscAlControl
+                    0x0b72                  _bAlEventEnabled
+                    0x0b74                  _vertx_error_buffer
+                    0x0b76                  _vertx_buffer
+                    0x0b7a                  _vertx_idx
+                    0x0b7c                  _vertx_val
+                    0x0b7e                  _adc_zero
+                    0x0b86                  _qei_last
+                    0x0b8a                  _qei_period_t1
+                    0x0b8c                  _last_status
+                    0x0b8e                  _wd_cnt
+                    0x0b90                  _tmp_cnt
+                    0x0b92                  _watchdog_expired
+                    0x0b94                  _bEcatWaitForInputUpdate
                     0x2670                  _BufferB
                     0x2678                  _BufferA
                     0x2680                  _Spi1RxBuffA
@@ -211,93 +215,97 @@ External Symbols in Data Memory (by name):
 
                     0x2678                  _BufferA
                     0x2670                  _BufferB
-                    0x0b50                  _EscAlControl
-                    0x0b4c                  _EscAlEvent
-                    0x0b3e                  _EscMbxReadEcatCtrl
+                    0x0b70                  _EscAlControl
+                    0x0b6c                  _EscAlEvent
+                    0x0b5e                  _EscMbxReadEcatCtrl
                     0x2680                  _Spi1RxBuffA
                     0x2700                  _Spi1TxBuffA
-                    0x0b40                  _TmpSyncMan
+                    0x0b60                  _TmpSyncMan
                     0x0800                  _adc_buffer
-                    0x090e                  _adc_idx
-                    0x090c                  _adc_idx_fast
-                    0x0904                  _adc_meas
-                    0x0910                  _adc_raw
-                    0x0b6e                  _adc_zero
-                    0x0b52                  _bAlEventEnabled
-                    0x0b22                  _bDcSyncActive
-                    0x0b38                  _bEcatFirstOutputsReceived
-                    0x0b39                  _bEcatInputUpdateRunning
-                    0x0b3a                  _bEcatOutputUpdateRunning
-                    0x0b80                  _bEcatWaitForInputUpdate
-                    0x0b33                  _bSynchronMode
-                    0x0b29                  _bWdActive
-                    0x0a90                  _d_term
-                    0x0a9e                  _dac_buffer
-                    0x0a9c                  _dac_cmd_val
-                    0x0b20                  _dac_idx
-                    0x0b1e                  _dac_idx_fast
-                    0x0b4a                  _did_rx
-                    0x0b49                  _did_tx
-                    0x0b48                  _do_tx
-                    0x09dc                  _ec_cmd
-                    0x0956                  _ec_cmd_ext
-                    0x09a2                  _ec_cmd_in
-                    0x0a0e                  _ec_debug
-                    0x0a0a                  _ec_flags
-                    0x09ba                  _ec_stat
-                    0x0976                  _ec_stat_ext
-                    0x0984                  _ec_stat_out
-                    0x0a08                  _ec_wd_expired
-                    0x0a04                  _ec_wd_timestamp
-                    0x0a8c                  _ff_term
-                    0x0a4a                  _fsa_state
-                    0x0a16                  _gains
-                    0x0a94                  _i_term
-                    0x0902                  _irq_cnt
-                    0x0b6a                  _last_status
-                    0x0b31                  _nAlControl
-                    0x0b30                  _nAlStatus
-                    0x0b2e                  _nAlStatusCode
-                    0x0b2f                  _nAlStatusFailed
-                    0x0b24                  _nEscAddrInputData
-                    0x0b26                  _nEscAddrOutputData
-                    0x0b32                  _nMaxSyncMan
-                    0x0b36                  _nPdInputSize
-                    0x0b34                  _nPdOutputSize
-                    0x0b28                  _nStateTrans
-                    0x0a98                  _p_term
-                    0x0936                  _pdo_cmd
-                    0x0918                  _pdo_stat
-                    0x0b5e                  _qei_calibrate_flag_last
-                    0x0b56                  _qei_calibrated
-                    0x0b5c                  _qei_calibration_req
-                    0x0b60                  _qei_err
-                    0x0b54                  _qei_index_cnt
-                    0x0b5a                  _qei_limitswitch_last
-                    0x0b66                  _qei_pos
-                    0x0b62                  _qei_roll
-                    0x0b58                  _qei_zero_last
-                    0x0a48                  _ramp_idx
-                    0x0a02                  _rcon_reg
-                    0x0a10                  _result
-                    0x0954                  _stat_ext_idx
-                    0x0a14                  _t_error
-                    0x0a44                  _t_error_sum
-                    0x0a3c                  _td_idx
-                    0x0b82                  _tmp_cnt
-                    0x0a0c                  _tmp_debug
-                    0x0a4c                  _torque_delta
-                    0x0a40                  _torque_dot
-                    0x0a3e                  _torque_prev
-                    0x0b3c                  _tx_idx
-                    0x0b2a                  _u16WdCounter
-                    0x0b2c                  _u16WdValue
-                    0x0b78                  _vertx_buffer
-                    0x0b76                  _vertx_error_buffer
-                    0x0b7c                  _vertx_idx
-                    0x0b7e                  _vertx_val
-                    0x0900                  _watchdog_expired
-                    0x0b6c                  _wd_cnt
+                    0x090c                  _adc_idx
+                    0x090a                  _adc_idx_fast
+                    0x0902                  _adc_meas
+                    0x090e                  _adc_raw
+                    0x0b7e                  _adc_zero
+                    0x0b72                  _bAlEventEnabled
+                    0x0b42                  _bDcSyncActive
+                    0x0b58                  _bEcatFirstOutputsReceived
+                    0x0b59                  _bEcatInputUpdateRunning
+                    0x0b5a                  _bEcatOutputUpdateRunning
+                    0x0b94                  _bEcatWaitForInputUpdate
+                    0x0b53                  _bSynchronMode
+                    0x0b49                  _bWdActive
+                    0x0a92                  _d_term
+                    0x0aa0                  _dac_buffer
+                    0x0a9e                  _dac_cmd_val
+                    0x0b22                  _dac_idx
+                    0x0b20                  _dac_idx_fast
+                    0x0b6a                  _did_rx
+                    0x0b69                  _did_tx
+                    0x0b68                  _do_tx
+                    0x09da                  _ec_cmd
+                    0x0954                  _ec_cmd_ext
+                    0x09a0                  _ec_cmd_in
+                    0x0a0c                  _ec_debug
+                    0x0a08                  _ec_flags
+                    0x09b8                  _ec_stat
+                    0x0974                  _ec_stat_ext
+                    0x0982                  _ec_stat_out
+                    0x0a06                  _ec_wd_expired
+                    0x0a02                  _ec_wd_timestamp
+                    0x0a8e                  _ff_term
+                    0x0a4c                  _fsa_state
+                    0x0a18                  _gains
+                    0x0a96                  _i_term
+                    0x0b24                  _idx_offset
+                    0x0900                  _irq_cnt
+                    0x0b8c                  _last_status
+                    0x0b51                  _nAlControl
+                    0x0b50                  _nAlStatus
+                    0x0b4e                  _nAlStatusCode
+                    0x0b4f                  _nAlStatusFailed
+                    0x0b44                  _nEscAddrInputData
+                    0x0b46                  _nEscAddrOutputData
+                    0x0b52                  _nMaxSyncMan
+                    0x0b56                  _nPdInputSize
+                    0x0b54                  _nPdOutputSize
+                    0x0b48                  _nStateTrans
+                    0x0a9a                  _p_term
+                    0x0934                  _pdo_cmd
+                    0x0916                  _pdo_stat
+                    0x0b30                  _qei_calibrate_flag_last
+                    0x0b28                  _qei_calibrated
+                    0x0b2e                  _qei_calibration_req
+                    0x0b32                  _qei_err
+                    0x0a0e                  _qei_freeze
+                    0x0b26                  _qei_index_cnt
+                    0x0b86                  _qei_last
+                    0x0b2c                  _qei_limitswitch_last
+                    0x0b8a                  _qei_period_t1
+                    0x0b38                  _qei_pos
+                    0x0b34                  _qei_roll
+                    0x0b2a                  _qei_zero_last
+                    0x0a4a                  _ramp_idx
+                    0x0a00                  _rcon_reg
+                    0x0a12                  _result
+                    0x0952                  _stat_ext_idx
+                    0x0a16                  _t_error
+                    0x0a46                  _t_error_sum
+                    0x0a3e                  _td_idx
+                    0x0b90                  _tmp_cnt
+                    0x0a0a                  _tmp_debug
+                    0x0a4e                  _torque_delta
+                    0x0a42                  _torque_dot
+                    0x0a40                  _torque_prev
+                    0x0b5c                  _tx_idx
+                    0x0b4a                  _u16WdCounter
+                    0x0b4c                  _u16WdValue
+                    0x0b76                  _vertx_buffer
+                    0x0b74                  _vertx_error_buffer
+                    0x0b7a                  _vertx_idx
+                    0x0b7c                  _vertx_val
+                    0x0b92                  _watchdog_expired
+                    0x0b8e                  _wd_cnt
 
 External Symbols in Program Memory (by address):
 
@@ -343,94 +351,107 @@ External Symbols in Program Memory (by address):
                   0x0037ee                  _HW_SetAlStatus
                   0x00389c                  _HW_DisableSyncManChannel
                   0x0038e8                  _HW_EnableSyncManChannel
-                  0x003932                  _ramp_pid_gains_up
-                  0x003a20                  _ramp_pid_gains_down
-                  0x003aa6                  _setup_pid
-                  0x003af4                  _step_amp_out
-                  0x003b3c                  _setup_control
-                  0x003b70                  _step_ctrl_pid
-                  0x003bb8                  _step_control
-                  0x003eae                  _eeprom_loaded
-                  0x003eb4                  _step_ethercat
-                  0x003ec4                  _isr_reset_outputs
-                  0x003ec6                  _isr_update_outputs
-                  0x003ed8                  _pack_status_out
-                  0x003f66                  _isr_update_input_pdo
-                  0x003fb6                  _isr_update_inputs
-                  0x003fe8                  _unpack_command_in
-                  0x0040b8                  _setup_spi
-                  0x0040de                  _setup_ethercat
-                  0x0041a2                  __INT0Interrupt
-                  0x004256                  _get_avg_adc
-                  0x00425e                  _get_avg_adc_torque
-                  0x004260                  _get_temperature_cC
-                  0x004278                  _setup_dma2
-                  0x0042b6                  _current_dma_buf
-                  0x0042c8                  _adc_filter
-                  0x0042e0                  _get_adc_zero
-                  0x0042e8                  __DMA2Interrupt
-                  0x004318                  _set_adc_zeros
-                  0x004356                  _setup_adc
-                  0x0043ec                  _setup_interrupt_priorities
-                  0x00441e                  _us_delay
-                  0x004432                  _setup_ports
-                  0x004472                  _setup_peripheral_pin_select
-                  0x0044ce                  _ms_delay
-                  0x0044e2                  _us100_delay
-                  0x0044f6                  _setup_oscillator
-                  0x004536                  _get_dac_smooth
-                  0x004556                  _dac_cmd
-                  0x00455a                  _convert_val_to_unsigned_dac
-                  0x004578                  _setup_dac
-                  0x00457c                  _set_dac
-                  0x004652                  _qei_error
-                  0x004656                  _qei_position_LW
-                  0x00465a                  _qei_position_HW
-                  0x004664                  _qei_position
-                  0x00466a                  _qei_calibrated_flag
-                  0x00466e                  _qei_zero
-                  0x00467c                  _step_qei
-                  0x0046d0                  __QEI1Interrupt
-                  0x00471a                  _setup_qei
-                  0x00474a                  _cfgDma0SpiTx
-                  0x004766                  _cfgDma1SpiRx
-                  0x004782                  _ResetDMATx
-                  0x004790                  __DMA0Interrupt
-                  0x004796                  _GetRxBufIdx
-                  0x00479e                  __DMA1Interrupt
-                  0x00485c                  _main
-                  0x0048b2                  _setup_timer3
-                  0x0048ce                  __T3Interrupt
-                  0x0048f2                  _setup_dio
-                  0x0048f6                  _ToggleHeartbeatLED
-                  0x00490e                  _limit_switch_neg_flag
-                  0x00491c                  _limit_switch_pos_flag
-                  0x00491e                  _APPL_StartMailboxHandler
-                  0x004920                  _APPL_StopMailboxHandler
-                  0x004922                  _APPL_GenerateMapping
-                  0x004924                  _APPL_StartInputHandler
-                  0x004926                  _APPL_StopInputHandler
-                  0x004928                  _APPL_StartOutputHandler
-                  0x00492a                  _APPL_StopOutputHandler
+                  0x003932                  _set_qei_freeze
+                  0x00393a                  _get_qei_freeze
+                  0x003940                  _ramp_pid_gains_up
+                  0x003a2e                  _ramp_pid_gains_down
+                  0x003ab4                  _setup_pid
+                  0x003b02                  _step_amp_out
+                  0x003b4a                  _setup_control
+                  0x003b7e                  _step_ctrl_pid
+                  0x003bc6                  _step_control
+                  0x003ec4                  _eeprom_loaded
+                  0x003eca                  _step_ethercat
+                  0x003eda                  _isr_reset_outputs
+                  0x003edc                  _isr_update_outputs
+                  0x003eee                  _pack_status_out
+                  0x003f7c                  _isr_update_input_pdo
+                  0x003fcc                  _isr_update_inputs
+                  0x003ffe                  _unpack_command_in
+                  0x0040ce                  _setup_spi
+                  0x0040f4                  _setup_ethercat
+                  0x0041b8                  __INT0Interrupt
+                  0x00426c                  _get_avg_adc
+                  0x004274                  _get_avg_adc_torque
+                  0x004276                  _get_temperature_cC
+                  0x00428e                  _setup_dma2
+                  0x0042cc                  _current_dma_buf
+                  0x0042de                  _adc_filter
+                  0x0042f6                  _get_adc_zero
+                  0x0042fe                  __DMA2Interrupt
+                  0x004320                  _set_adc_zeros
+                  0x00435e                  _setup_adc
+                  0x0043f4                  _setup_interrupt_priorities
+                  0x00443a                  _us_delay
+                  0x00444e                  _setup_ports
+                  0x00448e                  _setup_peripheral_pin_select
+                  0x0044ea                  _ms_delay
+                  0x0044fe                  _us100_delay
+                  0x004512                  _setup_oscillator
+                  0x004552                  _set_idx_offset
+                  0x004556                  _get_period_16
+                  0x00457a                  _set_index_flag
+                  0x00457e                  _get_period
+                  0x004584                  _get_period_LW
+                  0x004588                  _get_period_HW
+                  0x004592                  _qei_error
+                  0x004596                  _qei_freeze_LW
+                  0x004598                  _qei_freeze_HW
+                  0x00459e                  _qei_position_LW
+                  0x0045a2                  _qei_position_HW
+                  0x0045ac                  _qei_position
+                  0x0045b2                  _qei_calibrated_flag
+                  0x0045b6                  _qei_zero
+                  0x0045c4                  _step_bb
+                  0x00460a                  _step_qei
+                  0x00461a                  __QEI1Interrupt
+                  0x004664                  _setup_qei
+                  0x004694                  _get_dac_smooth
+                  0x0046b4                  _dac_cmd
+                  0x0046b8                  _convert_val_to_unsigned_dac
+                  0x0046d6                  _setup_dac
+                  0x0046da                  _set_dac
+                  0x0047b2                  _cfgDma0SpiTx
+                  0x0047ce                  _cfgDma1SpiRx
+                  0x0047ea                  _ResetDMATx
+                  0x0047f8                  __DMA0Interrupt
+                  0x0047fe                  _GetRxBufIdx
+                  0x004806                  __DMA1Interrupt
+                  0x004866                  _setup_timer3
+                  0x004882                  __T3Interrupt
+                  0x004962                  _main
+                  0x0049ba                  _setup_timer1
+                  0x0049d6                  __T1Interrupt
+                  0x004a04                  _setup_dio
+                  0x004a08                  _ToggleHeartbeatLED
+                  0x004a20                  _limit_switch_neg_flag
+                  0x004a2e                  _limit_switch_pos_flag
+                  0x004a30                  _APPL_StartMailboxHandler
+                  0x004a32                  _APPL_StopMailboxHandler
+                  0x004a34                  _APPL_GenerateMapping
+                  0x004a36                  _APPL_StartInputHandler
+                  0x004a38                  _APPL_StopInputHandler
+                  0x004a3a                  _APPL_StartOutputHandler
+                  0x004a3c                  _APPL_StopOutputHandler
                   0xf80004                  __FGS.sec
 
 External Symbols in Program Memory (by name):
 
                   0x002ed0                  _AL_ControlInd
-                  0x004922                  _APPL_GenerateMapping
-                  0x004924                  _APPL_StartInputHandler
-                  0x00491e                  _APPL_StartMailboxHandler
-                  0x004928                  _APPL_StartOutputHandler
-                  0x004926                  _APPL_StopInputHandler
-                  0x004920                  _APPL_StopMailboxHandler
-                  0x00492a                  _APPL_StopOutputHandler
+                  0x004a34                  _APPL_GenerateMapping
+                  0x004a36                  _APPL_StartInputHandler
+                  0x004a30                  _APPL_StartMailboxHandler
+                  0x004a3a                  _APPL_StartOutputHandler
+                  0x004a38                  _APPL_StopInputHandler
+                  0x004a32                  _APPL_StopMailboxHandler
+                  0x004a3c                  _APPL_StopOutputHandler
                   0x003326                  _AddressingEsc
                   0x002bbe                  _CheckSmChannelParameters
                   0x002db8                  _CheckSmSettings
                   0x002d96                  _ECAT_Init
                   0x002db6                  _ECAT_Main
                   0x0032c0                  _GetInterruptRegister
-                  0x004796                  _GetRxBufIdx
+                  0x0047fe                  _GetRxBufIdx
                   0x00389c                  _HW_DisableSyncManChannel
                   0x0038e8                  _HW_EnableSyncManChannel
                   0x0034c2                  _HW_EscReadAccess
@@ -448,83 +469,96 @@ External Symbols in Program Memory (by name):
                   0x0033e8                  _ISR_EscWriteAccessDMA
                   0x003300                  _ISR_GetInterruptRegister
                   0x003398                  _ISR_StartDMA
-                  0x004782                  _ResetDMATx
+                  0x0047ea                  _ResetDMATx
                   0x002c90                  _StartInputHandler
                   0x002cee                  _StartOutputHandler
                   0x002d7c                  _StopInputHandler
                   0x002d66                  _StopOutputHandler
-                  0x0048f6                  _ToggleHeartbeatLED
-                  0x004790                  __DMA0Interrupt
-                  0x00479e                  __DMA1Interrupt
-                  0x0042e8                  __DMA2Interrupt
+                  0x004a08                  _ToggleHeartbeatLED
+                  0x0047f8                  __DMA0Interrupt
+                  0x004806                  __DMA1Interrupt
+                  0x0042fe                  __DMA2Interrupt
                   0x000290                  __DefaultInterrupt
                   0xf80004                  __FGS.sec
-                  0x0041a2                  __INT0Interrupt
-                  0x0046d0                  __QEI1Interrupt
-                  0x0048ce                  __T3Interrupt
+                  0x0041b8                  __INT0Interrupt
+                  0x00461a                  __QEI1Interrupt
+                  0x0049d6                  __T1Interrupt
+                  0x004882                  __T3Interrupt
                   0x000294                  ___udivsi3
                   0x000232                  __data_init
                   0x000232                  __data_init_standard
                   0x000222                  __psv_init
                   0x000200                  __resetPRI
-                  0x0042c8                  _adc_filter
-                  0x00474a                  _cfgDma0SpiTx
-                  0x004766                  _cfgDma1SpiRx
-                  0x00455a                  _convert_val_to_unsigned_dac
-                  0x0042b6                  _current_dma_buf
-                  0x004556                  _dac_cmd
-                  0x003eae                  _eeprom_loaded
-                  0x0042e0                  _get_adc_zero
-                  0x004256                  _get_avg_adc
-                  0x00425e                  _get_avg_adc_torque
+                  0x0042de                  _adc_filter
+                  0x0047b2                  _cfgDma0SpiTx
+                  0x0047ce                  _cfgDma1SpiRx
+                  0x0046b8                  _convert_val_to_unsigned_dac
+                  0x0042cc                  _current_dma_buf
+                  0x0046b4                  _dac_cmd
+                  0x003ec4                  _eeprom_loaded
+                  0x0042f6                  _get_adc_zero
+                  0x00426c                  _get_avg_adc
+                  0x004274                  _get_avg_adc_torque
                   0x0002d8                  _get_avg_vertx
-                  0x004536                  _get_dac_smooth
-                  0x004260                  _get_temperature_cC
-                  0x003ec4                  _isr_reset_outputs
-                  0x003f66                  _isr_update_input_pdo
-                  0x003fb6                  _isr_update_inputs
-                  0x003ec6                  _isr_update_outputs
-                  0x00490e                  _limit_switch_neg_flag
-                  0x00491c                  _limit_switch_pos_flag
-                  0x00485c                  _main
+                  0x004694                  _get_dac_smooth
+                  0x00457e                  _get_period
+                  0x004556                  _get_period_16
+                  0x004588                  _get_period_HW
+                  0x004584                  _get_period_LW
+                  0x00393a                  _get_qei_freeze
+                  0x004276                  _get_temperature_cC
+                  0x003eda                  _isr_reset_outputs
+                  0x003f7c                  _isr_update_input_pdo
+                  0x003fcc                  _isr_update_inputs
+                  0x003edc                  _isr_update_outputs
+                  0x004a20                  _limit_switch_neg_flag
+                  0x004a2e                  _limit_switch_pos_flag
+                  0x004962                  _main
                   0x0002b4                  _memcpy
                   0x0002c2                  _memset
-                  0x0044ce                  _ms_delay
-                  0x003ed8                  _pack_status_out
-                  0x00466a                  _qei_calibrated_flag
-                  0x004652                  _qei_error
-                  0x004664                  _qei_position
-                  0x00465a                  _qei_position_HW
-                  0x004656                  _qei_position_LW
-                  0x00466e                  _qei_zero
-                  0x003a20                  _ramp_pid_gains_down
-                  0x003932                  _ramp_pid_gains_up
-                  0x004318                  _set_adc_zeros
-                  0x00457c                  _set_dac
-                  0x004356                  _setup_adc
-                  0x003b3c                  _setup_control
-                  0x004578                  _setup_dac
-                  0x0048f2                  _setup_dio
-                  0x004278                  _setup_dma2
-                  0x0040de                  _setup_ethercat
-                  0x0043ec                  _setup_interrupt_priorities
-                  0x0044f6                  _setup_oscillator
-                  0x004472                  _setup_peripheral_pin_select
-                  0x003aa6                  _setup_pid
-                  0x004432                  _setup_ports
-                  0x00471a                  _setup_qei
-                  0x0040b8                  _setup_spi
-                  0x0048b2                  _setup_timer3
+                  0x0044ea                  _ms_delay
+                  0x003eee                  _pack_status_out
+                  0x0045b2                  _qei_calibrated_flag
+                  0x004592                  _qei_error
+                  0x004598                  _qei_freeze_HW
+                  0x004596                  _qei_freeze_LW
+                  0x0045ac                  _qei_position
+                  0x0045a2                  _qei_position_HW
+                  0x00459e                  _qei_position_LW
+                  0x0045b6                  _qei_zero
+                  0x003a2e                  _ramp_pid_gains_down
+                  0x003940                  _ramp_pid_gains_up
+                  0x004320                  _set_adc_zeros
+                  0x0046da                  _set_dac
+                  0x004552                  _set_idx_offset
+                  0x00457a                  _set_index_flag
+                  0x003932                  _set_qei_freeze
+                  0x00435e                  _setup_adc
+                  0x003b4a                  _setup_control
+                  0x0046d6                  _setup_dac
+                  0x004a04                  _setup_dio
+                  0x00428e                  _setup_dma2
+                  0x0040f4                  _setup_ethercat
+                  0x0043f4                  _setup_interrupt_priorities
+                  0x004512                  _setup_oscillator
+                  0x00448e                  _setup_peripheral_pin_select
+                  0x003ab4                  _setup_pid
+                  0x00444e                  _setup_ports
+                  0x004664                  _setup_qei
+                  0x0040ce                  _setup_spi
+                  0x0049ba                  _setup_timer1
+                  0x004866                  _setup_timer3
                   0x000326                  _setup_vertx
-                  0x003af4                  _step_amp_out
-                  0x003bb8                  _step_control
-                  0x003b70                  _step_ctrl_pid
-                  0x003eb4                  _step_ethercat
-                  0x00467c                  _step_qei
+                  0x003b02                  _step_amp_out
+                  0x0045c4                  _step_bb
+                  0x003bc6                  _step_control
+                  0x003b7e                  _step_ctrl_pid
+                  0x003eca                  _step_ethercat
+                  0x00460a                  _step_qei
                   0x000338                  _step_vertx
-                  0x003fe8                  _unpack_command_in
-                  0x0044e2                  _us100_delay
-                  0x00441e                  _us_delay
+                  0x003ffe                  _unpack_command_in
+                  0x0044fe                  _us100_delay
+                  0x00443a                  _us_delay
                   0x0002d0                  _vertx_error
                   0x0002f4                  _vertx_error_filter
                   0x000330                  _vertx_pos
@@ -674,25 +708,26 @@ __FUID3
 .comment
  *(.comment)
 
-.debug_info       0x000000       0xafee
+.debug_info       0x000000       0xbd5c
  *(.debug_info)
- .debug_info      0x000000       0x175f build/default/production/_ext/1445274692/adc.o
- .debug_info      0x00175f        0x5db build/default/production/_ext/1445274692/dio.o
- .debug_info      0x001d3a        0xba8 build/default/production/_ext/1445274692/encoder_vertx.o
- .debug_info      0x0028e2       0x1896 build/default/production/_ext/1445274692/ethercat.o
- .debug_info      0x004178        0x23a build/default/production/_ext/1445274692/ethercat_appl.o
- .debug_info      0x0043b2       0x14a0 build/default/production/_ext/1445274692/ethercat_hw.o
- .debug_info      0x005852        0x84d build/default/production/_ext/1445274692/ethercat_slave_fsm.o
- .debug_info      0x00609f        0x464 build/default/production/_ext/1445274692/main.o
- .debug_info      0x006503       0x1c69 build/default/production/_ext/1445274692/setup.o
- .debug_info      0x00816c        0x6cf build/default/production/_ext/1445274692/timer3.o
- .debug_info      0x00883b        0xa30 build/default/production/_ext/1445274692/control.o
- .debug_info      0x00926b        0xb13 build/default/production/_ext/1445274692/spi1Drv.o
- .debug_info      0x009d7e        0x6d7 build/default/production/_ext/1445274692/dac.o
- .debug_info      0x00a455        0xb99 build/default/production/_ext/1445274692/encoder_qei.o
+ .debug_info      0x000000       0x170f build/default/production/_ext/1445274692/adc.o
+ .debug_info      0x00170f        0x5d3 build/default/production/_ext/1445274692/dio.o
+ .debug_info      0x001ce2        0xba0 build/default/production/_ext/1445274692/encoder_vertx.o
+ .debug_info      0x002882       0x18a5 build/default/production/_ext/1445274692/ethercat.o
+ .debug_info      0x004127        0x232 build/default/production/_ext/1445274692/ethercat_appl.o
+ .debug_info      0x004359       0x1498 build/default/production/_ext/1445274692/ethercat_hw.o
+ .debug_info      0x0057f1        0x845 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
+ .debug_info      0x006036        0x45c build/default/production/_ext/1445274692/main.o
+ .debug_info      0x006492       0x1d84 build/default/production/_ext/1445274692/setup.o
+ .debug_info      0x008216        0x635 build/default/production/_ext/1445274692/timer1.o
+ .debug_info      0x00884b        0xa90 build/default/production/_ext/1445274692/timer3.o
+ .debug_info      0x0092db        0xa99 build/default/production/_ext/1445274692/control.o
+ .debug_info      0x009d74        0xb0b build/default/production/_ext/1445274692/spi1Drv.o
+ .debug_info      0x00a87f        0x6cf build/default/production/_ext/1445274692/dac.o
+ .debug_info      0x00af4e        0xe0e build/default/production/_ext/1445274692/encoder_qei.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000       0x1596
+.debug_abbrev     0x000000       0x17c0
  *(.debug_abbrev)
  .debug_abbrev    0x000000        0x255 build/default/production/_ext/1445274692/adc.o
  .debug_abbrev    0x000255         0x9d build/default/production/_ext/1445274692/dio.o
@@ -703,34 +738,34 @@ __FUID3
  .debug_abbrev    0x000a10        0x1f7 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
  .debug_abbrev    0x000c07         0xbd build/default/production/_ext/1445274692/main.o
  .debug_abbrev    0x000cc4          0x1 build/default/production/_ext/1445274692/pwm.o
- .debug_abbrev    0x000cc5        0x188 build/default/production/_ext/1445274692/setup.o
- .debug_abbrev    0x000e4d          0x1 build/default/production/_ext/1445274692/timer1.o
- .debug_abbrev    0x000e4e         0xc1 build/default/production/_ext/1445274692/timer3.o
- .debug_abbrev    0x000f0f        0x20f build/default/production/_ext/1445274692/control.o
- .debug_abbrev    0x00111e        0x15b build/default/production/_ext/1445274692/spi1Drv.o
- .debug_abbrev    0x001279        0x1c2 build/default/production/_ext/1445274692/dac.o
- .debug_abbrev    0x00143b        0x15b build/default/production/_ext/1445274692/encoder_qei.o
+ .debug_abbrev    0x000cc5        0x17b build/default/production/_ext/1445274692/setup.o
+ .debug_abbrev    0x000e40         0xfa build/default/production/_ext/1445274692/timer1.o
+ .debug_abbrev    0x000f3a        0x14b build/default/production/_ext/1445274692/timer3.o
+ .debug_abbrev    0x001085        0x237 build/default/production/_ext/1445274692/control.o
+ .debug_abbrev    0x0012bc        0x15b build/default/production/_ext/1445274692/spi1Drv.o
+ .debug_abbrev    0x001417        0x1c2 build/default/production/_ext/1445274692/dac.o
+ .debug_abbrev    0x0015d9        0x1e7 build/default/production/_ext/1445274692/encoder_qei.o
 
-.debug_line       0x000000       0x49c2
+.debug_line       0x000000       0x4d63
  *(.debug_line)
- .debug_line      0x000000        0x481 build/default/production/_ext/1445274692/adc.o
- .debug_line      0x000481        0x1c9 build/default/production/_ext/1445274692/dio.o
- .debug_line      0x00064a        0x4b9 build/default/production/_ext/1445274692/encoder_vertx.o
- .debug_line      0x000b03        0x80d build/default/production/_ext/1445274692/ethercat.o
- .debug_line      0x001310         0xc4 build/default/production/_ext/1445274692/ethercat_appl.o
- .debug_line      0x0013d4       0x100b build/default/production/_ext/1445274692/ethercat_hw.o
- .debug_line      0x0023df        0x9f7 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
- .debug_line      0x002dd6        0x24a build/default/production/_ext/1445274692/main.o
- .debug_line      0x003020         0x24 build/default/production/_ext/1445274692/pwm.o
- .debug_line      0x003044        0x3f2 build/default/production/_ext/1445274692/setup.o
- .debug_line      0x003436         0x24 build/default/production/_ext/1445274692/timer1.o
- .debug_line      0x00345a        0x204 build/default/production/_ext/1445274692/timer3.o
- .debug_line      0x00365e        0x91b build/default/production/_ext/1445274692/control.o
- .debug_line      0x003f79        0x362 build/default/production/_ext/1445274692/spi1Drv.o
- .debug_line      0x0042db        0x362 build/default/production/_ext/1445274692/dac.o
- .debug_line      0x00463d        0x385 build/default/production/_ext/1445274692/encoder_qei.o
+ .debug_line      0x000000        0x477 build/default/production/_ext/1445274692/adc.o
+ .debug_line      0x000477        0x1c9 build/default/production/_ext/1445274692/dio.o
+ .debug_line      0x000640        0x4b9 build/default/production/_ext/1445274692/encoder_vertx.o
+ .debug_line      0x000af9        0x821 build/default/production/_ext/1445274692/ethercat.o
+ .debug_line      0x00131a         0xc4 build/default/production/_ext/1445274692/ethercat_appl.o
+ .debug_line      0x0013de       0x100b build/default/production/_ext/1445274692/ethercat_hw.o
+ .debug_line      0x0023e9        0x9f7 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
+ .debug_line      0x002de0        0x252 build/default/production/_ext/1445274692/main.o
+ .debug_line      0x003032         0x24 build/default/production/_ext/1445274692/pwm.o
+ .debug_line      0x003056        0x402 build/default/production/_ext/1445274692/setup.o
+ .debug_line      0x003458        0x205 build/default/production/_ext/1445274692/timer1.o
+ .debug_line      0x00365d        0x26e build/default/production/_ext/1445274692/timer3.o
+ .debug_line      0x0038cb        0x95f build/default/production/_ext/1445274692/control.o
+ .debug_line      0x00422a        0x372 build/default/production/_ext/1445274692/spi1Drv.o
+ .debug_line      0x00459c        0x362 build/default/production/_ext/1445274692/dac.o
+ .debug_line      0x0048fe        0x465 build/default/production/_ext/1445274692/encoder_qei.o
 
-.debug_frame      0x000000        0x7b2
+.debug_frame      0x000000        0x899
  *(.debug_frame)
  .debug_frame     0x000000         0xb7 build/default/production/_ext/1445274692/adc.o
  .debug_frame     0x0000b7         0x57 build/default/production/_ext/1445274692/dio.o
@@ -741,13 +776,14 @@ __FUID3
  .debug_frame     0x00041a         0xa7 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
  .debug_frame     0x0004c1         0x27 build/default/production/_ext/1445274692/main.o
  .debug_frame     0x0004e8         0x87 build/default/production/_ext/1445274692/setup.o
- .debug_frame     0x00056f         0x37 build/default/production/_ext/1445274692/timer3.o
- .debug_frame     0x0005a6         0x87 build/default/production/_ext/1445274692/control.o
- .debug_frame     0x00062d         0x77 build/default/production/_ext/1445274692/spi1Drv.o
- .debug_frame     0x0006a4         0x67 build/default/production/_ext/1445274692/dac.o
- .debug_frame     0x00070b         0xa7 build/default/production/_ext/1445274692/encoder_qei.o
+ .debug_frame     0x00056f         0x37 build/default/production/_ext/1445274692/timer1.o
+ .debug_frame     0x0005a6         0x37 build/default/production/_ext/1445274692/timer3.o
+ .debug_frame     0x0005dd         0xa7 build/default/production/_ext/1445274692/control.o
+ .debug_frame     0x000684         0x77 build/default/production/_ext/1445274692/spi1Drv.o
+ .debug_frame     0x0006fb         0x67 build/default/production/_ext/1445274692/dac.o
+ .debug_frame     0x000762        0x137 build/default/production/_ext/1445274692/encoder_qei.o
 
-.debug_str        0x000000        0x1c7
+.debug_str        0x000000        0x1d4
  *(.debug_str)
  .debug_str       0x000000         0x19 build/default/production/_ext/1445274692/adc.o
  .debug_str       0x000019          0xd build/default/production/_ext/1445274692/dio.o
@@ -757,11 +793,12 @@ __FUID3
  .debug_str       0x000141         0x1d build/default/production/_ext/1445274692/ethercat_slave_fsm.o
  .debug_str       0x00015e          0xd build/default/production/_ext/1445274692/main.o
  .debug_str       0x00016b          0xd build/default/production/_ext/1445274692/setup.o
- .debug_str       0x000178          0xd build/default/production/_ext/1445274692/timer3.o
- .debug_str       0x000185         0x12 build/default/production/_ext/1445274692/control.o
- .debug_str       0x000197          0xd build/default/production/_ext/1445274692/spi1Drv.o
- .debug_str       0x0001a4          0xd build/default/production/_ext/1445274692/dac.o
- .debug_str       0x0001b1         0x16 build/default/production/_ext/1445274692/encoder_qei.o
+ .debug_str       0x000178          0xd build/default/production/_ext/1445274692/timer1.o
+ .debug_str       0x000185          0xd build/default/production/_ext/1445274692/timer3.o
+ .debug_str       0x000192         0x12 build/default/production/_ext/1445274692/control.o
+ .debug_str       0x0001a4          0xd build/default/production/_ext/1445274692/spi1Drv.o
+ .debug_str       0x0001b1          0xd build/default/production/_ext/1445274692/dac.o
+ .debug_str       0x0001be         0x16 build/default/production/_ext/1445274692/encoder_qei.o
 
 .debug_loc
  *(.debug_loc)
@@ -770,36 +807,38 @@ __FUID3
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000        0xebd
+                  0x000000        0xfef
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000        0x16c build/default/production/_ext/1445274692/adc.o
+                  0x000000        0x13c build/default/production/_ext/1445274692/adc.o
  .debug_pubnames
-                  0x00016c         0x6b build/default/production/_ext/1445274692/dio.o
+                  0x00013c         0x6b build/default/production/_ext/1445274692/dio.o
  .debug_pubnames
-                  0x0001d7         0xbc build/default/production/_ext/1445274692/encoder_vertx.o
+                  0x0001a7         0xbc build/default/production/_ext/1445274692/encoder_vertx.o
  .debug_pubnames
-                  0x000293        0x1c9 build/default/production/_ext/1445274692/ethercat.o
+                  0x000263        0x1c9 build/default/production/_ext/1445274692/ethercat.o
  .debug_pubnames
-                  0x00045c         0xec build/default/production/_ext/1445274692/ethercat_appl.o
+                  0x00042c         0xec build/default/production/_ext/1445274692/ethercat_appl.o
  .debug_pubnames
-                  0x000548        0x23a build/default/production/_ext/1445274692/ethercat_hw.o
+                  0x000518        0x23a build/default/production/_ext/1445274692/ethercat_hw.o
  .debug_pubnames
-                  0x000782        0x225 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
+                  0x000752        0x225 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
  .debug_pubnames
-                  0x0009a7         0x59 build/default/production/_ext/1445274692/main.o
+                  0x000977         0x59 build/default/production/_ext/1445274692/main.o
  .debug_pubnames
-                  0x000a00         0xa0 build/default/production/_ext/1445274692/setup.o
+                  0x0009d0         0xa0 build/default/production/_ext/1445274692/setup.o
  .debug_pubnames
-                  0x000aa0         0x40 build/default/production/_ext/1445274692/timer3.o
+                  0x000a70         0x53 build/default/production/_ext/1445274692/timer1.o
  .debug_pubnames
-                  0x000ae0        0x148 build/default/production/_ext/1445274692/control.o
+                  0x000ac3         0x70 build/default/production/_ext/1445274692/timer3.o
  .debug_pubnames
-                  0x000c28         0x99 build/default/production/_ext/1445274692/spi1Drv.o
+                  0x000b33        0x17d build/default/production/_ext/1445274692/control.o
  .debug_pubnames
-                  0x000cc1         0xa7 build/default/production/_ext/1445274692/dac.o
+                  0x000cb0         0x99 build/default/production/_ext/1445274692/spi1Drv.o
  .debug_pubnames
-                  0x000d68        0x155 build/default/production/_ext/1445274692/encoder_qei.o
+                  0x000d49         0xa7 build/default/production/_ext/1445274692/dac.o
+ .debug_pubnames
+                  0x000df0        0x1ff build/default/production/_ext/1445274692/encoder_qei.o
 
 .debug_ranges     0x000000        0x1d0
  *(.debug_ranges)
@@ -808,7 +847,7 @@ __FUID3
  .debug_ranges    0x000068         0xc0 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
  .debug_ranges    0x000128         0xa8 build/default/production/_ext/1445274692/control.o
 
-.debug_aranges    0x000000        0x1c0
+.debug_aranges    0x000000        0x1e0
  *(.debug_aranges)
  .debug_aranges
                   0x000000         0x20 build/default/production/_ext/1445274692/adc.o
@@ -829,15 +868,17 @@ __FUID3
  .debug_aranges
                   0x000100         0x20 build/default/production/_ext/1445274692/setup.o
  .debug_aranges
-                  0x000120         0x20 build/default/production/_ext/1445274692/timer3.o
+                  0x000120         0x20 build/default/production/_ext/1445274692/timer1.o
  .debug_aranges
-                  0x000140         0x20 build/default/production/_ext/1445274692/control.o
+                  0x000140         0x20 build/default/production/_ext/1445274692/timer3.o
  .debug_aranges
-                  0x000160         0x20 build/default/production/_ext/1445274692/spi1Drv.o
+                  0x000160         0x20 build/default/production/_ext/1445274692/control.o
  .debug_aranges
-                  0x000180         0x20 build/default/production/_ext/1445274692/dac.o
+                  0x000180         0x20 build/default/production/_ext/1445274692/spi1Drv.o
  .debug_aranges
-                  0x0001a0         0x20 build/default/production/_ext/1445274692/encoder_qei.o
+                  0x0001a0         0x20 build/default/production/_ext/1445274692/dac.o
+ .debug_aranges
+                  0x0001c0         0x20 build/default/production/_ext/1445274692/encoder_qei.o
 
 .ivt              0x000004         0xfc
                   0x000004          0x4 LONG 0x290 DEFINED (__ReservedTrap0)?ABSOLUTE (__ReservedTrap0):ABSOLUTE (__DefaultInterrupt)
@@ -848,21 +889,21 @@ __FUID3
                   0x00000e          0x4 LONG 0x290 DEFINED (__DMACError)?ABSOLUTE (__DMACError):ABSOLUTE (__DefaultInterrupt)
                   0x000010          0x4 LONG 0x290 DEFINED (__ReservedTrap6)?ABSOLUTE (__ReservedTrap6):ABSOLUTE (__DefaultInterrupt)
                   0x000012          0x4 LONG 0x290 DEFINED (__ReservedTrap7)?ABSOLUTE (__ReservedTrap7):ABSOLUTE (__DefaultInterrupt)
-                  0x000014          0x4 LONG 0x41a2 DEFINED (__INT0Interrupt)?ABSOLUTE (__INT0Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000014          0x4 LONG 0x41b8 DEFINED (__INT0Interrupt)?ABSOLUTE (__INT0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000016          0x4 LONG 0x290 DEFINED (__IC1Interrupt)?ABSOLUTE (__IC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000018          0x4 LONG 0x290 DEFINED (__OC1Interrupt)?ABSOLUTE (__OC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00001a          0x4 LONG 0x290 DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00001c          0x4 LONG 0x4790 DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00001a          0x4 LONG 0x49d6 DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00001c          0x4 LONG 0x47f8 DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00001e          0x4 LONG 0x290 DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000020          0x4 LONG 0x290 DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000022          0x4 LONG 0x290 DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000024          0x4 LONG 0x48ce DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000024          0x4 LONG 0x4882 DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000026          0x4 LONG 0x290 DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000028          0x4 LONG 0x290 DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00002a          0x4 LONG 0x290 DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00002c          0x4 LONG 0x290 DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00002e          0x4 LONG 0x290 DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000030          0x4 LONG 0x479e DEFINED (__DMA1Interrupt)?ABSOLUTE (__DMA1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000030          0x4 LONG 0x4806 DEFINED (__DMA1Interrupt)?ABSOLUTE (__DMA1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000032          0x4 LONG 0x290 DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000034          0x4 LONG 0x290 DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000036          0x4 LONG 0x290 DEFINED (__MI2C1Interrupt)?ABSOLUTE (__MI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -872,7 +913,7 @@ __FUID3
                   0x00003e          0x4 LONG 0x290 DEFINED (__Interrupt21)?ABSOLUTE (__Interrupt21):ABSOLUTE (__DefaultInterrupt)
                   0x000040          0x4 LONG 0x290 DEFINED (__IC7Interrupt)?ABSOLUTE (__IC7Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000042          0x4 LONG 0x290 DEFINED (__IC8Interrupt)?ABSOLUTE (__IC8Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000044          0x4 LONG 0x42e8 DEFINED (__DMA2Interrupt)?ABSOLUTE (__DMA2Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000044          0x4 LONG 0x42fe DEFINED (__DMA2Interrupt)?ABSOLUTE (__DMA2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000046          0x4 LONG 0x290 DEFINED (__OC3Interrupt)?ABSOLUTE (__OC3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000048          0x4 LONG 0x290 DEFINED (__OC4Interrupt)?ABSOLUTE (__OC4Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00004a          0x4 LONG 0x290 DEFINED (__T4Interrupt)?ABSOLUTE (__T4Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -906,7 +947,7 @@ __FUID3
                   0x000082          0x4 LONG 0x290 DEFINED (__Interrupt55)?ABSOLUTE (__Interrupt55):ABSOLUTE (__DefaultInterrupt)
                   0x000084          0x4 LONG 0x290 DEFINED (__Interrupt56)?ABSOLUTE (__Interrupt56):ABSOLUTE (__DefaultInterrupt)
                   0x000086          0x4 LONG 0x290 DEFINED (__MPWM1Interrupt)?ABSOLUTE (__MPWM1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000088          0x4 LONG 0x46d0 DEFINED (__QEI1Interrupt)?ABSOLUTE (__QEI1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000088          0x4 LONG 0x461a DEFINED (__QEI1Interrupt)?ABSOLUTE (__QEI1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00008a          0x4 LONG 0x290 DEFINED (__Interrupt59)?ABSOLUTE (__Interrupt59):ABSOLUTE (__DefaultInterrupt)
                   0x00008c          0x4 LONG 0x290 DEFINED (__Interrupt60)?ABSOLUTE (__Interrupt60):ABSOLUTE (__DefaultInterrupt)
                   0x00008e          0x4 LONG 0x290 DEFINED (__DMA5Interrupt)?ABSOLUTE (__DMA5Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -976,21 +1017,21 @@ __FUID3
                   0x00010e          0x4 LONG 0x290 DEFINED (__AltDMACError)?ABSOLUTE (__AltDMACError):DEFINED (__DMACError)?ABSOLUTE (__DMACError):ABSOLUTE (__DefaultInterrupt)
                   0x000110          0x4 LONG 0x290 DEFINED (__AltReservedTrap6)?ABSOLUTE (__AltReservedTrap6):DEFINED (__ReservedTrap6)?ABSOLUTE (__ReservedTrap6):ABSOLUTE (__DefaultInterrupt)
                   0x000112          0x4 LONG 0x290 DEFINED (__AltReservedTrap7)?ABSOLUTE (__AltReservedTrap7):DEFINED (__ReservedTrap7)?ABSOLUTE (__ReservedTrap7):ABSOLUTE (__DefaultInterrupt)
-                  0x000114          0x4 LONG 0x41a2 DEFINED (__AltINT0Interrupt)?ABSOLUTE (__AltINT0Interrupt):DEFINED (__INT0Interrupt)?ABSOLUTE (__INT0Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000114          0x4 LONG 0x41b8 DEFINED (__AltINT0Interrupt)?ABSOLUTE (__AltINT0Interrupt):DEFINED (__INT0Interrupt)?ABSOLUTE (__INT0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000116          0x4 LONG 0x290 DEFINED (__AltIC1Interrupt)?ABSOLUTE (__AltIC1Interrupt):DEFINED (__IC1Interrupt)?ABSOLUTE (__IC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000118          0x4 LONG 0x290 DEFINED (__AltOC1Interrupt)?ABSOLUTE (__AltOC1Interrupt):DEFINED (__OC1Interrupt)?ABSOLUTE (__OC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00011a          0x4 LONG 0x290 DEFINED (__AltT1Interrupt)?ABSOLUTE (__AltT1Interrupt):DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00011c          0x4 LONG 0x4790 DEFINED (__AltDMA0Interrupt)?ABSOLUTE (__AltDMA0Interrupt):DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00011a          0x4 LONG 0x49d6 DEFINED (__AltT1Interrupt)?ABSOLUTE (__AltT1Interrupt):DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00011c          0x4 LONG 0x47f8 DEFINED (__AltDMA0Interrupt)?ABSOLUTE (__AltDMA0Interrupt):DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00011e          0x4 LONG 0x290 DEFINED (__AltIC2Interrupt)?ABSOLUTE (__AltIC2Interrupt):DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000120          0x4 LONG 0x290 DEFINED (__AltOC2Interrupt)?ABSOLUTE (__AltOC2Interrupt):DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000122          0x4 LONG 0x290 DEFINED (__AltT2Interrupt)?ABSOLUTE (__AltT2Interrupt):DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000124          0x4 LONG 0x48ce DEFINED (__AltT3Interrupt)?ABSOLUTE (__AltT3Interrupt):DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000124          0x4 LONG 0x4882 DEFINED (__AltT3Interrupt)?ABSOLUTE (__AltT3Interrupt):DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000126          0x4 LONG 0x290 DEFINED (__AltSPI1ErrInterrupt)?ABSOLUTE (__AltSPI1ErrInterrupt):DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000128          0x4 LONG 0x290 DEFINED (__AltSPI1Interrupt)?ABSOLUTE (__AltSPI1Interrupt):DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00012a          0x4 LONG 0x290 DEFINED (__AltU1RXInterrupt)?ABSOLUTE (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00012c          0x4 LONG 0x290 DEFINED (__AltU1TXInterrupt)?ABSOLUTE (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00012e          0x4 LONG 0x290 DEFINED (__AltADC1Interrupt)?ABSOLUTE (__AltADC1Interrupt):DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000130          0x4 LONG 0x479e DEFINED (__AltDMA1Interrupt)?ABSOLUTE (__AltDMA1Interrupt):DEFINED (__DMA1Interrupt)?ABSOLUTE (__DMA1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000130          0x4 LONG 0x4806 DEFINED (__AltDMA1Interrupt)?ABSOLUTE (__AltDMA1Interrupt):DEFINED (__DMA1Interrupt)?ABSOLUTE (__DMA1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000132          0x4 LONG 0x290 DEFINED (__AltInterrupt15)?ABSOLUTE (__AltInterrupt15):DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000134          0x4 LONG 0x290 DEFINED (__AltSI2C1Interrupt)?ABSOLUTE (__AltSI2C1Interrupt):DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000136          0x4 LONG 0x290 DEFINED (__AltMI2C1Interrupt)?ABSOLUTE (__AltMI2C1Interrupt):DEFINED (__MI2C1Interrupt)?ABSOLUTE (__MI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -1000,7 +1041,7 @@ __FUID3
                   0x00013e          0x4 LONG 0x290 DEFINED (__AltInterrupt21)?ABSOLUTE (__AltInterrupt21):DEFINED (__Interrupt21)?ABSOLUTE (__Interrupt21):ABSOLUTE (__DefaultInterrupt)
                   0x000140          0x4 LONG 0x290 DEFINED (__AltIC7Interrupt)?ABSOLUTE (__AltIC7Interrupt):DEFINED (__IC7Interrupt)?ABSOLUTE (__IC7Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000142          0x4 LONG 0x290 DEFINED (__AltIC8Interrupt)?ABSOLUTE (__AltIC8Interrupt):DEFINED (__IC8Interrupt)?ABSOLUTE (__IC8Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000144          0x4 LONG 0x42e8 DEFINED (__AltDMA2Interrupt)?ABSOLUTE (__AltDMA2Interrupt):DEFINED (__DMA2Interrupt)?ABSOLUTE (__DMA2Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000144          0x4 LONG 0x42fe DEFINED (__AltDMA2Interrupt)?ABSOLUTE (__AltDMA2Interrupt):DEFINED (__DMA2Interrupt)?ABSOLUTE (__DMA2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000146          0x4 LONG 0x290 DEFINED (__AltOC3Interrupt)?ABSOLUTE (__AltOC3Interrupt):DEFINED (__OC3Interrupt)?ABSOLUTE (__OC3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000148          0x4 LONG 0x290 DEFINED (__AltOC4Interrupt)?ABSOLUTE (__AltOC4Interrupt):DEFINED (__OC4Interrupt)?ABSOLUTE (__OC4Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00014a          0x4 LONG 0x290 DEFINED (__AltT4Interrupt)?ABSOLUTE (__AltT4Interrupt):DEFINED (__T4Interrupt)?ABSOLUTE (__T4Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -1034,7 +1075,7 @@ __FUID3
                   0x000182          0x4 LONG 0x290 DEFINED (__AltInterrupt55)?ABSOLUTE (__AltInterrupt55):DEFINED (__Interrupt55)?ABSOLUTE (__Interrupt55):ABSOLUTE (__DefaultInterrupt)
                   0x000184          0x4 LONG 0x290 DEFINED (__AltInterrupt56)?ABSOLUTE (__AltInterrupt56):DEFINED (__Interrupt56)?ABSOLUTE (__Interrupt56):ABSOLUTE (__DefaultInterrupt)
                   0x000186          0x4 LONG 0x290 DEFINED (__AltMPWM1Interrupt)?ABSOLUTE (__AltMPWM1Interrupt):DEFINED (__MPWM1Interrupt)?ABSOLUTE (__MPWM1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000188          0x4 LONG 0x46d0 DEFINED (__AltQEI1Interrupt)?ABSOLUTE (__AltQEI1Interrupt):DEFINED (__QEI1Interrupt)?ABSOLUTE (__QEI1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000188          0x4 LONG 0x461a DEFINED (__AltQEI1Interrupt)?ABSOLUTE (__AltQEI1Interrupt):DEFINED (__QEI1Interrupt)?ABSOLUTE (__QEI1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00018a          0x4 LONG 0x290 DEFINED (__AltInterrupt59)?ABSOLUTE (__AltInterrupt59):DEFINED (__Interrupt59)?ABSOLUTE (__Interrupt59):ABSOLUTE (__DefaultInterrupt)
                   0x00018c          0x4 LONG 0x290 DEFINED (__AltInterrupt60)?ABSOLUTE (__AltInterrupt60):DEFINED (__Interrupt60)?ABSOLUTE (__Interrupt60):ABSOLUTE (__DefaultInterrupt)
                   0x00018e          0x4 LONG 0x290 DEFINED (__AltDMA5Interrupt)?ABSOLUTE (__AltDMA5Interrupt):DEFINED (__DMA5Interrupt)?ABSOLUTE (__DMA5Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -1995,177 +2036,183 @@ LOAD default_isr
 LOAD data_init
 
 __c30_signature
-                  0x0001c0         0x7e
+                  0x0001e0         0x7e
  __c30_signature
-                  0x0001c0          0x6 build/default/production/_ext/1445274692/adc.o
+                  0x0001e0          0x6 build/default/production/_ext/1445274692/adc.o
  __c30_signature
-                  0x0001c6          0x6 build/default/production/_ext/1445274692/dio.o
+                  0x0001e6          0x6 build/default/production/_ext/1445274692/dio.o
  __c30_signature
-                  0x0001cc          0x6 build/default/production/_ext/1445274692/encoder_vertx.o
+                  0x0001ec          0x6 build/default/production/_ext/1445274692/encoder_vertx.o
  __c30_signature
-                  0x0001d2          0x6 build/default/production/_ext/1445274692/ethercat.o
+                  0x0001f2          0x6 build/default/production/_ext/1445274692/ethercat.o
  __c30_signature
-                  0x0001d8          0x6 build/default/production/_ext/1445274692/ethercat_appl.o
+                  0x0001f8          0x6 build/default/production/_ext/1445274692/ethercat_appl.o
  __c30_signature
-                  0x0001de          0x6 build/default/production/_ext/1445274692/ethercat_hw.o
+                  0x0001fe          0x6 build/default/production/_ext/1445274692/ethercat_hw.o
  __c30_signature
-                  0x0001e4          0x6 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
+                  0x000204          0x6 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
  __c30_signature
-                  0x0001ea          0x6 build/default/production/_ext/1445274692/main.o
+                  0x00020a          0x6 build/default/production/_ext/1445274692/main.o
  __c30_signature
-                  0x0001f0          0x6 build/default/production/_ext/1445274692/pwm.o
+                  0x000210          0x6 build/default/production/_ext/1445274692/pwm.o
  __c30_signature
-                  0x0001f6          0x6 build/default/production/_ext/1445274692/setup.o
+                  0x000216          0x6 build/default/production/_ext/1445274692/setup.o
  __c30_signature
-                  0x0001fc          0x6 build/default/production/_ext/1445274692/timer1.o
+                  0x00021c          0x6 build/default/production/_ext/1445274692/timer1.o
  __c30_signature
-                  0x000202          0x6 build/default/production/_ext/1445274692/timer3.o
+                  0x000222          0x6 build/default/production/_ext/1445274692/timer3.o
  __c30_signature
-                  0x000208          0x6 build/default/production/_ext/1445274692/control.o
+                  0x000228          0x6 build/default/production/_ext/1445274692/control.o
  __c30_signature
-                  0x00020e          0x6 build/default/production/_ext/1445274692/spi1Drv.o
+                  0x00022e          0x6 build/default/production/_ext/1445274692/spi1Drv.o
  __c30_signature
-                  0x000214          0x6 build/default/production/_ext/1445274692/dac.o
+                  0x000234          0x6 build/default/production/_ext/1445274692/dac.o
  __c30_signature
-                  0x00021a          0x6 build/default/production/_ext/1445274692/encoder_qei.o
+                  0x00023a          0x6 build/default/production/_ext/1445274692/encoder_qei.o
  __c30_signature
-                  0x000220          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libpic30-elf.a(crt0_standard.o)
+                  0x000240          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libpic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x000226          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libpic30-elf.a(data_init_standard.o)
+                  0x000246          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libpic30-elf.a(data_init_standard.o)
  __c30_signature
-                  0x00022c          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libm-elf.a(udivsi3.eo)
+                  0x00024c          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libm-elf.a(udivsi3.eo)
  __c30_signature
-                  0x000232          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libc-elf.a(memcpy.XXeo)
+                  0x000252          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libc-elf.a(memcpy.XXeo)
  __c30_signature
-                  0x000238          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libc-elf.a(memset.XXeo)
+                  0x000258          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libc-elf.a(memset.XXeo)
 
-_40a13a1050cb9bd3
+_40a0b8505069fd72
                     0x2700        0x100
- _40a13a1050cb9bd3
+ _40a0b8505069fd72
                     0x2700        0x100 build/default/production/_ext/1445274692/spi1Drv.o
                     0x2700                  _Spi1TxBuffA
 
-_40a138c050cb9bd3
+_40a0b7005069fd72
                     0x2680         0x80
- _40a138c050cb9bd3
+ _40a0b7005069fd72
                     0x2680         0x80 build/default/production/_ext/1445274692/spi1Drv.o
                     0x2680                  _Spi1RxBuffA
 
-_409ed31050cb9bd0
+_409e50005069fd6f
                     0x2670          0x8
- _409ed31050cb9bd0
+ _409e50005069fd6f
                     0x2670          0x8 build/default/production/_ext/1445274692/adc.o
                     0x2670                  _BufferB
 
-_409ed1c050cb9bd0
+_409e4e705069fd6f
                     0x2678          0x8
- _409ed1c050cb9bd0
+ _409e4e705069fd6f
                     0x2678          0x8 build/default/production/_ext/1445274692/adc.o
                     0x2678                  _BufferA
 
-.nbss               0x0800        0x36a
- .nbss              0x0800        0x118 build/default/production/_ext/1445274692/adc.o
+.nbss               0x0800        0x37e
+ .nbss              0x0800        0x116 build/default/production/_ext/1445274692/adc.o
                     0x0800                  _adc_buffer
-                    0x0900                  _watchdog_expired
-                    0x0902                  _irq_cnt
-                    0x0904                  _adc_meas
-                    0x090c                  _adc_idx_fast
-                    0x090e                  _adc_idx
-                    0x0910                  _adc_raw
- .nbss              0x0918         0xf8 build/default/production/_ext/1445274692/ethercat.o
-                    0x0918                  _pdo_stat
-                    0x0936                  _pdo_cmd
-                    0x0954                  _stat_ext_idx
-                    0x0956                  _ec_cmd_ext
-                    0x0976                  _ec_stat_ext
-                    0x0984                  _ec_stat_out
-                    0x09a2                  _ec_cmd_in
-                    0x09ba                  _ec_stat
-                    0x09dc                  _ec_cmd
-                    0x0a02                  _rcon_reg
-                    0x0a04                  _ec_wd_timestamp
-                    0x0a08                  _ec_wd_expired
-                    0x0a0a                  _ec_flags
-                    0x0a0c                  _tmp_debug
-                    0x0a0e                  _ec_debug
- .nbss              0x0a10         0x8c build/default/production/_ext/1445274692/control.o
-                    0x0a10                  _result
-                    0x0a14                  _t_error
-                    0x0a16                  _gains
-                    0x0a3c                  _td_idx
-                    0x0a3e                  _torque_prev
-                    0x0a40                  _torque_dot
-                    0x0a44                  _t_error_sum
-                    0x0a48                  _ramp_idx
-                    0x0a4a                  _fsa_state
-                    0x0a4c                  _torque_delta
-                    0x0a8c                  _ff_term
-                    0x0a90                  _d_term
-                    0x0a94                  _i_term
-                    0x0a98                  _p_term
- .nbss              0x0a9c         0x86 build/default/production/_ext/1445274692/dac.o
-                    0x0a9c                  _dac_cmd_val
-                    0x0a9e                  _dac_buffer
-                    0x0b1e                  _dac_idx_fast
-                    0x0b20                  _dac_idx
- .nbss              0x0b22         0x1a build/default/production/_ext/1445274692/ethercat_slave_fsm.o
-                    0x0b22                  _bDcSyncActive
-                    0x0b24                  _nEscAddrInputData
-                    0x0b26                  _nEscAddrOutputData
-                    0x0b28                  _nStateTrans
-                    0x0b29                  _bWdActive
-                    0x0b2a                  _u16WdCounter
-                    0x0b2c                  _u16WdValue
-                    0x0b2e                  _nAlStatusCode
-                    0x0b2f                  _nAlStatusFailed
-                    0x0b30                  _nAlStatus
-                    0x0b31                  _nAlControl
-                    0x0b32                  _nMaxSyncMan
-                    0x0b33                  _bSynchronMode
-                    0x0b34                  _nPdOutputSize
-                    0x0b36                  _nPdInputSize
-                    0x0b38                  _bEcatFirstOutputsReceived
-                    0x0b39                  _bEcatInputUpdateRunning
-                    0x0b3a                  _bEcatOutputUpdateRunning
- .nbss              0x0b3c         0x18 build/default/production/_ext/1445274692/ethercat_hw.o
-                    0x0b3c                  _tx_idx
-                    0x0b3e                  _EscMbxReadEcatCtrl
-                    0x0b40                  _TmpSyncMan
-                    0x0b48                  _do_tx
-                    0x0b49                  _did_tx
-                    0x0b4a                  _did_rx
-                    0x0b4c                  _EscAlEvent
-                    0x0b50                  _EscAlControl
-                    0x0b52                  _bAlEventEnabled
- .nbss              0x0b54         0x16 build/default/production/_ext/1445274692/encoder_qei.o
-                    0x0b54                  _qei_index_cnt
-                    0x0b56                  _qei_calibrated
-                    0x0b58                  _qei_zero_last
-                    0x0b5a                  _qei_limitswitch_last
-                    0x0b5c                  _qei_calibration_req
-                    0x0b5e                  _qei_calibrate_flag_last
-                    0x0b60                  _qei_err
-                    0x0b62                  _qei_roll
-                    0x0b66                  _qei_pos
+                    0x0900                  _irq_cnt
+                    0x0902                  _adc_meas
+                    0x090a                  _adc_idx_fast
+                    0x090c                  _adc_idx
+                    0x090e                  _adc_raw
+ .nbss              0x0916         0xf8 build/default/production/_ext/1445274692/ethercat.o
+                    0x0916                  _pdo_stat
+                    0x0934                  _pdo_cmd
+                    0x0952                  _stat_ext_idx
+                    0x0954                  _ec_cmd_ext
+                    0x0974                  _ec_stat_ext
+                    0x0982                  _ec_stat_out
+                    0x09a0                  _ec_cmd_in
+                    0x09b8                  _ec_stat
+                    0x09da                  _ec_cmd
+                    0x0a00                  _rcon_reg
+                    0x0a02                  _ec_wd_timestamp
+                    0x0a06                  _ec_wd_expired
+                    0x0a08                  _ec_flags
+                    0x0a0a                  _tmp_debug
+                    0x0a0c                  _ec_debug
+ .nbss              0x0a0e         0x90 build/default/production/_ext/1445274692/control.o
+                    0x0a0e                  _qei_freeze
+                    0x0a12                  _result
+                    0x0a16                  _t_error
+                    0x0a18                  _gains
+                    0x0a3e                  _td_idx
+                    0x0a40                  _torque_prev
+                    0x0a42                  _torque_dot
+                    0x0a46                  _t_error_sum
+                    0x0a4a                  _ramp_idx
+                    0x0a4c                  _fsa_state
+                    0x0a4e                  _torque_delta
+                    0x0a8e                  _ff_term
+                    0x0a92                  _d_term
+                    0x0a96                  _i_term
+                    0x0a9a                  _p_term
+ .nbss              0x0a9e         0x86 build/default/production/_ext/1445274692/dac.o
+                    0x0a9e                  _dac_cmd_val
+                    0x0aa0                  _dac_buffer
+                    0x0b20                  _dac_idx_fast
+                    0x0b22                  _dac_idx
+ .nbss              0x0b24         0x1e build/default/production/_ext/1445274692/encoder_qei.o
+                    0x0b24                  _idx_offset
+                    0x0b26                  _qei_index_cnt
+                    0x0b28                  _qei_calibrated
+                    0x0b2a                  _qei_zero_last
+                    0x0b2c                  _qei_limitswitch_last
+                    0x0b2e                  _qei_calibration_req
+                    0x0b30                  _qei_calibrate_flag_last
+                    0x0b32                  _qei_err
+                    0x0b34                  _qei_roll
+                    0x0b38                  _qei_pos
+ .nbss              0x0b42         0x1a build/default/production/_ext/1445274692/ethercat_slave_fsm.o
+                    0x0b42                  _bDcSyncActive
+                    0x0b44                  _nEscAddrInputData
+                    0x0b46                  _nEscAddrOutputData
+                    0x0b48                  _nStateTrans
+                    0x0b49                  _bWdActive
+                    0x0b4a                  _u16WdCounter
+                    0x0b4c                  _u16WdValue
+                    0x0b4e                  _nAlStatusCode
+                    0x0b4f                  _nAlStatusFailed
+                    0x0b50                  _nAlStatus
+                    0x0b51                  _nAlControl
+                    0x0b52                  _nMaxSyncMan
+                    0x0b53                  _bSynchronMode
+                    0x0b54                  _nPdOutputSize
+                    0x0b56                  _nPdInputSize
+                    0x0b58                  _bEcatFirstOutputsReceived
+                    0x0b59                  _bEcatInputUpdateRunning
+                    0x0b5a                  _bEcatOutputUpdateRunning
+ .nbss              0x0b5c         0x18 build/default/production/_ext/1445274692/ethercat_hw.o
+                    0x0b5c                  _tx_idx
+                    0x0b5e                  _EscMbxReadEcatCtrl
+                    0x0b60                  _TmpSyncMan
+                    0x0b68                  _do_tx
+                    0x0b69                  _did_tx
+                    0x0b6a                  _did_rx
+                    0x0b6c                  _EscAlEvent
+                    0x0b70                  _EscAlControl
+                    0x0b72                  _bAlEventEnabled
+ .nbss              0x0b74          0xa build/default/production/_ext/1445274692/encoder_vertx.o
+                    0x0b74                  _vertx_error_buffer
+                    0x0b76                  _vertx_buffer
+                    0x0b7a                  _vertx_idx
+                    0x0b7c                  _vertx_val
 
-.ndata              0x0b6a          0xc
- .ndata             0x0b6a          0xc build/default/production/_ext/1445274692/adc.o
-                    0x0b6a                  _last_status
-                    0x0b6c                  _wd_cnt
-                    0x0b6e                  _adc_zero
+.ndata              0x0b7e         0x12
+ .ndata             0x0b7e          0x8 build/default/production/_ext/1445274692/adc.o
+                    0x0b7e                  _adc_zero
+ .ndata             0x0b86          0x6 build/default/production/_ext/1445274692/timer1.o
+                    0x0b86                  _qei_last
+                    0x0b8a                  _qei_period_t1
+ .ndata             0x0b8c          0x4 build/default/production/_ext/1445274692/timer3.o
+                    0x0b8c                  _last_status
+                    0x0b8e                  _wd_cnt
 
-.nbss               0x0b76          0xe
- .nbss              0x0b76          0xa build/default/production/_ext/1445274692/encoder_vertx.o
-                    0x0b76                  _vertx_error_buffer
-                    0x0b78                  _vertx_buffer
-                    0x0b7c                  _vertx_idx
-                    0x0b7e                  _vertx_val
- .nbss              0x0b80          0x2 build/default/production/_ext/1445274692/ethercat_appl.o
-                    0x0b80                  _bEcatWaitForInputUpdate
- .nbss              0x0b82          0x2 build/default/production/_ext/1445274692/timer3.o
-                    0x0b82                  _tmp_cnt
+.nbss               0x0b90          0x6
+ .nbss              0x0b90          0x4 build/default/production/_ext/1445274692/timer3.o
+                    0x0b90                  _tmp_cnt
+                    0x0b92                  _watchdog_expired
+ .nbss              0x0b94          0x2 build/default/production/_ext/1445274692/ethercat_appl.o
+                    0x0b94                  _bEcatWaitForInputUpdate
 
-.text             0x0002d0       0x4528
+.text             0x0002d0       0x461c
  .text            0x0002d0       0x28ee build/default/production/_ext/1445274692/encoder_vertx.o
                   0x0002d0                  _vertx_error
                   0x0002d8                  _get_avg_vertx
@@ -2203,88 +2250,102 @@ _409ed1c050cb9bd0
                   0x0037ee                  _HW_SetAlStatus
                   0x00389c                  _HW_DisableSyncManChannel
                   0x0038e8                  _HW_EnableSyncManChannel
- .text            0x003932        0x57c build/default/production/_ext/1445274692/control.o
-                  0x003932                  _ramp_pid_gains_up
-                  0x003a20                  _ramp_pid_gains_down
-                  0x003aa6                  _setup_pid
-                  0x003af4                  _step_amp_out
-                  0x003b3c                  _setup_control
-                  0x003b70                  _step_ctrl_pid
-                  0x003bb8                  _step_control
- .text            0x003eae        0x3a8 build/default/production/_ext/1445274692/ethercat.o
-                  0x003eae                  _eeprom_loaded
-                  0x003eb4                  _step_ethercat
-                  0x003ec4                  _isr_reset_outputs
-                  0x003ec6                  _isr_update_outputs
-                  0x003ed8                  _pack_status_out
-                  0x003f66                  _isr_update_input_pdo
-                  0x003fb6                  _isr_update_inputs
-                  0x003fe8                  _unpack_command_in
-                  0x0040b8                  _setup_spi
-                  0x0040de                  _setup_ethercat
-                  0x0041a2                  __INT0Interrupt
- .text            0x004256        0x196 build/default/production/_ext/1445274692/adc.o
-                  0x004256                  _get_avg_adc
-                  0x00425e                  _get_avg_adc_torque
-                  0x004260                  _get_temperature_cC
-                  0x004278                  _setup_dma2
-                  0x0042b6                  _current_dma_buf
-                  0x0042c8                  _adc_filter
-                  0x0042e0                  _get_adc_zero
-                  0x0042e8                  __DMA2Interrupt
-                  0x004318                  _set_adc_zeros
-                  0x004356                  _setup_adc
- .text            0x0043ec        0x14a build/default/production/_ext/1445274692/setup.o
-                  0x0043ec                  _setup_interrupt_priorities
-                  0x00441e                  _us_delay
-                  0x004432                  _setup_ports
-                  0x004472                  _setup_peripheral_pin_select
-                  0x0044ce                  _ms_delay
-                  0x0044e2                  _us100_delay
-                  0x0044f6                  _setup_oscillator
- .text            0x004536        0x11c build/default/production/_ext/1445274692/dac.o
-                  0x004536                  _get_dac_smooth
-                  0x004556                  _dac_cmd
-                  0x00455a                  _convert_val_to_unsigned_dac
-                  0x004578                  _setup_dac
-                  0x00457c                  _set_dac
- .text            0x004652         0xf8 build/default/production/_ext/1445274692/encoder_qei.o
-                  0x004652                  _qei_error
-                  0x004656                  _qei_position_LW
-                  0x00465a                  _qei_position_HW
-                  0x004664                  _qei_position
-                  0x00466a                  _qei_calibrated_flag
-                  0x00466e                  _qei_zero
-                  0x00467c                  _step_qei
-                  0x0046d0                  __QEI1Interrupt
-                  0x00471a                  _setup_qei
- .text            0x00474a         0xae build/default/production/_ext/1445274692/spi1Drv.o
-                  0x00474a                  _cfgDma0SpiTx
-                  0x004766                  _cfgDma1SpiRx
-                  0x004782                  _ResetDMATx
-                  0x004790                  __DMA0Interrupt
-                  0x004796                  _GetRxBufIdx
-                  0x00479e                  __DMA1Interrupt
+ .text            0x003932        0x592 build/default/production/_ext/1445274692/control.o
+                  0x003932                  _set_qei_freeze
+                  0x00393a                  _get_qei_freeze
+                  0x003940                  _ramp_pid_gains_up
+                  0x003a2e                  _ramp_pid_gains_down
+                  0x003ab4                  _setup_pid
+                  0x003b02                  _step_amp_out
+                  0x003b4a                  _setup_control
+                  0x003b7e                  _step_ctrl_pid
+                  0x003bc6                  _step_control
+ .text            0x003ec4        0x3a8 build/default/production/_ext/1445274692/ethercat.o
+                  0x003ec4                  _eeprom_loaded
+                  0x003eca                  _step_ethercat
+                  0x003eda                  _isr_reset_outputs
+                  0x003edc                  _isr_update_outputs
+                  0x003eee                  _pack_status_out
+                  0x003f7c                  _isr_update_input_pdo
+                  0x003fcc                  _isr_update_inputs
+                  0x003ffe                  _unpack_command_in
+                  0x0040ce                  _setup_spi
+                  0x0040f4                  _setup_ethercat
+                  0x0041b8                  __INT0Interrupt
+ .text            0x00426c        0x188 build/default/production/_ext/1445274692/adc.o
+                  0x00426c                  _get_avg_adc
+                  0x004274                  _get_avg_adc_torque
+                  0x004276                  _get_temperature_cC
+                  0x00428e                  _setup_dma2
+                  0x0042cc                  _current_dma_buf
+                  0x0042de                  _adc_filter
+                  0x0042f6                  _get_adc_zero
+                  0x0042fe                  __DMA2Interrupt
+                  0x004320                  _set_adc_zeros
+                  0x00435e                  _setup_adc
+ .text            0x0043f4        0x15e build/default/production/_ext/1445274692/setup.o
+                  0x0043f4                  _setup_interrupt_priorities
+                  0x00443a                  _us_delay
+                  0x00444e                  _setup_ports
+                  0x00448e                  _setup_peripheral_pin_select
+                  0x0044ea                  _ms_delay
+                  0x0044fe                  _us100_delay
+                  0x004512                  _setup_oscillator
+ .text            0x004552        0x142 build/default/production/_ext/1445274692/encoder_qei.o
+                  0x004552                  _set_idx_offset
+                  0x004556                  _get_period_16
+                  0x00457a                  _set_index_flag
+                  0x00457e                  _get_period
+                  0x004584                  _get_period_LW
+                  0x004588                  _get_period_HW
+                  0x004592                  _qei_error
+                  0x004596                  _qei_freeze_LW
+                  0x004598                  _qei_freeze_HW
+                  0x00459e                  _qei_position_LW
+                  0x0045a2                  _qei_position_HW
+                  0x0045ac                  _qei_position
+                  0x0045b2                  _qei_calibrated_flag
+                  0x0045b6                  _qei_zero
+                  0x0045c4                  _step_bb
+                  0x00460a                  _step_qei
+                  0x00461a                  __QEI1Interrupt
+                  0x004664                  _setup_qei
+ .text            0x004694        0x11e build/default/production/_ext/1445274692/dac.o
+                  0x004694                  _get_dac_smooth
+                  0x0046b4                  _dac_cmd
+                  0x0046b8                  _convert_val_to_unsigned_dac
+                  0x0046d6                  _setup_dac
+                  0x0046da                  _set_dac
+ .text            0x0047b2         0xb4 build/default/production/_ext/1445274692/spi1Drv.o
+                  0x0047b2                  _cfgDma0SpiTx
+                  0x0047ce                  _cfgDma1SpiRx
+                  0x0047ea                  _ResetDMATx
+                  0x0047f8                  __DMA0Interrupt
+                  0x0047fe                  _GetRxBufIdx
+                  0x004806                  __DMA1Interrupt
+ .text            0x004866         0x86 build/default/production/_ext/1445274692/timer3.o
+                  0x004866                  _setup_timer3
+                  0x004882                  __T3Interrupt
 
-.dinit            0x0047f8         0x64
- .dinit           0x0047f8         0x64 data_init
+.dinit            0x0048ec         0x76
+ .dinit           0x0048ec         0x76 data_init
 
-.text             0x00485c         0xd0
- .text            0x00485c         0x56 build/default/production/_ext/1445274692/main.o
-                  0x00485c                  _main
- .text            0x0048b2         0x40 build/default/production/_ext/1445274692/timer3.o
-                  0x0048b2                  _setup_timer3
-                  0x0048ce                  __T3Interrupt
- .text            0x0048f2         0x2c build/default/production/_ext/1445274692/dio.o
-                  0x0048f2                  _setup_dio
-                  0x0048f6                  _ToggleHeartbeatLED
-                  0x00490e                  _limit_switch_neg_flag
-                  0x00491c                  _limit_switch_pos_flag
- .text            0x00491e          0xe build/default/production/_ext/1445274692/ethercat_appl.o
-                  0x00491e                  _APPL_StartMailboxHandler
-                  0x004920                  _APPL_StopMailboxHandler
-                  0x004922                  _APPL_GenerateMapping
-                  0x004924                  _APPL_StartInputHandler
-                  0x004926                  _APPL_StopInputHandler
-                  0x004928                  _APPL_StartOutputHandler
-                  0x00492a                  _APPL_StopOutputHandler
+.text             0x004962         0xdc
+ .text            0x004962         0x58 build/default/production/_ext/1445274692/main.o
+                  0x004962                  _main
+ .text            0x0049ba         0x4a build/default/production/_ext/1445274692/timer1.o
+                  0x0049ba                  _setup_timer1
+                  0x0049d6                  __T1Interrupt
+ .text            0x004a04         0x2c build/default/production/_ext/1445274692/dio.o
+                  0x004a04                  _setup_dio
+                  0x004a08                  _ToggleHeartbeatLED
+                  0x004a20                  _limit_switch_neg_flag
+                  0x004a2e                  _limit_switch_pos_flag
+ .text            0x004a30          0xe build/default/production/_ext/1445274692/ethercat_appl.o
+                  0x004a30                  _APPL_StartMailboxHandler
+                  0x004a32                  _APPL_StopMailboxHandler
+                  0x004a34                  _APPL_GenerateMapping
+                  0x004a36                  _APPL_StartInputHandler
+                  0x004a38                  _APPL_StopInputHandler
+                  0x004a3a                  _APPL_StartOutputHandler
+                  0x004a3c                  _APPL_StopOutputHandler
