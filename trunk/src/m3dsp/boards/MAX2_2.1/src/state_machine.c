@@ -40,8 +40,9 @@ void step_state()
 		wd_cnt = 0;
 		last_status = ec_cmd.command[0].config & M3ACT_CONFIG_EC_WD;
 	}
-	else if (wd_cnt > 10)					// if the status doesn't change for some cycles, we're hosed
+	else if (wd_cnt > 100)					// if the status doesn't change for some cycles, we're hosed
 	{
+            // Note : Lee changed this to 100 from 10 to fix a glitch. This indicates that there are issues with m3
 		ec_cmd.command[0].mode = DSP_OFF;
 	}
 
