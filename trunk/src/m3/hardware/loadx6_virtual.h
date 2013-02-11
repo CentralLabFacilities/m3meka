@@ -25,7 +25,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 namespace m3
 {
 	using namespace std;
-	using namespace ros;
+
 /////////////////////////////////////////////////////////////////////////
 
 class M3LoadX6Virtual : public M3LoadX6

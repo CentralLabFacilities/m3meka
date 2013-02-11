@@ -26,15 +26,12 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include <google/protobuf/message.h>
 #include "m3/hardware/joint.h"
 #include "m3/toolbox/trajectory.h"
-#include "m3meka_msgs/M3JointArrayCmd.h"
-#include "m3meka_msgs/M3JointArrayParam.h"
-#include "m3meka_msgs/M3JointArrayStatus.h"
 
 namespace m3
 {
 	using namespace std;
 	using namespace KDL;
-	using namespace ros;
+
 ///////////////////////////////////////////////////////////////////////////
 
 class M3JointArray : public m3rt::M3Component
@@ -59,12 +56,7 @@ class M3JointArray : public m3rt::M3Component
 		mReal GetThetaMaxDeg(int i){return joints[i]->GetThetaMaxDeg();}
 		mReal GetThetaMinDeg(int i){return joints[i]->GetThetaMinDeg();}
 		mReal GetTorque(int i){return torque(i);}
-		ServiceServer RosInitCmd(NodeHandle * node_handle);
-		ServiceServer RosInitStatus(NodeHandle * node_handle);
-		ServiceServer RosInitParam(NodeHandle * node_handle);
-		bool RosCallbackCmd(m3meka_msgs::M3JointArrayCmd::Request  &req, m3meka_msgs::M3JointArrayCmd::Response &res);
-		bool RosCallbackStatus(m3meka_msgs::M3JointArrayStatus::Request  &req, m3meka_msgs::M3JointArrayStatus::Response &res);
-		bool RosCallbackParam(m3meka_msgs::M3JointArrayParam::Request  &req, m3meka_msgs::M3JointArrayParam::Response &res);
+		
 		string GetJointName(int i){return joint_names[i];}		
 	protected:
 		enum {DEFAULT, ISS};	

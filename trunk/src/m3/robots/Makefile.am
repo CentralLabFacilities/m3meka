@@ -72,7 +72,7 @@ proto_install:
 	cp *.proto $(includedir)/m3/robots
 	
 lib_LTLIBRARIES = libm3robots.la 
-libm3robots_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3chains -lm3toolbox -lyaml-cpp -lXmlRpc -lros -lroslib -llxrt
+libm3robots_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3chains -lm3toolbox -lyaml-cpp  -llxrt
 libm3robots_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/core/roscpp/lib \
 	-L$(ros_dir)/core/roslib/lib \

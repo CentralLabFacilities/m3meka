@@ -19,7 +19,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <humanoid_shm.h>
 #include "m3rt/base/component_factory.h"
-#include "sensor_msgs/JointState.h"
+
 
 namespace m3{
 	
@@ -399,47 +399,6 @@ bool M3HumanoidShm::ReadConfig(const char * filename)
 }
 
 
-Publisher M3HumanoidShm::RosInitPublish(NodeHandle * node_handle)
-{
-  return node_handle->advertise<sensor_msgs::JointState>("/joint_states", 1000);
-  
-}
-
-bool M3HumanoidShm::RosPublish(Publisher * pub)
-{
-  /*Header header
-string[] name
-float64[] position
-float64[] velocity
-float64[] effort*/
-  
-  int ndof = 7;
-  
-  sensor_msgs::JointState msg;
-  
-  msg.name.resize(ndof);
-  msg.position.resize(ndof);
-  msg.velocity.resize(ndof);
-  msg.effort.resize(ndof);
-  
-  msg.name[0] = "m3joint_ma10_j0";
-  msg.name[1] = "m3joint_ma10_j1";
-  msg.name[2] = "m3joint_ma10_j2";
-  msg.name[3] = "m3joint_ma10_j3";
-  msg.name[4] = "m3joint_ma10_j4";
-  msg.name[5] = "m3joint_ma10_j5";
-  msg.name[6] = "m3joint_ma10_j6";
-  
-  for (int i = 0; i < ndof; i++)
-  {
-      msg.position[i] = bot->GetThetaDeg(RIGHT_ARM,i) * (3.14/180.0);
-      msg.velocity[i] = bot->GetThetaDotDeg(RIGHT_ARM,i) * (3.14/180.0);
-      msg.effort[i] =  bot->GetTorque_mNm(RIGHT_ARM,i);
-  }
-
-  pub->publish(msg);
-  
-}
 
 
 

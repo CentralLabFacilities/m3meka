@@ -56,15 +56,11 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/robots/robot.h"
 #include "m3/robots/chain_name.h"
 #include <google/protobuf/message.h>
-#include "m3meka_msgs/M3HumanoidCmd.h"
-#include "m3meka_msgs/M3HumanoidParam.h"
-#include "m3meka_msgs/M3HumanoidStatus.h"
 
 namespace m3
 {
 	using namespace std;
 	using namespace KDL;
-	using namespace ros;
 	
 ///////////////////////////////////////////////////////////////////////////
 	
@@ -341,12 +337,7 @@ class M3Humanoid : public M3Robot
 		Frame GetRightEye2WorldTransform(){return right_eye_2_world_frame;}
 		Frame GetLeftEye2WorldTransform(){return left_eye_2_world_frame;}
 		Frame GetHeadBase2WorldTransform(){return head_base_2_world_frame;}
-		bool RosCallbackCmd(m3meka_msgs::M3HumanoidCmd::Request  &req, m3meka_msgs::M3HumanoidCmd::Response &res);
-		bool RosCallbackStatus(m3meka_msgs::M3HumanoidStatus::Request  &req, m3meka_msgs::M3HumanoidStatus::Response &res);
-		bool RosCallbackParam(m3meka_msgs::M3HumanoidParam::Request  &req, m3meka_msgs::M3HumanoidParam::Response &res);		
-		ServiceServer RosInitCmd(NodeHandle * node_handle);
-		ServiceServer RosInitStatus(NodeHandle * node_handle);		
-		ServiceServer RosInitParam(NodeHandle * node_handle);
+		
 	protected:
 		bool ReadConfig(const char * filename);
 		void Startup();

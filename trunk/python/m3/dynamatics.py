@@ -52,7 +52,7 @@ class M3Dynamatics(M3Component):
 	self.end_twist=nu.zeros(6,nu.float32)
 	self.end_pos=nu.zeros(3,nu.float32)
 	self.end_rot=nu.zeros([3,3],nu.float32)
-	self.set_tool_transform(nu.identity(4,nu.float32)) #default
+	#self.set_tool_transform(nu.identity(4,nu.float32)) #default
 	
 		
     #Utility API

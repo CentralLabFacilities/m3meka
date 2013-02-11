@@ -27,7 +27,7 @@ from m3.component import M3Component
 from m3.unit_conversion import *
 
 import scipy.linalg
-import Numeric as nu
+#import Numeric as nu
 
 
 class M3JointArray(M3Component):

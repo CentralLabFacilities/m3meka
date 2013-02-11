@@ -28,16 +28,13 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/toolbox/dfilter.h"
 #include <google/protobuf/message.h>
 #include "m3/toolbox/toolbox.h"
-#include "m3meka_msgs/M3LoadX6Cmd.h"
-#include "m3meka_msgs/M3LoadX6Param.h"
-#include "m3meka_msgs/M3LoadX6Status.h"
 
 USING_PART_OF_NAMESPACE_EIGEN
 
 namespace m3
 {
 	using namespace std;
-	using namespace ros;
+	
 	
 class M3LoadX6 : public m3rt::M3Component
 {
@@ -52,12 +49,7 @@ class M3LoadX6 : public m3rt::M3Component
 		google::protobuf::Message * GetParam(){return &param;}		
 		Wrench  * GetWrench(){return w_sense.GetWrench();}
 		mReal GetWrench(int idx);
-		ServiceServer RosInitCmd(NodeHandle * node_handle);
-		ServiceServer RosInitStatus(NodeHandle * node_handle);
-		ServiceServer RosInitParam(NodeHandle * node_handle);
-		bool RosCallbackCmd(m3meka_msgs::M3LoadX6Cmd::Request  &req, m3meka_msgs::M3LoadX6Cmd::Response &res);
-		bool RosCallbackStatus(m3meka_msgs::M3LoadX6Status::Request  &req, m3meka_msgs::M3LoadX6Status::Response &res);
-		bool RosCallbackParam(m3meka_msgs::M3LoadX6Param::Request  &req, m3meka_msgs::M3LoadX6Param::Response &res);
+		
 	protected:
 		enum {DEFAULT,ISS};		
 		bool ReadConfig(const char * filename);

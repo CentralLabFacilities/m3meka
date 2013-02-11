@@ -19,7 +19,7 @@ from m3.chain import M3Chain
 import m3.toolbox as m3t
 import m3.toolbox_ctrl as m3tc
 import scipy.linalg
-import Numeric as nu
+#import Numeric as nu
 from m3.unit_conversion import *
 
 #Wrapper only

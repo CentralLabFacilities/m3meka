@@ -35,7 +35,7 @@ namespace m3
 {
 	using namespace std;
 	using namespace m3rt;
-	using namespace ros;
+	
 
 class M3CtrlSimple: public  m3rt::M3Component
 {

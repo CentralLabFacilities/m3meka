@@ -25,7 +25,7 @@ import exceptions
 import yaml
 import Gnuplot
 import numpy as nu
-import Numeric
+#import Numeric
 import glob
 import datetime
 from datetime import timedelta

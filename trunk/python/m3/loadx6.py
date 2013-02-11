@@ -19,7 +19,7 @@ import yaml
 import os 
 from m3.toolbox import *
 import m3.loadx6_pb2 as mrt
-import Numeric as nu
+#import Numeric as nu
 
 from m3.component import M3Component
 from m3.unit_conversion import *
@@ -32,7 +32,7 @@ class M3LoadX6(M3Component):
 	self.status=mrt.M3LoadX6Status()
 	self.command=mrt.M3LoadX6Command()
 	self.param=mrt.M3LoadX6Param()
-	self.wrench=nu.zeros(6,nu.Float32)
+	self.wrench=nu.zeros(6,float)
 	self.read_config()	
     #Utility API
     def get_dig_ext0(self):
@@ -87,5 +87,5 @@ class M3LoadX6(M3Component):
 	return mNm2inLb(self.wrench[5])
     
     def update_status(self):
-	self.wrench=nu.array(self.status.wrench,nu.Float32)
+	self.wrench=nu.array(self.status.wrench,float)
   

@@ -51,7 +51,7 @@ proto_install:
 	cp *.proto $(includedir)/m3/shared_mem
 	
 lib_LTLIBRARIES = libm3shm.la 
-libm3shm_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3chains -lm3robots -lm3toolbox -lyaml-cpp -lXmlRpc -lros -lroslib -llxrt
+libm3shm_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3chains -lm3robots -lm3toolbox -lyaml-cpp  -llxrt
 libm3shm_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/core/roscpp/lib \
 	-L$(ros_dir)/core/roslib/lib \

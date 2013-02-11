@@ -3,13 +3,21 @@
 from google.protobuf import descriptor
 from google.protobuf import message
 from google.protobuf import reflection
-from google.protobuf import service
-from google.protobuf import service_reflection
 from google.protobuf import descriptor_pb2
+# @@protoc_insertion_point(imports)
+
+
+
+DESCRIPTOR = descriptor.FileDescriptor(
+  name='joint_mode_ros.proto',
+  package='',
+  serialized_pb='\n\x14joint_mode_ros.proto*_\n\x0eJOINT_MODE_ROS\x12\x16\n\x12JOINT_MODE_ROS_OFF\x10\x00\x12\x18\n\x14JOINT_MODE_ROS_THETA\x10\x01\x12\x1b\n\x17JOINT_MODE_ROS_THETA_GC\x10\x02\x42\x02H\x01')
+
 _JOINT_MODE_ROS = descriptor.EnumDescriptor(
   name='JOINT_MODE_ROS',
   full_name='JOINT_MODE_ROS',
-  filename='JOINT_MODE_ROS',
+  filename=None,
+  file=DESCRIPTOR,
   values=[
     descriptor.EnumValueDescriptor(
       name='JOINT_MODE_ROS_OFF', index=0, number=0,
@@ -24,7 +32,10 @@ _JOINT_MODE_ROS = descriptor.EnumDescriptor(
       options=None,
       type=None),
   ],
+  containing_type=None,
   options=None,
+  serialized_start=24,
+  serialized_end=119,
 )
 
 
@@ -34,4 +45,4 @@ JOINT_MODE_ROS_THETA_GC = 2
 
 
 
-
+# @@protoc_insertion_point(module_scope)

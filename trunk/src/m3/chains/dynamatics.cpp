@@ -162,6 +162,7 @@ void M3Dynamatics::StepStatus()
 	}	
 	SetPayload();	
 	idsolver->SetGrav(grav);
+	
 	f_ext[kdlchain.getNrOfSegments()-1] = end_wrench;	
 	
 	int result = idsolver->CartToJnt(q.q, qdot_id, qdotdot_id, f_ext, G);

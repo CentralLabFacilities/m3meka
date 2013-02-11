@@ -16,7 +16,7 @@
 #along with M3.  If not, see <http://www.gnu.org/licenses/>.
 import pylab
 import math
-import Numeric as nu
+#import Numeric as nu
 import m3.unit_conversion as m3u
 import  scipy 
 import numpy as np

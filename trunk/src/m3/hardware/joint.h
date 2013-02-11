@@ -29,13 +29,13 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/hardware/transmission.h"
 #include "m3/toolbox/trajectory.h"
 #include <google/protobuf/message.h>
-#include "m3meka_msgs/M3JointStatus.h"
+
 
 
 namespace m3
 {
 	using namespace std;
-	using namespace ros;
+
 
 /////////////////////////////////////////////////////////////////////////
 class M3Transmission;
@@ -97,8 +97,7 @@ class M3Joint: public m3rt::M3Component
 		virtual bool IsEncoderCalibrated(){return act->IsEncoderCalibrated();}
 		void SetLimitSwitchNegZeroEncoder(){act->SetLimitSwitchNegZeroEncoder();}
 		void ClrLimitSwitchNegZeroEncoder(){act->ClrLimitSwitchNegZeroEncoder();}
-		Publisher RosInitPublish(NodeHandle * node_handle);
-		bool RosPublish(Publisher * pub);
+		
 		google::protobuf::Message * GetCommand(){return &command;}
 		google::protobuf::Message * GetStatus(){return &status;}
 		google::protobuf::Message * GetParam(){return &param;}			

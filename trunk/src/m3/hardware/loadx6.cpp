@@ -26,7 +26,7 @@ namespace m3{
 	
 using namespace m3rt;
 using namespace std;
-using namespace ros;
+
 
 		
 ///////////////////////////////////////////////////////
@@ -111,57 +111,5 @@ mReal M3LoadX6::GetWrench(int idx)
 void M3LoadX6::StepCommand(){}
 
 
-ServiceServer M3LoadX6::RosInitCmd(NodeHandle * node_handle)
-{	
-	return node_handle->advertiseService(GetName()+"_cmd",&M3LoadX6::RosCallbackCmd, this);		
-}
-
-
-ServiceServer M3LoadX6::RosInitStatus(NodeHandle * node_handle)
-{
-	return node_handle->advertiseService(GetName()+"_status",&M3LoadX6::RosCallbackStatus, this);
-}
-
-ServiceServer M3LoadX6::RosInitParam(NodeHandle * node_handle)
-{
-	return node_handle->advertiseService(GetName()+"_param",&M3LoadX6::RosCallbackParam, this);
-}
-
-bool M3LoadX6::RosCallbackCmd(m3meka_msgs::M3LoadX6Cmd::Request  &req, m3meka_msgs::M3LoadX6Cmd::Response &res)
-{
-  return true;
-}
-
-bool M3LoadX6::RosCallbackStatus(m3meka_msgs::M3LoadX6Status::Request  &req, m3meka_msgs::M3LoadX6Status::Response &res)
-{
-  for (int i=0;i<6;i++)
-    res.wrench[i] = status.wrench(i);
-  
-  res.adc_ext_0 = status.adc_ext_0();
-  res.adc_ext_1 = status.adc_ext_1();
-  res.adc_ext_2 = status.adc_ext_2();
-  res.dig_ext_0 = status.dig_ext_0();
-  /*Wrench * wrench = GetWrench();
-  
-  for (int i=0;i<6;i++)
-  {
-    if (i < 3)
-      res.wrench[i] = GetWrench()->force[i];
-    else
-      res.wrench[i] = GetWrench()->torque[i-3];
-  }
-  
-  res.adc_ext_0 = status.adc_ext_0();
-  res.adc_ext_1 = status.adc_ext_1();
-  res.adc_ext_2 = status.adc_ext_2();
-  res.dig_ext_0 = status.dig_ext_0();*/
-  
-  return true;
-}
-
-bool M3LoadX6::RosCallbackParam(m3meka_msgs::M3LoadX6Param::Request  &req, m3meka_msgs::M3LoadX6Param::Response &res)
-{
-  return true;
-}
 
 }

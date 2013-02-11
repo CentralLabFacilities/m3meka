@@ -16,7 +16,7 @@
 #along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 from m3.joint_array import M3JointArray
-import Numeric as nu
+#import Numeric as nu
 import m3.unit_conversion as m3u
 
 class M3Gripper(M3JointArray):

@@ -28,7 +28,7 @@ namespace m3
 using namespace m3rt;
 using namespace std;
 using namespace KDL;
-using namespace ros;
+
 
 ///////////////////////////////////////////////////////
 //Success so long as least one dependent comp. available
@@ -266,70 +266,7 @@ bool M3JointArray::ReadConfig(const char * filename)
 	return true;
 }
 
-ServiceServer M3JointArray::RosInitCmd(NodeHandle * node_handle)
-{	
-	return node_handle->advertiseService(GetName()+"_cmd",&M3JointArray::RosCallbackCmd, this);		
-}
 
-
-ServiceServer M3JointArray::RosInitStatus(NodeHandle * node_handle)
-{
-	return node_handle->advertiseService(GetName()+"_status",&M3JointArray::RosCallbackStatus, this);
-}
-
-ServiceServer M3JointArray::RosInitParam(NodeHandle * node_handle)
-{
-	return node_handle->advertiseService(GetName()+"_param",&M3JointArray::RosCallbackParam, this);
-}
-
-bool M3JointArray::RosCallbackCmd(m3meka_msgs::M3JointArrayCmd::Request  &req, m3meka_msgs::M3JointArrayCmd::Response &res)
-{
-  for (int i=0;i<ndof;i++)
-  {
-    command.set_tq_desired(i, req.tq_desired[i]);
-    command.set_pwm_desired(i, req.pwm_desired[i]);
-    command.set_ctrl_mode(i, (JOINT_ARRAY_MODE)req.ctrl_mode[i]);
-    command.set_q_desired(i, req.q_desired[i]);
-    command.set_qdot_desired(i, req.qdot_desired[i]);    
-    command.set_q_slew_rate(i, req.q_slew_rate[i]);        
-  }
-  return true;
-}
-
-bool M3JointArray::RosCallbackStatus(m3meka_msgs::M3JointArrayStatus::Request  &req, m3meka_msgs::M3JointArrayStatus::Response &res)
-{
-  res.motor_temp.resize(GetNumDof());
-  res.amp_temp.resize(GetNumDof());
-  res.current.resize(GetNumDof());
-  res.torque.resize(GetNumDof());
-  res.torquedot.resize(GetNumDof());
-  res.theta.resize(GetNumDof());
-  res.thetadot.resize(GetNumDof());
-  res.thetadotdot.resize(GetNumDof());
-  res.pwm_cmd.resize(GetNumDof());
-  
-  for (int i=0;i<ndof;i++)
-  {
-    res.motor_temp[i] = status.motor_temp(i);
-    res.amp_temp[i] = status.amp_temp(i);
-    res.current[i] = status.current(i);
-    res.torque[i] = status.torque(i);
-    res.torquedot[i] = status.torquedot(i);
-    res.theta[i] = status.theta(i);
-    res.thetadot[i] = status.thetadot(i);
-    res.thetadotdot[i] = status.thetadotdot(i);
-    res.pwm_cmd[i] = status.pwm_cmd(i);
-  }
-
-  res.completed_spline_idx = status.completed_spline_idx();
-  
-  return true;
-}
-
-bool M3JointArray::RosCallbackParam(m3meka_msgs::M3JointArrayParam::Request  &req, m3meka_msgs::M3JointArrayParam::Response &res)
-{
-  return true;
-}
 
 
 }

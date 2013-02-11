@@ -26,7 +26,7 @@ namespace m3{
 	
 using namespace m3rt;
 using namespace std;
-using namespace ros;
+
 
 
 //#define MODE_SWITCH_SLEW_TIME 1.0 //Seconds
@@ -38,42 +38,7 @@ using namespace ros;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Publisher M3Joint::RosInitPublish(NodeHandle * node_handle)
-{
-  return node_handle->advertise<m3meka_msgs::M3JointStatus>(GetName()+"/status", 1000);
-  
-}
 
-bool M3Joint::RosPublish(Publisher * pub)
-{
-  
-  m3meka_msgs::M3JointStatus msg;
- 
-  msg.base.name = status.base().name();
-  msg.base.state = status.base().state();
-  msg.base.timestamp = status.base().timestamp();
-  msg.base.rate = status.base().rate();
-  msg.base.version = status.base().version();
-  
-  
-  msg.motor_temp = status.motor_temp();
-  msg.amp_temp = status.amp_temp();
-  msg.current = status.current();
-  msg.torque = status.torque();
-  msg.torquedot = status.torquedot();
-  msg.theta = status.theta();
-  msg.thetadot = status.thetadot();
-  msg.thetadotdot = status.thetadotdot();
-  msg.torque_gravity = status.torque_gravity();
-  msg.pwm_cmd = status.pwm_cmd();
-  msg.ambient_temp = status.ambient_temp();
-  msg.case_temp = status.case_temp();
-  msg.power = status.power();
-  msg.flags = status.flags();
-   
-  pub->publish(msg);
-  
-}
 
 bool M3Joint::ReadConfig(const char * filename)
 {

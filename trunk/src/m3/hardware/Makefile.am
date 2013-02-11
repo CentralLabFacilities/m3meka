@@ -254,7 +254,7 @@ proto_install:
 	
 #///////////////////////////////////////////////////////////////////////////////////////////////////
 lib_LTLIBRARIES = libm3hardware.la 
-libm3hardware_la_LIBADD = -lprotobuf -lm3toolbox -lorocos-kdl -lyaml-cpp -lm3base -lXmlRpc -lros -lroslib $(EIGEN2_LIBS) -llxrt
+libm3hardware_la_LIBADD = -lprotobuf -lm3toolbox -lorocos-kdl -lyaml-cpp -lm3base  $(EIGEN2_LIBS) -llxrt
 
 libm3hardware_la_LDFLAGS = -version-info 1:1:0 -module -L$(rtai_lib)  \
 	-L$(ros_dir)/core/roscpp/lib \

@@ -85,7 +85,7 @@ proto_install:
 	cp *.proto $(includedir)/m3/chains
 	
 lib_LTLIBRARIES = libm3chains.la 
-libm3chains_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3toolbox -lyaml-cpp -lXmlRpc -lros -lroslib
+libm3chains_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3toolbox -lyaml-cpp 
 libm3chains_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/core/roscpp/lib \
 	-L$(ros_dir)/core/roslib/lib \
@@ -107,19 +107,7 @@ libm3chains_la_CPPFLAGS =   -I../hardware/ -I../toolbox/ -I$(m3_dir) \
 	-I$(m3rt_dir) -I$(m3rtb_dir) -ffast-math -pipe -mhard-float \
 	-I$(m3tb_dir) \
 	$(EIGEN2_CFLAGS) \
-	-I$(ros_dir)/core/roscpp/include \
-	-I$(top_srcdir)/ros/m3meka_msgs/srv_gen/cpp/include \
-	-I$(top_srcdir)/ros/m3meka_msgs/msg_gen/cpp/include \
-	-I$(ros_dir)/core/roslib/include \
-	-I$(ros_dir)/core/rosconsole/include \
-	-I$(ros_dir)/3rdparty/xmlrpcpp/src \
-	-I$(ros_dir)/../stacks/ros_comm/utilities/cpp_common/include \
-	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_traits/include \
-	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp_serialization/include \
-	-I$(ros_dir)/../stacks/ros_comm/clients/cpp/roscpp/include \
-	-I$(ros_dir)/../stacks/ros_comm/tools/rosconsole/include \
-	-I$(ros_dir)/../stacks/ros_comm/utilities/xmlrpcpp/src \
-	-I$(ros_dir)/../stacks/ros_comm/utilities/rostime/include
+	-I$/usr/local/include
 
 	
 

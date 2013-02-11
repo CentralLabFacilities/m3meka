@@ -47,7 +47,7 @@ proto_install:
 	
 lib_LTLIBRARIES = libm3toolbox.la 
 
-libm3toolbox_la_LIBADD = $(PROTOBUF_LIBS) $(OROCOSKDL_LIBS) $(YAMLCPP_LIBS) -lm3base -lXmlRpc -lros -lroslib -lpthread
+libm3toolbox_la_LIBADD = $(PROTOBUF_LIBS) $(OROCOSKDL_LIBS) $(YAMLCPP_LIBS) -lm3base -lpthread
 
 libm3toolbox_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/ros/core/roscpp/lib \
