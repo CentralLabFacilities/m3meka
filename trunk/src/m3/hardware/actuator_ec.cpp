@@ -567,7 +567,10 @@ void M3ActuatorEc::SetPdoV2FromPdoV1Command(unsigned char * data)
 
 void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 {
-
+      mReal current_in = (mReal)command.current_desired();
+      mReal pwm_in = (mReal)command.pwm_desired();
+      mReal mode_in = (mReal)command.mode();
+  
 	M3ActPdoV1Cmd * ax;
 	if (IsPdoVersion(ACTX1_PDO_V2) || 
 	    IsPdoVersion(ACTX2_PDO_V2) || 
@@ -673,7 +676,8 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 
 	if (command.mode()==ACTUATOR_EC_MODE_CURRENT) //Overwrite
 		command.set_current_desired(((mReal)command.current_desired())*pwr_scale);
-
+	mReal current_post_scale = (mReal)command.current_desired();
+	
 	
 	if (IsVersion(DEFAULT)||IsVersion(ISS))
 	{
@@ -734,9 +738,15 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	    IsPdoVersion(ACTX3_PDO_V4))
 		SetPdoV4FromPdoV1Command(data);
 		
-	//if (tmp_cnt++%100==0)
-	//M3_INFO("Pwm slew %f Pwr slew %f Mode %d des %d, t_desire %d\n",
-	//	  pwm_scale,pwr_scale,(int) command.mode(),(int)command.t_desire(), ax->t_desire);
+	if (tmp_cnt++ == 200)
+	{
+	  //M3_DEBUG("Name: %s\n", GetName().c_str());
+	  M3_DEBUG("mode_in: %f mode_out: %d current_post_scale: %f Pwr_slew: %f  I_des_in: %f I_des_out: %d\n",
+		  mode_in, (int)((M3ActX1PdoV4Cmd *)data)->command[0].mode, current_post_scale,pwr_scale,current_in, ((M3ActX1PdoV4Cmd *)data)->command[0].current_desired);
+ 	  //  M3_DEBUG("mode_in: %d mode_out: %d pwm_scale %f Pwr slew %f  pwm_in %f pwm_out %d\n",
+ 		//  (int)mode_in, (int)((M3ActX1PdoV4Cmd *)data)->command[0].mode, pwm_scale,pwr_scale,pwm_in, ((M3ActX1PdoV4Cmd *)data)->command[0].pwm_desired);
+	  tmp_cnt = 0;
+	}
 	
 }
 
