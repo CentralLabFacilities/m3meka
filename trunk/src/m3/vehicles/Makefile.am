@@ -62,7 +62,7 @@ proto_install:
 	
 lib_LTLIBRARIES = libm3vehicles.la 
 libm3vehicles_la_LIBADD = -lprotobuf -lm3base -lorocos-kdl -lm3hardware -lm3chains -lm3toolbox \
-	-lyaml-cpp -lXmlRpc -lros -lroslib -lholomni_pcv
+	-lyaml-cpp -lholomni_pcv
 libm3vehicles_la_LDFLAGS = -version-info 1:1:0 -module \
 	-L$(ros_dir)/core/roscpp/lib \
 	-L$(ros_dir)/core/roslib/lib \
