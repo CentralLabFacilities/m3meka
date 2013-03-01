@@ -19,7 +19,7 @@ from m3.chain import M3Chain
 import m3.toolbox as m3t
 import m3.toolbox_ctrl as m3tc
 import scipy.linalg
-#import Numeric as nu
+import numpy as nu
 from m3.unit_conversion import *
 
 #Wrapper only
@@ -27,7 +27,7 @@ class M3Arm(M3Chain):
 	"""Wrapper for 7DOF SEA Arm"""
 	def __init__(self,name):
 		M3Chain.__init__(self,name,ndof=7,ctype='m3arm')
-		self.set_fts_transform(nu.identity(4,nu.Float32)) #default
+		self.set_fts_transform(nu.identity(4,float)) #default
 		self.ikjt_q=None
 	# ############################################################################# 
 
@@ -37,7 +37,7 @@ class M3Arm(M3Chain):
 
 	def set_fts_transform(self,T):
 		""" Set the homogenous transform from the force-torque-sensor frame to eff frame"""
-		self.S2E = nu.array(T,nu.Float32) #Transform point in sensor frame to eff
+		self.S2E = nu.array(T,float) #Transform point in sensor frame to eff
 		self.E2S =  scipy.linalg.inv(self.S2E)  #Transform point in eff to sensor frame.
 		self.FS2FE = m3tc.force_moment_transform(self.S2E)  #Transform wrench in sensor frame to eff frame
 		self.FE2FS = m3tc.force_moment_transform(self.E2S)  #Transform wrench in eff frame to sensor frame

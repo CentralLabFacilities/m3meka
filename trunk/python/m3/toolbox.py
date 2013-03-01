@@ -32,9 +32,9 @@ from datetime import timedelta
 from m3.unit_conversion import *
 from threading import Thread
 import m3.component_base_pb2 as mbs
-import roslib; roslib.load_manifest('m3_toolbox_ros')
-import rospy
-import rosbag
+#import roslib; roslib.load_manifest('m3_toolbox_ros')
+#import rospy
+#import rosbag
 from m3.toolbox_core import *
 
 

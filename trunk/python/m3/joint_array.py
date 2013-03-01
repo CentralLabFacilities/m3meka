@@ -27,7 +27,7 @@ from m3.component import M3Component
 from m3.unit_conversion import *
 
 import scipy.linalg
-#import Numeric as nu
+import numpy as nu
 
 
 class M3JointArray(M3Component):
@@ -68,14 +68,14 @@ class M3JointArray(M3Component):
 	    self.command.smoothing_mode.append(msm.SMOOTHING_MODE_OFF)
             self.command.ctrl_mode.append(mam.JOINT_ARRAY_MODE_OFF)
         
-        self.motor_temp=nu.zeros(self.ndof,nu.Float32)
-        self.amp_temp=nu.zeros(self.ndof,nu.Float32)
-        self.torque=nu.zeros(self.ndof,nu.Float32)
-        self.torquedot=nu.zeros(self.ndof,nu.Float32)	
-        self.current=nu.zeros(self.ndof,nu.Float32)
-        self.theta=nu.zeros(self.ndof,nu.Float32)
-        self.thetadot=nu.zeros(self.ndof,nu.Float32)
-        self.thetadotdot=nu.zeros(self.ndof,nu.Float32)
+        self.motor_temp=nu.zeros(self.ndof,float)
+        self.amp_temp=nu.zeros(self.ndof,float)
+        self.torque=nu.zeros(self.ndof,float)
+        self.torquedot=nu.zeros(self.ndof,float)	
+        self.current=nu.zeros(self.ndof,float)
+        self.theta=nu.zeros(self.ndof,float)
+        self.thetadot=nu.zeros(self.ndof,float)
+        self.thetadotdot=nu.zeros(self.ndof,float)
 	
 	self.max_slew_rates=self.__get_max_slew_rates_from_config()
 
@@ -184,7 +184,7 @@ class M3JointArray(M3Component):
         """Add a desired via point to the queue. 
 	-- thetadot_avg is the desired average velocity of the joint with the farthest to travel
 	Requires that a NDOF are specified even if not all are in via control mode"""
-        self.vias.append([rad2deg(nu.array(theta_des,nu.Float32)),rad2deg(nu.array(thetadot_avg))])
+        self.vias.append([rad2deg(nu.array(theta_des,float)),rad2deg(nu.array(thetadot_avg))])
 
     def add_splined_traj_via_deg(self,theta_des,thetadot_avg):
         self.vias.append([theta_des,thetadot_avg])
@@ -208,14 +208,14 @@ class M3JointArray(M3Component):
         self.vias=self.vias[nadd:]
 
     def update_status(self):
-        self.motor_temp=nu.array(self.status.motor_temp,nu.Float32)
-        self.amp_temp=  nu.array(self.status.amp_temp,nu.Float32)
-        self.current=  nu.array(self.status.current,nu.Float32)
-        self.torque=  nu.array(self.status.torque,nu.Float32)
-        self.torquedot=  nu.array(self.status.torquedot,nu.Float32)	
-        self.theta=  nu.array(self.status.theta,nu.Float32)
-        self.thetadot=  nu.array(self.status.thetadot,nu.Float32)
-        self.thetadotdot=  nu.array(self.status.thetadotdot,nu.Float32)
+        self.motor_temp=nu.array(self.status.motor_temp,float)
+        self.amp_temp=  nu.array(self.status.amp_temp,float)
+        self.current=  nu.array(self.status.current,float)
+        self.torque=  nu.array(self.status.torque,float)
+        self.torquedot=  nu.array(self.status.torquedot,float)	
+        self.theta=  nu.array(self.status.theta,float)
+        self.thetadot=  nu.array(self.status.thetadot,float)
+        self.thetadotdot=  nu.array(self.status.thetadotdot,float)
 
     def __get_max_slew_rates_from_config(self):
 	file_name = m3t.get_component_config_filename(self.name)

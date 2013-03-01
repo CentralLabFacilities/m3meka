@@ -37,7 +37,7 @@ import math
 class M3Proc:
     def __init__(self):
         self.proxy = m3p.M3RtProxy()
-        self.gui = m3g.M3Gui(stride_ms=250)#125
+        self.gui = m3g.M3Gui(stride_ms=125)#125
     def stop(self):
         self.proxy.stop()
     def start(self):

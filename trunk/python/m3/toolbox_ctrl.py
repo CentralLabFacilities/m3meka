@@ -16,7 +16,7 @@
 #along with M3.  If not, see <http://www.gnu.org/licenses/>.
 import pylab
 import math
-#import Numeric as nu
+import numpy as nu
 import m3.unit_conversion as m3u
 import  scipy 
 import numpy as np
@@ -91,8 +91,8 @@ def force_moment_transform(S2T):
         #Compute Jt for fh=Jt*ft , for a force a pt in hand coord frame
         R=S2T[:3,:3] #rotation
         pt=S2T[:3,3] #translation
-        Px=nu.array([[0,-pt[2],pt[1]],[pt[2],0,-pt[0]],[-pt[1],pt[0],0]],nu.Float32) #cross product
-        t=nu.concatenate([R,nu.zeros([3,3],nu.Float32)],1)
+        Px=nu.array([[0,-pt[2],pt[1]],[pt[2],0,-pt[0]],[-pt[1],pt[0],0]],float) #cross product
+        t=nu.concatenate([R,nu.zeros([3,3],float)],1)
         tt=nu.concatenate([Px,R],1)
         FS2FT=nu.concatenate([t,tt],0) #6x6
         return FS2FT	

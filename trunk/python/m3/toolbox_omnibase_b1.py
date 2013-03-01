@@ -21,7 +21,8 @@ import time
 import yaml
 import m3.unit_conversion as m3u
 import m3.toolbox as m3t
-import Numeric as nu
+#import Numeric as nu
+import numpy as nu
 import math
 import copy
 import random
