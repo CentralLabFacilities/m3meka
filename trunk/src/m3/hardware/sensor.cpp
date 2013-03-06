@@ -127,6 +127,21 @@ void M3AngleSensor::Step(int qei_on, int qei_period, int qei_rollover)
 	}
 }
 
+void M3AngleSensor::StepError(int ec_err)
+{	
+	
+	if (type==VERTX_14_BIT )
+	{
+	   err = ec_err;
+	
+	} else {
+	  err = 0; 
+	}
+	
+	
+}
+
+
 ///////////////////////////////////////////////////////
 
 
@@ -290,6 +305,20 @@ void M3TorqueSensor::Step(mReal ticks)
 		val = ticks*cb_mA_per_tick*cb_mNm_per_mA;
 	}
 	val= val*cb_scale+cb_bias;
+}
+
+void M3TorqueSensor::StepError(int ec_err)
+{	
+	
+	if (type==SEA_VERTX_14_BIT )
+	{
+	   err = ec_err;
+	
+	} else {
+	  err = 0; 
+	}
+	
+	
 }
 
 int  M3TorqueSensor::mNmToTicks(mReal mNm, M3CurrentSensor * current)

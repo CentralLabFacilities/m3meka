@@ -30,6 +30,8 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "../toolbox/dfilter.h"
 #include <google/protobuf/message.h>
 
+
+
 namespace m3
 {
 	using namespace std;
@@ -38,7 +40,7 @@ namespace m3
 class M3Actuator : public m3rt::M3Component
 {
 	public:
-		M3Actuator(): m3rt::M3Component(CALIB_PRIORITY),ecc(NULL),ignore_bounds(false),use_i_torque_ctrl(false),overload_cnt(0),old_ts(0),encoder_calib_req(1),old_ts_rtai(0),old_ticks(0),old_is_calibrated(false),tmp_cnt(0),torque_shift(1.0)
+		M3Actuator(): m3rt::M3Component(CALIB_PRIORITY),ecc(NULL),ignore_bounds(false),use_i_torque_ctrl(false),overload_cnt(0),old_ts(0),encoder_calib_req(1),old_ts_rtai(0),old_ticks(0),old_is_calibrated(false),tmp_cnt(0),torque_shift(1.0),sensor_fault_theta_cnt(0),sensor_fault_torque_cnt(0)
 		{
 			RegisterVersion("default",DEFAULT);	//RBL
 			RegisterVersion("iss",ISS);		//ISS. Updated safety thresholds to use motor model.
@@ -110,7 +112,7 @@ class M3Actuator : public m3rt::M3Component
 		M3DFilter torquedot_df;
 		M3DitherToInt pwm_dither;
 		M3PID pid_torque;
-		
+		string config_filename;
 		bool ReadConfig(const char * filename);
 		void Startup();
 		void Shutdown();
@@ -137,10 +139,12 @@ class M3Actuator : public m3rt::M3Component
 		int old_ticks;
 		bool old_is_calibrated;
 		mReal torque_shift;
-		
+		int sensor_fault_theta_cnt;
+		int sensor_fault_torque_cnt;
 		int amp_control_input;
 		int pnt_cnt;
-		
+		int last_theta_err;
+		int last_torque_err;
 };
 
 

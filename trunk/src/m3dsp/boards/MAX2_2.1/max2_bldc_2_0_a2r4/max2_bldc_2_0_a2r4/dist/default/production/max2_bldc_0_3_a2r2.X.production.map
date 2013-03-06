@@ -83,11 +83,11 @@ section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200                0xc2           0x123  (291)
 .const                       0x2c2                0x90            0xd8  (216)
-.text                        0x352              0x43aa          0x657f  (25983)
-.dinit                      0x46fc                0xae           0x105  (261)
-.text                       0x47aa               0x16e           0x225  (549)
+.text                        0x352              0x43ac          0x6582  (25986)
+.dinit                      0x46fe                0xae           0x105  (261)
+.text                       0x47ac               0x16e           0x225  (549)
 
-                     Total program memory used (bytes):         0x6aa4  (27300) 41%
+                     Total program memory used (bytes):         0x6aa7  (27303) 41%
 
 
 Data Memory  [Origin = 0x800, Length = 0x2000]
@@ -103,10 +103,10 @@ section                    address      alignment gaps    total length  (dec)
 .nbss                        0x984                   0            0x14  (20)
 .ndata                       0x998                   0             0x2  (2)
 .nbss                        0x99a                   0             0x2  (2)
-_409ca380506b7b97           0x2670                   0             0x8  (8)
-_409ca230506b7b97           0x2678                   0             0x8  (8)
-_409f1d20506b7b9b           0x2680                   0            0x80  (128)
-_409f1e70506b7b9b           0x2700                   0           0x100  (256)
+_409cf380512f9912           0x2670                   0             0x8  (8)
+_409cf230512f9912           0x2678                   0             0x8  (8)
+_409f6d20512f9916           0x2680                   0            0x80  (128)
+_409f6e70512f9916           0x2700                   0           0x100  (256)
 
                         Total data memory used (bytes):          0x32c  (812) 9%
 
@@ -348,57 +348,57 @@ External Symbols in Program Memory (by address):
                   0x00433c                  _limit_check
                   0x004364                  _get_dsp_state
                   0x004368                  _step_state
-                  0x0044a2                  _setup_interrupt_priorities
-                  0x0044d8                  _us_delay
-                  0x0044ec                  _setup_ports
-                  0x004534                  _setup_peripheral_pin_select
-                  0x004578                  _ms_delay
-                  0x00458c                  _us100_delay
-                  0x0045a0                  _setup_oscillator
-                  0x0045e0                  _current_control
-                  0x00466e                  _set_current_ab
-                  0x00468c                  _ma2adc
-                  0x00469c                  _adc2ma
-                  0x0046ac                  _set_current_command_ma
-                  0x0046be                  _get_current_ma
-                  0x0046ce                  _get_max_current_ma
-                  0x0047aa                  _cfgDma0SpiTx
-                  0x0047c6                  _cfgDma1SpiRx
-                  0x0047e2                  _ResetDMATx
-                  0x0047f0                  __DMA0Interrupt
-                  0x0047f6                  _GetRxBufIdx
-                  0x0047fe                  __DMA1Interrupt
-                  0x004856                  _main
-                  0x0048aa                  _setup_timer3
-                  0x0048c6                  __T3Interrupt
-                  0x0048f0                  _setup_dio
-                  0x0048f2                  _ToggleHeartbeatLED
-                  0x00490a                  _APPL_StartMailboxHandler
-                  0x00490c                  _APPL_StopMailboxHandler
-                  0x00490e                  _APPL_GenerateMapping
-                  0x004910                  _APPL_StartInputHandler
-                  0x004912                  _APPL_StopInputHandler
-                  0x004914                  _APPL_StartOutputHandler
-                  0x004916                  _APPL_StopOutputHandler
+                  0x0044a4                  _setup_interrupt_priorities
+                  0x0044da                  _us_delay
+                  0x0044ee                  _setup_ports
+                  0x004536                  _setup_peripheral_pin_select
+                  0x00457a                  _ms_delay
+                  0x00458e                  _us100_delay
+                  0x0045a2                  _setup_oscillator
+                  0x0045e2                  _current_control
+                  0x004670                  _set_current_ab
+                  0x00468e                  _ma2adc
+                  0x00469e                  _adc2ma
+                  0x0046ae                  _set_current_command_ma
+                  0x0046c0                  _get_current_ma
+                  0x0046d0                  _get_max_current_ma
+                  0x0047ac                  _cfgDma0SpiTx
+                  0x0047c8                  _cfgDma1SpiRx
+                  0x0047e4                  _ResetDMATx
+                  0x0047f2                  __DMA0Interrupt
+                  0x0047f8                  _GetRxBufIdx
+                  0x004800                  __DMA1Interrupt
+                  0x004858                  _main
+                  0x0048ac                  _setup_timer3
+                  0x0048c8                  __T3Interrupt
+                  0x0048f2                  _setup_dio
+                  0x0048f4                  _ToggleHeartbeatLED
+                  0x00490c                  _APPL_StartMailboxHandler
+                  0x00490e                  _APPL_StopMailboxHandler
+                  0x004910                  _APPL_GenerateMapping
+                  0x004912                  _APPL_StartInputHandler
+                  0x004914                  _APPL_StopInputHandler
+                  0x004916                  _APPL_StartOutputHandler
+                  0x004918                  _APPL_StopOutputHandler
                   0xf80004                  __FGS.sec
 
 External Symbols in Program Memory (by name):
 
                   0x0030ca                  _AL_ControlInd
-                  0x00490e                  _APPL_GenerateMapping
-                  0x004910                  _APPL_StartInputHandler
-                  0x00490a                  _APPL_StartMailboxHandler
-                  0x004914                  _APPL_StartOutputHandler
-                  0x004912                  _APPL_StopInputHandler
-                  0x00490c                  _APPL_StopMailboxHandler
-                  0x004916                  _APPL_StopOutputHandler
+                  0x004910                  _APPL_GenerateMapping
+                  0x004912                  _APPL_StartInputHandler
+                  0x00490c                  _APPL_StartMailboxHandler
+                  0x004916                  _APPL_StartOutputHandler
+                  0x004914                  _APPL_StopInputHandler
+                  0x00490e                  _APPL_StopMailboxHandler
+                  0x004918                  _APPL_StopOutputHandler
                   0x003520                  _AddressingEsc
                   0x002db8                  _CheckSmChannelParameters
                   0x002fb2                  _CheckSmSettings
                   0x002f90                  _ECAT_Init
                   0x002fb0                  _ECAT_Main
                   0x0034ba                  _GetInterruptRegister
-                  0x0047f6                  _GetRxBufIdx
+                  0x0047f8                  _GetRxBufIdx
                   0x003a96                  _HW_DisableSyncManChannel
                   0x003ae2                  _HW_EnableSyncManChannel
                   0x0036bc                  _HW_EscReadAccess
@@ -416,34 +416,34 @@ External Symbols in Program Memory (by name):
                   0x0035e2                  _ISR_EscWriteAccessDMA
                   0x0034fa                  _ISR_GetInterruptRegister
                   0x003592                  _ISR_StartDMA
-                  0x0047e2                  _ResetDMATx
+                  0x0047e4                  _ResetDMATx
                   0x002e8a                  _StartInputHandler
                   0x002ee8                  _StartOutputHandler
                   0x002f76                  _StopInputHandler
                   0x002f60                  _StopOutputHandler
-                  0x0048f2                  _ToggleHeartbeatLED
+                  0x0048f4                  _ToggleHeartbeatLED
                   0x003c0e                  __CNInterrupt
-                  0x0047f0                  __DMA0Interrupt
-                  0x0047fe                  __DMA1Interrupt
+                  0x0047f2                  __DMA0Interrupt
+                  0x004800                  __DMA1Interrupt
                   0x0041e8                  __DMA2Interrupt
                   0x000290                  __DefaultInterrupt
                   0xf80004                  __FGS.sec
                   0x003ea0                  __INT0Interrupt
                   0x004056                  __MPWM1Interrupt
-                  0x0048c6                  __T3Interrupt
+                  0x0048c8                  __T3Interrupt
                   0x000294                  ___udivsi3
                   0x000232                  __data_init
                   0x000232                  __data_init_standard
                   0x000222                  __psv_init
                   0x000200                  __resetPRI
-                  0x00469c                  _adc2ma
+                  0x00469e                  _adc2ma
                   0x0041c8                  _adc_filter
-                  0x0047aa                  _cfgDma0SpiTx
-                  0x0047c6                  _cfgDma1SpiRx
+                  0x0047ac                  _cfgDma0SpiTx
+                  0x0047c8                  _cfgDma1SpiRx
                   0x003fa4                  _clamp_pwm
                   0x003b8e                  _commutate
                   0x0002c2                  _commutation_pos_table
-                  0x0045e0                  _current_control
+                  0x0045e2                  _current_control
                   0x0041b6                  _current_dma_buf
                   0x003d48                  _eeprom_loaded
                   0x0041e0                  _get_adc_zero
@@ -451,10 +451,10 @@ External Symbols in Program Memory (by name):
                   0x00415e                  _get_avg_adc_torque
                   0x00035a                  _get_avg_vertx
                   0x003b64                  _get_bldc_dir
-                  0x0046be                  _get_current_ma
+                  0x0046c0                  _get_current_ma
                   0x004364                  _get_dsp_state
                   0x003b30                  _get_hall_state
-                  0x0046ce                  _get_max_current_ma
+                  0x0046d0                  _get_max_current_ma
                   0x003b2c                  _get_motor_pos
                   0x003f52                  _get_pwm_cmd
                   0x004160                  _get_temperature_cC
@@ -464,10 +464,10 @@ External Symbols in Program Memory (by name):
                   0x003dbc                  _isr_update_inputs
                   0x003d60                  _isr_update_outputs
                   0x00433c                  _limit_check
-                  0x00468c                  _ma2adc
-                  0x004856                  _main
+                  0x00468e                  _ma2adc
+                  0x004858                  _main
                   0x0002b4                  _memset
-                  0x004578                  _ms_delay
+                  0x00457a                  _ms_delay
                   0x003f62                  _pwm_deadband
                   0x004246                  _set_adc_zeros
                   0x003b5a                  _set_bldc_brake
@@ -475,30 +475,30 @@ External Symbols in Program Memory (by name):
                   0x003bc6                  _set_bldc_dir
                   0x003b68                  _set_bldc_mode
                   0x003b52                  _set_bldc_open
-                  0x00466e                  _set_current_ab
-                  0x0046ac                  _set_current_command_ma
+                  0x004670                  _set_current_ab
+                  0x0046ae                  _set_current_command_ma
                   0x00405a                  _set_pwm
                   0x003f5e                  _set_pwm_current_desired
                   0x003f5a                  _set_pwm_desired
                   0x004270                  _setup_adc
                   0x003b74                  _setup_bldc
-                  0x0048f0                  _setup_dio
+                  0x0048f2                  _setup_dio
                   0x004178                  _setup_dma2
                   0x003e12                  _setup_ethercat
-                  0x0044a2                  _setup_interrupt_priorities
-                  0x0045a0                  _setup_oscillator
-                  0x004534                  _setup_peripheral_pin_select
-                  0x0044ec                  _setup_ports
+                  0x0044a4                  _setup_interrupt_priorities
+                  0x0045a2                  _setup_oscillator
+                  0x004536                  _setup_peripheral_pin_select
+                  0x0044ee                  _setup_ports
                   0x003fce                  _setup_pwm
                   0x003dec                  _setup_spi
-                  0x0048aa                  _setup_timer3
+                  0x0048ac                  _setup_timer3
                   0x0003a6                  _setup_vertx
                   0x003d4e                  _step_ethercat
                   0x004368                  _step_state
                   0x0003c6                  _step_vertx
                   0x0040c4                  _update_pwm
-                  0x00458c                  _us100_delay
-                  0x0044d8                  _us_delay
+                  0x00458e                  _us100_delay
+                  0x0044da                  _us_delay
                   0x000352                  _vertx_error
                   0x000376                  _vertx_error_filter
                   0x0003be                  _vertx_pos
@@ -647,23 +647,23 @@ __FUID3
 .comment
  *(.comment)
 
-.debug_info       0x000000       0xbcf8
+.debug_info       0x000000       0xbc8f
  *(.debug_info)
- .debug_info      0x000000       0x19ee build/default/production/_ext/1445274692/adc.o
- .debug_info      0x0019ee       0x1056 build/default/production/_ext/1445274692/bldc.o
- .debug_info      0x002a44        0x29d build/default/production/_ext/1445274692/dio.o
- .debug_info      0x002ce1        0xc89 build/default/production/_ext/1445274692/encoder_vertx.o
- .debug_info      0x00396a       0x13d1 build/default/production/_ext/1445274692/ethercat.o
- .debug_info      0x004d3b        0x239 build/default/production/_ext/1445274692/ethercat_appl.o
- .debug_info      0x004f74       0x149f build/default/production/_ext/1445274692/ethercat_hw.o
- .debug_info      0x006413        0x84c build/default/production/_ext/1445274692/ethercat_slave_fsm.o
- .debug_info      0x006c5f        0x463 build/default/production/_ext/1445274692/main.o
- .debug_info      0x0070c2       0x1007 build/default/production/_ext/1445274692/pwm.o
- .debug_info      0x0080c9       0x1bba build/default/production/_ext/1445274692/setup.o
- .debug_info      0x009c83        0x8a1 build/default/production/_ext/1445274692/timer3.o
- .debug_info      0x00a524        0x5de build/default/production/_ext/1445274692/state_machine.o
- .debug_info      0x00ab02        0x62c build/default/production/_ext/1445274692/current.o
- .debug_info      0x00b12e        0xbca build/default/production/_ext/1445274692/spi1Drv.o
+ .debug_info      0x000000       0x19e7 build/default/production/_ext/1445274692/adc.o
+ .debug_info      0x0019e7       0x104f build/default/production/_ext/1445274692/bldc.o
+ .debug_info      0x002a36        0x296 build/default/production/_ext/1445274692/dio.o
+ .debug_info      0x002ccc        0xc82 build/default/production/_ext/1445274692/encoder_vertx.o
+ .debug_info      0x00394e       0x13ca build/default/production/_ext/1445274692/ethercat.o
+ .debug_info      0x004d18        0x232 build/default/production/_ext/1445274692/ethercat_appl.o
+ .debug_info      0x004f4a       0x1498 build/default/production/_ext/1445274692/ethercat_hw.o
+ .debug_info      0x0063e2        0x845 build/default/production/_ext/1445274692/ethercat_slave_fsm.o
+ .debug_info      0x006c27        0x45c build/default/production/_ext/1445274692/main.o
+ .debug_info      0x007083       0x1000 build/default/production/_ext/1445274692/pwm.o
+ .debug_info      0x008083       0x1bb3 build/default/production/_ext/1445274692/setup.o
+ .debug_info      0x009c36        0x89a build/default/production/_ext/1445274692/timer3.o
+ .debug_info      0x00a4d0        0x5d7 build/default/production/_ext/1445274692/state_machine.o
+ .debug_info      0x00aaa7        0x625 build/default/production/_ext/1445274692/current.o
+ .debug_info      0x00b0cc        0xbc3 build/default/production/_ext/1445274692/spi1Drv.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000       0x17bf
@@ -834,17 +834,17 @@ __FUID3
                   0x000016          0x4 LONG 0x290 DEFINED (__IC1Interrupt)?ABSOLUTE (__IC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000018          0x4 LONG 0x290 DEFINED (__OC1Interrupt)?ABSOLUTE (__OC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00001a          0x4 LONG 0x290 DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00001c          0x4 LONG 0x47f0 DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00001c          0x4 LONG 0x47f2 DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00001e          0x4 LONG 0x290 DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000020          0x4 LONG 0x290 DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000022          0x4 LONG 0x290 DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000024          0x4 LONG 0x48c6 DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000024          0x4 LONG 0x48c8 DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000026          0x4 LONG 0x290 DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000028          0x4 LONG 0x290 DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00002a          0x4 LONG 0x290 DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00002c          0x4 LONG 0x290 DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00002e          0x4 LONG 0x290 DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000030          0x4 LONG 0x47fe DEFINED (__DMA1Interrupt)?ABSOLUTE (__DMA1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000030          0x4 LONG 0x4800 DEFINED (__DMA1Interrupt)?ABSOLUTE (__DMA1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000032          0x4 LONG 0x290 DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000034          0x4 LONG 0x290 DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000036          0x4 LONG 0x290 DEFINED (__MI2C1Interrupt)?ABSOLUTE (__MI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -962,17 +962,17 @@ __FUID3
                   0x000116          0x4 LONG 0x290 DEFINED (__AltIC1Interrupt)?ABSOLUTE (__AltIC1Interrupt):DEFINED (__IC1Interrupt)?ABSOLUTE (__IC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000118          0x4 LONG 0x290 DEFINED (__AltOC1Interrupt)?ABSOLUTE (__AltOC1Interrupt):DEFINED (__OC1Interrupt)?ABSOLUTE (__OC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00011a          0x4 LONG 0x290 DEFINED (__AltT1Interrupt)?ABSOLUTE (__AltT1Interrupt):DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00011c          0x4 LONG 0x47f0 DEFINED (__AltDMA0Interrupt)?ABSOLUTE (__AltDMA0Interrupt):DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00011c          0x4 LONG 0x47f2 DEFINED (__AltDMA0Interrupt)?ABSOLUTE (__AltDMA0Interrupt):DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00011e          0x4 LONG 0x290 DEFINED (__AltIC2Interrupt)?ABSOLUTE (__AltIC2Interrupt):DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000120          0x4 LONG 0x290 DEFINED (__AltOC2Interrupt)?ABSOLUTE (__AltOC2Interrupt):DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000122          0x4 LONG 0x290 DEFINED (__AltT2Interrupt)?ABSOLUTE (__AltT2Interrupt):DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000124          0x4 LONG 0x48c6 DEFINED (__AltT3Interrupt)?ABSOLUTE (__AltT3Interrupt):DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000124          0x4 LONG 0x48c8 DEFINED (__AltT3Interrupt)?ABSOLUTE (__AltT3Interrupt):DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000126          0x4 LONG 0x290 DEFINED (__AltSPI1ErrInterrupt)?ABSOLUTE (__AltSPI1ErrInterrupt):DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000128          0x4 LONG 0x290 DEFINED (__AltSPI1Interrupt)?ABSOLUTE (__AltSPI1Interrupt):DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00012a          0x4 LONG 0x290 DEFINED (__AltU1RXInterrupt)?ABSOLUTE (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00012c          0x4 LONG 0x290 DEFINED (__AltU1TXInterrupt)?ABSOLUTE (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00012e          0x4 LONG 0x290 DEFINED (__AltADC1Interrupt)?ABSOLUTE (__AltADC1Interrupt):DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000130          0x4 LONG 0x47fe DEFINED (__AltDMA1Interrupt)?ABSOLUTE (__AltDMA1Interrupt):DEFINED (__DMA1Interrupt)?ABSOLUTE (__DMA1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000130          0x4 LONG 0x4800 DEFINED (__AltDMA1Interrupt)?ABSOLUTE (__AltDMA1Interrupt):DEFINED (__DMA1Interrupt)?ABSOLUTE (__DMA1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000132          0x4 LONG 0x290 DEFINED (__AltInterrupt15)?ABSOLUTE (__AltInterrupt15):DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000134          0x4 LONG 0x290 DEFINED (__AltSI2C1Interrupt)?ABSOLUTE (__AltSI2C1Interrupt):DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000136          0x4 LONG 0x290 DEFINED (__AltMI2C1Interrupt)?ABSOLUTE (__AltMI2C1Interrupt):DEFINED (__MI2C1Interrupt)?ABSOLUTE (__MI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -2021,27 +2021,27 @@ __c30_signature
  __c30_signature
                   0x000258          0x6 /opt/microchip/mplabc30/v3.30c/bin/bin/../../lib/libc-elf.a(memset.XXeo)
 
-_409f1e70506b7b9b
+_409f6e70512f9916
                     0x2700        0x100
- _409f1e70506b7b9b
+ _409f6e70512f9916
                     0x2700        0x100 build/default/production/_ext/1445274692/spi1Drv.o
                     0x2700                  _Spi1TxBuffA
 
-_409f1d20506b7b9b
+_409f6d20512f9916
                     0x2680         0x80
- _409f1d20506b7b9b
+ _409f6d20512f9916
                     0x2680         0x80 build/default/production/_ext/1445274692/spi1Drv.o
                     0x2680                  _Spi1RxBuffA
 
-_409ca380506b7b97
+_409cf380512f9912
                     0x2670          0x8
- _409ca380506b7b97
+ _409cf380512f9912
                     0x2670          0x8 build/default/production/_ext/1445274692/adc.o
                     0x2670                  _BufferB
 
-_409ca230506b7b97
+_409cf230512f9912
                     0x2678          0x8
- _409ca230506b7b97
+ _409cf230512f9912
                     0x2678          0x8 build/default/production/_ext/1445274692/adc.o
                     0x2678                  _BufferA
 
@@ -2147,7 +2147,7 @@ _409ca230506b7b97
                     0x82c2                  _commutation_pos_table
  .const             0x8342         0x10 build/default/production/_ext/1445274692/current.o
 
-.text             0x000352       0x43aa
+.text             0x000352       0x43ac
  .text            0x000352       0x2a66 build/default/production/_ext/1445274692/encoder_vertx.o
                   0x000352                  _vertx_error
                   0x00035a                  _get_avg_vertx
@@ -2229,51 +2229,51 @@ _409ca230506b7b97
                   0x0041e8                  __DMA2Interrupt
                   0x004246                  _set_adc_zeros
                   0x004270                  _setup_adc
- .text            0x00433c        0x166 build/default/production/_ext/1445274692/state_machine.o
+ .text            0x00433c        0x168 build/default/production/_ext/1445274692/state_machine.o
                   0x00433c                  _limit_check
                   0x004364                  _get_dsp_state
                   0x004368                  _step_state
- .text            0x0044a2        0x13e build/default/production/_ext/1445274692/setup.o
-                  0x0044a2                  _setup_interrupt_priorities
-                  0x0044d8                  _us_delay
-                  0x0044ec                  _setup_ports
-                  0x004534                  _setup_peripheral_pin_select
-                  0x004578                  _ms_delay
-                  0x00458c                  _us100_delay
-                  0x0045a0                  _setup_oscillator
- .text            0x0045e0        0x11c build/default/production/_ext/1445274692/current.o
-                  0x0045e0                  _current_control
-                  0x00466e                  _set_current_ab
-                  0x00468c                  _ma2adc
-                  0x00469c                  _adc2ma
-                  0x0046ac                  _set_current_command_ma
-                  0x0046be                  _get_current_ma
-                  0x0046ce                  _get_max_current_ma
+ .text            0x0044a4        0x13e build/default/production/_ext/1445274692/setup.o
+                  0x0044a4                  _setup_interrupt_priorities
+                  0x0044da                  _us_delay
+                  0x0044ee                  _setup_ports
+                  0x004536                  _setup_peripheral_pin_select
+                  0x00457a                  _ms_delay
+                  0x00458e                  _us100_delay
+                  0x0045a2                  _setup_oscillator
+ .text            0x0045e2        0x11c build/default/production/_ext/1445274692/current.o
+                  0x0045e2                  _current_control
+                  0x004670                  _set_current_ab
+                  0x00468e                  _ma2adc
+                  0x00469e                  _adc2ma
+                  0x0046ae                  _set_current_command_ma
+                  0x0046c0                  _get_current_ma
+                  0x0046d0                  _get_max_current_ma
 
-.dinit            0x0046fc         0xae
- .dinit           0x0046fc         0xae data_init
+.dinit            0x0046fe         0xae
+ .dinit           0x0046fe         0xae data_init
 
-.text             0x0047aa        0x16e
- .text            0x0047aa         0xac build/default/production/_ext/1445274692/spi1Drv.o
-                  0x0047aa                  _cfgDma0SpiTx
-                  0x0047c6                  _cfgDma1SpiRx
-                  0x0047e2                  _ResetDMATx
-                  0x0047f0                  __DMA0Interrupt
-                  0x0047f6                  _GetRxBufIdx
-                  0x0047fe                  __DMA1Interrupt
- .text            0x004856         0x54 build/default/production/_ext/1445274692/main.o
-                  0x004856                  _main
- .text            0x0048aa         0x46 build/default/production/_ext/1445274692/timer3.o
-                  0x0048aa                  _setup_timer3
-                  0x0048c6                  __T3Interrupt
- .text            0x0048f0         0x1a build/default/production/_ext/1445274692/dio.o
-                  0x0048f0                  _setup_dio
-                  0x0048f2                  _ToggleHeartbeatLED
- .text            0x00490a          0xe build/default/production/_ext/1445274692/ethercat_appl.o
-                  0x00490a                  _APPL_StartMailboxHandler
-                  0x00490c                  _APPL_StopMailboxHandler
-                  0x00490e                  _APPL_GenerateMapping
-                  0x004910                  _APPL_StartInputHandler
-                  0x004912                  _APPL_StopInputHandler
-                  0x004914                  _APPL_StartOutputHandler
-                  0x004916                  _APPL_StopOutputHandler
+.text             0x0047ac        0x16e
+ .text            0x0047ac         0xac build/default/production/_ext/1445274692/spi1Drv.o
+                  0x0047ac                  _cfgDma0SpiTx
+                  0x0047c8                  _cfgDma1SpiRx
+                  0x0047e4                  _ResetDMATx
+                  0x0047f2                  __DMA0Interrupt
+                  0x0047f8                  _GetRxBufIdx
+                  0x004800                  __DMA1Interrupt
+ .text            0x004858         0x54 build/default/production/_ext/1445274692/main.o
+                  0x004858                  _main
+ .text            0x0048ac         0x46 build/default/production/_ext/1445274692/timer3.o
+                  0x0048ac                  _setup_timer3
+                  0x0048c8                  __T3Interrupt
+ .text            0x0048f2         0x1a build/default/production/_ext/1445274692/dio.o
+                  0x0048f2                  _setup_dio
+                  0x0048f4                  _ToggleHeartbeatLED
+ .text            0x00490c          0xe build/default/production/_ext/1445274692/ethercat_appl.o
+                  0x00490c                  _APPL_StartMailboxHandler
+                  0x00490e                  _APPL_StopMailboxHandler
+                  0x004910                  _APPL_GenerateMapping
+                  0x004912                  _APPL_StartInputHandler
+                  0x004914                  _APPL_StopInputHandler
+                  0x004916                  _APPL_StartOutputHandler
+                  0x004918                  _APPL_StopOutputHandler

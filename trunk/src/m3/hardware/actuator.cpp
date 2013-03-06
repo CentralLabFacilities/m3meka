@@ -29,6 +29,7 @@ using namespace std;
 
 ///////////////////////////////////////////////////////
 #define BOUNDS_AVERAGE_TIME 2.0 //Seconds to average temp values for out-of-bounds errors
+#define SENSOR_FAULT_LIMIT 0.1 // 100 ms limit for sensor error before error state
 
 void M3Actuator::Startup()
 {
@@ -47,6 +48,11 @@ void M3Actuator::Startup()
 void M3Actuator::Shutdown()
 {
 
+  if (IsVersion(DEFAULT) || IsVersion(ISS) || IsVersion(IQ))
+  {
+    motor.ThermalShutdown(config_filename, ex_sense.GetTempC());
+  }
+  
 }
 
 
@@ -58,6 +64,7 @@ bool M3Actuator::ReadConfig(const char * filename)
 	string str;
 	mReal mval;
 	YAML::Node doc;
+	config_filename = string(filename);
 
 	if (!M3Component::ReadConfig(filename))
 		return false;
@@ -108,7 +115,7 @@ bool M3Actuator::ReadConfig(const char * filename)
 		{
 			param.set_max_i(0.0);
 		} 
-		motor.ReadConfig(doc["calib"]["motor"]);	
+		motor.ReadConfig(doc["calib"]["motor"], config_filename);	
 		q_sense.ReadConfig( doc["calib"]["theta"]);
 		tq_sense.ReadConfig(doc["calib"]["torque"]);
 		at_sense.ReadConfig(doc["calib"]["amp_temp"]);
@@ -187,6 +194,8 @@ void M3Actuator::StepStatus()
 {
 	if (IsStateError())
 		return;
+	
+	
 	 
 	if (IsVersion(DEFAULT) || IsVersion(ISS) || IsVersion(IQ))
 	{
@@ -269,9 +278,42 @@ void M3Actuator::StepStatus()
 		//Update status data
 		status.set_flags(ecs->flags());
 		status.set_pwm_cmd(ecs->pwm_cmd());
+	
+		// Detect Loss of Vertx sensors
+		q_sense.StepError(ecs->qei_rollover());
+		tq_sense.StepError(ecs->qei_period());	
 		
+		if (last_theta_err != q_sense.GetError())
+		  sensor_fault_theta_cnt++;
+		else
+		  sensor_fault_theta_cnt = 0;
+		
+		if (last_torque_err != tq_sense.GetError())
+		  sensor_fault_torque_cnt++;
+		else
+		  sensor_fault_torque_cnt = 0;
+		
+		if (((mReal)sensor_fault_theta_cnt) > (SENSOR_FAULT_LIMIT * (mReal)RT_TASK_FREQUENCY)) // throw an error if we loose jnt/tq sensor for 100 ms
+		{
+		  M3_DEBUG("th_cnt: %d, th_err: %d, th_err_last: %d\n", sensor_fault_theta_cnt, q_sense.GetError(), last_theta_err);
+		  SetStateError();
+		  M3_ERR("------ SENSOR FAULT EVENT FOR JOINT ANGLE OF %s ---------------\n",GetName().c_str());
+		}
+		
+		if (((mReal)sensor_fault_torque_cnt) > (SENSOR_FAULT_LIMIT * (mReal)RT_TASK_FREQUENCY)) // throw an error if we loose jnt/tq sensor for 100 ms
+		{
+		  M3_DEBUG("tq_cnt: %d, tq_err: %d, tq_err_last: %d\n", sensor_fault_torque_cnt, tq_sense.GetError(), last_torque_err);
+		  SetStateError();
+		  M3_ERR("------ SENSOR FAULT EVENT FOR TORQUE OF %s ---------------\n",GetName().c_str());
+		}
+		
+		last_theta_err = q_sense.GetError();
+		last_torque_err = tq_sense.GetError();
 	}
 	StepOverloadDetect();
+	
+	
+	
 }
 
 void M3Actuator::StepOverloadDetect()

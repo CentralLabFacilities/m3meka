@@ -54,9 +54,10 @@ class M3MotorModel
 		mReal GetMaxCurrent(){return nominal_current*1000.0;} //Continuous, mA
 		mReal GetSafePwmDuty(){return safe_pwm_duty;}
 		mReal mNmToPwm(mReal mNm);
-		virtual void ReadConfig(const YAML::Node & doc);
+		virtual void ReadConfig(const YAML::Node & doc, string config_filename);		
+		void ThermalShutdown(string config_filename, mReal ambient_temp);
 	protected:
-		void ThermalInit();
+		void ThermalInit(string config_filename);	
 		void StepModelV0(mReal i, mReal pwm, mReal rpm, mReal tmp);
 		void StepModelV1(mReal i, mReal pwm, mReal rpm, mReal tmp);
 		void StepModelV2(mReal i, mReal pwm, mReal rpm, mReal tmp);
@@ -118,10 +119,12 @@ class M3MotorModel
 		M3TimeAvg curr_avg_cont;
 		int first_wt_step;
 		int tmp_cnt;
-		
+		mReal previous_winding_temp;
+		mReal previous_case_temp;
+		string previous_temp_timestamp;
 		MatrixXf eA1;
 		VectorXf eA2, Tprev;
-		
+		bool use_old_temp_values;
 };
 
 }

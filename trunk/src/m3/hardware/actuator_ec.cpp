@@ -572,7 +572,7 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
       mReal mode_in = (mReal)command.mode();
       if (tmp_cnt == 200)
 	{
-  M3_DEBUG("I_des_in: %f \n",current_in);
+  //M3_DEBUG("I_des_in: %f \n",current_in);
 	}
 //       
       
@@ -666,6 +666,7 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	    ax->k_i=CLAMP((int)((mReal)param.k_i()*pwr_scale),-32767,32767);
 	    ax->k_d=CLAMP((int)((mReal)param.k_d()*pwr_scale),-32767,32767);
 	    ax->pwm_max=(int)(CLAMP(MIN(pwm_max_ext,param.pwm_max()),0,32767)*pwr_scale);
+	    //ax->pwm_max=(int)(CLAMP(MIN(pwm_max_ext,param.pwm_max()),0,32767));
 	}
 	
 	ax->k_p_shift=CLAMP(param.k_p_shift(),-32767,32767);
@@ -751,13 +752,14 @@ static int cnt;
 	  cnt++;
 	  M3_DEBUG("cnt: %d\n", cnt);
 	  //M3_DEBUG("Name: %s\n", GetName().c_str());
-	  M3_DEBUG("mode_in: %f\n", mode_in);
-	  M3_DEBUG("mode_in: %f\n", mode_in);
-	  M3_DEBUG("mode_out: %d \n", (int)((M3ActX1PdoV4Cmd *)data)->command[0].mode);
-	  M3_DEBUG("current_post_scale: %f \n", current_post_scale);
+	  M3_DEBUG("mode_in: %f\n", mode_in);	  
+	  M3_DEBUG("mode_out: %d \n", (int)((M3ActX1PdoV4Cmd *)data)->command[0].mode);	  
 	  M3_DEBUG("Pwr_slew: %f\n", pwr_scale);
-	  
+	  M3_DEBUG("I_des_in: %f \n",current_in);
 	  M3_DEBUG("I_des_out: %d\n", ((M3ActX1PdoV4Cmd *)data)->command[0].current_desired);
+	  M3_DEBUG("pwm_slew: %f\n", pwm_scale);
+	  M3_DEBUG("pwm_des_in: %f \n",pwm_in);
+	  M3_DEBUG("pwm_des_out: %d\n", ((M3ActX1PdoV4Cmd *)data)->command[0].pwm_desired);
  	  //  M3_DEBUG("mode_in: %d mode_out: %d pwm_scale %f Pwr slew %f  pwm_in %f pwm_out %d\n",
  		//  (int)mode_in, (int)((M3ActX1PdoV4Cmd *)data)->command[0].mode, pwm_scale,pwr_scale,pwm_in, ((M3ActX1PdoV4Cmd *)data)->command[0].pwm_desired);
 	  tmp_cnt = 0;

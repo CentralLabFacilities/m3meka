@@ -42,6 +42,8 @@ class M3AngleSensor
 		virtual mReal GetThetaRad(){return DEG2RAD(GetThetaDeg());}
 		virtual mReal GetThetaDotRad(){return DEG2RAD(GetThetaDotDeg());}
 		virtual bool IsTypeQEI(){return (type==QEI);}
+		virtual void StepError(int ec_error);
+		virtual int GetError(){return err;}
 		virtual void ReadConfig(const YAML::Node & doc);
 	protected:
 		enum { NONE, VERTX_14_BIT, MA3_12_BIT, MA3_10_BIT, MA3_12_BIT_POLY, QEI };
@@ -54,6 +56,7 @@ class M3AngleSensor
 		mReal velocity;
 		int type;
 		int tmp_cnt;		
+		int err;
 };
 
 /*
@@ -99,6 +102,7 @@ class M3CurrentSensor
 		virtual void ReadConfig(const YAML::Node& doc);
 		virtual int mAtoTicks(mReal milliamps);
 		virtual void SetZero(){val=0.0;}
+		
 	protected:
 		enum {NONE,  ADC_POLY, ADC_LINEAR_5V,ADC_LINEAR_5V_NS,LINEAR_AMP_VIA_DAC,
 			ADC_POLY_SINGLE,DSP_CALIB, DSP_TICKS, ADC_PHASE_MA};
@@ -113,6 +117,7 @@ class M3CurrentSensor
 		mReal cb_dac_mV_per_tick;
 		mReal cb_amp_mA_per_mV;
 		int tmp_cnt;
+
 };
 
 class M3TorqueSensor 
@@ -125,6 +130,8 @@ class M3TorqueSensor
 		int mNmToTicks(mReal x);
 		virtual void ReadConfig(const YAML::Node& doc);
 		bool IsFFCurrentCtrl(){return (type == FF_CURRENT_CTRL);}
+		virtual void StepError(int ec_error);
+		virtual int GetError(){return err;}
 	protected:
 		enum {NONE, ADC_POLY, SEA_VERTX_14_BIT, FF_CURRENT_CTRL};
 		vector<mReal> cb_torque, cb_inv_torque;
@@ -135,6 +142,7 @@ class M3TorqueSensor
 		mReal cb_mA_per_tick;
 		int type;
 		int tmp_cnt;
+		int err;
 };
 
 class M3WrenchSensor 

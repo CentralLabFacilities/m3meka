@@ -33,10 +33,10 @@ void M3ActuatorVirtual::Startup()
 	SetStateSafeOp();
 }
 
-void M3ActuatorVirtual::Shutdown()
+/*void M3ActuatorVirtual::Shutdown()
 {
 
-}
+}*/
 
 bool M3ActuatorVirtual::ReadConfig(const char * filename)
 {

@@ -37,7 +37,7 @@ class M3ActuatorVirtual : public M3Actuator
 		virtual bool IsMotorPowerSlewedOn(){return true;}
 	protected:
 		void Startup();
-		void Shutdown();
+		//void Shutdown();
 		void StepStatus();
 		void StepCommand();
 		bool LinkDependentComponents();

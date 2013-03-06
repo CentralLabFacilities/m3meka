@@ -92,6 +92,8 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		void SetPwmMax(int val){pwm_max_ext=val;}
 		bool IsCurrentFaultMom() {return status.flags()&M3ACT_FLAG_I_FAULT_MOM;}
 		bool IsCurrentFaultCont() {return status.flags()&M3ACT_FLAG_I_FAULT_CONT;}
+		int GetTorqueErr();
+		int GetThetaErr();
 		
 	protected:
 		bool ReadConfig(const char * filename);

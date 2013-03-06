@@ -21,13 +21,17 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "math.h"
 #include <cmath>
 #include <Eigen/LU>
+#include <stdio.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 namespace m3{
 	
 using namespace std;
 
 
-void M3MotorModel::ThermalInit()
+void M3MotorModel::ThermalInit(string config_filename)
 {
 
 	mReal C1, C2, tau1, tau2, tau3;
@@ -67,7 +71,114 @@ void M3MotorModel::ThermalInit()
 	}
 	eA2 = A.inverse()*(eA1-I)*B;
 	
+		
 	Tprev << 0.,0.;
+	
+	if (use_old_temp_values)
+	{
+	  
+	    // Get Old Temps to init model
+	    string temp_filename = config_filename.substr(0, config_filename.length()-4);
+	    temp_filename += "_temps.yml";
+	    YAML::Node doc;
+	    
+	    bool previous_temp_missing = false;	
+	    
+	    
+	    string s(temp_filename);
+	    string path;
+	    
+	    if (GetEnvironmentVar(M3_ROBOT_ENV_VAR, path))
+	    {		
+		    path.append("/robot_config/");
+		    path.append(s);
+	    }
+	    
+	    ifstream fin(path.c_str());
+	    if (fin.fail())
+	    {		
+		    //M3_ERR("could not read %s \n", path.c_str());	
+		    return;
+	    }
+
+	    YAML::Parser parser(fin);
+	    
+	    parser.GetNextDocument(doc);
+	    fin.close();
+	    
+	    /*try
+	    {
+	      GetYamlDoc(temp_filename.c_str(), doc);
+	    } catch(YAML::RepresentationException e) {
+	      previous_temp_missing = true;
+	      M3_DEBUG("b\n");
+	    }
+	    catch(...) {
+	      previous_temp_missing = true;
+	      M3_DEBUG("a\n");
+	    }*/	
+	    
+	    if (!previous_temp_missing)
+	    {
+	      try 
+	      {
+		
+		      doc["previous_winding_temp"] >> previous_winding_temp;
+		      
+	      } catch(YAML::TypedKeyNotFound<string> e) 
+	      {		
+		      previous_winding_temp=0.0;
+	      } 
+
+	      try 
+	      {
+		      doc["previous_case_temp"] >> previous_case_temp;
+		      
+	      } catch(YAML::TypedKeyNotFound<string> e) 
+	      {		
+		      previous_case_temp=0.0;
+	      } 
+
+
+	      try 
+	      {
+		      doc["previous_temp_timestamp"] >> previous_temp_timestamp;
+		      
+	      } catch(YAML::TypedKeyNotFound<string> e) 
+	      {
+		      //M3_WARN("Missing version key in config file for motor %s. Defaulting to type MODEL_V0\n",name.c_str());
+		      previous_temp_timestamp="";
+	      } 
+	      
+	      if (previous_temp_timestamp != "")
+	      {
+			time_t timenew;		    		    
+			time(&timenew);		    
+					
+			struct tm timeold;		  		  		    
+			if (strptime(previous_temp_timestamp.c_str(), "%c", &timeold) == NULL) //ERROR
+			  return;		    
+			time_t oldtime = mktime(&timeold);
+			
+			double diff = difftime(timenew, oldtime);
+			
+			ser = I;
+			MatrixXf eA1_i = I;
+			for (int i = 1;i<5;i++) {
+			    ser = ser*A*diff/i;
+			    eA1_i = eA1_i + ser;
+			}
+			Tprev << previous_winding_temp, previous_case_temp;
+			Tprev = eA1_i*Tprev;
+			M3_DEBUG("Init motor model:\n");
+			M3_DEBUG("diff: %f\n", diff);
+			M3_DEBUG("winding: %f\n", Tprev[0]);
+			M3_DEBUG("case: %f\n", Tprev[1]);
+			
+	      }
+	    }
+	    
+	}
 	
 	// C1 = tau1/r1, C2 = tau2/r2, tau3 = r1*C2
 	// A = [-1/tau1 1/tau1;1/tau3,-1/tau3-1/tau2]
@@ -81,12 +192,56 @@ void M3MotorModel::ThermalInit()
 	// eA2 == inv(A)*(eA1-eye(2))*B
 }
 
+void M3MotorModel::ThermalShutdown(string config_filename, mReal ambient_temp)
+{
+	if (use_old_temp_values)
+	{
+		  time_t rawtime;
+		  struct tm *timeinfo;
+		  char buf[80];
+		  
+		  
+		  time(&rawtime);
+		  timeinfo = localtime(&rawtime);
+		  strftime(buf,80,"%c",timeinfo);
+		  string s = string(buf);
+		  
+		  // Write Old Temps to file
+		  string temp_filename = config_filename.substr(0, config_filename.length()-4);
+		  temp_filename += "_temps.yml";
+				  
+		  
+		  YAML::Emitter out;
+		  out << YAML::BeginMap;
+		  out << YAML::Key << "previous_temp_timestamp";
+		  out << YAML::Value << s;
+		  out << YAML::Key << "previous_winding_temp";
+		  out << YAML::Value << GetWindingTemp() - ambient_temp;
+		  out << YAML::Key << "previous_case_temp";
+		  out << YAML::Value << GetCaseTemp() - ambient_temp;
+		  out << YAML::EndMap;
+		  
+		  WriteYamlDoc(temp_filename.c_str(), out);
+		  
+	}
+		  //M3_DEBUG("writing: %s\n", temp_filename.c_str() );
+		  /*
+		  YAML::Node config = YAML::LoadFile(config_filename);		  
+		  config["previous_temp_timestamp"] = s;
+		  config["previous_winding_temp"] = GetWindingTemp();
+		  config["previous_case_temp"] = GetCaseTemp();
 
+		  std::ofstream fout(config_filename);
+		  fout << config;
+		  */
+}
 
-void M3MotorModel::ReadConfig(const YAML::Node & doc)
+void M3MotorModel::ReadConfig(const YAML::Node & doc, string config_filename)
 {
 	string t;
 	doc["name"] >> name;
+	
+		
 	try 
 	{
 		doc["model_type"] >> t;
@@ -196,7 +351,15 @@ void M3MotorModel::ReadConfig(const YAML::Node & doc)
 	
 	if (model_type==MODEL_V2)
 	{
-	  ThermalInit();
+	  try 
+	{
+		doc["use_old_temp_values"] >> use_old_temp_values;	
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		//M3_WARN("Missing version key in config file for motor %s. Defaulting to type MODEL_V0\n",name.c_str());
+		use_old_temp_values = false;
+	} 
+	  ThermalInit(config_filename);
 	}
 }
 
@@ -225,6 +388,23 @@ void M3MotorModel::StepModelV2(mReal i, mReal pwm, mReal rpm, mReal tmp)
 	duty=pwm/max_pwm_duty ;
 	v_pwm = ABS(nominal_voltage*pwm/max_pwm_duty);
 	v_cemf = ABS(rpm*gear_ratio/speed_constant);
+	
+	if (current_sensor_type==CURRENT_NONE)
+	{
+		//Basic motor model with back emf. Estimates current from applied duty cycle and motor velocity.
+		//See paper: "Towards a dynamic actuator model for a hexapod robot"	
+		//I_a = (d*Vs-Ks*omega)/(Ra+d*d*Ramp)
+		//duty should be -1.0 to 1.0
+		//put in mA
+		
+		mReal I_ma = MAX(.00001,((MAX(0.0,v_pwm-v_cemf))/(winding_resistance+duty*duty*amplifier_resistance))*1000.0);
+		mReal x=curr_avg_rms.Step(I_ma*I_ma); 
+		i_rms = i_scale*sqrt(ABS(x)); //min(starting_current*1000.0,sqrt(curr_avg_rms.Step(I_ma*I_ma)));
+		/*if (tmp_cnt++%100==0)
+			M3_INFO("i_rms %f x %f I_ma %f v_pwm %f v_cemf %f duty %f\n",i_rms,x,I_ma, v_pwm, v_cemf, duty);
+		i_cont=curr_avg_cont.Step(i_rms);*/
+		i = I_ma;
+	}
 	
 	//Current
 	//i_rms=min(starting_current*1000.0,sqrt(ABS(curr_avg_rms.Step(i*i)))); //Just filter (Avoid NAN)
@@ -333,9 +513,9 @@ void M3MotorModel::StepModelV1(mReal i, mReal pwm, mReal rpm, mReal tmp)
 		mReal I_ma = MAX(.00001,((MAX(0.0,v_pwm-v_cemf))/(winding_resistance+duty*duty*amplifier_resistance))*1000.0);
 		mReal x=curr_avg_rms.Step(I_ma*I_ma); 
 		i_rms = i_scale*sqrt(ABS(x)); //min(starting_current*1000.0,sqrt(curr_avg_rms.Step(I_ma*I_ma)));
-		//if (tmp_cnt++%100==0)
-		//	M3_INFO("i_rms %f x %f I_ma %f v_pwm %f v_cemf %f duty %f\n",i_rms,x,I_ma, v_pwm, v_cemf, duty);
-		i_cont=curr_avg_cont.Step(i_rms);
+		/*if (tmp_cnt++%100==0)
+			M3_INFO("i_rms %f x %f I_ma %f v_pwm %f v_cemf %f duty %f\n",i_rms,x,I_ma, v_pwm, v_cemf, duty);
+		i_cont=curr_avg_cont.Step(i_rms);*/
 	}
 	power_mech=(i_rms/1000.0)*v_cemf;
 	power_elec=(i_rms/1000.0)*v_pwm;

@@ -133,6 +133,7 @@ dist_bin_SCRIPTS = \
 	scripts/demo/m3_demo_hand_h2r2.py\
 	scripts/demo/m3_demo_hand_h2r3.py\
 	scripts/demo/m3_demo_hand_h2r4.py\
+	scripts/demo/m3_demo_hand_h2r5.py\
 	scripts/demo/m3_demo_hand_viz_h2r3.py\
 	scripts/demo/m3_demo_gripper_g1r1.py\
 	scripts/demo/m3_demo_ik_delta.py\
