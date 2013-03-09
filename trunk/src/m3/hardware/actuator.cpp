@@ -138,6 +138,20 @@ bool M3Actuator::ReadConfig(const char * filename)
 		{
 			encoder_calib_req=0;
 		} 
+		try 
+		{		  
+			doc["disable_vertx_check"] >> disable_vertx_check;
+		} catch(YAML::TypedKeyNotFound<string> e) 
+		{
+			disable_vertx_check=false;
+		} 
+		try 
+		{		  
+			doc["vertx_timeout_limit_ms"] >> vertx_timeout_limit_ms;
+		} catch(YAML::TypedKeyNotFound<string> e) 
+		{
+			vertx_timeout_limit_ms=int(SENSOR_FAULT_LIMIT*1000.0);
+		} 
 	}
 	if (IsVersion(ISS) || IsVersion(IQ))
 	{
@@ -293,20 +307,22 @@ void M3Actuator::StepStatus()
 		else
 		  sensor_fault_torque_cnt = 0;
 		
-		if (((mReal)sensor_fault_theta_cnt) > (SENSOR_FAULT_LIMIT * (mReal)RT_TASK_FREQUENCY)) // throw an error if we loose jnt/tq sensor for 100 ms
+		if (!disable_vertx_check)
 		{
-		  M3_DEBUG("th_cnt: %d, th_err: %d, th_err_last: %d\n", sensor_fault_theta_cnt, q_sense.GetError(), last_theta_err);
-		  SetStateError();
-		  M3_ERR("------ SENSOR FAULT EVENT FOR JOINT ANGLE OF %s ---------------\n",GetName().c_str());
-		}
+			if (((mReal)sensor_fault_theta_cnt) > ((mReal(vertx_timeout_limit_ms)/1000.0) * (mReal)RT_TASK_FREQUENCY)) // throw an error if we loose jnt/tq sensor for 100 ms
+			{
+			  M3_DEBUG("th_cnt: %d, th_err: %d, th_err_last: %d\n", sensor_fault_theta_cnt, q_sense.GetError(), last_theta_err);
+			  SetStateError();
+			  M3_ERR("------ SENSOR FAULT EVENT FOR JOINT ANGLE OF %s ---------------\n",GetName().c_str());
+			}
 		
-		if (((mReal)sensor_fault_torque_cnt) > (SENSOR_FAULT_LIMIT * (mReal)RT_TASK_FREQUENCY)) // throw an error if we loose jnt/tq sensor for 100 ms
-		{
-		  M3_DEBUG("tq_cnt: %d, tq_err: %d, tq_err_last: %d\n", sensor_fault_torque_cnt, tq_sense.GetError(), last_torque_err);
-		  SetStateError();
-		  M3_ERR("------ SENSOR FAULT EVENT FOR TORQUE OF %s ---------------\n",GetName().c_str());
+			if (((mReal)sensor_fault_torque_cnt) > ((mReal(vertx_timeout_limit_ms)/1000.0) * (mReal)RT_TASK_FREQUENCY)) // throw an error if we loose jnt/tq sensor for 100 ms
+			{
+			  M3_DEBUG("tq_cnt: %d, tq_err: %d, tq_err_last: %d\n", sensor_fault_torque_cnt, tq_sense.GetError(), last_torque_err);
+			  SetStateError();
+			  M3_ERR("------ SENSOR FAULT EVENT FOR TORQUE OF %s ---------------\n",GetName().c_str());
+			}
 		}
-		
 		last_theta_err = q_sense.GetError();
 		last_torque_err = tq_sense.GetError();
 	}
@@ -504,6 +520,15 @@ void M3Actuator::StepCommand()
 				break;
 		};
 	}
+	
+// 	if (tmp_cnt++ == 200)
+// 	{
+// 	  //M3_INFO("Name: %s\n", GetName().c_str());
+// 	  M3_INFO("Act: I_des_in %f I_des_out %f\n",
+// 		  ec_command->current_desired(), command.i_desired());
+// 	  tmp_cnt = 0;
+// 	}
+	
 }
 
 } // namespace

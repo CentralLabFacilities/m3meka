@@ -52,10 +52,11 @@ class M3Proc:
 	if len(pwr_name)>1:
             pwr_name=m3t.user_select_components_interactive(pwr_name,single=True)
 
-	print 'Position arm [y]?'
-	if m3t.get_yes_no('y'):
-		arm_names=self.proxy.get_available_components('m3arm')
-		if len(arm_names)>0:
+
+	arm_names=self.proxy.get_available_components('m3arm')
+	if len(arm_names)>0:
+	  	print 'Position arm [y]?'
+		if m3t.get_yes_no('y'):
 		  if len(arm_names)>1:
 			  print 'Select arm: '	
 			  arm_name=m3t.user_select_components_interactive(arm_names,single=True)[0]
@@ -67,6 +68,10 @@ class M3Proc:
 		  self.arm.set_theta_deg([30,0,0,110,0,0,0])
 		  self.arm.set_stiffness(0.5)
 		  self.arm.set_slew_rate_proportion([0.75]*7)
+
+	humanoid_shm_names=self.proxy.get_available_components('m3humanoid_shm')
+	if len(humanoid_shm_names) > 0:
+	  self.proxy.make_safe_operational(humanoid_shm_names[0])
 		
         self.chain=m3f.create_component(hand_name[0])
         self.proxy.publish_command(self.chain)

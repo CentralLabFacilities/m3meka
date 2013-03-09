@@ -161,7 +161,8 @@ void M3MotorModel::ThermalInit(string config_filename)
 			time_t oldtime = mktime(&timeold);
 			
 			double diff = difftime(timenew, oldtime);
-			
+			if (diff > 600.0)
+				diff = 600.0;
 			ser = I;
 			MatrixXf eA1_i = I;
 			for (int i = 1;i<5;i++) {
@@ -170,11 +171,15 @@ void M3MotorModel::ThermalInit(string config_filename)
 			}
 			Tprev << previous_winding_temp, previous_case_temp;
 			Tprev = eA1_i*Tprev;
+			if (Tprev[0] < 0.0)
+				Tprev[0] = 0.0;
+			if (Tprev[1] < 0.0)
+				Tprev[1] = 0.0;
+
 			M3_DEBUG("Init motor model:\n");
 			M3_DEBUG("diff: %f\n", diff);
 			M3_DEBUG("winding: %f\n", Tprev[0]);
-			M3_DEBUG("case: %f\n", Tprev[1]);
-			
+			M3_DEBUG("case: %f\n", Tprev[1]);			
 	      }
 	    }
 	    
@@ -211,14 +216,22 @@ void M3MotorModel::ThermalShutdown(string config_filename, mReal ambient_temp)
 		  temp_filename += "_temps.yml";
 				  
 		  
+		  mReal wind_temp = GetWindingTemp() - ambient_temp;
+		  if (wind_temp < 0.0)
+			wind_temp = 0.1;
+
+		  mReal case_temp = GetCaseTemp() - ambient_temp;
+		  if (case_temp < 0.0)
+			case_temp = 0.1;
+
 		  YAML::Emitter out;
 		  out << YAML::BeginMap;
 		  out << YAML::Key << "previous_temp_timestamp";
 		  out << YAML::Value << s;
 		  out << YAML::Key << "previous_winding_temp";
-		  out << YAML::Value << GetWindingTemp() - ambient_temp;
+		  out << YAML::Value << wind_temp;
 		  out << YAML::Key << "previous_case_temp";
-		  out << YAML::Value << GetCaseTemp() - ambient_temp;
+		  out << YAML::Value << case_temp;
 		  out << YAML::EndMap;
 		  
 		  WriteYamlDoc(temp_filename.c_str(), out);

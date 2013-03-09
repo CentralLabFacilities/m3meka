@@ -13,6 +13,7 @@
   <depend package="rosconsole"/>
   <depend package="nav_msgs"/>
   <depend package="tf"/>
+  <depend package="m3ctrl_msgs"/>
 
 </package>
 

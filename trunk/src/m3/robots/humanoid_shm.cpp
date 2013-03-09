@@ -72,7 +72,15 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
     
     int64_t dt = GetBaseStatus()->timestamp()-command_from_sds.timestamp; // microseconds
     bool shm_timeout = ABS(dt) > (timeout*1000);    
-       
+      
+  if (pwr != NULL)
+  {
+    if (shm_timeout)
+	pwr->SetMotorEnable(false);
+    else
+      pwr->SetMotorEnable(true);
+  }
+ 
   if (bot != NULL)
   {
     if (shm_timeout)
@@ -159,12 +167,17 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);
 	} else{	 	  
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.right_hand.ctrl_mode[i]);
-	  //((M3JointArrayCommand*)right_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.right_hand.smoothing_mode[i]);      
+  	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.right_hand.smoothing_mode[i]);      
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_desired(i, RAD2DEG(command_from_sds.right_hand.q_desired[i]));
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_slew_rate(i, RAD2DEG(command_from_sds.right_hand.slew_rate_q_desired[i]));    
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_tq_desired(i, command_from_sds.right_hand.tq_desired[i]);
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_stiffness(i, command_from_sds.right_hand.q_stiffness[i]);      
 	}
+/*	if (tmp_cnt++ == 200 && i == 0)
+	{
+		M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_hand.ctrl_mode[i]);
+		tmp_cnt = 0;
+	}*/
       }	      
   }
   
@@ -177,7 +190,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_OFF);
 	} else{	  	  
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.left_hand.ctrl_mode[i]);      
-	  //((M3JointArrayCommand*)left_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.left_hand.smoothing_mode[i]);      
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.left_hand.smoothing_mode[i]);      
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_desired(i, RAD2DEG(command_from_sds.left_hand.q_desired[i]));
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_slew_rate(i, RAD2DEG(command_from_sds.left_hand.slew_rate_q_desired[i]));    
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_tq_desired(i, command_from_sds.left_hand.tq_desired[i]);
@@ -284,6 +297,15 @@ bool M3HumanoidShm::LinkDependentComponents()
 		}
 	}
 	
+	if (pwr_name.size()!=0)
+	{	
+		pwr=(M3Pwr*)factory->GetComponent(pwr_name);
+		if (pwr==NULL)
+			M3_WARN("M3Pwr component %s declared for M3BotShm but could not be linked\n",
+					pwr_name.c_str());
+
+	}
+
 	if (right_hand_name.size()!=0)
 	{
 		right_hand=(M3Hand*)factory->GetComponent(right_hand_name);//May be null if not on this robot model
@@ -386,11 +408,11 @@ bool M3HumanoidShm::ReadConfig(const char * filename)
 	}
 		
 	try{
-	  doc["startup_motor_pwr_on"]>>startup_motor_pwr_on;
+	  doc["pwr_component"]>>pwr_name;
 	}
 	catch(YAML::KeyNotFound& e)
 	{
-	  startup_motor_pwr_on=false;
+		pwr_name = "";
 	}
 		
 	doc["timeout"] >> timeout;	

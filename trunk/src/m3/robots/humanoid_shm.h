@@ -63,11 +63,12 @@ class M3HumanoidShm : public  m3::M3CompShm{
 		M3Hand * right_hand;
 		M3LoadX6 * left_loadx6;
 		M3Hand * left_hand;
+		M3Pwr * pwr;
 		M3HumanoidShmSdsCommand command_from_sds;
 		M3HumanoidShmSdsStatus status_to_sds;
 		int sds_status_size;
 		int sds_cmd_size;	
-		string bot_name, right_hand_name, right_loadx6_name, left_hand_name, left_loadx6_name;;
+		string bot_name, right_hand_name, right_loadx6_name, left_hand_name, left_loadx6_name, pwr_name;
 		int64_t timeout;
 		int tmp_cnt;		
 		bool startup_motor_pwr_on;

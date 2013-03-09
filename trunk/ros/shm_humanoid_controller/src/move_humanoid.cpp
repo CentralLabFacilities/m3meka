@@ -34,6 +34,7 @@ public:
     humanoid_cmd.stiffness.resize(1);
     humanoid_cmd.position.resize(1);
     humanoid_cmd.velocity.resize(1);
+    humanoid_cmd.effort.resize(1);
     humanoid_cmd.control_mode.resize(1);
     humanoid_cmd.smoothing_mode.resize(1);
     humanoid_cmd.chain_idx.resize(1);
@@ -44,18 +45,19 @@ public:
     std::cout << "Press any key to move to zero position.\n";
     std::cin.getline(cmd, 50);
     
-    humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
-    humanoid_cmd.chain_idx[0] = 0; //J0
-    humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC; //Compliant position mode
+    humanoid_cmd.chain[0] = (unsigned char)RIGHT_HAND; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
+    humanoid_cmd.chain_idx[0] = 2; //J0
+    humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_TORQUE_GC; //Compliant position mode
     humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_SLEW; //Smooth trajectory
     //humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_MIN_JERK; //Smooth trajectory
     humanoid_cmd.velocity[0] = 1.0; //Rad/s
     humanoid_cmd.stiffness[0] = 1.0; //0-1.0
+    humanoid_cmd.effort[0] = 300.0; //Torque for hand fingers
     humanoid_cmd.position[0] = 0; //Desired position (Rad)
     humanoid_cmd.header.stamp = ros::Time::now();
     humanoid_cmd.header.frame_id = "humanoid_cmd";
     
-    //printf("stiff: %d\n",humanoid_cmd.stiffness[0]);
+//   printf("mo: %d\n",(int)humanoid_cmd.control_mode[0]);
     
     cmd_pub_.publish(humanoid_cmd);
   

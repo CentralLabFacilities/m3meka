@@ -105,7 +105,7 @@ void M3JointArray::Startup()
 	status.set_completed_spline_idx(-1);
 	
 	SetStateSafeOp();
-
+	tmp_cnt = 0;
 }
 
 
@@ -167,7 +167,17 @@ void M3JointArray::StepCommand()
 			joints[i]->SetSlewRate(command.q_slew_rate(i));
 			joints[i]->SetDesiredSmoothingMode(command.smoothing_mode(i));
 			
-		
+			/*if (i == 2 && tmp_cnt++ == 200)
+			{
+				M3_DEBUG("mo: %d\n", (int)command.ctrl_mode(i));
+				M3_DEBUG("th: %f\n", command.q_desired(i));
+				M3_DEBUG("st: %f\n", command.q_stiffness(i));
+				M3_DEBUG("sm: %d\n", (int)command.smoothing_mode(i));
+				M3_DEBUG("sl: %f\n", command.q_slew_rate(i));
+				M3_DEBUG("qd: %f\n", command.qdot_desired(i));
+				M3_DEBUG("tq: %f\n", command.tq_desired(i));
+				tmp_cnt = 0;
+			}*/
 			switch(command.ctrl_mode(i))
 			{										
 				case JOINT_ARRAY_MODE_OFF:
