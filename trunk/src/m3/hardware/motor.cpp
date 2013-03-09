@@ -161,9 +161,17 @@ void M3MotorModel::ThermalInit(string config_filename)
 			time_t oldtime = mktime(&timeold);
 			
 			double diff = difftime(timenew, oldtime);
-			if (diff > 600.0)
-				diff = 600.0;
-			ser = I;
+			if (diff > 2.0*thermal_time_constant_motor)
+				return;
+
+			Tprev << previous_winding_temp, previous_case_temp;
+			int model_run_cnts = int(diff / dt);
+			for (int i = 0; i < model_run_cnts; i++)
+			{
+				Tprev = eA1*Tprev;
+			}
+
+			/*ser = I;
 			MatrixXf eA1_i = I;
 			for (int i = 1;i<5;i++) {
 			    ser = ser*A*diff/i;
@@ -174,12 +182,15 @@ void M3MotorModel::ThermalInit(string config_filename)
 			if (Tprev[0] < 0.0)
 				Tprev[0] = 0.0;
 			if (Tprev[1] < 0.0)
-				Tprev[1] = 0.0;
+				Tprev[1] = 0.0;*/
 
-			M3_DEBUG("Init motor model:\n");
+		
+			/*M3_DEBUG("Init motor model:\n");
+			//M3_DEBUG("eA1_i00: %f\n", eA1_i(0,0));
+			//M3_DEBUG("eA1_i11: %f\n", eA1_i(1,1));
 			M3_DEBUG("diff: %f\n", diff);
 			M3_DEBUG("winding: %f\n", Tprev[0]);
-			M3_DEBUG("case: %f\n", Tprev[1]);			
+			M3_DEBUG("case: %f\n", Tprev[1]);*/
 	      }
 	    }
 	    
