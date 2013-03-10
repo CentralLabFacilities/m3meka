@@ -25,7 +25,7 @@ import time
 import m3.joint_zlift as m3z
 import m3.toolbox as m3t
 import m3.unit_conversion as m3u
-import Numeric as nu
+import numpy as nu
 import m3.rt_proxy as m3p
 import m3.component_factory as m3f
 import m3.omnibase as m3o
