@@ -32,9 +32,9 @@ import m3.omnibase as m3o
 import m3.toolbox_ros as m3tr
 import m3.joint_zlift as m3z
 import m3.toolbox_omnibase_b1 as m3to
-import roslib; roslib.load_manifest('m3_client')
+import roslib; roslib.load_manifest('m3meka_msgs')
 import rospy
-from m3_client.msg import M3OmnibaseJoy
+from m3meka_msgs.msg import M3OmnibaseJoy
 
 
 
@@ -111,25 +111,28 @@ def main():
     
     joy=m3to.M3OmniBaseJoy()
     joy.start(proxy,omni,zl)
-    
+    k = 0
     try:
         while True:
             joy.step()
             #print 'Bus Current:', pwr.get_bus_torque()
-            #p = omni.get_local_position()
+            p = omni.get_local_position()
             #omni.set_op_space_forces(f.jx*200.0, f.jy*200.0, f.jyaw*50.0)
-            '''print '-----------Local Pos-------'
-            print 'X:', p[0]
-            print 'Y:', p[1]
-            print 'Yaw:', p[2]
-            print '---------------------------'
-            print '-------Joystick Pos-------'
+            k += 1
+            if k == 100:
+	      print '-----------Local Pos-------'
+	      print 'X:', p[0]
+	      print 'Y:', p[1]
+	      print 'Yaw:', p[2]
+	      #print '---------------------------'
+	      k = 0
+            '''print '-------Joystick Pos-------'
             print 'jx:',f.jx
             print 'jy:', f.jy
             print 'jyaw:', f.jyaw
             print 'button:', f.jbutton
-            print '---------------------------'           '''
-            #print 'Bus voltage',omni.get_bus_voltage()
+            print '---------------------------'           
+            #print 'Bus voltage',omni.get_bus_voltage()'''
             '''tqs = omni.get_motor_torques()
             print tqs[0], tqs[2], tqs[4], tqs[6]'''
             #print omni.get_steer_torques()

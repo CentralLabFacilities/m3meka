@@ -88,7 +88,7 @@ class M3OmniBaseJoy:
                 self.des_zlift=self.zlift.get_pos_mm()
                 self.zlift_first=False
             self.des_zlift=max(self.zlift_min,min(self.zlift_max,self.des_zlift+self.f.jz))
-            print 'Desired Z-Lift',self.des_zlift
+            #print 'Desired Z-Lift',self.des_zlift
             #print 'ZL',self.f.jx,self.f.jy,self.f.jyaw,self.f.jz
             self.zlift.set_mode_theta_gc()
             self.zlift.set_slew_rate_proportion(1.0)
