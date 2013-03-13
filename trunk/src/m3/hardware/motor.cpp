@@ -183,11 +183,12 @@ void M3MotorModel::ThermalInit(string config_filename)
 				Tprev[0] = 0.0;
 			if (Tprev[1] < 0.0)
 				Tprev[1] = 0.0;*/
-
 		
 			/*M3_DEBUG("Init motor model:\n");
 			//M3_DEBUG("eA1_i00: %f\n", eA1_i(0,0));
 			//M3_DEBUG("eA1_i11: %f\n", eA1_i(1,1));
+			M3_DEBUG("eA1_i00: %f\n", eA1_i(0,0));
+			M3_DEBUG("eA1_i11: %f\n", eA1_i(1,1));
 			M3_DEBUG("diff: %f\n", diff);
 			M3_DEBUG("winding: %f\n", Tprev[0]);
 			M3_DEBUG("case: %f\n", Tprev[1]);*/

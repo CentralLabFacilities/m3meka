@@ -17,7 +17,7 @@
 
 import math
 import time
-import Numeric as nu
+import numpy as nu
 import m3.unit_conversion as m3u
 import random
 

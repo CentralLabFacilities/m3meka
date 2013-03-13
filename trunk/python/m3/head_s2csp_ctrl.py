@@ -21,7 +21,7 @@ from m3.toolbox import *
 import m3.head_s2csp_ctrl_pb2 as hpb
 from m3.component import M3Component
 from m3.unit_conversion import *
-import Numeric as nu
+import numpy as nu
 
 class M3HeadS2CSPCtrl(M3Component):
 	"""Interface for smooth pursuit controller of an S2 head"""
