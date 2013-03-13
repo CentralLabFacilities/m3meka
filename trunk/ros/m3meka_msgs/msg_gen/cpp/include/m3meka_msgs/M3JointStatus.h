@@ -3,20 +3,23 @@
 #define M3MEKA_MSGS_MESSAGE_M3JOINTSTATUS_H
 #include <string>
 #include <vector>
+#include <map>
 #include <ostream>
 #include "ros/serialization.h"
 #include "ros/builtin_message_traits.h"
 #include "ros/message_operations.h"
-#include "ros/message.h"
 #include "ros/time.h"
+
+#include "ros/macros.h"
+
+#include "ros/assert.h"
 
 #include "m3_msgs/M3BaseStatus.h"
 
 namespace m3meka_msgs
 {
 template <class ContainerAllocator>
-struct M3JointStatus_ : public ros::Message
-{
+struct M3JointStatus_ {
   typedef M3JointStatus_<ContainerAllocator> Type;
 
   M3JointStatus_()
@@ -103,117 +106,9 @@ struct M3JointStatus_ : public ros::Message
   int32_t flags;
 
 
-private:
-  static const char* __s_getDataType_() { return "m3meka_msgs/M3JointStatus"; }
-public:
-  ROSCPP_DEPRECATED static const std::string __s_getDataType() { return __s_getDataType_(); }
-
-  ROSCPP_DEPRECATED const std::string __getDataType() const { return __s_getDataType_(); }
-
-private:
-  static const char* __s_getMD5Sum_() { return "9c6d93ab28413f8b473c8def3d02284b"; }
-public:
-  ROSCPP_DEPRECATED static const std::string __s_getMD5Sum() { return __s_getMD5Sum_(); }
-
-  ROSCPP_DEPRECATED const std::string __getMD5Sum() const { return __s_getMD5Sum_(); }
-
-private:
-  static const char* __s_getMessageDefinition_() { return "m3_msgs/M3BaseStatus base\n\
-float32 motor_temp\n\
-float32 amp_temp\n\
-float32 current\n\
-float32 torque\n\
-float32 torquedot\n\
-float32 theta\n\
-float32 thetadot\n\
-float32 thetadotdot\n\
-float32 torque_gravity\n\
-int32 pwm_cmd\n\
-float32 ambient_temp\n\
-float32 case_temp\n\
-float32 power\n\
-int32 flags\n\
-\n\
-================================================================================\n\
-MSG: m3_msgs/M3BaseStatus\n\
-string name\n\
-uint8 state\n\
-int64 timestamp\n\
-string rate\n\
-string version\n\
-\n\
-\n\
-"; }
-public:
-  ROSCPP_DEPRECATED static const std::string __s_getMessageDefinition() { return __s_getMessageDefinition_(); }
-
-  ROSCPP_DEPRECATED const std::string __getMessageDefinition() const { return __s_getMessageDefinition_(); }
-
-  ROSCPP_DEPRECATED virtual uint8_t *serialize(uint8_t *write_ptr, uint32_t seq) const
-  {
-    ros::serialization::OStream stream(write_ptr, 1000000000);
-    ros::serialization::serialize(stream, base);
-    ros::serialization::serialize(stream, motor_temp);
-    ros::serialization::serialize(stream, amp_temp);
-    ros::serialization::serialize(stream, current);
-    ros::serialization::serialize(stream, torque);
-    ros::serialization::serialize(stream, torquedot);
-    ros::serialization::serialize(stream, theta);
-    ros::serialization::serialize(stream, thetadot);
-    ros::serialization::serialize(stream, thetadotdot);
-    ros::serialization::serialize(stream, torque_gravity);
-    ros::serialization::serialize(stream, pwm_cmd);
-    ros::serialization::serialize(stream, ambient_temp);
-    ros::serialization::serialize(stream, case_temp);
-    ros::serialization::serialize(stream, power);
-    ros::serialization::serialize(stream, flags);
-    return stream.getData();
-  }
-
-  ROSCPP_DEPRECATED virtual uint8_t *deserialize(uint8_t *read_ptr)
-  {
-    ros::serialization::IStream stream(read_ptr, 1000000000);
-    ros::serialization::deserialize(stream, base);
-    ros::serialization::deserialize(stream, motor_temp);
-    ros::serialization::deserialize(stream, amp_temp);
-    ros::serialization::deserialize(stream, current);
-    ros::serialization::deserialize(stream, torque);
-    ros::serialization::deserialize(stream, torquedot);
-    ros::serialization::deserialize(stream, theta);
-    ros::serialization::deserialize(stream, thetadot);
-    ros::serialization::deserialize(stream, thetadotdot);
-    ros::serialization::deserialize(stream, torque_gravity);
-    ros::serialization::deserialize(stream, pwm_cmd);
-    ros::serialization::deserialize(stream, ambient_temp);
-    ros::serialization::deserialize(stream, case_temp);
-    ros::serialization::deserialize(stream, power);
-    ros::serialization::deserialize(stream, flags);
-    return stream.getData();
-  }
-
-  ROSCPP_DEPRECATED virtual uint32_t serializationLength() const
-  {
-    uint32_t size = 0;
-    size += ros::serialization::serializationLength(base);
-    size += ros::serialization::serializationLength(motor_temp);
-    size += ros::serialization::serializationLength(amp_temp);
-    size += ros::serialization::serializationLength(current);
-    size += ros::serialization::serializationLength(torque);
-    size += ros::serialization::serializationLength(torquedot);
-    size += ros::serialization::serializationLength(theta);
-    size += ros::serialization::serializationLength(thetadot);
-    size += ros::serialization::serializationLength(thetadotdot);
-    size += ros::serialization::serializationLength(torque_gravity);
-    size += ros::serialization::serializationLength(pwm_cmd);
-    size += ros::serialization::serializationLength(ambient_temp);
-    size += ros::serialization::serializationLength(case_temp);
-    size += ros::serialization::serializationLength(power);
-    size += ros::serialization::serializationLength(flags);
-    return size;
-  }
-
   typedef boost::shared_ptr< ::m3meka_msgs::M3JointStatus_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::m3meka_msgs::M3JointStatus_<ContainerAllocator>  const> ConstPtr;
+  boost::shared_ptr<std::map<std::string, std::string> > __connection_header;
 }; // struct M3JointStatus
 typedef  ::m3meka_msgs::M3JointStatus_<std::allocator<void> > M3JointStatus;
 
@@ -233,6 +128,8 @@ namespace ros
 {
 namespace message_traits
 {
+template<class ContainerAllocator> struct IsMessage< ::m3meka_msgs::M3JointStatus_<ContainerAllocator> > : public TrueType {};
+template<class ContainerAllocator> struct IsMessage< ::m3meka_msgs::M3JointStatus_<ContainerAllocator>  const> : public TrueType {};
 template<class ContainerAllocator>
 struct MD5Sum< ::m3meka_msgs::M3JointStatus_<ContainerAllocator> > {
   static const char* value() 

@@ -3,19 +3,22 @@
 #define M3MEKA_MSGS_MESSAGE_M3OMNIBASEJOY_H
 #include <string>
 #include <vector>
+#include <map>
 #include <ostream>
 #include "ros/serialization.h"
 #include "ros/builtin_message_traits.h"
 #include "ros/message_operations.h"
-#include "ros/message.h"
 #include "ros/time.h"
+
+#include "ros/macros.h"
+
+#include "ros/assert.h"
 
 
 namespace m3meka_msgs
 {
 template <class ContainerAllocator>
-struct M3OmnibaseJoy_ : public ros::Message
-{
+struct M3OmnibaseJoy_ {
   typedef M3OmnibaseJoy_<ContainerAllocator> Type;
 
   M3OmnibaseJoy_()
@@ -52,69 +55,9 @@ struct M3OmnibaseJoy_ : public ros::Message
   float z;
 
 
-private:
-  static const char* __s_getDataType_() { return "m3meka_msgs/M3OmnibaseJoy"; }
-public:
-  ROSCPP_DEPRECATED static const std::string __s_getDataType() { return __s_getDataType_(); }
-
-  ROSCPP_DEPRECATED const std::string __getDataType() const { return __s_getDataType_(); }
-
-private:
-  static const char* __s_getMD5Sum_() { return "6719502035b93742f7b2585c261584a9"; }
-public:
-  ROSCPP_DEPRECATED static const std::string __s_getMD5Sum() { return __s_getMD5Sum_(); }
-
-  ROSCPP_DEPRECATED const std::string __getMD5Sum() const { return __s_getMD5Sum_(); }
-
-private:
-  static const char* __s_getMessageDefinition_() { return "float32 x\n\
-float32 y\n\
-float32 yaw\n\
-float32 button\n\
-float32 z\n\
-\n\
-\n\
-"; }
-public:
-  ROSCPP_DEPRECATED static const std::string __s_getMessageDefinition() { return __s_getMessageDefinition_(); }
-
-  ROSCPP_DEPRECATED const std::string __getMessageDefinition() const { return __s_getMessageDefinition_(); }
-
-  ROSCPP_DEPRECATED virtual uint8_t *serialize(uint8_t *write_ptr, uint32_t seq) const
-  {
-    ros::serialization::OStream stream(write_ptr, 1000000000);
-    ros::serialization::serialize(stream, x);
-    ros::serialization::serialize(stream, y);
-    ros::serialization::serialize(stream, yaw);
-    ros::serialization::serialize(stream, button);
-    ros::serialization::serialize(stream, z);
-    return stream.getData();
-  }
-
-  ROSCPP_DEPRECATED virtual uint8_t *deserialize(uint8_t *read_ptr)
-  {
-    ros::serialization::IStream stream(read_ptr, 1000000000);
-    ros::serialization::deserialize(stream, x);
-    ros::serialization::deserialize(stream, y);
-    ros::serialization::deserialize(stream, yaw);
-    ros::serialization::deserialize(stream, button);
-    ros::serialization::deserialize(stream, z);
-    return stream.getData();
-  }
-
-  ROSCPP_DEPRECATED virtual uint32_t serializationLength() const
-  {
-    uint32_t size = 0;
-    size += ros::serialization::serializationLength(x);
-    size += ros::serialization::serializationLength(y);
-    size += ros::serialization::serializationLength(yaw);
-    size += ros::serialization::serializationLength(button);
-    size += ros::serialization::serializationLength(z);
-    return size;
-  }
-
   typedef boost::shared_ptr< ::m3meka_msgs::M3OmnibaseJoy_<ContainerAllocator> > Ptr;
   typedef boost::shared_ptr< ::m3meka_msgs::M3OmnibaseJoy_<ContainerAllocator>  const> ConstPtr;
+  boost::shared_ptr<std::map<std::string, std::string> > __connection_header;
 }; // struct M3OmnibaseJoy
 typedef  ::m3meka_msgs::M3OmnibaseJoy_<std::allocator<void> > M3OmnibaseJoy;
 
@@ -134,6 +77,8 @@ namespace ros
 {
 namespace message_traits
 {
+template<class ContainerAllocator> struct IsMessage< ::m3meka_msgs::M3OmnibaseJoy_<ContainerAllocator> > : public TrueType {};
+template<class ContainerAllocator> struct IsMessage< ::m3meka_msgs::M3OmnibaseJoy_<ContainerAllocator>  const> : public TrueType {};
 template<class ContainerAllocator>
 struct MD5Sum< ::m3meka_msgs::M3OmnibaseJoy_<ContainerAllocator> > {
   static const char* value() 
