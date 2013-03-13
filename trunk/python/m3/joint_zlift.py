@@ -16,7 +16,7 @@
 #along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 from m3.joint import M3Joint
-#import Numeric as nu
+import numpy as nu
 import m3.unit_conversion as m3u
 import math
 import time
