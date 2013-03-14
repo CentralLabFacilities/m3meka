@@ -28,18 +28,18 @@
 #include <m3rt/base/m3rt_def.h>
 #include <rtai_nam2num.h>
 #include <rtai_registry.h>
-#include "m3/hardware/led_matrix_ec_shm_sds.h"
+#include "m3/hardware/ledx2xn_ec_shm_sds.h"
 
 // Needed for ROS
 #include <ros/ros.h>
-#include <shm_led_mouth/LEDMatrixCmd.h>
+#include <shm_led_x2xn/LEDX2XNCmd.h>
 
 
-#define RT_TASK_FREQUENCY_MEKA_LED_SHM 100
-#define RT_TIMER_TICKS_NS_MEKA_LED_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_LED_SHM)		//Period of rt-timer 
-#define MEKA_LED_SHM "LSHMM"
-#define MEKA_LED_CMD_SEM "LSHMC"
-#define MEKA_LED_STATUS_SEM "LSHMS"
+#define RT_TASK_FREQUENCY_MEKA_X2XN_SHM 30
+#define RT_TIMER_TICKS_NS_MEKA_X2XN_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_X2XN_SHM)		//Period of rt-timer 
+#define MEKA_LED_SHM "XSHMM"
+#define MEKA_LED_CMD_SEM "XSHMC"
+#define MEKA_LED_STATUS_SEM "XSHMS"
 
 
 #define CYCLE_TIME_SEC 4
@@ -50,8 +50,8 @@ static int sys_thread_active = 0;
 static int sys_thread_end=0;
 static int end=0;
 static int hst;
-static M3LedMatrixEcShmSdsCommand cmd;
-static M3LedMatrixEcShmSdsStatus status;
+static M3LedX2XNEcShmSdsCommand cmd;
+static M3LedX2XNEcShmSdsStatus status;
 static int sds_status_size;
 static int sds_cmd_size;
 static long step_cnt = 0;
@@ -64,7 +64,7 @@ ros::Subscriber cmd_sub_g;
 
 ///////  Periodic Control Loop:
 void StepShm();
-void commandCallback(const shm_led_mouth::LEDMatrixCmdConstPtr& msg);
+void commandCallback(const shm_led_mouth::LEDX2XNCmdConstPtr& msg);
 
 ///////////////////////////////
 
@@ -87,29 +87,7 @@ void StepShm(int cntr)
     SetTimestamp(GetTimestamp()); //Pass back timestamp as a heartbeat
    
     
-     /*if (cntr % 100 == 0)
-      {	
-	if (1)
-	{
-	  printf("********************************\n");
-	  printf("timestamp: %ld\n", status.timestamp);	  
-	  {	    	    
-	    printf("------------------------------\n");
-	    printf("position: %f\n", status.position);
-	    printf("velocity: %f\n", status.velocity);
-	    printf("effort: %f\n", status.effort);	    
-	     printf("------------------------------\n");
-	    printf("\n");
-	  }
-	}
-      }*/
-    
-    /*cmd.position = 600;
-    cmd.velocity = 2000;
-    cmd.stiffness = 1.0;
-    cmd.control_mode = JOINT_MODE_ROS_THETA_GC;
-    cmd.smoothing_mode = SMOOTHING_MODE_SLEW;*/
-    
+ 
  
 
 }
@@ -119,17 +97,21 @@ void commandCallback(const shm_led_mouth::LEDMatrixCmdConstPtr& msg)
   
   //printf("cmd!\n");
   
-    cmd.enable = msg->enable;
+    cmd.enable_a = msg->enable_a;
+    cmd.enable_b = msg->enable_b;
     
   
     for (int i = 0; i < NUM_ROWS; i++)
     {	        
-      for (int j = 0; j < NUM_COLS; j++)
-      {	
-	cmd.r[i][j] = msg->row[i].column[j].r;
-	cmd.b[i][j] = msg->row[i].column[j].b;
-	cmd.g[i][j] = msg->row[i].column[j].g;		
-      }
+
+	cmd.r_a[i] = msg->branch_a[i].r;
+	cmd.b_a[i] = msg->branch_a[i].b;
+	cmd.g_a[i] = msg->branch_a[i].g;
+
+	cmd.r_b[i] = msg->branch_b[i].r;
+	cmd.b_b[i] = msg->branch_b[i].b;
+	cmd.g_b[i] = msg->branch_b[i].g;
+
     }
 
         
@@ -240,22 +222,22 @@ int main (int argc, char **argv)
   	spinner.start();
         ros::NodeHandle root_handle;*/
 	
-	ros::init(argc, argv, "led_controller", ros::init_options::NoSigintHandler); // initialize ROS node
+	ros::init(argc, argv, "x2xn_controller", ros::init_options::NoSigintHandler); // initialize ROS node
 	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
 	spinner.start();
         ros::NodeHandle root_handle;
 	ros::NodeHandle p_nh("~");
 	
-	cmd_sub_g = root_handle.subscribe<shm_led_mouth::LEDMatrixCmd>("/led_matrix_command", 1, &commandCallback);
+	cmd_sub_g = root_handle.subscribe<shm_led_mouth::LEDX2XNCmd>("/led_x2xn_command", 1, &commandCallback);
 	
 	
 	signal(SIGINT, endme);
 
-	if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_LED_SHM),sizeof(M3Sds),USE_VMALLOC))
-		printf("Found shared memory starting shm_led_mouth_controller.");
+	if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_X2XN_SHM),sizeof(M3Sds),USE_VMALLOC))
+		printf("Found shared memory starting shm_led_x2xn_controller.");
 	else
 	{
-		printf("Rtai_malloc failure for %s\n",MEKA_LED_SHM);
+		printf("Rtai_malloc failure for %s\n",MEKA_X2XN_SHM);
 		return 0;
 	}
 
@@ -271,7 +253,7 @@ int main (int argc, char **argv)
 	if (!sys_thread_active)
 	{
 		rt_task_delete(task);
-		rt_shm_free(nam2num(MEKA_LED_SHM));
+		rt_shm_free(nam2num(MEKA_X2XN_SHM));
 		printf("Startup of thread failed.\n",0);
 		return 0;
 	}
@@ -286,7 +268,7 @@ int main (int argc, char **argv)
 	usleep(1250000);
 	if (sys_thread_active)printf("Real-time thread did not shutdown correctly\n");
 	//rt_task_delete(task);
-	rt_shm_free(nam2num(MEKA_LED_SHM));
+	rt_shm_free(nam2num(MEKA_X2XN_SHM));
 	ros::shutdown();	
 	return 0;
 }

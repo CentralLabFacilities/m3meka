@@ -1,10 +1,10 @@
 #include <iostream>
 
 #include <ros/ros.h>
-#include "m3/hardware/led_matrix_ec_shm_sds.h"
-#include <shm_led_mouth/LEDMatrixCmd.h>
+#include "m3/hardware/ledx2xn_ec_shm_sds.h"
+#include <shm_led_x2xn/LEDX2XNCmd.h>
 
-class LEDDriver
+class X2XNDriver
 {
 private:
   //! The node handle we'll be using
@@ -14,36 +14,37 @@ private:
 
 public:
   //! ROS node initialization
-  LEDDriver(ros::NodeHandle &nh)
+  X2XNDriver(ros::NodeHandle &nh)
   {
     nh_ = nh;
     //set up the publisher for the cmd_vel topic
-    cmd_pub_ = nh_.advertise<shm_led_mouth::LEDMatrixCmd>("/led_matrix_command", 1);
+    cmd_pub_ = nh_.advertise<shm_led_x2xn::LEDX2XNCmd>("/led_x2xn_command", 1);
   }
 
   //! Loop forever while sending drive commands based on keyboard input
-  bool driveLED()
+  bool driveX2XN()
   {
     char cmd[50];
-     shm_led_mouth::LEDMatrixCmd led_matrix_cmd;     
+     shm_led_x2xn::LEDX2XNCmd led_x2xn_cmd;     
      
-    led_matrix_cmd.row.resize(NUM_ROWS);
+    led_x2xn_cmd.branch_a.resize(NUM_PER_BRANCH);
+    led_x2xn_cmd.branch_b.resize(NUM_PER_BRANCH);
+        
+    led_x2xn_cmd.enable_a = true;
+    led_x2xn_cmd.enable_b = true;
+    led_x2xn_cmd.header.stamp = ros::Time::now();
+    led_x2xn_cmd.header.frame_id = "led_x2xn_cmd";
     
-    for (int i = 0; i < NUM_ROWS; i++)
-      led_matrix_cmd.row[i].column.resize(NUM_COLS);
-    
-    led_matrix_cmd.enable = true;
-    led_matrix_cmd.header.stamp = ros::Time::now();
-    led_matrix_cmd.header.frame_id = "led_matrix_cmd";
-    
-    for (int i = 0; i < NUM_ROWS; i++)
-    {
-      for (int j = 0; j < NUM_COLS; j++)
-      {
-	led_matrix_cmd.row[i].column[j].r = 40;
-	led_matrix_cmd.row[i].column[j].b = 20;
-	led_matrix_cmd.row[i].column[j].g = 30;
-      }
+    for (int i = 0; i < NUM_PER_BRANCH; i++)
+    {     
+	led_matrix_cmd.branch_a[i].r = 40;
+	led_matrix_cmd.branch_a[i].b = 20;
+	led_matrix_cmd.branch_a[i].g = 30;     
+
+	led_matrix_cmd.branch_b[i].r = 40;
+	led_matrix_cmd.branch_b[i].b = 20;
+	led_matrix_cmd.branch_b[i].g = 30;     
+
     }
     
 
@@ -51,15 +52,15 @@ public:
     std::cin.getline(cmd, 50);
     
     
-    cmd_pub_.publish(led_matrix_cmd);
+    cmd_pub_.publish(led_x2xn_cmd);
     
         
     std::cout << "Press any key to stop LED.\n";
     std::cin.getline(cmd, 50);
     
-    led_matrix_cmd.header.stamp = ros::Time::now();
-    led_matrix_cmd.enable = false;
-    cmd_pub_.publish(led_matrix_cmd);
+    led_x2xn_cmd.header.stamp = ros::Time::now();
+    led_x2xn_cmd.enable = false;
+    cmd_pub_.publish(led_x2xn_cmd);
     
     
     return true;
@@ -70,9 +71,9 @@ public:
 int main(int argc, char** argv)
 {
   //init the ROS node
-  ros::init(argc, argv, "robot_driver");
+  ros::init(argc, argv, "x2xn_driver");
   ros::NodeHandle nh;
 
-  LEDDriver driver(nh);
-  driver.driveLED();
+  X2XNDriver driver(nh);
+  driver.driveX2XN();
 }
