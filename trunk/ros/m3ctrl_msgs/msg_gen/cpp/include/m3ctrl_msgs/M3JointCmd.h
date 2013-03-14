@@ -29,6 +29,7 @@ struct M3JointCmd_ {
   , stiffness()
   , velocity()
   , position()
+  , effort()
   , control_mode()
   , smoothing_mode()
   {
@@ -41,6 +42,7 @@ struct M3JointCmd_ {
   , stiffness(_alloc)
   , velocity(_alloc)
   , position(_alloc)
+  , effort(_alloc)
   , control_mode(_alloc)
   , smoothing_mode(_alloc)
   {
@@ -63,6 +65,9 @@ struct M3JointCmd_ {
 
   typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _position_type;
   std::vector<float, typename ContainerAllocator::template rebind<float>::other >  position;
+
+  typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _effort_type;
+  std::vector<float, typename ContainerAllocator::template rebind<float>::other >  effort;
 
   typedef std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  _control_mode_type;
   std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  control_mode;
@@ -99,12 +104,12 @@ template<class ContainerAllocator>
 struct MD5Sum< ::m3ctrl_msgs::M3JointCmd_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "537d840f3b6e483d60cb71f9f796de1e";
+    return "7bc113ddddf00bf9378a6e9a94a186f0";
   }
 
   static const char* value(const  ::m3ctrl_msgs::M3JointCmd_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0x537d840f3b6e483dULL;
-  static const uint64_t static_value2 = 0x60cb71f9f796de1eULL;
+  static const uint64_t static_value1 = 0x7bc113ddddf00bf9ULL;
+  static const uint64_t static_value2 = 0x378a6e9a94a186f0ULL;
 };
 
 template<class ContainerAllocator>
@@ -127,6 +132,7 @@ int16[] chain_idx\n\
 float32[] stiffness\n\
 float32[] velocity\n\
 float32[] position\n\
+float32[] effort\n\
 uint8[] control_mode\n\
 uint8[] smoothing_mode\n\
 \n\
@@ -175,6 +181,7 @@ template<class ContainerAllocator> struct Serializer< ::m3ctrl_msgs::M3JointCmd_
     stream.next(m.stiffness);
     stream.next(m.velocity);
     stream.next(m.position);
+    stream.next(m.effort);
     stream.next(m.control_mode);
     stream.next(m.smoothing_mode);
   }
@@ -226,6 +233,12 @@ s << std::endl;
     {
       s << indent << "  position[" << i << "]: ";
       Printer<float>::stream(s, indent + "  ", v.position[i]);
+    }
+    s << indent << "effort[]" << std::endl;
+    for (size_t i = 0; i < v.effort.size(); ++i)
+    {
+      s << indent << "  effort[" << i << "]: ";
+      Printer<float>::stream(s, indent + "  ", v.effort[i]);
     }
     s << indent << "control_mode[]" << std::endl;
     for (size_t i = 0; i < v.control_mode.size(); ++i)

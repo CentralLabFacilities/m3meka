@@ -179,6 +179,19 @@ ROSBUILD_gensrv_cpp/fast:
 .PHONY : ROSBUILD_gensrv_cpp/fast
 
 #=============================================================================
+# Target rules for targets named ROSBUILD_gensrv_py
+
+# Build rule for target.
+ROSBUILD_gensrv_py: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ROSBUILD_gensrv_py
+.PHONY : ROSBUILD_gensrv_py
+
+# fast build rule for target.
+ROSBUILD_gensrv_py/fast:
+	$(MAKE) -f CMakeFiles/ROSBUILD_gensrv_py.dir/build.make CMakeFiles/ROSBUILD_gensrv_py.dir/build
+.PHONY : ROSBUILD_gensrv_py/fast
+
+#=============================================================================
 # Target rules for targets named clean_test_results
 
 # Build rule for target.
@@ -421,6 +434,7 @@ help:
 	@echo "... ROSBUILD_genmsg_cpp"
 	@echo "... ROSBUILD_genmsg_py"
 	@echo "... ROSBUILD_gensrv_cpp"
+	@echo "... ROSBUILD_gensrv_py"
 	@echo "... clean_test_results"
 	@echo "... doxygen"
 	@echo "... edit_cache"

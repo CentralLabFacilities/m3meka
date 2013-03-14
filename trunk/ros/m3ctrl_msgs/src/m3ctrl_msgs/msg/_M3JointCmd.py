@@ -7,7 +7,7 @@ import struct
 import std_msgs.msg
 
 class M3JointCmd(genpy.Message):
-  _md5sum = "537d840f3b6e483d60cb71f9f796de1e"
+  _md5sum = "7bc113ddddf00bf9378a6e9a94a186f0"
   _type = "m3ctrl_msgs/M3JointCmd"
   _has_header = True #flag to mark the presence of a Header object
   _full_text = """Header header
@@ -16,6 +16,7 @@ int16[] chain_idx
 float32[] stiffness
 float32[] velocity
 float32[] position
+float32[] effort
 uint8[] control_mode
 uint8[] smoothing_mode
 
@@ -39,8 +40,8 @@ time stamp
 string frame_id
 
 """
-  __slots__ = ['header','chain','chain_idx','stiffness','velocity','position','control_mode','smoothing_mode']
-  _slot_types = ['std_msgs/Header','uint8[]','int16[]','float32[]','float32[]','float32[]','uint8[]','uint8[]']
+  __slots__ = ['header','chain','chain_idx','stiffness','velocity','position','effort','control_mode','smoothing_mode']
+  _slot_types = ['std_msgs/Header','uint8[]','int16[]','float32[]','float32[]','float32[]','float32[]','uint8[]','uint8[]']
 
   def __init__(self, *args, **kwds):
     """
@@ -50,7 +51,7 @@ string frame_id
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       header,chain,chain_idx,stiffness,velocity,position,control_mode,smoothing_mode
+       header,chain,chain_idx,stiffness,velocity,position,effort,control_mode,smoothing_mode
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -71,6 +72,8 @@ string frame_id
         self.velocity = []
       if self.position is None:
         self.position = []
+      if self.effort is None:
+        self.effort = []
       if self.control_mode is None:
         self.control_mode = ''
       if self.smoothing_mode is None:
@@ -82,6 +85,7 @@ string frame_id
       self.stiffness = []
       self.velocity = []
       self.position = []
+      self.effort = []
       self.control_mode = ''
       self.smoothing_mode = ''
 
@@ -128,6 +132,10 @@ string frame_id
       buff.write(_struct_I.pack(length))
       pattern = '<%sf'%length
       buff.write(struct.pack(pattern, *self.position))
+      length = len(self.effort)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sf'%length
+      buff.write(struct.pack(pattern, *self.effort))
       _x = self.control_mode
       length = len(_x)
       # - if encoded as a list instead, serialize as bytes instead of string
@@ -207,6 +215,13 @@ string frame_id
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sf'%length
+      start = end
+      end += struct.calcsize(pattern)
+      self.effort = struct.unpack(pattern, str[start:end])
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
       start = end
       end += length
       if python3:
@@ -265,6 +280,10 @@ string frame_id
       buff.write(_struct_I.pack(length))
       pattern = '<%sf'%length
       buff.write(self.position.tostring())
+      length = len(self.effort)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sf'%length
+      buff.write(self.effort.tostring())
       _x = self.control_mode
       length = len(_x)
       # - if encoded as a list instead, serialize as bytes instead of string
@@ -342,6 +361,13 @@ string frame_id
       start = end
       end += struct.calcsize(pattern)
       self.position = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sf'%length
+      start = end
+      end += struct.calcsize(pattern)
+      self.effort = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
