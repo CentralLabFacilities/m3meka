@@ -81,7 +81,9 @@ libm3hardwareinclude_HEADERS = \
 	joint_zlift_shm.pb.h\
 	joint_zlift_shm_sds.h\
 	led_matrix_ec_shm.pb.h\
-	led_matrix_ec_shm_sds.h
+	led_matrix_ec_shm_sds.h\
+	ledx2xn_ec_shm.pb.h\
+	ledx2xn_ec_shm_sds.h
 
 
 #	async_io.h
@@ -239,13 +241,16 @@ led_matrix_ec_shm.pb.cpp: led_matrix_ec_shm.proto
 	mv led_matrix_ec_shm.pb.cc led_matrix_ec_shm.pb.cpp
 	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 led_matrix_ec_shm.proto
 
+ledx2xn_ec_shm.pb.cpp: ledx2xn_ec_shm.proto
+	protoc -I$(prefix)/include/m3rt/base   -I./ --cpp_out=./ ledx2xn_ec_shm.proto
+	mv ledx2xn_ec_shm.pb.cc ledx2xn_ec_shm.pb.cpp
+	protoc -I$(prefix)/include/m3rt/base   -I./ --python_out=$(top_srcdir)/python/m3 ledx2xn_ec_shm.proto
 
 
 proto: actuator.pb.cpp pwr.pb.cpp pwr_ec.pb.cpp  actuator_ec.pb.cpp joint.pb.cpp loadx1.pb.cpp loadx1_ec.pb.cpp \
 	loadx6.pb.cpp loadx6_ec.pb.cpp tactile_pps22_ec.pb.cpp ledx2_ec.pb.cpp ledx2xn_ec.pb.cpp led_matrix_ec.pb.cpp \
 	robot_monitor.pb.cpp ctrl_simple.pb.cpp joint_zlift_shm.pb.cpp smoothing_mode.pb.cpp joint_mode_ros.pb.cpp \
-	led_matrix_ec_shm.pb.cpp
-
+	led_matrix_ec_shm.pb.cpp ledx2xn_ec_shm.pb.cpp
 
 proto_install: 
 	if test -d $(includedir)/m3; then echo '' ; else mkdir $(includedir)/m3;fi
@@ -336,6 +341,8 @@ libm3hardware_la_SOURCES = \
 	joint_zlift_shm.cpp\
 	led_matrix_ec_shm.pb.cpp\
 	led_matrix_ec_shm.cpp\
+	ledx2xn_ec_shm.pb.cpp\
+	ledx2xn_ec_shm.cpp\
 	factory_proxy.cpp
 
 #	async_io.cpp
