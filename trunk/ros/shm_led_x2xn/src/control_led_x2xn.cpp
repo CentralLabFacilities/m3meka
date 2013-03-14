@@ -37,13 +37,13 @@ public:
     
     for (int i = 0; i < NUM_PER_BRANCH; i++)
     {     
-	led_matrix_cmd.branch_a[i].r = 40;
-	led_matrix_cmd.branch_a[i].b = 20;
-	led_matrix_cmd.branch_a[i].g = 30;     
+	led_x2xn_cmd.branch_a[i].r = 40;
+	led_x2xn_cmd.branch_a[i].b = 20;
+	led_x2xn_cmd.branch_a[i].g = 30;     
 
-	led_matrix_cmd.branch_b[i].r = 40;
-	led_matrix_cmd.branch_b[i].b = 20;
-	led_matrix_cmd.branch_b[i].g = 30;     
+	led_x2xn_cmd.branch_b[i].r = 40;
+	led_x2xn_cmd.branch_b[i].b = 20;
+	led_x2xn_cmd.branch_b[i].g = 30;     
 
     }
     
@@ -59,7 +59,8 @@ public:
     std::cin.getline(cmd, 50);
     
     led_x2xn_cmd.header.stamp = ros::Time::now();
-    led_x2xn_cmd.enable = false;
+    led_x2xn_cmd.enable_a = false;
+    led_x2xn_cmd.enable_b = false;
     cmd_pub_.publish(led_x2xn_cmd);
     
     

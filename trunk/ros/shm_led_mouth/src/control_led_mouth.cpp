@@ -70,7 +70,7 @@ public:
 int main(int argc, char** argv)
 {
   //init the ROS node
-  ros::init(argc, argv, "robot_driver");
+  ros::init(argc, argv, "mouth_driver");
   ros::NodeHandle nh;
 
   LEDDriver driver(nh);
