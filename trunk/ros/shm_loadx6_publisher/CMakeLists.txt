@@ -21,7 +21,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #uncomment if you have defined services
 #rosbuild_gensrv()
 
-include_directories(../m3ctrl_msgs/msg_gen/cpp/include/ ../../../m3core/src/ /usr/realtime-2.6.32.11-rtai-3.8.1/include)
+include_directories(../m3ctrl_msgs/msg_gen/cpp/include/ ../../../m3core/src/ /usr/realtime/include)
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
