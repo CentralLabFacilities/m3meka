@@ -36,9 +36,6 @@ import roslib; roslib.load_manifest('m3meka_msgs')
 import rospy
 from m3meka_msgs.msg import M3OmnibaseJoy
 
-
-
-    
 def main():   
     
     proxy = m3p.M3RtProxy()
@@ -63,14 +60,16 @@ def main():
     
     proxy.subscribe_status(pwr)
     proxy.publish_command(pwr) 
-    
+
     zlift_names=proxy.get_available_components('m3joint_zlift')
     zl=None
-    if len(zlift_names)==1:
-        zl=m3z.M3JointZLift(zlift_names[0])
-        proxy.subscribe_status(zl)
-        proxy.publish_command(zl)
-        proxy.publish_param(zl) 
+    if len(zlift_names)==1:    
+	print 'Use Zlift [y]?'
+	if m3t.get_yes_no('y'):
+		zl=m3z.M3JointZLift(zlift_names[0])
+		proxy.subscribe_status(zl)
+		proxy.publish_command(zl)
+		proxy.publish_param(zl) 
 
     proxy.make_operational(pwr_name[0])
     proxy.step()
