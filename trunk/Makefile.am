@@ -22,9 +22,10 @@ AM_CPPFLAGS = -g
 #SUBDIRS =   src/m3rt/base  src/m3rt/rt_system src/m3/toolbox src/m3/hardware src/m3/inverse_kine src/m3/chains \
 #	src/m3/robots src/m3/robot_ctrl  python
 
-#ros/m3meka_msgs
-#src/m3rt/bootloader 
 
+
+all-local:
+	bash disable_ros
 
 if RTAI
 SUBDIRS =   src/m3/toolbox \

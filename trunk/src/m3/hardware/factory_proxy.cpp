@@ -78,7 +78,7 @@ extern "C"
 #define M3CTRL_SIMPLE_NAME "m3ctrl_simple"
 #define M3JOINT_ZLIFT_SHM_TYPE_NAME "m3joint_zlift_shm"
 #define M3LED_MATRIX_EC_SHM_TYPE_NAME "m3led_matrix_ec_shm"
-#define M3LED_X2XN_EC_SHM_TYPE_NAME "m3_ledx2xn_ec_shm"
+#define M3LED_X2XN_EC_SHM_TYPE_NAME "m3ledx2xn_ec_shm"
 ///////////////////////////////////////////////////////
 //Creators
 

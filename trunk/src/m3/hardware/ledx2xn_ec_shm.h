@@ -35,7 +35,7 @@ using namespace m3rt;
 
 class M3LedX2XNEcShm : public  m3::M3CompShm{
 	public:
-		M3LedX2XNEcShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),led_x2xn(NULL)
+		M3LedX2XNEcShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),led_x2xn(NULL),tmp_cnt(0)
 		{		  
 		  RegisterVersion("default",DEFAULT);		  
 		}

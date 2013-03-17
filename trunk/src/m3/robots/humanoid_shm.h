@@ -35,7 +35,7 @@ using namespace m3rt;
 class M3HumanoidShm : public  m3::M3CompShm{
 	public:
 		M3HumanoidShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),bot(NULL),
-		right_hand(NULL),right_loadx6(NULL),tmp_cnt(0),left_hand(NULL),left_loadx6(NULL)
+		right_hand(NULL),right_loadx6(NULL),tmp_cnt(0),left_hand(NULL),left_loadx6(NULL),pwr(NULL)
 		{		  
 		  RegisterVersion("default",DEFAULT);		  
 		}

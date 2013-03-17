@@ -37,9 +37,9 @@
 
 #define RT_TASK_FREQUENCY_MEKA_X2XN_SHM 30
 #define RT_TIMER_TICKS_NS_MEKA_X2XN_SHM (1000000000 / RT_TASK_FREQUENCY_MEKA_X2XN_SHM)		//Period of rt-timer 
-#define MEKA_LED_SHM "XSHMM"
-#define MEKA_LED_CMD_SEM "XSHMC"
-#define MEKA_LED_STATUS_SEM "XSHMS"
+#define MEKA_X2XN_SHM "XSHMM"
+#define MEKA_X2XN_CMD_SEM "XSHMC"
+#define MEKA_X2XN_STATUS_SEM "XSHMS"
 
 
 #define CYCLE_TIME_SEC 4
@@ -58,13 +58,12 @@ static long step_cnt = 0;
 static void endme(int dummy) {  end=1; }
 
 ros::Subscriber cmd_sub_g;
-//tf::TransformBroadcaster odom_broadcaster;
 ////////////////////////////////////////////////////////////////////////////////////
 
 
 ///////  Periodic Control Loop:
 void StepShm();
-void commandCallback(const shm_led_mouth::LEDX2XNCmdConstPtr& msg);
+void commandCallback(const shm_led_x2xn::LEDX2XNCmdConstPtr& msg);
 
 ///////////////////////////////
 
@@ -92,16 +91,16 @@ void StepShm(int cntr)
 
 }
 
-void commandCallback(const shm_led_mouth::LEDMatrixCmdConstPtr& msg)
+void commandCallback(const shm_led_x2xn::LEDX2XNCmdConstPtr& msg)
 {
   
-  //printf("cmd!\n");
+//printf("cmd!\n");
   
     cmd.enable_a = msg->enable_a;
     cmd.enable_b = msg->enable_b;
     
   
-    for (int i = 0; i < NUM_ROWS; i++)
+    for (int i = 0; i < NUM_PER_BRANCH; i++)
     {	        
 
 	cmd.r_a[i] = msg->branch_a[i].r;
@@ -131,35 +130,35 @@ static void* rt_system_thread(void * arg)
 	printf("Starting real-time thread\n");
 		
 	
-	sds_status_size = sizeof(M3LedMatrixEcShmSdsStatus);
-	sds_cmd_size = sizeof(M3LedMatrixEcShmSdsCommand);
+	sds_status_size = sizeof(M3LedX2XNEcShmSdsStatus);
+	sds_cmd_size = sizeof(M3LedX2XNEcShmSdsCommand);
 	
 	memset(&cmd, 0, sds_cmd_size);
 	
-	task = rt_task_init_schmod(nam2num("LSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
+	task = rt_task_init_schmod(nam2num("XSHMP"), 0, 0, 0, SCHED_FIFO, 0xF);
 	rt_allow_nonroot_hrt();
 	if (task==NULL)
 	{
 		printf("Failed to create RT-TASK LSHMP\n");
 		return 0;
 	}
-	status_sem=(SEM*)rt_get_adr(nam2num(MEKA_LED_STATUS_SEM));
-	command_sem=(SEM*)rt_get_adr(nam2num(MEKA_LED_CMD_SEM));
+	status_sem=(SEM*)rt_get_adr(nam2num(MEKA_X2XN_STATUS_SEM));
+	command_sem=(SEM*)rt_get_adr(nam2num(MEKA_X2XN_CMD_SEM));
 	if (!status_sem)
 	{
-		printf("Unable to find the %s semaphore.\n",MEKA_LED_STATUS_SEM);
+		printf("Unable to find the %s semaphore.\n",MEKA_X2XN_STATUS_SEM);
 		rt_task_delete(task);
 		return 0;
 	}
 	if (!command_sem)
 	{
-		printf("Unable to find the %s semaphore.\n",MEKA_LED_CMD_SEM);
+		printf("Unable to find the %s semaphore.\n",MEKA_X2XN_CMD_SEM);
 		rt_task_delete(task);
 		return 0;
 	}
 	
 	
-	RTIME tick_period = nano2count(RT_TIMER_TICKS_NS_MEKA_LED_SHM); 
+	RTIME tick_period = nano2count(RT_TIMER_TICKS_NS_MEKA_X2XN_SHM); 
 	RTIME now = rt_get_time();
 	rt_task_make_periodic(task, now + tick_period, tick_period); 
 	mlockall(MCL_CURRENT | MCL_FUTURE);
@@ -195,7 +194,7 @@ static void* rt_system_thread(void * arg)
 			//rt_task_make_periodic(task, end + tick_period,tick_period);			
 		}
 		step_cnt++;
-		if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_LED_SHM)
+		if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_X2XN_SHM)
 		  cntr = 0;
 		rt_task_wait_period();
 	}	
@@ -228,7 +227,7 @@ int main (int argc, char **argv)
         ros::NodeHandle root_handle;
 	ros::NodeHandle p_nh("~");
 	
-	cmd_sub_g = root_handle.subscribe<shm_led_mouth::LEDX2XNCmd>("/led_x2xn_command", 1, &commandCallback);
+	cmd_sub_g = root_handle.subscribe<shm_led_x2xn::LEDX2XNCmd>("/led_x2xn_command", 1, &commandCallback);
 	
 	
 	signal(SIGINT, endme);

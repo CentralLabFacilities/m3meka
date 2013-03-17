@@ -72,14 +72,37 @@ void M3LedX2XNEcShm::SetCommandFromSds(unsigned char * data)
     
     int64_t dt = GetBaseStatus()->timestamp()-command_from_sds.timestamp; // microseconds
     bool shm_timeout = ABS(dt) > (timeout*1000);    
+
+/*	if (tmp_cnt++ == 200)
+	{
+		M3_DEBUG("hi\n");
+		tmp_cnt = 0;
+	
+	}*/
+
        
   if (led_x2xn != NULL)
   {
     if (shm_timeout)
     {
+/*	if (tmp_cnt++ == 200)
+	{
+		M3_DEBUG("hi\n");
+		tmp_cnt = 0;
+	
+	}*/
+
       ((M3LedX2XNEcCommand*)led_x2xn->GetCommand())->set_enable_a(0);
       ((M3LedX2XNEcCommand*)led_x2xn->GetCommand())->set_enable_b(0);            
     } else {
+/*	if (tmp_cnt++ == 200)
+	{
+		M3_DEBUG("here\n");
+		tmp_cnt = 0;
+	
+	}*/
+	((M3LedX2XNEcCommand*)led_x2xn->GetCommand())->set_enable_a(command_from_sds.enable_a);
+        ((M3LedX2XNEcCommand*)led_x2xn->GetCommand())->set_enable_b(command_from_sds.enable_b);  
 	for (int i = 0; i < NUM_PER_BRANCH; i++)
 	{	  
 		((M3LedX2XNEcCommand*)led_x2xn->GetCommand())->mutable_branch_a()->set_r(i,command_from_sds.r_a[i]);
