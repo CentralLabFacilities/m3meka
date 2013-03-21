@@ -18,6 +18,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "m3/vehicles/omnibase.h"
+#include "omnibase.h"
 
 namespace m3
 {
@@ -300,7 +301,7 @@ void M3Omnibase::StepCommand()
     
     switch (command.ctrl_mode())
     {    
-    case OMNIBASE_CTRL_CASTER:		
+    case OMNIBASE_CTRL_CASTER:
         for (int i=0;i<motor_array->GetNumDof()/2;i++)
 	{
 	  if (bool(status.calibrated(i)) && !old_calibrated[i])
@@ -323,8 +324,20 @@ void M3Omnibase::StepCommand()
 	  }	  
 	}
         break;    
-    case OMNIBASE_CTRL_OPSPACE_TRAJ:
     case OMNIBASE_CTRL_CALIBRATE:       
+      for (int i=0;i<motor_array->GetNumDof();i++)
+      {
+	/*((M3ActuatorEcCommand*)motor_array->GetJoint(i)->GetActuator()->GetActuatorEc()->GetCommand())->set_t_desire(
+		 motor_array->GetJoint(i)->mNmToTicks(1000*pcv_status.motor_torque_Nm[i]));	
+	((M3ActuatorEcCommand*)motor_array->GetJoint(i)->GetActuator()->GetActuatorEc()->GetCommand())->set_mode(ACTUATOR_EC_MODE_PWM);*/
+	/*((M3JointArrayCommand*)motor_array->GetCommand())->set_pwm_desired(i,
+		 motor_array->GetJoint(i)->mNmToTicks(round(1000*pcv_status.motor_torque_Nm[i])));	
+	((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_PWM);*/
+	((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
+      }
+	break;
+    case OMNIBASE_CTRL_OPSPACE_TRAJ:
     case OMNIBASE_CTRL_OPSPACE_FORCE:            
     case OMNIBASE_CTRL_CART_LOCAL:	
     case OMNIBASE_CTRL_CART_GLOBAL:    
@@ -336,8 +349,85 @@ void M3Omnibase::StepCommand()
 	/*((M3JointArrayCommand*)motor_array->GetCommand())->set_pwm_desired(i,
 		 motor_array->GetJoint(i)->mNmToTicks(round(1000*pcv_status.motor_torque_Nm[i])));	
 	((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_PWM);*/
-	((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
-	((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
+	if ( i % 2 == 0 && flip_out_detect_enable) // if we are on a steer motor_angles_rad
+	{
+	  // get avg vel of other steer motors
+	  mReal avg_vel = 0;
+	  for (int j = 0; j < motor_array->GetNumDof()/2; j++)
+	  {
+	   if (j*2 != i)
+	     avg_vel += ABS(RAD2DEG(pcv_status.steer_velocity_rad[j]));
+	  }
+	  avg_vel = avg_vel / (motor_array->GetNumDof()/2 - 1);
+	  bool flip_detected = ((ABS(RAD2DEG(pcv_status.steer_velocity_rad[i/2])) >  flip_out_detect_mult*avg_vel) && (ABS(RAD2DEG(pcv_status.steer_velocity_rad[i/2])) > flip_out_detect_min));
+	  if (flip_detected || (flip_out_detect_timeout[i/2] > 0)) // wheel is freaking out
+	  {
+	    if (flip_detected)
+	      flip_out_detect_time[i/2]++;
+	    if (flip_out_detect_time[i/2] > flip_out_detect_time_cnt) // start reducing torque to prevent flipout
+	    {
+	      if (first_flip_out[i/2])
+	      {
+		if ((i == 2) || (i == 4))
+		{
+		  M3_DEBUG("flip: %i\n", i/2);
+		  M3_DEBUG("avg: %f\n", avg_vel);
+		  M3_DEBUG("my: %f\n", ABS(RAD2DEG(pcv_status.steer_velocity_rad[i/2])));
+		}
+		flip_out_detect_timeout[i/2] = flip_out_detect_timeout_cnt;
+	      }
+	      first_flip_out[i/2] = false;
+	      if (flip_out_detect_timeout[i/2] == 0) // still flipping out after timeout? restart it..
+		flip_out_detect_timeout[i/2] = flip_out_detect_timeout_cnt;
+	      flip_out_detect_timeout[i/2]--;	    
+	      ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	      ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 0);
+	    } else {
+	      ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	      ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
+	    }
+	  } else {
+	    first_flip_out[i/2] = true;
+	    //if (flip_out_detect_time[i/2] > 0)
+	    //  flip_out_detect_time[i/2]--;
+	    flip_out_detect_time[i/2] = 0;
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
+	  }
+	  if ((i/2 == 0) && flip_out_detect_disable_0)
+	  {
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
+	    flip_out_detect_timeout[i/2] = 0;
+	  } else if ((i/2 == 1) && flip_out_detect_disable_1)
+	  {
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
+	    flip_out_detect_timeout[i/2] = 0;
+	  } if ((i/2 == 2) && flip_out_detect_disable_2)
+	  {
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
+	    flip_out_detect_timeout[i/2] = 0;
+	  } if ((i/2 == 3) && flip_out_detect_disable_3)
+	  {
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
+	    flip_out_detect_timeout[i/2] = 0;
+	  }  
+	    
+	} else { // roll motor
+	  if (flip_out_detect_timeout[i/2-1] > 0 )
+	  {
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 0);
+	  } else {
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
+	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
+	  }
+	}
+	
+	  
       }
 	break;
     case OMNIBASE_CTRL_OFF:
@@ -372,6 +462,22 @@ bool M3Omnibase::ReadConfig(const char * filename)
     doc["param"]["ks_d"] >> val;
     param.set_ks_d(val); 
     
+    
+    doc["flip_out_detect_disable_0"] >> flip_out_detect_disable_0;
+    doc["flip_out_detect_disable_1"] >> flip_out_detect_disable_1;
+    doc["flip_out_detect_disable_2"] >> flip_out_detect_disable_2;
+    doc["flip_out_detect_disable_3"] >> flip_out_detect_disable_3;
+    
+    doc["flip_out_detect_mult"] >> flip_out_detect_mult;
+    
+    doc["flip_out_detect_min"] >> flip_out_detect_min;
+    
+    doc["flip_out_detect_enable"] >> flip_out_detect_enable;
+    
+    doc["flip_out_detect_timeout"] >> flip_out_detect_timeout_cnt;
+    
+    doc["flip_out_detect_time"] >> flip_out_detect_time_cnt;
+    
     //angle_df.ReadConfig( doc["calib"]["angle_df"]);
     
     return M3Vehicle::ReadConfig(filename);;
@@ -386,6 +492,13 @@ void M3Omnibase::Startup()
   pcv_cmd.controlMode_ = CTRL_OFF;
   pcv_cmd.internalForce_ = false;
   pcv_cmd.accel_FF_ = false;
+  
+  for (int i = 0; i < 4; i++)
+  {
+    first_flip_out[i] = true;
+    flip_out_detect_timeout[i] = 0;
+    flip_out_detect_time[i] = 0;
+  }
   
   for (int i = 0; i < 3; i++)
   {

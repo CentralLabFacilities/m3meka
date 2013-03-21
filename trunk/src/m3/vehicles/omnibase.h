@@ -100,6 +100,18 @@ class M3Omnibase : public M3Vehicle
 		double max_vel_err[3];
 		double max_cdxx[3];
 		double min_cdxx[3];
+		bool first_flip_out[4];
+		mReal flip_out_detect_mult;
+		mReal flip_out_detect_min;
+		bool flip_out_detect_enable;
+		int flip_out_detect_timeout[4];
+		int flip_out_detect_timeout_cnt;
+		int flip_out_detect_time[4];
+		int flip_out_detect_time_cnt;
+		bool flip_out_detect_disable_0;
+		bool flip_out_detect_disable_1;
+		bool flip_out_detect_disable_2;
+		bool flip_out_detect_disable_3;
 		int cnt;
 		int tmp_cnt;
 		M3Pwr * pwr;
