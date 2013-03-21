@@ -343,13 +343,16 @@ void M3Omnibase::StepCommand()
     case OMNIBASE_CTRL_CART_GLOBAL:    
       for (int i=0;i<motor_array->GetNumDof();i++)
       {
+	
+	// EXPERIMENTAL FLIPOUT PREVENTION CODE BELOW.  IGNORE FOR NOW
+	
 	/*((M3ActuatorEcCommand*)motor_array->GetJoint(i)->GetActuator()->GetActuatorEc()->GetCommand())->set_t_desire(
 		 motor_array->GetJoint(i)->mNmToTicks(1000*pcv_status.motor_torque_Nm[i]));	
 	((M3ActuatorEcCommand*)motor_array->GetJoint(i)->GetActuator()->GetActuatorEc()->GetCommand())->set_mode(ACTUATOR_EC_MODE_PWM);*/
 	/*((M3JointArrayCommand*)motor_array->GetCommand())->set_pwm_desired(i,
 		 motor_array->GetJoint(i)->mNmToTicks(round(1000*pcv_status.motor_torque_Nm[i])));	
 	((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_PWM);*/
-	if ( i % 2 == 0 && flip_out_detect_enable) // if we are on a steer motor_angles_rad
+	/*if ( i % 2 == 0 && flip_out_detect_enable) // if we are on a steer motor_angles_rad
 	{
 	  // get avg vel of other steer motors
 	  mReal avg_vel = 0;
@@ -416,16 +419,16 @@ void M3Omnibase::StepCommand()
 	    flip_out_detect_timeout[i/2] = 0;
 	  }  
 	    
-	} else { // roll motor
+	} else { // roll motor 
 	  if (flip_out_detect_timeout[i/2-1] > 0 )
 	  {
 	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
 	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 0);
-	  } else {
+	  } else */{
 	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_TORQUE);
 	    ((M3JointArrayCommand*)motor_array->GetCommand())->set_tq_desired(i, 1000*pcv_status.motor_torque_Nm[i]);
 	  }
-	}
+	//}
 	
 	  
       }
@@ -463,7 +466,7 @@ bool M3Omnibase::ReadConfig(const char * filename)
     param.set_ks_d(val); 
     
     
-    doc["flip_out_detect_disable_0"] >> flip_out_detect_disable_0;
+    /*doc["flip_out_detect_disable_0"] >> flip_out_detect_disable_0;
     doc["flip_out_detect_disable_1"] >> flip_out_detect_disable_1;
     doc["flip_out_detect_disable_2"] >> flip_out_detect_disable_2;
     doc["flip_out_detect_disable_3"] >> flip_out_detect_disable_3;
@@ -476,7 +479,7 @@ bool M3Omnibase::ReadConfig(const char * filename)
     
     doc["flip_out_detect_timeout"] >> flip_out_detect_timeout_cnt;
     
-    doc["flip_out_detect_time"] >> flip_out_detect_time_cnt;
+    doc["flip_out_detect_time"] >> flip_out_detect_time_cnt;*/
     
     //angle_df.ReadConfig( doc["calib"]["angle_df"]);
     
