@@ -45,11 +45,13 @@ public:
     std::cout << "Press any key to move to zero position.\n";
     std::cin.getline(cmd, 50);
     
-    humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
+    humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, RIGHT_HAND, LEFT_ARM, or LEFT_HAND
+    //humanoid_cmd.chain[0] = (unsigned char)HEAD; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
     humanoid_cmd.chain_idx[0] = 0; //J0
-    humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC; //Compliant position mode
+    //humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC; //Compliant position mode
+    //humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA; //Use for HEAD
     humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_SLEW; //Smooth trajectory
-    //humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_MIN_JERK; //Smooth trajectory
+    //humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_MIN_JERK; //Use for HEAD
     humanoid_cmd.velocity[0] = 1.0; //Rad/s
     humanoid_cmd.stiffness[0] = 1.0; //0-1.0
     humanoid_cmd.effort[0] = 300.0; //Torque for hand fingers
