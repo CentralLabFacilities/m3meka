@@ -45,9 +45,9 @@ public:
     std::cout << "Press any key to move to zero position.\n";
     std::cin.getline(cmd, 50);
     
-    humanoid_cmd.chain[0] = (unsigned char)RIGHT_HAND; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
-    humanoid_cmd.chain_idx[0] = 2; //J0
-    humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_TORQUE_GC; //Compliant position mode
+    humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
+    humanoid_cmd.chain_idx[0] = 0; //J0
+    humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC; //Compliant position mode
     humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_SLEW; //Smooth trajectory
     //humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_MIN_JERK; //Smooth trajectory
     humanoid_cmd.velocity[0] = 1.0; //Rad/s
