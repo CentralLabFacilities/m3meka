@@ -25,7 +25,7 @@ import time
 import m3.rt_proxy as m3p
 import m3.toolbox as m3t
 import m3.component_factory as m3f
-import Numeric as nu
+import numpy as nu
 import m3.humanoid 
 
 # ######################################################	
@@ -48,6 +48,7 @@ for c in chains:
 	bot.set_mode_theta_gc(c)
 	bot.set_theta_deg(c,[0.0]*ndof)
 	bot.set_stiffness(c,[0.0]*ndof)	
+	bot.set_slew_rate_proportion(c,[1.0]*ndof)
 try:
 	while True:
 		proxy.step()

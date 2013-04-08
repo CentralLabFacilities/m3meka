@@ -90,6 +90,15 @@ def main():
     if len(humanoid_shm_names) > 0:
       proxy.make_safe_operational(humanoid_shm_names[0])
     
+    m3ledx2xn_ec_shm_names=proxy.get_available_components('m3ledx2xn_ec_shm')
+    if len(m3ledx2xn_ec_shm_names) > 0:
+      proxy.make_safe_operational(m3ledx2xn_ec_shm_names[0])
+
+    m3led_matrix_ec_shm_names=proxy.get_available_components('m3led_matrix_ec_shm')
+    if len(m3led_matrix_ec_shm_names) > 0:
+      proxy.make_safe_operational(m3led_matrix_ec_shm_names[0])    
+    
+    
     proxy.step()
     time.sleep(0.5)
     if omni is not None:
