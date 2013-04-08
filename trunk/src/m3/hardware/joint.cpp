@@ -83,6 +83,8 @@ bool M3Joint::ReadConfig(const char * filename)
 	param.set_min_q_pad(val);
 	doc["param"]["max_q_slew_rate"] >> val;
 	param.set_max_q_slew_rate(val);
+	doc["param"]["kq_d_pose"] >> val;
+	param.set_kq_d_pose(val);
 	
 	string t;
 	try 
@@ -357,6 +359,7 @@ void M3Joint::StepCommand()
 			}
 			case JOINT_MODE_THETA_GC:
 			case JOINT_MODE_THETA_GC_MJ:
+			case JOINT_MODE_POSE:
 			{
 				if (!IsEncoderCalibrated())
 				  break;
@@ -365,14 +368,26 @@ void M3Joint::StepCommand()
 				mReal des=trans->GetThetaDesJointDeg();
 				StepBrake(des,trans->GetThetaJointDeg());
 				//Do PID in joint space
-				tq_des =pid_theta_gc.Step(trans->GetThetaJointDeg(),
-						trans->GetThetaDotJointDeg(),
-						des,
-						param.kq_p(),
-						param.kq_i(),
-						param.kq_d(),
-						param.kq_i_limit(),
-						param.kq_i_range());
+				if (command.ctrl_mode() == JOINT_MODE_POSE)
+				{
+				  tq_des =pid_theta_gc.Step(trans->GetThetaJointDeg(),
+						  trans->GetThetaDotJointDeg(),
+						  des,
+						  0.0,
+						  0.0,
+						  param.kq_d_pose(),
+						  0.0,
+						  0.0);
+				} else {
+				  tq_des =pid_theta_gc.Step(trans->GetThetaJointDeg(),
+						  trans->GetThetaDotJointDeg(),
+						  des,
+						  param.kq_p(),
+						  param.kq_i(),
+						  param.kq_d(),
+						  param.kq_i_limit(),
+						  param.kq_i_range());
+				}
 				/*if (pnt_cnt%200==0) {		
 					M3_DEBUG("actuator: %s\n", GetName().c_str());
 					M3_DEBUG("tq_des: %f\n",tq_des);
