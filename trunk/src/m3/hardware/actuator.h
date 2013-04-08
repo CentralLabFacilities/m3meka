@@ -145,7 +145,8 @@ class M3Actuator : public m3rt::M3Component
 		int pnt_cnt;
 		int last_theta_err;
 		int last_torque_err;
-		bool disable_vertx_check;
+		bool disable_vertx_check_tq;
+		bool disable_vertx_check_angle;
 		int vertx_timeout_limit_ms;
 };
 

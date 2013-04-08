@@ -140,11 +140,20 @@ bool M3Actuator::ReadConfig(const char * filename)
 		} 
 		try 
 		{		  
-			doc["disable_vertx_check"] >> disable_vertx_check;
+			doc["disable_vertx_check_tq"] >> disable_vertx_check_tq;
 		} catch(YAML::TypedKeyNotFound<string> e) 
 		{
-			disable_vertx_check=false;
+			disable_vertx_check_tq=false;
 		} 
+		try 
+		{		  
+			doc["disable_vertx_check_angle"] >> disable_vertx_check_angle;
+		} catch(YAML::TypedKeyNotFound<string> e) 
+		{
+			disable_vertx_check_angle=false;
+		} 
+
+		
 		try 
 		{		  
 			doc["vertx_timeout_limit_ms"] >> vertx_timeout_limit_ms;
@@ -307,7 +316,7 @@ void M3Actuator::StepStatus()
 		else
 		  sensor_fault_torque_cnt = 0;
 		
-		if (!disable_vertx_check)
+		if (!disable_vertx_check_angle)
 		{
 			if (((mReal)sensor_fault_theta_cnt) > ((mReal(vertx_timeout_limit_ms)/1000.0) * (mReal)RT_TASK_FREQUENCY)) // throw an error if we loose jnt/tq sensor for 100 ms
 			{
@@ -315,7 +324,10 @@ void M3Actuator::StepStatus()
 			  SetStateError();
 			  M3_ERR("------ SENSOR FAULT EVENT FOR JOINT ANGLE OF %s ---------------\n",GetName().c_str());
 			}
+		}
 		
+		if (!disable_vertx_check_tq)
+		{
 			if (((mReal)sensor_fault_torque_cnt) > ((mReal(vertx_timeout_limit_ms)/1000.0) * (mReal)RT_TASK_FREQUENCY)) // throw an error if we loose jnt/tq sensor for 100 ms
 			{
 			  M3_DEBUG("tq_cnt: %d, tq_err: %d, tq_err_last: %d\n", sensor_fault_torque_cnt, tq_sense.GetError(), last_torque_err);
