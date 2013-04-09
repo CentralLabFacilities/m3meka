@@ -203,6 +203,8 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
       else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
 	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+      /*else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_POSE)
+	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_POSE; */
       else
 	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
       
@@ -219,6 +221,8 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
       else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
 	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_POSE)
+	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_POSE;       
       else
 	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
 
@@ -251,6 +255,8 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	cmd.torso.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
       else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
 	cmd.torso.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_POSE)
+	cmd.torso.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_POSE;       
       else
 	cmd.torso.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
       cmd.torso.q_desired[chain_idx] = msg->position[i];
