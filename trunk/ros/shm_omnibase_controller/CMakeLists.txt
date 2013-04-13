@@ -17,7 +17,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #uncomment if you have defined messages
-#rosbuild_genmsg()
+rosbuild_genmsg()
 #uncomment if you have defined services
 #rosbuild_gensrv()
 
@@ -29,5 +29,6 @@ include_directories(../../../m3core/src/ ../../../m3rw/src/ /usr/realtime/includ
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 rosbuild_add_executable(shm_omnibase_controller src/shm_omnibase_controller.cpp)
+rosbuild_add_executable(shm_truss_vels src/shm_truss_vels.cpp)
 rosbuild_add_executable(drive_base src/drive_base.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
