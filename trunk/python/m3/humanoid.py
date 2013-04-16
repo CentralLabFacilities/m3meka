@@ -2704,6 +2704,13 @@ class M3Humanoid(M3Robot):
 	    v = [mab.JOINT_ARRAY_MODE_THETA_MJ] * len(ind)
 	self.set_mode(chain, v, ind)
 	
+    def set_mode_pose(self, chain, ind=None):	
+	if ind is None:
+	    v = [mab.JOINT_ARRAY_MODE_POSE] * self.get_num_dof(chain)
+	else:
+	    v = [mab.JOINT_ARRAY_MODE_POSE] * len(ind)
+	self.set_mode(chain, v, ind)	
+	
     def set_mode_theta_gc_mj(self, chain, ind=None):
 	"""
 	Sets joint controller mode for selected chain to joint angle control with gravity compensation and

@@ -45,10 +45,10 @@ public:
     std::cout << "Press any key to move to zero position.\n";
     std::cin.getline(cmd, 50);
     
-    humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, RIGHT_HAND, LEFT_ARM, or LEFT_HAND
-    //humanoid_cmd.chain[0] = (unsigned char)HEAD; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
+    //humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, RIGHT_HAND, LEFT_ARM, or LEFT_HAND
+    humanoid_cmd.chain[0] = (unsigned char)HEAD; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
     humanoid_cmd.chain_idx[0] = 0; //J0
-    humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC; //Compliant position mode
+    humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA; //Compliant position mode
     //humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA; //Use for HEAD
     humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_SLEW; //Smooth trajectory
     //humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_MIN_JERK; //Use for HEAD
@@ -81,12 +81,12 @@ public:
       //move forward
       if(cmd[0]=='+'){
         //humanoid_cmd.position[0] += 5.0 * 3.14/180.;
-	humanoid_cmd.position[0] += 10 * 3.14/180.;
+	humanoid_cmd.position[0] += 2 * 3.14/180.;
       } 
       //turn left (yaw) and drive forward at the same time
       else if(cmd[0]=='-'){
         //humanoid_cmd.position[0] -= 5 * 3.14/180.;
-	humanoid_cmd.position[0] -= 10 * 3.14/180.;
+	humanoid_cmd.position[0] -= 2 * 3.14/180.;
       } 
       //turn right (yaw) and drive forward at the same time
       else if(cmd[0]=='z'){

@@ -205,6 +205,9 @@ void M3JointArray::StepCommand()
 				case JOINT_ARRAY_MODE_THETA_GC_MJ:
 					joints[i]->SetDesiredControlMode(JOINT_MODE_THETA_GC_MJ);
 					break;
+				case JOINT_ARRAY_MODE_POSE:
+					joints[i]->SetDesiredControlMode(JOINT_MODE_POSE);
+					break;					
 				case JOINT_ARRAY_MODE_SPLINED_TRAJ_GC:
 				{
 					joints[i]->SetDesiredControlMode(JOINT_MODE_THETA_GC);	

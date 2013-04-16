@@ -101,6 +101,12 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	bot->SetStiffness(RIGHT_ARM, i, command_from_sds.right_arm.q_stiffness[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_right_arm()->set_ctrl_mode(i, command_from_sds.right_arm.ctrl_mode[i]);
 	((M3HumanoidCommand*)bot->GetCommand())->mutable_right_arm()->set_smoothing_mode(i, command_from_sds.right_arm.smoothing_mode[i]);
+	/*if (i == 0)
+	{if (tmp_cnt++ == 1000)
+	{
+	  M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
+	  tmp_cnt = 0;
+	}}*/
 	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
       }
     }

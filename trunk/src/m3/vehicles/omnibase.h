@@ -44,7 +44,8 @@ class M3Omnibase : public M3Vehicle
 {
 	public:
 		M3Omnibase():M3Vehicle(),motor_array(NULL),pcv(NULL),tmp_cnt(0),
-		  old_ctrl_mode(OMNIBASE_CTRL_OFF),old_traj_mode(OMNIBASE_TRAJ_OFF),cnt(0),pwr(0)
+		  old_ctrl_mode(OMNIBASE_CTRL_OFF),old_traj_mode(OMNIBASE_TRAJ_OFF),cnt(0),pwr(0),
+		  truss_vel_thresh(0),use_truss_vel_thresh(false)
 		{
 			RegisterVersion("default",DEFAULT);	//RBL
 			RegisterVersion("iss",ISS);		//ISS. Safe as DEFAULT
@@ -100,22 +101,14 @@ class M3Omnibase : public M3Vehicle
 		double max_vel_err[3];
 		double max_cdxx[3];
 		double min_cdxx[3];
-		bool first_flip_out[4];
-		mReal flip_out_detect_mult;
-		mReal flip_out_detect_min;
-		bool flip_out_detect_enable;
-		int flip_out_detect_timeout[4];
-		int flip_out_detect_timeout_cnt;
-		int flip_out_detect_time[4];
-		int flip_out_detect_time_cnt;
-		bool flip_out_detect_disable_0;
-		bool flip_out_detect_disable_1;
-		bool flip_out_detect_disable_2;
-		bool flip_out_detect_disable_3;
+		
+		bool use_truss_vel_thresh;
 		int cnt;
 		int tmp_cnt;
 		M3Pwr * pwr;
 		string pwr_name;
+		mReal truss_vel_products[4];
+		mReal truss_vel_thresh;
 		//M3JointFilter angle_df;
 };
 

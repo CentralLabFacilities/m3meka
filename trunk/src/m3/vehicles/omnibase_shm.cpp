@@ -130,33 +130,8 @@ void M3OmnibaseShm::SetSdsFromStatus(unsigned char * data)
   
   status_to_sds.calibrated = calibrated;
   
-  /*if (bot)
-  {
-    for (int i = 0; i < bot->GetNdof(RIGHT_ARM); i++)
-    {          
-      status_to_sds.right_arm.theta[i] = bot->GetThetaDeg(RIGHT_ARM,i);
-      status_to_sds.right_arm.thetadot[i] = bot->GetThetaDotDeg(RIGHT_ARM,i);
-      status_to_sds.right_arm.torque[i] = bot->GetTorque_mNm(RIGHT_ARM,i);      
-    }
-  }
-    
-  if (right_hand)
-  { 
-      for (int i = 0; i < right_hand->GetNumDof(); i++)
-      {	
-	status_to_sds.right_hand.theta[i] = right_hand->GetThetaDeg(i);
-	status_to_sds.right_hand.thetadot[i] = right_hand->GetThetaDotDeg(i);
-	status_to_sds.right_hand.torque[i] = right_hand->GetTorque(i);
-      }
-  }
-  
-  if (right_loadx6)
-  {
-    for (int i = 0; i < 6; i++)
-    {      
-      status_to_sds.right_loadx6.wrench[i] = right_loadx6->GetWrench(i);
-    }
-  }*/
+  for (int i = 0; i < 6; i++)
+    status_to_sds.truss_vels[i] = ((M3OmnibaseStatus*)omnibase->GetStatus())->truss_vel(i);
   
   M3OmnibaseShmSdsStatus * sds = (M3OmnibaseShmSdsStatus *) data;
   request_status();  

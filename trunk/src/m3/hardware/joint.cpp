@@ -83,8 +83,15 @@ bool M3Joint::ReadConfig(const char * filename)
 	param.set_min_q_pad(val);
 	doc["param"]["max_q_slew_rate"] >> val;
 	param.set_max_q_slew_rate(val);
-	doc["param"]["kq_d_pose"] >> val;
-	param.set_kq_d_pose(val);
+	
+	try 
+	{
+	    doc["param"]["kq_d_pose"] >> val;
+	    param.set_kq_d_pose(val);
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		param.set_kq_d_pose(param.kq_d());
+	} 	
 	
 	string t;
 	try 

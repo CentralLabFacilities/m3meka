@@ -72,6 +72,7 @@ message M3OmnibaseStatus
 	repeated double			motor_current=23;
 	repeated double			roll_torque_internal=24;	
 	repeated double			steer_torque_internal=25;
+	repeated double			truss_vel=26;
 }
 
 message M3OmnibaseParam
