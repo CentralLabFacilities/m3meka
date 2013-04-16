@@ -30,5 +30,7 @@ include_directories(../m3ctrl_msgs/msg_gen/cpp/include/ ../../../m3core/src/ /us
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 rosbuild_add_executable(shm_humanoid_controller src/shm_humanoid_controller.cpp)
 rosbuild_add_executable(move_humanoid src/move_humanoid.cpp)
+rosbuild_add_executable(pose_right_arm src/pose_right_arm.cpp)
+rosbuild_add_executable(gravity_right_arm src/gravity_right_arm.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 target_link_libraries(shm_humanoid_controller yaml-cpp)

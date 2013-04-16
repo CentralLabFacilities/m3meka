@@ -192,6 +192,19 @@ doxygen/fast:
 .PHONY : doxygen/fast
 
 #=============================================================================
+# Target rules for targets named gravity_right_arm
+
+# Build rule for target.
+gravity_right_arm: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gravity_right_arm
+.PHONY : gravity_right_arm
+
+# fast build rule for target.
+gravity_right_arm/fast:
+	$(MAKE) -f CMakeFiles/gravity_right_arm.dir/build.make CMakeFiles/gravity_right_arm.dir/build
+.PHONY : gravity_right_arm/fast
+
+#=============================================================================
 # Target rules for targets named move_humanoid
 
 # Build rule for target.
@@ -203,6 +216,19 @@ move_humanoid: cmake_check_build_system
 move_humanoid/fast:
 	$(MAKE) -f CMakeFiles/move_humanoid.dir/build.make CMakeFiles/move_humanoid.dir/build
 .PHONY : move_humanoid/fast
+
+#=============================================================================
+# Target rules for targets named pose_right_arm
+
+# Build rule for target.
+pose_right_arm: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 pose_right_arm
+.PHONY : pose_right_arm
+
+# fast build rule for target.
+pose_right_arm/fast:
+	$(MAKE) -f CMakeFiles/pose_right_arm.dir/build.make CMakeFiles/pose_right_arm.dir/build
+.PHONY : pose_right_arm/fast
 
 #=============================================================================
 # Target rules for targets named rosbuild_clean-test-results
@@ -399,6 +425,30 @@ gtest_main/fast:
 	$(MAKE) -f gtest/CMakeFiles/gtest_main.dir/build.make gtest/CMakeFiles/gtest_main.dir/build
 .PHONY : gtest_main/fast
 
+src/gravity_right_arm.o: src/gravity_right_arm.cpp.o
+.PHONY : src/gravity_right_arm.o
+
+# target to build an object file
+src/gravity_right_arm.cpp.o:
+	$(MAKE) -f CMakeFiles/gravity_right_arm.dir/build.make CMakeFiles/gravity_right_arm.dir/src/gravity_right_arm.cpp.o
+.PHONY : src/gravity_right_arm.cpp.o
+
+src/gravity_right_arm.i: src/gravity_right_arm.cpp.i
+.PHONY : src/gravity_right_arm.i
+
+# target to preprocess a source file
+src/gravity_right_arm.cpp.i:
+	$(MAKE) -f CMakeFiles/gravity_right_arm.dir/build.make CMakeFiles/gravity_right_arm.dir/src/gravity_right_arm.cpp.i
+.PHONY : src/gravity_right_arm.cpp.i
+
+src/gravity_right_arm.s: src/gravity_right_arm.cpp.s
+.PHONY : src/gravity_right_arm.s
+
+# target to generate assembly for a file
+src/gravity_right_arm.cpp.s:
+	$(MAKE) -f CMakeFiles/gravity_right_arm.dir/build.make CMakeFiles/gravity_right_arm.dir/src/gravity_right_arm.cpp.s
+.PHONY : src/gravity_right_arm.cpp.s
+
 src/move_humanoid.o: src/move_humanoid.cpp.o
 .PHONY : src/move_humanoid.o
 
@@ -422,6 +472,30 @@ src/move_humanoid.s: src/move_humanoid.cpp.s
 src/move_humanoid.cpp.s:
 	$(MAKE) -f CMakeFiles/move_humanoid.dir/build.make CMakeFiles/move_humanoid.dir/src/move_humanoid.cpp.s
 .PHONY : src/move_humanoid.cpp.s
+
+src/pose_right_arm.o: src/pose_right_arm.cpp.o
+.PHONY : src/pose_right_arm.o
+
+# target to build an object file
+src/pose_right_arm.cpp.o:
+	$(MAKE) -f CMakeFiles/pose_right_arm.dir/build.make CMakeFiles/pose_right_arm.dir/src/pose_right_arm.cpp.o
+.PHONY : src/pose_right_arm.cpp.o
+
+src/pose_right_arm.i: src/pose_right_arm.cpp.i
+.PHONY : src/pose_right_arm.i
+
+# target to preprocess a source file
+src/pose_right_arm.cpp.i:
+	$(MAKE) -f CMakeFiles/pose_right_arm.dir/build.make CMakeFiles/pose_right_arm.dir/src/pose_right_arm.cpp.i
+.PHONY : src/pose_right_arm.cpp.i
+
+src/pose_right_arm.s: src/pose_right_arm.cpp.s
+.PHONY : src/pose_right_arm.s
+
+# target to generate assembly for a file
+src/pose_right_arm.cpp.s:
+	$(MAKE) -f CMakeFiles/pose_right_arm.dir/build.make CMakeFiles/pose_right_arm.dir/src/pose_right_arm.cpp.s
+.PHONY : src/pose_right_arm.cpp.s
 
 src/shm_humanoid_controller.o: src/shm_humanoid_controller.cpp.o
 .PHONY : src/shm_humanoid_controller.o
@@ -458,11 +532,13 @@ help:
 	@echo "... clean_test_results"
 	@echo "... doxygen"
 	@echo "... edit_cache"
+	@echo "... gravity_right_arm"
 	@echo "... install"
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... move_humanoid"
+	@echo "... pose_right_arm"
 	@echo "... rebuild_cache"
 	@echo "... rosbuild_clean-test-results"
 	@echo "... rosbuild_precompile"
@@ -479,9 +555,15 @@ help:
 	@echo "... tests"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... src/gravity_right_arm.o"
+	@echo "... src/gravity_right_arm.i"
+	@echo "... src/gravity_right_arm.s"
 	@echo "... src/move_humanoid.o"
 	@echo "... src/move_humanoid.i"
 	@echo "... src/move_humanoid.s"
+	@echo "... src/pose_right_arm.o"
+	@echo "... src/pose_right_arm.i"
+	@echo "... src/pose_right_arm.s"
 	@echo "... src/shm_humanoid_controller.o"
 	@echo "... src/shm_humanoid_controller.i"
 	@echo "... src/shm_humanoid_controller.s"

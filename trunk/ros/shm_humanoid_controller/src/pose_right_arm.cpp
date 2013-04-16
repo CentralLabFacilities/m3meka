@@ -7,6 +7,8 @@
 #include "m3/robots/chain_name.h"
 #include "m3/hardware/smoothing_mode.pb.h"
 
+#define NDOF_ARM 7
+
 class HumanoidDriver
 {
 private:
@@ -30,39 +32,47 @@ public:
     char cmd[50];
      m3ctrl_msgs::M3JointCmd humanoid_cmd;
      
-    humanoid_cmd.chain.resize(1);
-    humanoid_cmd.stiffness.resize(1);
-    humanoid_cmd.position.resize(1);
-    humanoid_cmd.velocity.resize(1);
-    humanoid_cmd.control_mode.resize(1);
-    humanoid_cmd.smoothing_mode.resize(1);
-    humanoid_cmd.chain_idx.resize(1);
+    humanoid_cmd.chain.resize(NDOF_ARM);
+    humanoid_cmd.stiffness.resize(NDOF_ARM);
+    humanoid_cmd.position.resize(NDOF_ARM);
+    humanoid_cmd.velocity.resize(NDOF_ARM);
+    humanoid_cmd.effort.resize(NDOF_ARM);
+    humanoid_cmd.control_mode.resize(NDOF_ARM);
+    humanoid_cmd.smoothing_mode.resize(NDOF_ARM);
+    humanoid_cmd.chain_idx.resize(NDOF_ARM);
      
     //  center robot first
     
-    std::cout << "Example: commanding right arm J0.\n";
-    std::cout << "Press any key to move to zero position.\n";
+    std::cout << "Posing right arm demo.\n";
+    std::cout << "Commanding right arm in mode JOINT_MODE_ROS_POSE.\n";
+    std::cout << "Press any key to move to start with 0.5 stiffness.\n";
     std::cin.getline(cmd, 50);
     
-    humanoid_cmd.chain[0] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, or RIGHT_HAND
-    humanoid_cmd.chain_idx[0] = 0; //J0
-    humanoid_cmd.control_mode[0] = (unsigned char)JOINT_MODE_ROS_THETA_GC; //Compliant position mode
-    humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_SLEW; //Smooth trajectory
-    //humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_MIN_JERK; //Smooth trajectory
-    humanoid_cmd.velocity[0] = 1.0; //Rad/s
-    humanoid_cmd.stiffness[0] = 1.0; //0-1.0
-    humanoid_cmd.position[0] = 0; //Desired position (Rad)
+    
     humanoid_cmd.header.stamp = ros::Time::now();
     humanoid_cmd.header.frame_id = "humanoid_cmd";
     
-    //printf("stiff: %d\n",humanoid_cmd.stiffness[0]);
+    double stiffness = 0.5;
+    
+    for (int i = 0; i < NDOF_ARM; i++)
+    {
+      humanoid_cmd.chain[i] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, RIGHT_HAND, LEFT_ARM, or LEFT_HAND    
+      humanoid_cmd.chain_idx[i] = i;
+      humanoid_cmd.control_mode[i] = (unsigned char)JOINT_MODE_ROS_POSE; //Compliant position mode      
+      humanoid_cmd.smoothing_mode[i] = (unsigned char)SMOOTHING_MODE_SLEW; //Smooth trajectory
+      //humanoid_cmd.smoothing_mode[0] = (unsigned char)SMOOTHING_MODE_MIN_JERK; //Use for HEAD
+      humanoid_cmd.velocity[i] = 1.0; //Rad/s
+      humanoid_cmd.stiffness[i] = stiffness; //0-1.0
+      humanoid_cmd.effort[i] = 0.0;
+      humanoid_cmd.position[i] = 0.0; //Desired position (Rad)      
+    }
     
     cmd_pub_.publish(humanoid_cmd);
   
     
     
     std::cout << "Type a command and then press enter.  "
-      "Use 'z' to go to middle, '+' to move up, '-' to move down, "
+      "Use '+' to increase stiffness by 0.05, '-' to decrease stiffness by -0.05, or"
       "'.' to exit.\n";
 
     while(nh_.ok()){
@@ -74,23 +84,24 @@ public:
         continue;
       }
       
+      double stiffness_delta = 0.05;
+      
       //move forward
-      if(cmd[0]=='+'){
-        //humanoid_cmd.position[0] += 5.0 * 3.14/180.;
-	humanoid_cmd.position[0] += 10 * 3.14/180.;
+      if(cmd[0]=='+'){        
+	stiffness += stiffness_delta;
       } 
       //turn left (yaw) and drive forward at the same time
-      else if(cmd[0]=='-'){
-        //humanoid_cmd.position[0] -= 5 * 3.14/180.;
-	humanoid_cmd.position[0] -= 10 * 3.14/180.;
-      } 
-      //turn right (yaw) and drive forward at the same time
-      else if(cmd[0]=='z'){
-        humanoid_cmd.position[0] = 0 * 3.14/180.;
-      } 
+      else if(cmd[0]=='-'){        
+	stiffness -= stiffness_delta;
+      }       
       //quit
       else if(cmd[0]=='.'){
         break;
+      }
+      
+      for (int i = 0; i < NDOF_ARM; i++)
+      {      
+	  humanoid_cmd.stiffness[i] = stiffness; //0-1.0      
       }
             
       humanoid_cmd.header.stamp = ros::Time::now();
