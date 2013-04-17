@@ -41,19 +41,23 @@ public:
     humanoid_cmd.smoothing_mode.resize(NDOF_ARM);
     humanoid_cmd.chain_idx.resize(NDOF_ARM);
      
-    //  center robot first
+    
+    
+    double stiffness = 1.0;
+    
     
     std::cout << "Posing right arm demo.\n";
     std::cout << "Commanding right arm in mode JOINT_MODE_ROS_POSE.\n";
-    std::cout << "Press any key to move to start with 0.5 stiffness.\n";
+    std::cout << "Press any key to move to start.\n";
+    std::cout << "Stiffness now:" << stiffness << "\n\n";
+    
     std::cin.getline(cmd, 50);
     
     
     humanoid_cmd.header.stamp = ros::Time::now();
     humanoid_cmd.header.frame_id = "humanoid_cmd";
     
-    double stiffness = 0.5;
-    
+  
     for (int i = 0; i < NDOF_ARM; i++)
     {
       humanoid_cmd.chain[i] = (unsigned char)RIGHT_ARM; // chain name: RIGHT_ARM, HEAD, RIGHT_HAND, LEFT_ARM, or LEFT_HAND    
@@ -93,11 +97,18 @@ public:
       //turn left (yaw) and drive forward at the same time
       else if(cmd[0]=='-'){        
 	stiffness -= stiffness_delta;
-      }       
+      }                         
       //quit
       else if(cmd[0]=='.'){
         break;
       }
+      
+      if (stiffness > 1.0)
+	stiffness = 1.0;
+      if (stiffness < 0)
+	stiffness = 0.0;
+      
+      std::cout << "Stiffness now:" << stiffness << "\n\n";
       
       for (int i = 0; i < NDOF_ARM; i++)
       {      

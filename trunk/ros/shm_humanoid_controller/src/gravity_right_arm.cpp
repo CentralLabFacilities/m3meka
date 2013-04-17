@@ -44,8 +44,12 @@ public:
     //  center robot first
     
     std::cout << "Gravity Compenstation Demo.\n";
-    std::cout << "Commanding right arm in mode JOINT_MODE_ROS_POSE.\n";
-    std::cout << "Press any key to move to start with 0.5 stiffness.\n";
+    std::cout << "Commanding right arm in mode JOINT_MODE_THETA_GC.\n";
+    std::cout << "Stiffness is 0.0.\n";    
+    
+    
+    std::cout << "\nPress any key to Start.\n";
+    
     std::cin.getline(cmd, 50);
     
     
@@ -71,7 +75,7 @@ public:
     cmd_pub_.publish(humanoid_cmd);
       
     
-    std::cout << "Press any key to exit.\n";
+    std::cout << "\nPress any key to exit.\n";
     
       std::cin.getline(cmd, 50);
       

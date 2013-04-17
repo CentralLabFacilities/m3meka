@@ -245,7 +245,7 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
       cmd.head.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
       cmd.head.q_stiffness[chain_idx] = msg->stiffness[i];       
       cmd.head.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
-      printf("here!\n");
+      //printf("here!\n");
     }
     else if ((M3Chain)msg->chain[i] == TORSO)
     {

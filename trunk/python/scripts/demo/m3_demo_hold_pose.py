@@ -43,10 +43,15 @@ bot.set_motor_power_on()
 chains=bot.get_available_chains()
 print 'Select chain'
 chains=m3t.user_select_components_interactive(chains,single=True)
+
+stiffness=0.5
+print 'Enter stiffness (0-1.0) [',stiffness,']'
+stiffness=max(0,min(1.0,m3t.get_float(stiffness)))
+
 for c in chains:
 	ndof=bot.get_num_dof(c)
 	bot.set_mode_pose(c)	
-	bot.set_stiffness(c,[1.0]*ndof)	
+	bot.set_stiffness(c,[stiffness]*ndof)	
 	bot.set_slew_rate_proportion(c,[1.0]*ndof)
 try:
 	while True:
