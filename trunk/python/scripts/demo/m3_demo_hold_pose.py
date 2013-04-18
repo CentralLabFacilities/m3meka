@@ -40,6 +40,11 @@ proxy.subscribe_status(bot)
 proxy.publish_command(bot)
 proxy.make_operational_all()
 bot.set_motor_power_on()
+
+humanoid_shm_names=proxy.get_available_components('m3humanoid_shm')
+if len(humanoid_shm_names) > 0:
+  proxy.make_safe_operational(humanoid_shm_names[0])
+
 chains=bot.get_available_chains()
 print 'Select chain'
 chains=m3t.user_select_components_interactive(chains,single=True)
