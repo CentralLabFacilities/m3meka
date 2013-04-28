@@ -1,0 +1,14 @@
+<package>
+  <description brief="meka_ik">
+
+     meka_ik
+
+  </description>
+  <author>meka</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/meka_ik</url>
+
+</package>
+
+
