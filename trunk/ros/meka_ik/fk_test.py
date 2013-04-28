@@ -30,13 +30,13 @@ from PyKDL import *
 from m3.ik_axis import M3IKAxis
 import numpy as nu
 
-def ik_test_client():
-    rospy.wait_for_service('meka_ik')
-    try:
-	tmp = MekaIK()
-        ik = rospy.ServiceProxy('meka_ik', MekaIK)
-        resp1 = ik('right_arm',[0]*3,[0]*3,[0]*7)
-        print resp1.success, resp1.angles_solution
+def fk_client():
+    rospy.wait_for_service('meka_fk')
+    try:	
+        meka_fk = rospy.ServiceProxy('meka_fk', MekaFK)
+        resp1 = meka_fk('right_arm',[0.0]*7)
+        print 'end_pos:', resp1.end_position
+        print 'end rpy:', resp1.end_rpy
         #return resp1.sum
     except rospy.ServiceException, e:
         print "Service call failed: %s"%e
@@ -44,4 +44,4 @@ def ik_test_client():
 
 
 if __name__ == "__main__":
-    ik_test_client()
+    fk_client()

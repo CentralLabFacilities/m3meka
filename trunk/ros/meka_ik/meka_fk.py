@@ -32,59 +32,22 @@ import numpy as nu
 import m3.humanoid
 import m3.toolbox as m3t
 
-#global bot
 
-def joint_update(joint_states):
-    for i in range(len(joints)):
-      for j in range(len(joint_states.name)):
-	if joints[i] == joint_states.name[j]:
-	  positions[i] = joint_states.position[j]
-	  velocities[i] = joint_states.velocity[j]
-	  effort[i] = joint_states.effort[j]
+def meka_fk_srv(req):    
+    bot.set_theta_sim_rad(req.arm_name, nu.array(req.joint_angles))
+    end_pos = bot.get_tool_position_sim(req.arm_name)
+    end_rpy = bot.get_tool_roll_pitch_yaw_rad_sim(req.arm_name)
+    
+    return MekaFKResponse( end_pos, end_rpy)
 
-'''rospy.init_node("meka_ik")
-pub = rospy.Publisher("/humanoid_command", JointState)
-
-rospy.Subscriber("/humanoid_state", JointState, joint_update)
-'''
-joints = []
-positions = []
-
-
-joints.append('right_arm_j0')
-positions.append(0.0)
-joints.append('right_arm_j1')
-positions.append(0.0)
-joints.append('right_arm_j2')
-positions.append(0.0)
-joints.append('right_arm_j3')
-positions.append(0.0)
-joints.append('right_arm_j4')
-positions.append(0.0)
-joints.append('right_arm_j5')
-positions.append(0.0)
-joints.append('right_arm_j6')
-positions.append(0.0)
-
-
-def meka_ik_srv(req):    
-    qdes=[]
-    #success = self.bot.get_tool_position_rpy_2_theta_deg(arm_name, self.target_pos[:], self.target_rpy[:], qdes)
-    bot.set_theta_sim_rad(req.arm_name, nu.array(req.angles_current))
-    success = bot.get_tool_position_rpy_2_theta_rad_sim(req.arm_name, req.end_position[:], req.end_rpy[:], qdes)
-
-    if not success:
-      qdes = [0.0]*7
-    return MekaIKResponse(success, qdes[:])
-
-def meka_ik_server():
-    rospy.init_node('meka_ik_node')    
+def meka_fk_server():
+    rospy.init_node('meka_fk_node')    
     bot_name=m3t.get_robot_name()    
     global bot
     bot = m3.humanoid.M3Humanoid(bot_name)    
-    s = rospy.Service('meka_ik', MekaIK, meka_ik_srv)
-    print "Ready to service IK request."
+    s = rospy.Service('meka_fk', MekaFK, meka_fk_srv)
+    print "Ready to service FK request."
     rospy.spin()
 
 if __name__ == "__main__":
-    meka_ik_server()
+    meka_fk_server()
