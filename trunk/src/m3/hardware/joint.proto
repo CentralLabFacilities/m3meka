@@ -32,6 +32,7 @@ enum JOINT_MODE{
 	JOINT_MODE_THETA_MJ = 6;	//Minimum Jerk joint angle control
 	JOINT_MODE_THETA_GC_MJ = 7;	//Minimum Jerk gravity compensated joint angle control
 	JOINT_MODE_POSE = 8;	//Gravity comp with only D term on 
+	JOINT_MODE_TORQUE_GRAV_MODEL = 9; //Tracks torque from GC model instead of actual torque
 }
 
 message M3JointStatus{
@@ -71,6 +72,11 @@ message M3JointParam{
 	optional double		max_q_pad=15 ;					//Safety thresh padding (Deg)
 	optional double		min_q_pad = 16 ;				//Safety thresh padding (Deg)
 	optional double		kq_d_pose = 17;					//D gain, gc joint angle  control
+	optional double		kq_p_tq_gm = 18;
+	optional double		kq_i_tq_gm = 19;
+	optional double		kq_d_tq_gm = 20;
+	optional double		kq_i_limit_tq_gm = 21;
+	optional double		kq_i_range_tq_gm = 22;
 }
 		
 message M3JointCommand{

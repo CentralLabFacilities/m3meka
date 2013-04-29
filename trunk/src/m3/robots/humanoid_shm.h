@@ -35,7 +35,7 @@ using namespace m3rt;
 class M3HumanoidShm : public  m3::M3CompShm{
 	public:
 		M3HumanoidShm(): sds_status_size(0),sds_cmd_size(0),M3CompShm(),bot(NULL),
-		right_hand(NULL),right_loadx6(NULL),tmp_cnt(0),left_hand(NULL),left_loadx6(NULL),pwr(NULL)
+		right_hand(NULL),right_loadx6(NULL),tmp_cnt(0),left_hand(NULL),left_loadx6(NULL),pwr(NULL),left_gripper(NULL)
 		{		  
 		  RegisterVersion("default",DEFAULT);		  
 		}
@@ -52,7 +52,6 @@ class M3HumanoidShm : public  m3::M3CompShm{
 		void ResetCommandSds(unsigned char * sds);
 		void Startup();		
 		
-		
 		enum {DEFAULT};
 		M3BaseStatus * GetBaseStatus();		
 		M3HumanoidShmCommand command;
@@ -63,15 +62,20 @@ class M3HumanoidShm : public  m3::M3CompShm{
 		M3Hand * right_hand;
 		M3LoadX6 * left_loadx6;
 		M3Hand * left_hand;
+		M3Joint * left_gripper;		
 		M3Pwr * pwr;
 		M3HumanoidShmSdsCommand command_from_sds;
 		M3HumanoidShmSdsStatus status_to_sds;
 		int sds_status_size;
 		int sds_cmd_size;	
-		string bot_name, right_hand_name, right_loadx6_name, left_hand_name, left_loadx6_name, pwr_name;
+		string bot_name, right_hand_name, right_loadx6_name, left_hand_name, left_loadx6_name, pwr_name, left_gripper_name;
 		int64_t timeout;
 		int tmp_cnt;		
 		bool startup_motor_pwr_on;
+		mReal right_arm_extra_payload_mass_initial;
+		mReal right_arm_extra_payload_com_initial[3];
+		mReal left_arm_extra_payload_mass_initial;
+		mReal left_arm_extra_payload_com_initial[3];
 };
 
 }

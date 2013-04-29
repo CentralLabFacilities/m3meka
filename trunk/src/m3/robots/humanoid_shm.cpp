@@ -42,6 +42,15 @@ void  M3HumanoidShm::Startup()
   
   memset(&status_to_sds, 0, sds_status_size);
   
+  right_arm_extra_payload_mass_initial = bot->GetPayloadMass(RIGHT_ARM);
+  left_arm_extra_payload_mass_initial = bot->GetPayloadMass(LEFT_ARM);
+  
+  for (int i = 0; i < 3; i++)
+  {
+    right_arm_extra_payload_com_initial[i] = bot->GetPayloadInertia(RIGHT_ARM,i);
+    left_arm_extra_payload_com_initial[i] = bot->GetPayloadInertia(LEFT_ARM,i);
+  }
+  
 }
 
 void M3HumanoidShm::ResetCommandSds(unsigned char * sds)
@@ -111,6 +120,22 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
       }
     }
     
+    // calc new COM for adjusted payload
+    
+    mReal com_new[3];
+    mReal m_total = command_from_sds.right_arm.extra_payload_mass + right_arm_extra_payload_mass_initial;
+    com_new[0] = (command_from_sds.right_arm.extra_payload_com[0]*command_from_sds.right_arm.extra_payload_mass +
+		  right_arm_extra_payload_com_initial[0]*right_arm_extra_payload_mass_initial)/m_total;
+    com_new[1] = (command_from_sds.right_arm.extra_payload_com[1]*command_from_sds.right_arm.extra_payload_mass +
+		  right_arm_extra_payload_com_initial[1]*right_arm_extra_payload_mass_initial)/m_total;
+    com_new[2] = (command_from_sds.right_arm.extra_payload_com[2]*command_from_sds.right_arm.extra_payload_mass +
+		  right_arm_extra_payload_com_initial[2]*right_arm_extra_payload_mass_initial)/m_total;
+    
+    bot->SetPayloadMass(RIGHT_ARM, m_total);
+    
+    for (int i = 0; i < 3; i++)
+      bot->SetPayloadCom(RIGHT_ARM, i, com_new[i]);
+    
     for (int i = 0; i < bot->GetNdof(TORSO); i++)
     {       
       if (shm_timeout)
@@ -144,6 +169,19 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	//M3_DEBUG("mode %d : %d\n",i, (int)command_from_sds.right_arm.ctrl_mode[i]);
       }
     }
+    
+    m_total = command_from_sds.left_arm.extra_payload_mass + left_arm_extra_payload_mass_initial;
+    com_new[0] = (command_from_sds.left_arm.extra_payload_com[0]*command_from_sds.left_arm.extra_payload_mass +
+		  left_arm_extra_payload_com_initial[0]*left_arm_extra_payload_mass_initial)/m_total;
+    com_new[1] = (command_from_sds.left_arm.extra_payload_com[1]*command_from_sds.left_arm.extra_payload_mass +
+		  left_arm_extra_payload_com_initial[1]*left_arm_extra_payload_mass_initial)/m_total;
+    com_new[2] = (command_from_sds.left_arm.extra_payload_com[2]*command_from_sds.left_arm.extra_payload_mass +
+		  left_arm_extra_payload_com_initial[2]*left_arm_extra_payload_mass_initial)/m_total;
+    
+    bot->SetPayloadMass(LEFT_ARM, m_total);
+    
+    for (int i = 0; i < 3; i++)
+      bot->SetPayloadCom(LEFT_ARM, i, com_new[i]);
     
     for (int i = 0; i < bot->GetNdof(HEAD); i++)
     {       
@@ -209,6 +247,21 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
       }	      
   }
   
+  if (left_gripper)
+  {     
+	if (shm_timeout)
+	{	
+	  left_gripper->SetDesiredControlMode(JOINT_MODE_OFF);
+	} else{
+	  left_gripper->SetDesiredThetaRad(command_from_sds.left_gripper.q_desired[0]);
+	  left_gripper->SetDesiredStiffness(command_from_sds.left_gripper.q_stiffness[0]);
+	  left_gripper->SetDesiredControlMode((JOINT_MODE)command_from_sds.left_gripper.ctrl_mode[0]);
+	  left_gripper->SetDesiredSmoothingMode((SMOOTHING_MODE)command_from_sds.left_gripper.smoothing_mode[0]);
+	  left_gripper->SetDesiredTorque((SMOOTHING_MODE)command_from_sds.left_gripper.tq_desired[0]);
+	  left_gripper->SetDesiredThetaDotRad(command_from_sds.left_gripper.slew_rate_q_desired[0]);
+	}    
+  }
+  
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -267,6 +320,14 @@ void M3HumanoidShm::SetSdsFromStatus(unsigned char * data)
 	status_to_sds.left_hand.torque[i] = left_hand->GetTorque(i);
       }
   }
+  
+  if (left_gripper)
+  {       
+	status_to_sds.left_hand.theta[0] = left_gripper->GetThetaDeg();
+	status_to_sds.left_hand.thetadot[0] = left_gripper->GetThetaDotDeg();
+	status_to_sds.left_hand.torque[0] = left_gripper->GetTorque();    
+  }
+
   
   if (right_loadx6)
   {
@@ -349,6 +410,17 @@ bool M3HumanoidShm::LinkDependentComponents()
 		}				
 	}
 	
+	if (left_gripper_name.size()!=0)
+	{
+		left_gripper=(M3Joint*)factory->GetComponent(left_gripper_name);//May be null if not on this robot model
+		if (left_gripper==NULL)
+		{
+			M3_WARN("M3Gripper component %s declared for M3BotShm but could not be linked\n",
+					left_gripper_name.c_str());
+		}				
+	}
+
+	
 	if (left_loadx6_name.size()!=0)
 	{
 		left_loadx6=(M3LoadX6*)factory->GetComponent(left_loadx6_name);
@@ -407,6 +479,14 @@ bool M3HumanoidShm::ReadConfig(const char * filename)
 	catch(YAML::KeyNotFound& e)
 	{
 	  left_hand_name="";
+	}
+
+	try{
+	  doc["left_gripper_component"] >> left_gripper_name;	
+	}
+	catch(YAML::KeyNotFound& e)
+	{
+	  left_gripper_name="";
 	}
 	
 	try{

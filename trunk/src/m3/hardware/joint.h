@@ -116,6 +116,7 @@ class M3Joint: public m3rt::M3Component
 		bool ReadConfig(const char * filename);
 		M3BaseStatus * GetBaseStatus(){return status.mutable_base();}
 		M3MinJerkTrajectory jerk_joint;
+		M3PID pid_tq_grav_model;		
 		M3PID pid_theta;
 		M3PID pid_theta_gc;
 		M3TimeSlew q_slew;

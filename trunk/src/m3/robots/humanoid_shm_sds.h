@@ -36,6 +36,8 @@ typedef struct
   mReal			q_desired[MAX_NDOF];
   mReal			slew_rate_q_desired[MAX_NDOF];
   mReal			q_stiffness[MAX_NDOF];
+  mReal			extra_payload_com[3];
+  mReal			extra_payload_mass;
 }M3JntArrayShmSdsCommand;
 
 
@@ -59,9 +61,11 @@ typedef struct
   M3JntArrayShmSdsStatus torso;    
   M3JntArrayShmSdsStatus right_arm;    
   M3JntArrayShmSdsStatus right_hand;
+  M3JntArrayShmSdsStatus right_gripper;
   M3LoadX6ShmSdsStatus right_loadx6;
   M3JntArrayShmSdsStatus left_arm;    
   M3JntArrayShmSdsStatus left_hand;
+  M3JntArrayShmSdsStatus left_gripper;  
   M3LoadX6ShmSdsStatus left_loadx6;
 }M3HumanoidShmSdsStatus;
 
@@ -72,8 +76,10 @@ typedef struct
   M3JntArrayShmSdsCommand torso;    
   M3JntArrayShmSdsCommand right_arm;    
   M3JntArrayShmSdsCommand right_hand;
+  M3JntArrayShmSdsCommand right_gripper;  
   M3JntArrayShmSdsCommand left_arm;    
-  M3JntArrayShmSdsCommand left_hand;  
+  M3JntArrayShmSdsCommand left_hand;
+  M3JntArrayShmSdsCommand left_gripper;    
 }M3HumanoidShmSdsCommand;
 
 #endif

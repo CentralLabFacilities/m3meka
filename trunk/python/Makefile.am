@@ -90,7 +90,8 @@ pkgpython_PYTHON = \
 	m3/nanokontrol.py\
 	m3/smoothing_mode_pb2.py\
 	m3/haptic_demo.py\
-	m3/haptic_demo_pb2.py
+	m3/haptic_demo_pb2.py\
+	m3/joint_mode_ros_pb2.py
 
 #	m3/tactile_pps22_ec_pb2.py
 #	m3/tactile_pps22_ec.py

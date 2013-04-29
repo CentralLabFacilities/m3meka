@@ -13,7 +13,7 @@ import smoothing_mode_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='joint.proto',
   package='',
-  serialized_pb='\n\x0bjoint.proto\x1a\x14\x63omponent_base.proto\x1a\x14smoothing_mode.proto\"\xac\x02\n\rM3JointStatus\x12\x1b\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\r.M3BaseStatus\x12\x12\n\nmotor_temp\x18\x02 \x01(\x01\x12\x10\n\x08\x61mp_temp\x18\x03 \x01(\x01\x12\x0f\n\x07\x63urrent\x18\x04 \x01(\x01\x12\x0e\n\x06torque\x18\x06 \x01(\x01\x12\x11\n\ttorquedot\x18\x07 \x01(\x01\x12\r\n\x05theta\x18\x08 \x01(\x01\x12\x10\n\x08thetadot\x18\t \x01(\x01\x12\x13\n\x0bthetadotdot\x18\n \x01(\x01\x12\x16\n\x0etorque_gravity\x18\x0b \x01(\x01\x12\x0f\n\x07pwm_cmd\x18\x0c \x01(\x05\x12\x14\n\x0c\x61mbient_temp\x18\r \x01(\x01\x12\x11\n\tcase_temp\x18\x0e \x01(\x01\x12\r\n\x05power\x18\x0f \x01(\x01\x12\r\n\x05\x66lags\x18\x10 \x01(\x05\"\xb0\x02\n\x0cM3JointParam\x12\x0c\n\x04kq_p\x18\x01 \x01(\x01\x12\x0c\n\x04kq_i\x18\x02 \x01(\x01\x12\x0c\n\x04kq_d\x18\x03 \x01(\x01\x12\x12\n\nkq_i_limit\x18\x04 \x01(\x01\x12\r\n\x05max_q\x18\x05 \x01(\x01\x12\r\n\x05min_q\x18\x06 \x01(\x01\x12\x0c\n\x04kt_p\x18\x07 \x01(\x01\x12\x0c\n\x04kt_i\x18\x08 \x01(\x01\x12\x0c\n\x04kt_d\x18\t \x01(\x01\x12\x12\n\nkt_i_limit\x18\n \x01(\x01\x12\x0c\n\x04kq_g\x18\x0b \x01(\x01\x12\x17\n\x0fmax_q_slew_rate\x18\x0c \x01(\x01\x12\x12\n\nkq_i_range\x18\r \x01(\x01\x12\x12\n\nkt_i_range\x18\x0e \x01(\x01\x12\x11\n\tmax_q_pad\x18\x0f \x01(\x01\x12\x11\n\tmin_q_pad\x18\x10 \x01(\x01\x12\x11\n\tkq_d_pose\x18\x11 \x01(\x01\"\xe8\x01\n\x0eM3JointCommand\x12\x12\n\ntq_desired\x18\x01 \x01(\x01\x12\x11\n\tq_desired\x18\x02 \x01(\x01\x12\x13\n\x0bpwm_desired\x18\x03 \x01(\x05\x12\x13\n\x0bq_stiffness\x18\x04 \x01(\x01\x12\x1e\n\tctrl_mode\x18\x05 \x01(\x0e\x32\x0b.JOINT_MODE\x12\x14\n\x0cqdot_desired\x18\x06 \x01(\x01\x12\x13\n\x0bq_slew_rate\x18\x07 \x01(\x01\x12\x11\n\tbrake_off\x18\x08 \x01(\x08\x12\'\n\x0esmoothing_mode\x18\t \x01(\x0e\x32\x0f.SMOOTHING_MODE*\xde\x01\n\nJOINT_MODE\x12\x12\n\x0eJOINT_MODE_OFF\x10\x00\x12\x12\n\x0eJOINT_MODE_PWM\x10\x01\x12\x15\n\x11JOINT_MODE_TORQUE\x10\x02\x12\x14\n\x10JOINT_MODE_THETA\x10\x03\x12\x18\n\x14JOINT_MODE_TORQUE_GC\x10\x04\x12\x17\n\x13JOINT_MODE_THETA_GC\x10\x05\x12\x17\n\x13JOINT_MODE_THETA_MJ\x10\x06\x12\x1a\n\x16JOINT_MODE_THETA_GC_MJ\x10\x07\x12\x13\n\x0fJOINT_MODE_POSE\x10\x08\x42\x02H\x01')
+  serialized_pb='\n\x0bjoint.proto\x1a\x14\x63omponent_base.proto\x1a\x14smoothing_mode.proto\"\xac\x02\n\rM3JointStatus\x12\x1b\n\x04\x62\x61se\x18\x01 \x01(\x0b\x32\r.M3BaseStatus\x12\x12\n\nmotor_temp\x18\x02 \x01(\x01\x12\x10\n\x08\x61mp_temp\x18\x03 \x01(\x01\x12\x0f\n\x07\x63urrent\x18\x04 \x01(\x01\x12\x0e\n\x06torque\x18\x06 \x01(\x01\x12\x11\n\ttorquedot\x18\x07 \x01(\x01\x12\r\n\x05theta\x18\x08 \x01(\x01\x12\x10\n\x08thetadot\x18\t \x01(\x01\x12\x13\n\x0bthetadotdot\x18\n \x01(\x01\x12\x16\n\x0etorque_gravity\x18\x0b \x01(\x01\x12\x0f\n\x07pwm_cmd\x18\x0c \x01(\x05\x12\x14\n\x0c\x61mbient_temp\x18\r \x01(\x01\x12\x11\n\tcase_temp\x18\x0e \x01(\x01\x12\r\n\x05power\x18\x0f \x01(\x01\x12\r\n\x05\x66lags\x18\x10 \x01(\x05\"\xa0\x03\n\x0cM3JointParam\x12\x0c\n\x04kq_p\x18\x01 \x01(\x01\x12\x0c\n\x04kq_i\x18\x02 \x01(\x01\x12\x0c\n\x04kq_d\x18\x03 \x01(\x01\x12\x12\n\nkq_i_limit\x18\x04 \x01(\x01\x12\r\n\x05max_q\x18\x05 \x01(\x01\x12\r\n\x05min_q\x18\x06 \x01(\x01\x12\x0c\n\x04kt_p\x18\x07 \x01(\x01\x12\x0c\n\x04kt_i\x18\x08 \x01(\x01\x12\x0c\n\x04kt_d\x18\t \x01(\x01\x12\x12\n\nkt_i_limit\x18\n \x01(\x01\x12\x0c\n\x04kq_g\x18\x0b \x01(\x01\x12\x17\n\x0fmax_q_slew_rate\x18\x0c \x01(\x01\x12\x12\n\nkq_i_range\x18\r \x01(\x01\x12\x12\n\nkt_i_range\x18\x0e \x01(\x01\x12\x11\n\tmax_q_pad\x18\x0f \x01(\x01\x12\x11\n\tmin_q_pad\x18\x10 \x01(\x01\x12\x11\n\tkq_d_pose\x18\x11 \x01(\x01\x12\x12\n\nkq_p_tq_gm\x18\x12 \x01(\x01\x12\x12\n\nkq_i_tq_gm\x18\x13 \x01(\x01\x12\x12\n\nkq_d_tq_gm\x18\x14 \x01(\x01\x12\x18\n\x10kq_i_limit_tq_gm\x18\x15 \x01(\x01\x12\x18\n\x10kq_i_range_tq_gm\x18\x16 \x01(\x01\"\xe8\x01\n\x0eM3JointCommand\x12\x12\n\ntq_desired\x18\x01 \x01(\x01\x12\x11\n\tq_desired\x18\x02 \x01(\x01\x12\x13\n\x0bpwm_desired\x18\x03 \x01(\x05\x12\x13\n\x0bq_stiffness\x18\x04 \x01(\x01\x12\x1e\n\tctrl_mode\x18\x05 \x01(\x0e\x32\x0b.JOINT_MODE\x12\x14\n\x0cqdot_desired\x18\x06 \x01(\x01\x12\x13\n\x0bq_slew_rate\x18\x07 \x01(\x01\x12\x11\n\tbrake_off\x18\x08 \x01(\x08\x12\'\n\x0esmoothing_mode\x18\t \x01(\x0e\x32\x0f.SMOOTHING_MODE*\x80\x02\n\nJOINT_MODE\x12\x12\n\x0eJOINT_MODE_OFF\x10\x00\x12\x12\n\x0eJOINT_MODE_PWM\x10\x01\x12\x15\n\x11JOINT_MODE_TORQUE\x10\x02\x12\x14\n\x10JOINT_MODE_THETA\x10\x03\x12\x18\n\x14JOINT_MODE_TORQUE_GC\x10\x04\x12\x17\n\x13JOINT_MODE_THETA_GC\x10\x05\x12\x17\n\x13JOINT_MODE_THETA_MJ\x10\x06\x12\x1a\n\x16JOINT_MODE_THETA_GC_MJ\x10\x07\x12\x13\n\x0fJOINT_MODE_POSE\x10\x08\x12 \n\x1cJOINT_MODE_TORQUE_GRAV_MODEL\x10\tB\x02H\x01')
 
 _JOINT_MODE = descriptor.EnumDescriptor(
   name='JOINT_MODE',
@@ -57,11 +57,15 @@ _JOINT_MODE = descriptor.EnumDescriptor(
       name='JOINT_MODE_POSE', index=8, number=8,
       options=None,
       type=None),
+    descriptor.EnumValueDescriptor(
+      name='JOINT_MODE_TORQUE_GRAV_MODEL', index=9, number=9,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=905,
-  serialized_end=1127,
+  serialized_start=1017,
+  serialized_end=1273,
 )
 
 
@@ -74,6 +78,7 @@ JOINT_MODE_THETA_GC = 5
 JOINT_MODE_THETA_MJ = 6
 JOINT_MODE_THETA_GC_MJ = 7
 JOINT_MODE_POSE = 8
+JOINT_MODE_TORQUE_GRAV_MODEL = 9
 
 
 
@@ -329,6 +334,41 @@ _M3JOINTPARAM = descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    descriptor.FieldDescriptor(
+      name='kq_p_tq_gm', full_name='M3JointParam.kq_p_tq_gm', index=17,
+      number=18, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='kq_i_tq_gm', full_name='M3JointParam.kq_i_tq_gm', index=18,
+      number=19, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='kq_d_tq_gm', full_name='M3JointParam.kq_d_tq_gm', index=19,
+      number=20, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='kq_i_limit_tq_gm', full_name='M3JointParam.kq_i_limit_tq_gm', index=20,
+      number=21, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='kq_i_range_tq_gm', full_name='M3JointParam.kq_i_range_tq_gm', index=21,
+      number=22, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -339,7 +379,7 @@ _M3JOINTPARAM = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=363,
-  serialized_end=667,
+  serialized_end=779,
 )
 
 
@@ -422,8 +462,8 @@ _M3JOINTCOMMAND = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=670,
-  serialized_end=902,
+  serialized_start=782,
+  serialized_end=1014,
 )
 
 _M3JOINTSTATUS.fields_by_name['base'].message_type = component_base_pb2._M3BASESTATUS

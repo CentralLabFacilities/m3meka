@@ -14,4 +14,5 @@ enum JOINT_ARRAY_MODE{
 		JOINT_ARRAY_MODE_TORQUE_SHM=10;					//External torque command via shared memory
 		JOINT_ARRAY_MODE_ANGLE_SHM=11;					//External angle command via shared memory
 		JOINT_ARRAY_MODE_POSE=12;					//External angle command via shared memory
+		JOINT_ARRAY_MODE_TORQUE_GRAV_MODEL=13;			//Tracks torque from GC model instead of actual torque		
 }

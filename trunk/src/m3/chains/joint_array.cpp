@@ -207,7 +207,11 @@ void M3JointArray::StepCommand()
 					break;
 				case JOINT_ARRAY_MODE_POSE:
 					joints[i]->SetDesiredControlMode(JOINT_MODE_POSE);
+					break;				
+				case JOINT_ARRAY_MODE_TORQUE_GRAV_MODEL:
+					joints[i]->SetDesiredControlMode(JOINT_MODE_TORQUE_GRAV_MODEL);
 					break;					
+
 				case JOINT_ARRAY_MODE_SPLINED_TRAJ_GC:
 				{
 					joints[i]->SetDesiredControlMode(JOINT_MODE_THETA_GC);	

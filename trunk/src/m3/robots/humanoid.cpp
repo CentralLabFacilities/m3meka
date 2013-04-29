@@ -45,6 +45,15 @@ bool M3Humanoid::LinkDependentComponents()
 		else
 			M3_WARN("M3Arm component %s declared for right_arm but could not be linked\n",
 					right_arm_name.c_str());
+		if (right_load_x6_component.size()!=0)
+		{		
+			right_load_x6=(M3LoadX6*)factory->GetComponent(right_load_x6_component);
+			if (right_load_x6!=NULL)
+				nl++;
+			else
+				M3_WARN("M3LoadX6 component %s declared for right_arm but could not be linked\n",
+						right_load_x6_component.c_str());
+		}
 	}
 	if (left_arm_name.size()!=0)
 	{		
@@ -579,14 +588,44 @@ void M3Humanoid::StepStatus()
 		status.mutable_right_arm()->set_completed_spline_idx(((M3JointArrayStatus*)right_arm->GetStatus())->completed_spline_idx());
 
 		if(right_arm->GetDynamatics())
-		{
-			for (int i=0; i<3; i++)
-				((M3DynamaticsParam*)right_arm->GetDynamatics()->GetParam())->set_payload_com(i,
-					 param.right_arm().payload_com(i));
-			for (int i=0; i<6; i++)
-				((M3DynamaticsParam*)right_arm->GetDynamatics()->GetParam())->set_payload_inertia(i,
-					 param.right_arm().payload_inertia(i));
-			((M3DynamaticsParam*)right_arm->GetDynamatics()->GetParam())->set_payload_mass(param.right_arm().payload_mass());
+		{		  			  
+			if (right_use_loadx6_instead_of_payload)
+			{
+			    if (right_load_x6)
+			    {
+			      Wrench * load_wrench = right_load_x6->GetWrench();
+			      Wrench end_wrench;
+			      // TODO: make this a transform.. hard coding for now			      
+			      //end_wrench.force(0) = -load_wrench->force(1)/1000.0;
+			      //end_wrench.torque(0) = -load_wrench->torque(1)/1000.0;
+			      //end_wrench.force(1) = -load_wrench->force(0)/1000.0;
+			      //end_wrench.torque(1) = -load_wrench->torque(0)/1000.0;
+			      //end_wrench.force(2) = load_wrench->force(2)/1000.0;
+			      //end_wrench.torque(2) = load_wrench->torque(2)/1000.0;
+			      end_wrench.force(0) = 0;
+			      end_wrench.torque(0) = 0;
+			      end_wrench.force(1) = 0;
+			      end_wrench.torque(1) = 0;
+			      end_wrench.force(2) = 0;
+			      end_wrench.torque(2) = 0;
+			      right_arm->GetDynamatics()->SetEndWrench(end_wrench);
+			    }
+			    for (int i=0; i<3; i++)
+				    ((M3DynamaticsParam*)right_arm->GetDynamatics()->GetParam())->set_payload_com(i,0);
+			    for (int i=0; i<6; i++)
+				    ((M3DynamaticsParam*)right_arm->GetDynamatics()->GetParam())->set_payload_inertia(i,0);
+			      ((M3DynamaticsParam*)right_arm->GetDynamatics()->GetParam())->set_payload_mass(0);
+			} 
+			else
+			{
+			    for (int i=0; i<3; i++)
+				    ((M3DynamaticsParam*)right_arm->GetDynamatics()->GetParam())->set_payload_com(i,
+					    param.right_arm().payload_com(i));
+			    for (int i=0; i<6; i++)
+				    ((M3DynamaticsParam*)right_arm->GetDynamatics()->GetParam())->set_payload_inertia(i,
+					    param.right_arm().payload_inertia(i));							
+			      ((M3DynamaticsParam*)right_arm->GetDynamatics()->GetParam())->set_payload_mass(param.right_arm().payload_mass());
+			}
 		}
 	}
 		
@@ -919,7 +958,21 @@ bool M3Humanoid::ReadConfig(const char * filename)
 		} catch(YAML::KeyNotFound& e) {		
 			force_shm_r_arm = false;
 		}
+		try{
+		  (*ra_node)["use_loadx6_instead_of_payload"]>>right_use_loadx6_instead_of_payload;
+		}
+		catch(YAML::KeyNotFound& e)
+		{
+		  right_use_loadx6_instead_of_payload = false;
+		}
 		
+		try{
+		  (*ra_node)["load_x6_component"]>>right_load_x6_component;
+		}
+		catch(YAML::KeyNotFound& e)
+		{
+		  right_load_x6_component = "";
+		}
 	}
 	if (la_node)
 	{	
@@ -963,6 +1016,8 @@ bool M3Humanoid::ReadConfig(const char * filename)
 	{
 	  startup_motor_pwr_on=false;
 	}
+	
+	
 	
 	Rotation ra_rot_kdl;
 	Vector ra_vec_kdl;

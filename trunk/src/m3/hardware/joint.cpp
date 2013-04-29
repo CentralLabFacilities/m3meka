@@ -82,7 +82,52 @@ bool M3Joint::ReadConfig(const char * filename)
 	doc["param"]["min_q_pad"] >> val;
 	param.set_min_q_pad(val);
 	doc["param"]["max_q_slew_rate"] >> val;
-	param.set_max_q_slew_rate(val);
+	param.set_max_q_slew_rate(val);	
+	
+	try 
+	{
+	    doc["param"]["kq_p_tq_gm"] >> val;
+	    param.set_kq_p_tq_gm(val);
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		param.set_kq_p_tq_gm(0.0);
+	} 	
+	
+	try 
+	{
+	    doc["param"]["kq_i_tq_gm"] >> val;
+	    param.set_kq_i_tq_gm(val);
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		param.set_kq_i_tq_gm(0.0);
+	}
+	
+	try 
+	{
+	    doc["param"]["kq_d_tq_gm"] >> val;
+	    param.set_kq_d_tq_gm(val);
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		param.set_kq_d_tq_gm(0.0);
+	} 	
+	
+	try 
+	{
+	    doc["param"]["kq_i_limit_tq_gm"] >> val;
+	    param.set_kq_i_limit_tq_gm(val);
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		param.set_kq_i_limit_tq_gm(0.0);
+	} 	
+	
+	try 
+	{
+	    doc["param"]["kq_i_range_tq_gm"] >> val;
+	    param.set_kq_i_range_tq_gm(val);
+	} catch(YAML::TypedKeyNotFound<string> e) 
+	{
+		param.set_kq_i_range_tq_gm(0.0);
+	} 
 	
 	try 
 	{
@@ -450,6 +495,53 @@ void M3Joint::StepCommand()
 				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
 				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
 								
+				break;
+			}
+			case JOINT_MODE_TORQUE_GRAV_MODEL:
+			{
+				if (!IsEncoderCalibrated())
+				  break;
+				
+				mReal tq_des;				
+								
+				//Do PID in torque grav model space
+				
+				  tq_des =pid_tq_grav_model.Step(GetTorqueGravity(),
+						  trans->GetThetaDotJointDeg(),
+						  -command.tq_desired(),
+						  param.kq_p_tq_gm(),
+						  param.kq_i_tq_gm(),
+						  param.kq_d_tq_gm(),
+						  param.kq_i_limit_tq_gm(),
+						  param.kq_i_range_tq_gm());
+				
+				
+				
+				//Ramp in from torque at switch-over point
+				mReal tq_on, tq_out;
+				tq_on=tq_on_slew.Step(1.0,1.0/MODE_TQ_ON_SLEW_TIME); 
+				//tq_on = 1.0;
+				tq_out=tq_on*(tq_des)+(1.0-tq_on)*tq_switch;				
+				//Send out
+				trans->SetTorqueDesJoint(tq_out/1000.0);	//TODO: convert back to mNm	
+				
+				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
+				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
+				
+				if (tmp_cnt++ == 1000)
+				{
+				    M3_DEBUG("------------------------\n");
+				    M3_DEBUG("%s\n", GetName().c_str());
+				    M3_DEBUG("tq_gc: %f\n", GetTorqueGravity());
+				    //M3_DEBUG("tq_dot: %f\n", -trans->GetTorqueDotJoint());				    
+				    M3_DEBUG("tq_des: %f\n", tq_des);
+				    M3_DEBUG("tq_on: %f\n", tq_on);
+				    //M3_DEBUG("tq_switch: %f\n", tq_switch);
+				    M3_DEBUG("tq_out: %f\n", tq_out);				    
+				    M3_DEBUG("tq_act: %f\n", trans->GetTorqueDesActuator());
+				    tmp_cnt = 0;
+				}
+				
 				break;
 			}
 			case JOINT_MODE_OFF:

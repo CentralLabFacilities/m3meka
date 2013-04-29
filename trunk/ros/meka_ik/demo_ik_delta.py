@@ -26,42 +26,42 @@ import rospy
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Header
 from meka_ik.srv import *
+from m3ctrl_msgs.msg import *
 from PyKDL import *
 from m3.ik_axis import M3IKAxis
 import numpy as nu
+import m3.joint_mode_ros_pb2 as mab
+import m3.smoothing_mode_pb2 as mas
+from threading import Thread
+import m3.unit_conversion as m3u
+import m3.toolbox as m3t
+import string
 
-'''def add_two_ints_client():
-    rospy.wait_for_service('meka_ik')
-    try:
-	tmp = MekaIK()
-        add_two_ints = rospy.ServiceProxy('meka_ik', MekaIK)
-        resp1 = add_two_ints('right_arm',[0]*3,[0]*3,[0]*7)
-        print resp1.success, resp1.angles_solution
-        #return resp1.sum
-    except rospy.ServiceException, e:
-        print "Service call failed: %s"%e'''
-        
-        
+class M3Chain:
+    (RIGHT_ARM, LEFT_ARM) = range(2)
 
-def get_pose(bot,arm_name):
-    select=[]
-    #bot.set_slew_rate_proportion(arm_name, [1.0]*7)
+def get_pose(arm_name):
     
+    cmd = M3JointCmd()
+    cmd.chain = [0]*7
+    cmd.control_mode = [0]*7
+    cmd.smoothing_mode = [0]*7
     
-    q = []
-    if arm_name == 'right_arm':
-	center = [.338,-.223,.190]			
-    else:
-	center = [.338,.223,.190]	
-	
-	
-    success = bot.get_tool_position_rpy_2_theta_deg(arm_name, center,[-90,0,-90],q)
-    bot.set_mode_theta_gc(arm_name)
-    bot.set_theta_deg(arm_name, q)
-    proxy.step
-    time.sleep(0.3)
-    
-    
+    for i in range(7):
+      if arm_name == 'right_arm':
+	cmd.chain[i] = (int(M3Chain.RIGHT_ARM))
+      elif arm_name == 'left_arm':
+	cmd.chain[i] = (int(M3Chain.LEFT_ARM))
+      
+      cmd.stiffness.append(0.0)
+      cmd.position.append(0.0)
+      cmd.velocity.append(0.0)
+      cmd.effort.append(0.0)
+      cmd.control_mode[i] = (int(mab.JOINT_MODE_ROS_TORQUE_GC))
+      cmd.smoothing_mode[i] = 0
+      cmd.chain_idx.append(i)
+    cmd.header = Header(0,rospy.Time.now(),'0')
+    humanoid_pub.publish(cmd)
     
     while True:
 	print '--------------------------'
@@ -72,59 +72,122 @@ def get_pose(bot,arm_name):
 	r = sys.stdin.read(1)
 	os.system("stty sane")
 	if r=='\r':
-	    proxy.step()
-	    print 'Basis pose of',bot.get_theta_deg(arm_name)
-	    return bot.get_theta_deg(arm_name)
+	    if arm_name == 'right_arm':
+	      print 'Basis pose of', right_arm_jnt_angles
+	      return right_arm_jnt_angles
+	    if arm_name == 'left_arm':
+	      print 'Basis pose of', left_arm_jnt_angles
+	      return left_arm_jnt_angles
 
 # ######################################################
 
 class ik_thread(Thread):
-    def __init__ (self,proxy,bot,step_delta,arm_name,pub, viz):
+    def __init__ (self,step_delta,arm_name):
 	Thread.__init__(self)
-	self.bot=bot
-	self.proxy=proxy
+
+	self.arm_name = arm_name
 	self.verror=0
 	self.aerror=0
 	self.delta_done=False
 	self.delta=nu.zeros(3) 
 	self.target_pos=nu.zeros(3)
-	self.pub = pub
-	self.target_pos_start = bot.get_tool_position(arm_name)
-	self.target_rpy = bot.get_tool_roll_pitch_yaw_deg(arm_name)
-	self.step_delta=step_delta
-	self.viz = viz
+	
+	q = []
+	if arm_name == 'right_arm':
+	  q = right_arm_jnt_angles
+	else:
+	  q = left_arm_jnt_angles
+	resp_fk = fk_srv(arm_name,q)
+	
+	self.target_pos_start = resp_fk.end_position
+	self.target_rpy = resp_fk.end_rpy
+	
+	self.step_delta=step_delta	
 	self.update=True
+	
     def set_delta(self,x):
 	self.delta=nu.array(x)
 	self.update=True
+	
     def run(self):
-	while not self.delta_done:	    
-	    self.proxy.step()	 
+	while not self.delta_done:
 	    if self.update:
 		self.update=False
 		self.target_pos=self.target_pos_start+self.delta
 		qdes=[]
-		success = self.bot.get_tool_position_rpy_2_theta_deg(arm_name, self.target_pos[:], self.target_rpy[:], qdes)
-		#success = False
-		if success:
-		    self.bot.set_theta_deg(arm_name,qdes)
-		self.aerror=nu.sqrt(sum((self.target_pos-bot.get_tool_position(arm_name))**2))
-		self.bot.set_slew_rate_proportion(arm_name, [0.4]*7)
-		self.proxy.step()
-		if not self.viz == None:
-		    self.viz.step()
+
+		qcurrent = []
+		if self.arm_name == 'right_arm':
+		  qcurrent = right_arm_jnt_angles
+		else:
+		  qcurrent = left_arm_jnt_angles
+		
+		resp_ik = ik_srv(self.arm_name,self.target_pos[:],self.target_rpy[:],qcurrent)
+		#print resp1.success, resp1.angles_solution
+		
+		if resp_ik.success:
+		    cmd = M3JointCmd()
+		    cmd.chain = [0]*7
+		    cmd.control_mode = [0]*7
+		    cmd.smoothing_mode = [0]*7
+		    
+		    for i in range(7):
+		      if arm_name == 'right_arm':
+			cmd.chain[i] = (int(M3Chain.RIGHT_ARM))
+		      elif arm_name == 'left_arm':
+			cmd.chain[i] = (int(M3Chain.LEFT_ARM))
+		      cmd.stiffness.append(stiffness)
+		      cmd.position.append(resp_ik.angles_solution[i])
+		      cmd.velocity.append(10.0)
+		      cmd.effort.append(0.0)
+		      cmd.control_mode[i] = (int(mab.JOINT_MODE_ROS_THETA_GC))
+		      cmd.smoothing_mode[i] = (int(mas.SMOOTHING_MODE_SLEW))
+		      cmd.chain_idx.append(i)
+		    cmd.header = Header(0,rospy.Time.now(),'0')
+		    humanoid_pub.publish(cmd)
+
+		q = []
+		if arm_name == 'right_arm':
+		  q = right_arm_jnt_angles
+		else:
+		  q = left_arm_jnt_angles
+		resp_fk = fk_srv(arm_name,q)
+		
+		self.target_pos_start = resp_fk.end_position
+		self.target_rpy = resp_fk.end_rpy
+		    
+		self.aerror=nu.sqrt(sum((nu.array(self.target_pos)-nu.array(resp_fk.end_position))**2))
+		
 	    time.sleep(0.1)
 	    
 # ######################################################
 
-def run_ik(proxy,bot, step_delta, arm_name,pub, viz):
-    pose=get_pose(proxy,bot, arm_name,viz)
-    bot.set_mode_theta_gc(arm_name)
-    bot.set_stiffness(arm_name, [stiffness]*bot.get_num_dof(arm_name))    
-    bot.set_theta_deg(arm_name, pose)
-    #bot.set_theta_deg([0,0,0],[4,5,6]) #No roll/pitch/yaw of wrist
-    proxy.step()    
-    t=ik_thread(proxy,bot,step_delta, arm_name,pub, viz)
+def run_ik(step_delta, arm_name):
+    pose=get_pose(arm_name)
+        
+    
+    cmd = M3JointCmd()
+    cmd.chain = [0]*7
+    cmd.control_mode = [0]*7
+    cmd.smoothing_mode = [0]*7
+    
+    for i in range(7):
+      if arm_name == 'right_arm':
+	cmd.chain[i] = (int(M3Chain.RIGHT_ARM))
+      elif arm_name == 'left_arm':
+	cmd.chain[i] = (int(M3Chain.LEFT_ARM))
+      
+      cmd.stiffness.append(stiffness)
+      cmd.position.append(pose[i])
+      cmd.velocity.append(10.0)
+      cmd.effort.append(0.0)
+      cmd.control_mode[i] = (int(mab.JOINT_MODE_ROS_THETA_GC))
+      cmd.smoothing_mode[i] = (int(mas.SMOOTHING_MODE_SLEW))
+      cmd.chain_idx.append(i)
+    cmd.header = Header(0,rospy.Time.now(),'0')
+    humanoid_pub.publish(cmd)
+
+    t=ik_thread(step_delta, arm_name)
     t.start()
     d=[0,0,0]
     while 1:
@@ -161,9 +224,22 @@ def run_ik(proxy,bot, step_delta, arm_name,pub, viz):
 	print 'Target: ',t.target_pos
 
 def humanoid_state_callback(data):
-    
+    for i in range(len(data.name)):
+      j = -1
+      if len(data.name[i]) >= 9:
+	if string.count(data.name[i],'right_arm') > 0:
+	  j = int(data.name[i][-1])
+      if j > -1:
+	right_arm_jnt_angles[j] = data.position[i]
+      j = -1
+      if len(data.name[i]) >= 9:
+	if string.count(data.name[i],'left_arm') > 0:
+	  j = int(data.name[i][-1])
+      if j > -1:
+	left_arm_jnt_angles[j] = data.position[i]
+	  
 	
-stiffness=0.5
+stiffness=0.85
 step_delta=.002 #meters
 
 print 'Select arm:'		
@@ -173,11 +249,28 @@ arm_name = m3t.user_select_components_interactive(arm_names,single=True)[0]
 global right_arm_jnt_angles
 global left_arm_jnt_angles
 
+global humanoid_pub
+humanoid_pub = rospy.Publisher('humanoid_command', M3JointCmd)
+
 right_arm_jnt_angles = [0.0]*7
 left_arm_jnt_angles = [0.0]*7
 
 rospy.init_node('demo_ik', anonymous=True)
 rospy.Subscriber("humanoid_state", JointState, humanoid_state_callback)
+
+print 'Waiting for IK service.'
+rospy.wait_for_service('meka_ik')
+print 'IK service found.'
+
+print 'Waiting for FK service.'
+rospy.wait_for_service('meka_fk')
+print 'FK service found.'
+
+global ik_srv
+ik_srv = rospy.ServiceProxy('meka_ik', MekaIK)
+
+global fk_srv
+fk_srv = rospy.ServiceProxy('meka_fk', MekaFK)
 
 while True:
 
@@ -198,7 +291,7 @@ while True:
 	print 'Enter step delta (m) [',step_delta,']'
 	step_delta=max(0,min(.25,m3t.get_float(step_delta)))
     if k=='e':
-	run_ik(proxy,bot, step_delta,arm_name,pub,viz)
+	run_ik(step_delta,arm_name)
 
 
 	

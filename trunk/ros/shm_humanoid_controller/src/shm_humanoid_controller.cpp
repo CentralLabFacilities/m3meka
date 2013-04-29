@@ -59,6 +59,9 @@ static int ndof_left_arm = 0;
 static int ndof_torso = 0;
 static int ndof_right_hand = 0;
 static int ndof_left_hand = 0;
+static int ndof_right_gripper = 0;
+static int ndof_left_gripper = 0;
+
 static int ndof_total = 0;
 
 
@@ -78,7 +81,10 @@ static void endme(int dummy) { std::cout << "END\n"; end=1; }
 sensor_msgs::JointState joint_state_g;
 m3ctrl_msgs::M3JointCmd joint_cmd_g;
 ros::Publisher publisher_g;
+
 ros::Subscriber cmd_sub_g;
+
+ros::Subscriber payload_sub_g;
 //tf::TransformBroadcaster odom_broadcaster;
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -156,6 +162,14 @@ void StepShm(int cntr)
     joint_state_g.position[j] = DEG2RAD(status.left_hand.theta[i]);
     joint_state_g.velocity[j] = DEG2RAD(status.left_hand.thetadot[i]);
     joint_state_g.effort[j] = status.left_hand.torque[i];
+      j++;
+  }
+  
+  for (int i = 0; i < ndof_left_gripper; i++)
+  {
+    joint_state_g.position[j] = DEG2RAD(status.left_gripper.theta[i]);
+    joint_state_g.velocity[j] = DEG2RAD(status.left_gripper.thetadot[i]);
+    joint_state_g.effort[j] = status.left_gripper.torque[i];
       j++;
   }
   
@@ -305,6 +319,24 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	cmd.left_hand.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
 	cmd.left_hand.tq_desired[chain_idx] = msg->effort[i]; 
      }
+     else if ((M3Chain)msg->chain[i] == LEFT_GRIPPER)
+    {
+	if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_OFF)
+	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA)
+	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
+	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
+	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_TORQUE_GC)
+	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_TORQUE_GC; 
+	else
+	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+	cmd.left_gripper.q_desired[chain_idx] = msg->position[i];
+	cmd.left_gripper.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
+	cmd.left_gripper.q_stiffness[chain_idx] = msg->stiffness[i]; 	
+	cmd.left_gripper.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
+	cmd.left_gripper.tq_desired[chain_idx] = msg->effort[i]; 
+     }
   }
   
       
@@ -396,6 +428,16 @@ float64[] effort
       j++;
   }
   
+   for (int i = 0; i < ndof_left_gripper; i++)
+  {
+    std::ostringstream convert;
+    std::string int_str; 
+    convert << i;
+    int_str = convert.str();
+    joint_state.name[j] = std::string("left_gripper_j") + int_str;
+      j++;
+  }
+
 
   return joint_state;
 }
@@ -585,6 +627,15 @@ int main (int argc, char **argv)
 	ndof_left_hand = ndof;
 	ndof_total += ndof;
 		
+	try {
+	  doc["ndof_chains"]["left_gripper"] >> ndof;
+	} catch (YAML::KeyNotFound &e) {
+	  ndof = 0;	  
+	}
+	ndof_left_gripper = ndof;
+	ndof_total += ndof;
+
+	
 	//printf("ndof: %d\n", ndof_total);
 	
 	

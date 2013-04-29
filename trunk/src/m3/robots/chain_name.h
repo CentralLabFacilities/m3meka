@@ -29,7 +29,8 @@ enum M3Chain
   TORSO,
   HEAD,
   RIGHT_HAND,
-  LEFT_HAND
+  LEFT_HAND,
+  LEFT_GRIPPER
 };
 
 #endif

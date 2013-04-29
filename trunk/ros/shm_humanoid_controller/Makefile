@@ -205,6 +205,19 @@ gravity_right_arm/fast:
 .PHONY : gravity_right_arm/fast
 
 #=============================================================================
+# Target rules for targets named move_gripper
+
+# Build rule for target.
+move_gripper: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 move_gripper
+.PHONY : move_gripper
+
+# fast build rule for target.
+move_gripper/fast:
+	$(MAKE) -f CMakeFiles/move_gripper.dir/build.make CMakeFiles/move_gripper.dir/build
+.PHONY : move_gripper/fast
+
+#=============================================================================
 # Target rules for targets named move_humanoid
 
 # Build rule for target.
@@ -449,6 +462,30 @@ src/gravity_right_arm.cpp.s:
 	$(MAKE) -f CMakeFiles/gravity_right_arm.dir/build.make CMakeFiles/gravity_right_arm.dir/src/gravity_right_arm.cpp.s
 .PHONY : src/gravity_right_arm.cpp.s
 
+src/move_gripper.o: src/move_gripper.cpp.o
+.PHONY : src/move_gripper.o
+
+# target to build an object file
+src/move_gripper.cpp.o:
+	$(MAKE) -f CMakeFiles/move_gripper.dir/build.make CMakeFiles/move_gripper.dir/src/move_gripper.cpp.o
+.PHONY : src/move_gripper.cpp.o
+
+src/move_gripper.i: src/move_gripper.cpp.i
+.PHONY : src/move_gripper.i
+
+# target to preprocess a source file
+src/move_gripper.cpp.i:
+	$(MAKE) -f CMakeFiles/move_gripper.dir/build.make CMakeFiles/move_gripper.dir/src/move_gripper.cpp.i
+.PHONY : src/move_gripper.cpp.i
+
+src/move_gripper.s: src/move_gripper.cpp.s
+.PHONY : src/move_gripper.s
+
+# target to generate assembly for a file
+src/move_gripper.cpp.s:
+	$(MAKE) -f CMakeFiles/move_gripper.dir/build.make CMakeFiles/move_gripper.dir/src/move_gripper.cpp.s
+.PHONY : src/move_gripper.cpp.s
+
 src/move_humanoid.o: src/move_humanoid.cpp.o
 .PHONY : src/move_humanoid.o
 
@@ -537,6 +574,7 @@ help:
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
+	@echo "... move_gripper"
 	@echo "... move_humanoid"
 	@echo "... pose_right_arm"
 	@echo "... rebuild_cache"
@@ -558,6 +596,9 @@ help:
 	@echo "... src/gravity_right_arm.o"
 	@echo "... src/gravity_right_arm.i"
 	@echo "... src/gravity_right_arm.s"
+	@echo "... src/move_gripper.o"
+	@echo "... src/move_gripper.i"
+	@echo "... src/move_gripper.s"
 	@echo "... src/move_humanoid.o"
 	@echo "... src/move_humanoid.i"
 	@echo "... src/move_humanoid.s"

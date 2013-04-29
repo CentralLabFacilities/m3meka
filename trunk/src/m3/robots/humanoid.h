@@ -55,6 +55,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/chains/head.h"
 #include "m3/robots/robot.h"
 #include "m3/robots/chain_name.h"
+#include "m3/hardware/loadx6.h"
 #include <google/protobuf/message.h>
 
 namespace m3
@@ -70,7 +71,7 @@ class M3Humanoid : public M3Robot
 		/// Create an M3Humanoid
 		M3Humanoid() : m3::M3Robot(), head(NULL), torso(NULL), right_arm(NULL), left_arm(NULL), force_shm_r_arm(false), 
 		  force_shm_l_arm(false), force_shm_torso(false), force_shm_head(false), enable_shm_r_arm(false), enable_shm_l_arm(false), enable_shm_torso(false), enable_shm_head(false),
-		    startup_motor_pwr_on(false)
+		    startup_motor_pwr_on(false), right_load_x6(NULL)
 		{
 		  head_base_2_world_frame=Frame::Identity();
 		}
@@ -399,6 +400,9 @@ class M3Humanoid : public M3Robot
 		bool enable_shm_torso;
 		bool enable_shm_head;
 		bool startup_motor_pwr_on;
+		M3LoadX6 * right_load_x6;
+		string right_load_x6_component;
+		bool right_use_loadx6_instead_of_payload;
 };
 
 }
