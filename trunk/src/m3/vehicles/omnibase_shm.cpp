@@ -133,6 +133,9 @@ void M3OmnibaseShm::SetSdsFromStatus(unsigned char * data)
   for (int i = 0; i < 6; i++)
     status_to_sds.truss_vels[i] = ((M3OmnibaseStatus*)omnibase->GetStatus())->truss_vel(i);
   
+  //status_to_sds.motor_power_enabled = omnibase->
+  status_to_sds.bus_voltage = ((M3OmnibaseStatus*)omnibase->GetStatus())->bus_voltage(); 
+  
   M3OmnibaseShmSdsStatus * sds = (M3OmnibaseShmSdsStatus *) data;
   request_status();  
   memcpy(sds, &status_to_sds, GetStatusSdsSize());  

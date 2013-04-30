@@ -50,6 +50,9 @@ typedef struct
     mReal			yaw_dot;    
     bool			calibrated;
     mReal			truss_vels[6];
+    mReal		bus_voltage;
+    mReal		bus_current;
+    bool			motor_power_enabled;
 }M3OmnibaseShmSdsStatus;
 
 #endif

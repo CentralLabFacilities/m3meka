@@ -1,7 +1,7 @@
 <package>
-  <description brief="shm_omnibase_odom_publisher">
+  <description brief="shm_pwr_state_omnibase">
 
-     shm_omnibase_odom_publisher
+     shm_pwr_state_omnibase
 
   </description>
   <author>Aaron Edsinger, Robby Kelbley, Sachin Chitta</author>

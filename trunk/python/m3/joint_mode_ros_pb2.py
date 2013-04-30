@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='joint_mode_ros.proto',
   package='',
-  serialized_pb='\n\x14joint_mode_ros.proto*\x96\x01\n\x0eJOINT_MODE_ROS\x12\x16\n\x12JOINT_MODE_ROS_OFF\x10\x00\x12\x18\n\x14JOINT_MODE_ROS_THETA\x10\x01\x12\x1b\n\x17JOINT_MODE_ROS_THETA_GC\x10\x02\x12\x1c\n\x18JOINT_MODE_ROS_TORQUE_GC\x10\x03\x12\x17\n\x13JOINT_MODE_ROS_POSE\x10\x04\x42\x02H\x01')
+  serialized_pb='\n\x14joint_mode_ros.proto*\xb1\x01\n\x0eJOINT_MODE_ROS\x12\x16\n\x12JOINT_MODE_ROS_OFF\x10\x00\x12\x18\n\x14JOINT_MODE_ROS_THETA\x10\x01\x12\x1b\n\x17JOINT_MODE_ROS_THETA_GC\x10\x02\x12\x1c\n\x18JOINT_MODE_ROS_TORQUE_GC\x10\x03\x12\x17\n\x13JOINT_MODE_ROS_POSE\x10\x04\x12\x19\n\x15JOINT_MODE_ROS_TORQUE\x10\x05\x42\x02H\x01')
 
 _JOINT_MODE_ROS = descriptor.EnumDescriptor(
   name='JOINT_MODE_ROS',
@@ -39,11 +39,15 @@ _JOINT_MODE_ROS = descriptor.EnumDescriptor(
       name='JOINT_MODE_ROS_POSE', index=4, number=4,
       options=None,
       type=None),
+    descriptor.EnumValueDescriptor(
+      name='JOINT_MODE_ROS_TORQUE', index=5, number=5,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=25,
-  serialized_end=175,
+  serialized_end=202,
 )
 
 
@@ -52,6 +56,7 @@ JOINT_MODE_ROS_THETA = 1
 JOINT_MODE_ROS_THETA_GC = 2
 JOINT_MODE_ROS_TORQUE_GC = 3
 JOINT_MODE_ROS_POSE = 4
+JOINT_MODE_ROS_TORQUE = 5
 
 
 

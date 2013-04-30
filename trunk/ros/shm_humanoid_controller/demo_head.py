@@ -57,24 +57,47 @@ for i in range(2):
   cmd.position.append(0.0)
   cmd.velocity.append(1.0)
   cmd.effort.append(0.0)
-  cmd.control_mode[i] = (int(mab.JOINT_MODE_ROS_THETA_GC))
+  cmd.control_mode[i] = (int(mab.JOINT_MODE_ROS_THETA))
+#  cmd.smoothing_mode[i] = (int(mas.SMOOTHING_MODE_MIN_JERK))
   cmd.smoothing_mode[i] = (int(mas.SMOOTHING_MODE_SLEW))
   cmd.chain_idx.append(i)
 
 
 try:
+      cmd.header = Header(0,rospy.Time.now(),'0')
+      humanoid_pub.publish(cmd)
 
-#      time.sleep(3.0)
+      rospy.sleep(3.0)
       
-      while True:
+      while not rospy.is_shutdown():        
 	
+	  print 'Moving to Position 1'
+	  cmd.position[0] = -0.17
+	  cmd.position[1] = 0.78
+	  rospy.sleep(3.0)
+	  
 	  cmd.header = Header(0,rospy.Time.now(),'0')
 	  humanoid_pub.publish(cmd)
+	  
+	  print 'Moving to Position 2'
+	  cmd.position[0] = 0.05
+	  cmd.position[1] = -0.78
+	  rospy.sleep(3.0)
+	  
+	  cmd.header = Header(0,rospy.Time.now(),'0')
+	  humanoid_pub.publish(cmd)
+	  
+	  print 'Moving to Position 3'
+	  cmd.position[0] = 0.0
+	  cmd.position[1] = 0.0
+	  rospy.sleep(3.0)
+	  
+	  cmd.header = Header(0,rospy.Time.now(),'0')
+	  humanoid_pub.publish(cmd)
+	  
 
-	  print '--------------'
-
-	  print
-	  time.sleep(0.5)
+	  print 'Repeating'
+	  rospy.sleep(0.5)
 
 except (KeyboardInterrupt,EOFError):
       pass

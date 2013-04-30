@@ -217,7 +217,8 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.right_hand.ctrl_mode[i]);
   	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.right_hand.smoothing_mode[i]);      
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_desired(i, RAD2DEG(command_from_sds.right_hand.q_desired[i]));
-	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_slew_rate(i, RAD2DEG(command_from_sds.right_hand.slew_rate_q_desired[i]));    
+	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_slew_rate(i, RAD2DEG(command_from_sds.right_hand.slew_rate_q_desired[i]));
+	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_qdot_desired(i, RAD2DEG(command_from_sds.right_hand.slew_rate_q_desired[i]));    
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_tq_desired(i, command_from_sds.right_hand.tq_desired[i]);
 	  ((M3JointArrayCommand*)right_hand->GetCommand())->set_q_stiffness(i, command_from_sds.right_hand.q_stiffness[i]);      
 	}
@@ -240,7 +241,8 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_ctrl_mode(i, command_from_sds.left_hand.ctrl_mode[i]);      
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_smoothing_mode(i, command_from_sds.left_hand.smoothing_mode[i]);      
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_desired(i, RAD2DEG(command_from_sds.left_hand.q_desired[i]));
-	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_slew_rate(i, RAD2DEG(command_from_sds.left_hand.slew_rate_q_desired[i]));    
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_slew_rate(i, RAD2DEG(command_from_sds.left_hand.slew_rate_q_desired[i]));
+	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_qdot_desired(i, RAD2DEG(command_from_sds.left_hand.slew_rate_q_desired[i]));    
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_tq_desired(i, command_from_sds.left_hand.tq_desired[i]);
 	  ((M3JointArrayCommand*)left_hand->GetCommand())->set_q_stiffness(i, command_from_sds.left_hand.q_stiffness[i]);      
 	}
@@ -249,16 +251,33 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
   
   if (left_gripper)
   {     
+	
 	if (shm_timeout)
 	{	
 	  left_gripper->SetDesiredControlMode(JOINT_MODE_OFF);
 	} else{
+	  if (command_from_sds.left_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_THETA)
+	    left_gripper->SetDesiredControlMode((JOINT_MODE_THETA));
+	  else if (command_from_sds.left_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_TORQUE)
+	    left_gripper->SetDesiredControlMode((JOINT_MODE_TORQUE));
+	  else
+	    left_gripper->SetDesiredControlMode((JOINT_MODE_OFF));
+	  
+	  /*if (tmp_cnt++ == 1000)
+	  {
+	    M3_DEBUG("m : %i\n", (int)command_from_sds.left_gripper.ctrl_mode[0]);
+	    M3_DEBUG("smoot : %i\n", (int)command_from_sds.left_gripper.smoothing_mode[0]);
+	    M3_DEBUG("th : %f\n", command_from_sds.left_gripper.q_desired[0]);
+	    M3_DEBUG("tq : %f\n", command_from_sds.left_gripper.tq_desired[0]);
+	    M3_DEBUG("tqd : %f\n", command_from_sds.left_gripper.slew_rate_q_desired[0]);
+	    tmp_cnt = 0;
+	  }*/
 	  left_gripper->SetDesiredThetaRad(command_from_sds.left_gripper.q_desired[0]);
-	  left_gripper->SetDesiredStiffness(command_from_sds.left_gripper.q_stiffness[0]);
-	  left_gripper->SetDesiredControlMode((JOINT_MODE)command_from_sds.left_gripper.ctrl_mode[0]);
+	  //left_gripper->SetDesiredStiffness(command_from_sds.left_gripper.q_stiffness[0]);	  
 	  left_gripper->SetDesiredSmoothingMode((SMOOTHING_MODE)command_from_sds.left_gripper.smoothing_mode[0]);
-	  left_gripper->SetDesiredTorque((SMOOTHING_MODE)command_from_sds.left_gripper.tq_desired[0]);
+	  left_gripper->SetDesiredTorque(command_from_sds.left_gripper.tq_desired[0]);
 	  left_gripper->SetDesiredThetaDotRad(command_from_sds.left_gripper.slew_rate_q_desired[0]);
+	  left_gripper->SetSlewRate(RAD2DEG(command_from_sds.left_gripper.slew_rate_q_desired[0]));
 	}    
   }
   

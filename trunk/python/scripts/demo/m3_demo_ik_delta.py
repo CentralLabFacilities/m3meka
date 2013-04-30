@@ -29,7 +29,7 @@ import m3.component_factory as m3f
 import os
 import sys
 import yaml
-import Numeric as nu
+import numpy as nu
 import m3.unit_conversion as m3u
 from threading import Thread
 import numpy as nu
@@ -83,7 +83,9 @@ class ik_thread(Thread):
 	self.target_pos=nu.zeros(3)
 	self.pub = pub
 	self.target_pos_start = bot.get_tool_position(arm_name)
+	print 'target_pos_start', self.target_pos_start
 	self.target_rpy = bot.get_tool_roll_pitch_yaw_deg(arm_name)
+	print 'target_rpy', self.target_rpy
 	self.step_delta=step_delta
 	self.viz = viz
 	self.update=True
@@ -98,9 +100,12 @@ class ik_thread(Thread):
 		self.target_pos=self.target_pos_start+self.delta
 		qdes=[]
 		success = self.bot.get_tool_position_rpy_2_theta_deg(arm_name, self.target_pos[:], self.target_rpy[:], qdes)
+		print 'new target_pos ', self.target_pos
+		print 'new target_rpy ', self.target_rpy
 		#success = False
 		if success:
 		    self.bot.set_theta_deg(arm_name,qdes)
+		    print 'new_q ', qdes
 		self.aerror=nu.sqrt(sum((self.target_pos-bot.get_tool_position(arm_name))**2))
 		self.bot.set_slew_rate_proportion(arm_name, [0.4]*7)
 		self.proxy.step()
@@ -187,6 +192,12 @@ proxy.publish_param(bot) #allow to set payload
 proxy.subscribe_status(bot)
 proxy.publish_command(bot)		
 proxy.make_operational_all()
+
+humanoid_shm_names=proxy.get_available_components('m3humanoid_shm')
+if len(humanoid_shm_names) > 0:
+  proxy.make_safe_operational(humanoid_shm_names[0])
+
+
 if not rviz == True:
     bot.set_motor_power_on()
 
