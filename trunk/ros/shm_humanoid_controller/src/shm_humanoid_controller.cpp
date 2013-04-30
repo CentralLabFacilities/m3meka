@@ -219,11 +219,9 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
       else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_POSE)
 	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_POSE; 
-      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_TORQUE_GC)
-	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_TORQUE_GC;       
       else
 	cmd.right_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
-      cmd.right_arm.tq_desired[chain_idx] = msg->effort[i];       
+      
       cmd.right_arm.q_desired[chain_idx] = msg->position[i];
       cmd.right_arm.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
       cmd.right_arm.q_stiffness[chain_idx] = msg->stiffness[i];       
@@ -238,12 +236,10 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
       else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
 	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
       else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_POSE)
-	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_POSE;
-      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_TORQUE_GC)
-	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_TORQUE_GC;             
+	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_POSE;       
       else
 	cmd.left_arm.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
-      cmd.left_arm.tq_desired[chain_idx] = msg->effort[i];       
+
       cmd.left_arm.q_desired[chain_idx] = msg->position[i];
       cmd.left_arm.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
       cmd.left_arm.q_stiffness[chain_idx] = msg->stiffness[i];       
@@ -325,10 +321,8 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
 	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA)
 	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
-	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
-	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
-	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_TORQUE_GC)
-	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_TORQUE_GC; 
+	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_TORQUE)
+	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_TORQUE; 
 	else
 	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
 	cmd.left_gripper.q_desired[chain_idx] = msg->position[i];

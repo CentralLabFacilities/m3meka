@@ -71,13 +71,16 @@ def get_pose(arm_name):
 	os.system("stty raw")
 	r = sys.stdin.read(1)
 	os.system("stty sane")
-	if r=='\r':
+	
+	return  m3t.deg2rad(nu.array([ 50.0692749,   16.81969261, -17.62414742,  76.4484024,   33.68758011, -28.43738556,  15.0620451]))
+	
+	'''if r=='\r':
 	    if arm_name == 'right_arm':
 	      print 'Basis pose of', right_arm_jnt_angles
 	      return right_arm_jnt_angles
 	    if arm_name == 'left_arm':
 	      print 'Basis pose of', left_arm_jnt_angles
-	      return left_arm_jnt_angles
+	      return left_arm_jnt_angles'''
 
 # ######################################################
 
@@ -100,10 +103,13 @@ class ik_thread(Thread):
 	resp_fk = fk_srv(arm_name,q)
 	
 	self.target_pos_start = resp_fk.end_position
+	print 'target_pos_start', self.target_pos_start
 	self.target_rpy = resp_fk.end_rpy
+	print 'target_rpy', m3t.rad2deg(nu.array(self.target_rpy))
 	
-	self.step_delta=step_delta	
-	self.update=True
+	self.step_delta=step_delta
+	#self.update=True
+	self.update=False
 	
     def set_delta(self,x):
 	self.delta=nu.array(x)
@@ -125,13 +131,20 @@ class ik_thread(Thread):
 		resp_ik = ik_srv(self.arm_name,self.target_pos[:],self.target_rpy[:],qcurrent)
 		#print resp1.success, resp1.angles_solution
 		
+		print 'new target_pos ', self.target_pos
+		print 'new target_rpy ', m3t.rad2deg(nu.array(self.target_rpy))
+		
 		if resp_ik.success:
 		    cmd = M3JointCmd()
 		    cmd.chain = [0]*7
 		    cmd.control_mode = [0]*7
 		    cmd.smoothing_mode = [0]*7
 		    
+		    print 'new_q ', m3t.rad2deg(nu.array(resp_ik.angles_solution))
+		    
 		    for i in range(7):
+		      
+		      
 		      if arm_name == 'right_arm':
 			cmd.chain[i] = (int(M3Chain.RIGHT_ARM))
 		      elif arm_name == 'left_arm':
@@ -152,11 +165,8 @@ class ik_thread(Thread):
 		else:
 		  q = left_arm_jnt_angles
 		resp_fk = fk_srv(arm_name,q)
-		
-		self.target_pos_start = resp_fk.end_position
-		self.target_rpy = resp_fk.end_rpy
-		    
-		self.aerror=nu.sqrt(sum((nu.array(self.target_pos)-nu.array(resp_fk.end_position))**2))
+				    
+		self.aerror=nu.sqrt(sum((nu.array(resp_fk.end_position)-nu.array(resp_fk.end_rpy))**2))
 		
 	    time.sleep(0.1)
 	    
@@ -186,6 +196,9 @@ def run_ik(step_delta, arm_name):
       cmd.chain_idx.append(i)
     cmd.header = Header(0,rospy.Time.now(),'0')
     humanoid_pub.publish(cmd)
+    
+    print 'Press any key to start IK demo.'
+    k=m3t.get_keystroke()
 
     t=ik_thread(step_delta, arm_name)
     t.start()
@@ -271,6 +284,28 @@ ik_srv = rospy.ServiceProxy('meka_ik', MekaIK)
 
 global fk_srv
 fk_srv = rospy.ServiceProxy('meka_fk', MekaFK)
+
+'''cmd = M3JointCmd()
+cmd.chain = [0]*7
+cmd.control_mode = [0]*7
+cmd.smoothing_mode = [0]*7
+
+for i in range(7):
+  if arm_name == 'right_arm':
+    cmd.chain[i] = (int(M3Chain.RIGHT_ARM))
+  elif arm_name == 'left_arm':
+    cmd.chain[i] = (int(M3Chain.LEFT_ARM))
+  
+  cmd.stiffness.append(stiffness)
+  cmd.position.append(10.0*(3.14/180.0)*i)
+  cmd.velocity.append(10.0)
+  cmd.effort.append(0.0)
+  cmd.control_mode[i] = (int(mab.JOINT_MODE_ROS_THETA_GC))
+  cmd.smoothing_mode[i] = (int(mas.SMOOTHING_MODE_SLEW))
+  cmd.chain_idx.append(i)
+cmd.header = Header(0,rospy.Time.now(),'0')
+humanoid_pub.publish(cmd)'''
+
 
 while True:
 
