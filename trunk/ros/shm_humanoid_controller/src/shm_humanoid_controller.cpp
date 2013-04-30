@@ -250,9 +250,7 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
       if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_OFF)
 	cmd.head.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
       else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA)
-	cmd.head.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
-      else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
-	cmd.head.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+	cmd.head.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA;       
       else
 	cmd.head.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
       cmd.head.q_desired[chain_idx] = msg->position[i];
