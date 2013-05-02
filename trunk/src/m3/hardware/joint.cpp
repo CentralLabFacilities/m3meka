@@ -528,7 +528,7 @@ void M3Joint::StepCommand()
 				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
 				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
 				
-				if (tmp_cnt++ == 1000)
+				/*if (tmp_cnt++ == 1000)
 				{
 				    M3_DEBUG("------------------------\n");
 				    M3_DEBUG("%s\n", GetName().c_str());
@@ -540,7 +540,7 @@ void M3Joint::StepCommand()
 				    M3_DEBUG("tq_out: %f\n", tq_out);				    
 				    M3_DEBUG("tq_act: %f\n", trans->GetTorqueDesActuator());
 				    tmp_cnt = 0;
-				}
+				}*/
 				
 				break;
 			}
