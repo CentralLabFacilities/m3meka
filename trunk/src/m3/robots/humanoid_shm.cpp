@@ -258,6 +258,8 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	} else{
 	  if (command_from_sds.left_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_THETA)
 	    left_gripper->SetDesiredControlMode((JOINT_MODE_THETA));
+	  else if (command_from_sds.left_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_THETA_GC)
+	    left_gripper->SetDesiredControlMode((JOINT_MODE_THETA_GC));
 	  else if (command_from_sds.left_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_TORQUE)
 	    left_gripper->SetDesiredControlMode((JOINT_MODE_TORQUE));
 	  else
@@ -273,7 +275,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	    tmp_cnt = 0;
 	  }*/
 	  left_gripper->SetDesiredThetaRad(command_from_sds.left_gripper.q_desired[0]);
-	  //left_gripper->SetDesiredStiffness(command_from_sds.left_gripper.q_stiffness[0]);	  
+	  left_gripper->SetDesiredStiffness(command_from_sds.left_gripper.q_stiffness[0]);	  
 	  left_gripper->SetDesiredSmoothingMode((SMOOTHING_MODE)command_from_sds.left_gripper.smoothing_mode[0]);
 	  left_gripper->SetDesiredTorque(command_from_sds.left_gripper.tq_desired[0]);
 	  left_gripper->SetDesiredThetaDotRad(command_from_sds.left_gripper.slew_rate_q_desired[0]);
@@ -290,6 +292,8 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	} else{
 	  if (command_from_sds.right_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_THETA)
 	    right_gripper->SetDesiredControlMode((JOINT_MODE_THETA));
+	  else if (command_from_sds.right_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_THETA_GC)
+	    right_gripper->SetDesiredControlMode((JOINT_MODE_THETA_GC));
 	  else if (command_from_sds.right_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_TORQUE)
 	    right_gripper->SetDesiredControlMode((JOINT_MODE_TORQUE));
 	  else
@@ -305,7 +309,7 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	    tmp_cnt = 0;
 	  }*/
 	  right_gripper->SetDesiredThetaRad(command_from_sds.right_gripper.q_desired[0]);
-	  //left_gripper->SetDesiredStiffness(command_from_sds.left_gripper.q_stiffness[0]);	  
+	  right_gripper->SetDesiredStiffness(command_from_sds.right_gripper.q_stiffness[0]);	  
 	  right_gripper->SetDesiredSmoothingMode((SMOOTHING_MODE)command_from_sds.right_gripper.smoothing_mode[0]);
 	  right_gripper->SetDesiredTorque(command_from_sds.right_gripper.tq_desired[0]);
 	  right_gripper->SetDesiredThetaDotRad(command_from_sds.right_gripper.slew_rate_q_desired[0]);
