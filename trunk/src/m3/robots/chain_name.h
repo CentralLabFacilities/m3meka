@@ -30,7 +30,8 @@ enum M3Chain
   HEAD,
   RIGHT_HAND,
   LEFT_HAND,
-  LEFT_GRIPPER
+  LEFT_GRIPPER,
+  RIGHT_GRIPPER
 };
 
 #endif

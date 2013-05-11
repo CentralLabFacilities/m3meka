@@ -281,6 +281,38 @@ void M3HumanoidShm::SetCommandFromSds(unsigned char * data)
 	}    
   }
   
+   if (right_gripper)
+  {     
+	
+	if (shm_timeout)
+	{	
+	  right_gripper->SetDesiredControlMode(JOINT_MODE_OFF);
+	} else{
+	  if (command_from_sds.right_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_THETA)
+	    right_gripper->SetDesiredControlMode((JOINT_MODE_THETA));
+	  else if (command_from_sds.right_gripper.ctrl_mode[0] == JOINT_ARRAY_MODE_TORQUE)
+	    right_gripper->SetDesiredControlMode((JOINT_MODE_TORQUE));
+	  else
+	    right_gripper->SetDesiredControlMode((JOINT_MODE_OFF));
+	  
+	  /*if (tmp_cnt++ == 1000)
+	  {
+	    M3_DEBUG("m : %i\n", (int)command_from_sds.left_gripper.ctrl_mode[0]);
+	    M3_DEBUG("smoot : %i\n", (int)command_from_sds.left_gripper.smoothing_mode[0]);
+	    M3_DEBUG("th : %f\n", command_from_sds.left_gripper.q_desired[0]);
+	    M3_DEBUG("tq : %f\n", command_from_sds.left_gripper.tq_desired[0]);
+	    M3_DEBUG("tqd : %f\n", command_from_sds.left_gripper.slew_rate_q_desired[0]);
+	    tmp_cnt = 0;
+	  }*/
+	  right_gripper->SetDesiredThetaRad(command_from_sds.right_gripper.q_desired[0]);
+	  //left_gripper->SetDesiredStiffness(command_from_sds.left_gripper.q_stiffness[0]);	  
+	  right_gripper->SetDesiredSmoothingMode((SMOOTHING_MODE)command_from_sds.right_gripper.smoothing_mode[0]);
+	  right_gripper->SetDesiredTorque(command_from_sds.right_gripper.tq_desired[0]);
+	  right_gripper->SetDesiredThetaDotRad(command_from_sds.right_gripper.slew_rate_q_desired[0]);
+	  right_gripper->SetSlewRate(RAD2DEG(command_from_sds.right_gripper.slew_rate_q_desired[0]));
+	}    
+  }
+  
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -342,9 +374,16 @@ void M3HumanoidShm::SetSdsFromStatus(unsigned char * data)
   
   if (left_gripper)
   {       
-	status_to_sds.left_hand.theta[0] = left_gripper->GetThetaDeg();
-	status_to_sds.left_hand.thetadot[0] = left_gripper->GetThetaDotDeg();
-	status_to_sds.left_hand.torque[0] = left_gripper->GetTorque();    
+	status_to_sds.left_gripper.theta[0] = left_gripper->GetThetaDeg();
+	status_to_sds.left_gripper.thetadot[0] = left_gripper->GetThetaDotDeg();
+	status_to_sds.left_gripper.torque[0] = left_gripper->GetTorque();    
+  }
+
+  if (right_gripper)
+  {       
+	status_to_sds.right_gripper.theta[0] = right_gripper->GetThetaDeg();
+	status_to_sds.right_gripper.thetadot[0] = right_gripper->GetThetaDotDeg();
+	status_to_sds.right_gripper.torque[0] = right_gripper->GetTorque();    
   }
 
   
@@ -438,6 +477,16 @@ bool M3HumanoidShm::LinkDependentComponents()
 					left_gripper_name.c_str());
 		}				
 	}
+	
+	if (right_gripper_name.size()!=0)
+	{
+		right_gripper=(M3Joint*)factory->GetComponent(right_gripper_name);//May be null if not on this robot model
+		if (right_gripper==NULL)
+		{
+			M3_WARN("M3Gripper component %s declared for M3BotShm but could not be linked\n",
+					right_gripper_name.c_str());
+		}				
+	}
 
 	
 	if (left_loadx6_name.size()!=0)
@@ -451,7 +500,7 @@ bool M3HumanoidShm::LinkDependentComponents()
 		}				
 	}
 
-	if (right_loadx6 || right_hand || bot || left_loadx6 || left_hand )
+	if (right_loadx6 || right_hand || bot || left_loadx6 || left_hand || left_gripper || right_gripper)
 	{	 
 	  return true;	  
 	} else {	  
@@ -506,6 +555,14 @@ bool M3HumanoidShm::ReadConfig(const char * filename)
 	catch(YAML::KeyNotFound& e)
 	{
 	  left_gripper_name="";
+	}
+	
+	try{
+	  doc["right_gripper_component"] >> right_gripper_name;	
+	}
+	catch(YAML::KeyNotFound& e)
+	{
+	  right_gripper_name="";
 	}
 	
 	try{
