@@ -318,7 +318,9 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_OFF)
 	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
 	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA)
-	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA; 
+	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA;
+	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
+	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
 	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_TORQUE)
 	  cmd.left_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_TORQUE; 
 	else
@@ -328,6 +330,24 @@ void commandCallback(const m3ctrl_msgs::M3JointCmdConstPtr& msg)
 	cmd.left_gripper.q_stiffness[chain_idx] = msg->stiffness[i]; 	
 	cmd.left_gripper.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
 	cmd.left_gripper.tq_desired[chain_idx] = msg->effort[i]; 
+     }
+     else if ((M3Chain)msg->chain[i] == RIGHT_GRIPPER)
+    {
+	if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_OFF)
+	  cmd.right_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA)
+	  cmd.right_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA;
+	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_THETA_GC)
+	  cmd.right_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_THETA_GC; 
+	else if ((JOINT_MODE_ROS)msg->control_mode[i] == JOINT_MODE_ROS_TORQUE)
+	  cmd.right_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_TORQUE; 
+	else
+	  cmd.right_gripper.ctrl_mode[chain_idx] = JOINT_ARRAY_MODE_OFF; 
+	cmd.right_gripper.q_desired[chain_idx] = msg->position[i];
+	cmd.right_gripper.slew_rate_q_desired[chain_idx] = msg->velocity[i];      
+	cmd.right_gripper.q_stiffness[chain_idx] = msg->stiffness[i]; 	
+	cmd.right_gripper.smoothing_mode[chain_idx] = (SMOOTHING_MODE)msg->smoothing_mode[i]; 
+	cmd.right_gripper.tq_desired[chain_idx] = msg->effort[i]; 
      }
   }
   
