@@ -515,7 +515,7 @@ void __attribute__((interrupt, no_auto_psv)) _INT1Interrupt(void)
 {
         //Signal for calibration on transition from 0 to 1 on the flag from the master
 	if (!qei_calibration_req)
-		qei_calibration_req=(ec_cmd.command[0].config & M3ACT_CONFIG_CALIB_QEI_LIMITSWITCH_NEG);// && !qei_calibrate_flag_last;
+		qei_calibration_req=((ec_cmd.command[0].config & M3ACT_CONFIG_CALIB_QEI_LIMITSWITCH_NEG) == M3ACT_CONFIG_CALIB_QEI_LIMITSWITCH_NEG);// && !qei_calibrate_flag_last;
 
 	 if ( qei_calibration_req)
 	 {
