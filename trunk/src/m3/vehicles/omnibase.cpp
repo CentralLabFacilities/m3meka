@@ -668,7 +668,10 @@ void M3Omnibase::StepStatus()
     status.set_motor_current(i, motor_array->GetJoint(i)->GetCurrent());
   }
     
-  status.set_bus_voltage(pwr->GetBusVoltage());
+    if (pwr)
+      status.set_bus_voltage(pwr->GetBusVoltage());
+    else
+      status.set_bus_voltage(0.0);
   
   //M3_INFO("%f\n", status.motor_current(1) * 0.000257 - status.motor_torque_desired(1));
     ///////////////
