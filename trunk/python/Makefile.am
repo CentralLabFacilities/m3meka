@@ -147,6 +147,7 @@ dist_bin_SCRIPTS = \
 	scripts/demo/m3_demo_arm_torso_a2r4_t2r3.py\
 	scripts/demo/m3_demo_face_detect.py\
 	scripts/demo/m3_demo_hold_pose.py\
+	scripts/demo/m3_demo_mirror.py\
 	scripts/tutorials/m3_tutorial_1.py\
 	scripts/tutorials/m3_tutorial_2.py\
 	scripts/tutorials/m3_tutorial_3.py\
