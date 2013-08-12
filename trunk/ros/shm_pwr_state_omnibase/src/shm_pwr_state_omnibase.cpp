@@ -1,22 +1,25 @@
- /*************************************************************************
- * 
- * REDWOOD CONFIDENTIAL
- * Author: Aaron Edsinger
- * __________________
- * 
- *  [2012] - [+] Redwood Robotics Incorporated 
- *  All Rights Reserved.
- * 
- * All information contained herein is, and remains
- * the property of Redwood Robotics Incorporated and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Redwood Robotics Incorporated
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Redwood Robotics Incorporated.
- */
+/*
+Copyright  2008, Meka Robotics
+All rights reserved.
+http://mekabot.com
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted. 
+
+
+THIS SOFTWARE IS PROVIDED BY THE Copyright HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+Copyright OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
  
 #include <rtai_sched.h>
 #include <stdio.h>
