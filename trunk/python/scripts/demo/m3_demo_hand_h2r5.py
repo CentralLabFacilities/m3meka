@@ -82,9 +82,9 @@ class M3Proc:
         self.pwr.set_motor_power_on()
 
  	#Force safe-op of robot if present
-        hum=self.proxy.get_available_components('m3humanoid')
-        if len(hum)>0:
-            self.proxy.make_safe_operational(hum[0])
+        #hum=self.proxy.get_available_components('m3humanoid')
+        #if len(hum)>0:
+        #    self.proxy.make_safe_operational(hum[0])
 	
         #Setup postures
 	self.posture_filename=m3t.get_m3_animation_path()+self.chain.name+'_postures.yml'
