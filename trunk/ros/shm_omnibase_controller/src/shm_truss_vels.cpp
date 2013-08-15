@@ -1,22 +1,21 @@
- /*************************************************************************
- * 
- * REDWOOD CONFIDENTIAL
- * Author: Aaron Edsinger
- * __________________
- * 
- *  [2012] - [+] Redwood Robotics Incorporated 
- *  All Rights Reserved.
- * 
- * All information contained herein is, and remains
- * the property of Redwood Robotics Incorporated and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Redwood Robotics Incorporated
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Redwood Robotics Incorporated.
- */
+/* 
+M3 -- Meka Robotics Robot Components
+Copyright (c) 2010 Meka Robotics
+Author: edsinger@mekabot.com (Aaron Edsinger)
+
+M3 is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+M3 is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with M3.  If not, see <http://www.gnu.org/licenses/>.
+*/
  
 #include <rtai_sched.h>
 #include <stdio.h>
