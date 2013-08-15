@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/meka/mekabot/m3meka/ros/shm_humanoid_controller/build/devel/setup.sh

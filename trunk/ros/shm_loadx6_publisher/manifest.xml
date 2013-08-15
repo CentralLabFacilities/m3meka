@@ -1,0 +1,17 @@
+<package>
+  <description brief="shm_loadx6_publisher">
+
+     shm_loadx6_publisher
+
+  </description>
+  <author>meka</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/shm_loadx6_publisher</url>
+  <depend package="roscpp"/>
+  <depend package="rosconsole"/>
+  <depend package="nav_msgs"/>
+  <depend package="tf"/>
+</package>
+
+

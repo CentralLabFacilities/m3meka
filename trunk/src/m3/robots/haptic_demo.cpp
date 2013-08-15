@@ -129,7 +129,7 @@ void M3HapticDemo::StepCommand()
 	
 	//M3Arm * arm = bot->GetLeftArm();
 	
-	Eigen::Vector3d end_pos = bot->GetEndPosition(LEFT_ARM);
+	Eigen::Vector3d end_pos = bot->GetEndPosition(RIGHT_ARM);
 	
 	mReal x_err = (x_desired - end_pos[0]);
 	mReal y_err = (y_desired - end_pos[1]);
@@ -191,7 +191,7 @@ void M3HapticDemo::StepCommand()
 	    wrench[5]=0;
 	    /*if (tmp_cnt%100==0)
 	     M3_INFO("F: %f %f %f\n",fx, fy, fz);*/
-	    Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> J = bot->GetJacobian(LEFT_ARM);
+	    Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> J = bot->GetJacobian(RIGHT_ARM);
 	    Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> JT=J.transpose();
 	    Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> tq=JT*wrench;
 	    
@@ -199,19 +199,19 @@ void M3HapticDemo::StepCommand()
 	      {
 		if (i == 2)
 		  {
-		    bot->SetModeThetaGc(LEFT_ARM,i);
-		    bot->SetStiffness(LEFT_ARM,i,0.7);
-		    bot->SetThetaDeg(LEFT_ARM,i,0.0);
-		    bot->SetSlewRateProportional(LEFT_ARM,i, 1.0);
+		    bot->SetModeThetaGc(RIGHT_ARM,i);
+		    bot->SetStiffness(RIGHT_ARM,i,0.7);
+		    bot->SetThetaDeg(RIGHT_ARM,i,0.0);
+		    bot->SetSlewRateProportional(RIGHT_ARM,i, 1.0);
 		  }
 		  else
 		  {
-		    bot->SetModeTorqueGc(LEFT_ARM,i);
-		    bot->SetStiffness(LEFT_ARM,i,0.0);
-		    //bot->SetModeThetaGc(LEFT_ARM,i);
-		    bot->SetSlewRateProportional(LEFT_ARM,i, 1.0);
-		    bot->SetTorque_mNm(LEFT_ARM,i,tq[i]);
-		    //bot->SetTorque_mNm(LEFT_ARM,i,0);
+		    bot->SetModeTorqueGc(RIGHT_ARM,i);
+		    bot->SetStiffness(RIGHT_ARM,i,0.0);
+		    //bot->SetModeThetaGc(RIGHT_ARM,i);
+		    bot->SetSlewRateProportional(RIGHT_ARM,i, 1.0);
+		    bot->SetTorque_mNm(RIGHT_ARM,i,tq[i]);
+		    //bot->SetTorque_mNm(RIGHT_ARM,i,0);
 		  }
 		  /*if (tmp_cnt%100==0)
 			M3_INFO("On: %d : %f\n",i,tq[i]);*/
@@ -219,20 +219,20 @@ void M3HapticDemo::StepCommand()
 	      }
 	      for (i=4;i<7;i++)
 	      {
-		  bot->SetModeThetaGc(LEFT_ARM,i);
-		  bot->SetStiffness(LEFT_ARM,i,0.7);
+		  bot->SetModeThetaGc(RIGHT_ARM,i);
+		  bot->SetStiffness(RIGHT_ARM,i,0.7);
 		  if (i == 5)
 		  {
-		    mReal j5 = CLAMP(90.0 - bot->GetThetaDeg(LEFT_ARM,3), -50.0, 50);
-		    bot->SetThetaDeg(LEFT_ARM,i,j5);
+		    mReal j5 = CLAMP(90.0 - bot->GetThetaDeg(RIGHT_ARM,3), -50.0, 50);
+		    bot->SetThetaDeg(RIGHT_ARM,i,j5);
 		  }
 		  else
 		  {
-		    bot->SetThetaDeg(LEFT_ARM,i,0.0);
+		    bot->SetThetaDeg(RIGHT_ARM,i,0.0);
 		  }
-		  bot->SetSlewRateProportional(LEFT_ARM,i, 1.0);
-		  //bot->SetTorque_mNm(LEFT_ARM,i,tq[i]);
-		  //bot->SetTorque_mNm(LEFT_ARM,i,0);
+		  bot->SetSlewRateProportional(RIGHT_ARM,i, 1.0);
+		  //bot->SetTorque_mNm(RIGHT_ARM,i,tq[i]);
+		  //bot->SetTorque_mNm(RIGHT_ARM,i,0);
 		  /*if (tmp_cnt%100==0)
 			M3_INFO("On: %d : %f\n",i,tq[i]);*/
 	      }
@@ -243,7 +243,7 @@ void M3HapticDemo::StepCommand()
 	   //   M3_INFO("Off\n");
 	  bot->SetMotorPowerOff();
 	  for (i=0;i<arm->GetNumDof();i++)
-		  bot->SetCtrlModeTorqueOff(M3Humanoid::LEFT_ARM,i);
+		  bot->SetCtrlModeTorqueOff(M3Humanoid::RIGHT_ARM,i);
 		
 	}*/
 }
