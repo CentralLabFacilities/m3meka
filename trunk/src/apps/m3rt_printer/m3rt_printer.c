@@ -42,6 +42,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/hardware/m3ec_pdo_v2_def.h"
 #include "m3/hardware/m3ec_pdo_v3_def.h"
 #include "m3/hardware/m3ec_pdo_v4_def.h"
+#include "m3/hardware/m3ec_pdo_vm_def.h"
 #include "m3rt/base/m3rt_def.h"
 #include "stdio.h"
 
@@ -75,6 +76,8 @@ void M3PwrPdoV2StatusPrettyPrint(M3PwrPdoV2Status * d, int sn);
 void M3PwrPdoV2CommandPrettyPrint(M3PwrPdoV2Cmd * d, int sn);
 void M3LedX2PdoCmdPrettyPrint(M3LedX2PdoV1Cmd * dd, int sn);
 void M3LedX2PdoStatusPrettyPrint(M3LedX2PdoV1Status * dd, int sn);
+void M3ActPdoVMStatusPrettyPrint(M3ActPdoVMStatus * d, int sn);
+void M3ActPdoVMCommandPrettyPrint(M3ActPdoVMCmd * d, int sn);
 
 //////// Legacy /////////////
 void M3GmbPdoCmdV0PrettyPrint(M3GmbX2PdoV0Cmd * dd);
@@ -405,7 +408,41 @@ void M3ActPdoV2StatusPrettyPrint(M3ActPdoV2Status * d, int sn, int ch)
 	  printf("id %d-%d: ext %d:  %d\n",sn,ch,i,((int16_t*) d->ext)[i]);
 }
 
+
+void M3ActPdoMStatusPrettyPrint(M3ActPdoVMStatus * d, int sn, int ch)
+{
+	printf("id %d-%d: motor_torque: %d\n",sn,ch,(int) d->motor_torque);
+	printf("id %d-%d: motor_iq: %d\n",sn,ch,(int) d->motor_iq);
+	printf("id %d-%d: motor_vq_avg: %d\n",sn,ch,(int) d->motor_vq_avg);
+	printf("id %d-%d: analog_1: %llu\n",sn,ch,(uint64_t) d->analog_1);
+	printf("id %d-%d: analog_1_dot: %d\n",sn,ch,(int) d->analog_1_dot);
+	printf("id %d-%d: analog_2: %d\n",sn,ch,(int) d->analog_2);
+	printf("id %d-%d: analog_2_dot: %d\n",sn,ch,(int) d->analog_2_dot);
+	printf("id %d-%d: analog_diff: %d\n",sn,ch,(int) d->analog_diff);
+	printf("id %d-%d: analog_diff_dot: %d\n",sn,ch,(int) d->analog_diff_dot);
+	printf("id %d-%d: quadrature_1: %d\n",sn,ch,(int) d->quadrature_1);
+	printf("id %d-%d: quadrature_1_dot: %d\n",sn,ch,(int) d->quadrature_1_dot);
+	printf("id %d-%d: quadrature_2: %d\n",sn,ch,(int) d->quadrature_2);
+	printf("id %d-%d: quadrature_2_dot: %d\n",sn,ch,(int) d->quadrature_2_dot);
+	printf("id %d-%d: ssi: %d\n",sn,ch,(int) d->ssi);
+	printf("id %d-%d: ssi_dot: %d\n",sn,ch,(int) d->ssi_dot);
+	printf("id %d-%d: fault_flags: %d\n",sn,ch,(int) d->fault_flags);
+	printf("id %d-%d: bus_v: %d\n",sn,ch,(int) d->bus_v);
+	printf("id %d-%d: debug: %d\n",sn,ch,(int) d->debug);
+	printf("id %d-%d: rpa_packet: %s\n",sn,ch,(int) d->rpa_packet);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
+void M3ActPdoMCmdPrettyPrint(M3ActPdoVMCmd * d, int sn, int ch)
+{	 
+	
+	printf("id %d-%d: mode: %d\n",sn,ch,(int) d->mode);
+	printf("id %d-%d: rt_control_command: %s\n",sn,ch,(int) d->rt_control_command);
+	printf("id %d-%d: rt_control_command_2: %s\n",sn,ch,(int) d->rt_control_command_2);
+	printf("id %d-%d: toggle: %d\n",sn,ch,(int) d->toggle);
+	printf("id %d-%d: rpc_packet: %s\n",sn,ch, d->rpc_packet);
+}
+
 void M3ActPdoCmdPrettyPrint(M3ActPdoV1Cmd * d, int sn, int ch)
 {	 
 	printf("id %d-%d: k_p: %d\n",sn,ch,(int) d->k_p);
@@ -838,5 +875,12 @@ void SlaveEcShmPrettyPrint(M3EcSlaveShm * shm)
 		M3LedX2PdoStatusPrettyPrint((M3LedX2PdoV1Status *) shm->status,shm->serial_number);
 		M3LedX2PdoCmdPrettyPrint((M3LedX2PdoV1Cmd *) shm->cmd,shm->serial_number);
 	}
+	if (shm->product_code==M3ACTM_PRODUCT_CODE)
+	{
+		M3ActPdoVMStatusPrettyPrint((M3ActPdoVMStatus *) shm->status,shm->serial_number, 0);
+		M3ActPdoVMCommandPrettyPrint((M3ActPdoVMCmd *) shm->cmd,shm->serial_number, 0);
+	}
+
+	
 }
 ////////////////////////////////////////////////////////////////////////////////////
