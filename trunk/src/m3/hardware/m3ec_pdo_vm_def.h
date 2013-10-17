@@ -23,6 +23,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef __KERNEL__
 #define int16_t short
 #define int32_t int
+#define uint8_t unsigned char
 #else
 #ifndef EMBEDDED
 #include <sys/types.h>
@@ -36,36 +37,36 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 
 typedef struct 
 {
-	int16_t		mode;					//Reserved
-	int16_t		rt_control_command;   			//P gain, torque control
-	int16_t		rt_control_command_2;			//I gain, torque control
-	int16_t		toggle;					//D gain, torque control
-	int16_t		rpc_packet;				//Shift scalar, torque control
+	int32_t		mode;					//Reserved
+	uint8_t[28]	rt_control_command;   			//P gain, torque control
+	uint8_t[28]	rt_control_command_2;			//I gain, torque control
+	int32_t		toggle;					//D gain, torque control
+	uint8_t[28]	rpc_packet;				//Shift scalar, torque control
 } M3ActPdoVMCmd;
 
 
 
 typedef struct 
 {
-	int16_t		motor_torque;		//Calibrated value
-	int16_t		motor_iq;			//Reserved [vertx err cnts]
-	int16_t		motor_vq_avg;			//Torque input 
-	int16_t		analog_1;		//Err
-	int16_t		analog_1_dot;		//Motor temp
-	int16_t		analog_2;		//Amplifier temp 
-	int16_t		analog_2_dot;		//Motor current leg A 
-	int16_t		analog_diff;		//Motor current leg B 
-	int16_t		analog_diff_dot;		//PWM command to motor
-	int16_t		quadrature_1;			//Encoder ticks
-	int16_t		quadrature_1_dot;		//Encoder ticks
-	int16_t		quadrature_2;		//Encoder rollover counts (directional) -1|0|1 ...
-	int16_t		quadrature_2_dot;		//Err
-	int16_t		ssi;			//Reserved
-        int16_t         ssi_dot;              // calculated from the hall effect sensors
-	int16_t		fault_flags;		//Encoder rollover counts (directional) -1|0|1 ...
-	int16_t		bus_v;		//Err
-	int16_t		debug;			//Reserved
-        int16_t         rpa_packet;              // calculated from the hall effect sensors
+	int32_t		motor_torque;		//Calibrated value
+	int32_t		motor_iq;			//Reserved [vertx err cnts]
+	int32_t		motor_vq_avg;			//Torque input 
+	int32_t		analog_1;		//Err
+	int32_t		analog_1_dot;		//Motor temp
+	int32_t		analog_2;		//Amplifier temp 
+	int32_t		analog_2_dot;		//Motor current leg A 
+	int32_t		analog_diff;		//Motor current leg B 
+	int32_t		analog_diff_dot;		//PWM command to motor
+	int32_t		quadrature_1;			//Encoder ticks
+	int32_t		quadrature_1_dot;		//Encoder ticks
+	int32_t		quadrature_2;		//Encoder rollover counts (directional) -1|0|1 ...
+	int32_t		quadrature_2_dot;		//Err
+	int32_t		ssi;			//Reserved
+        int32_t         ssi_dot;              // calculated from the hall effect sensors
+	int32_t		fault_flags;		//Encoder rollover counts (directional) -1|0|1 ...
+	int32_t		bus_v;		//Err
+	int32_t		debug;			//Reserved
+        uint8_t[28]     rpa_packet;              // calculated from the hall effect sensors
 
 }M3ActPdoVMStatus;
 
