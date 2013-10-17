@@ -62,6 +62,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #define M3ACTX4_PRODUCT_CODE 1013
 #define M3TACTX2_PRODUCT_CODE 1014
 #define M3AH_FB_PRODUCT_CODE 1015
+#define M3ACTM_PRODUCT_CODE 0000 // TODO: give marlin a better product code
 
 #define M3_PRODUCT_CODE_START 1001 //m3ec.ko searches start-end to ID non-hub slaves
 #define M3_PRODUCT_CODE_END 1015

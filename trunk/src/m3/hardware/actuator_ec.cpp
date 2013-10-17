@@ -200,6 +200,31 @@ void M3ActuatorEc::SetStatusFromPdoV1(unsigned char * data)
     status.set_flags(ax->flags);
 }
 
+void M3ActuatorEc::SetStatusFromPdoVM(unsigned char * data)
+{
+    M3ActPdoVMStatus * ax;
+    if (IsPdoVersion(ACTX1_PDO_VM))
+    {
+	    M3ActX1PdoVMStatus * ec = (M3ActX1PdoVMStatus *) data;
+	    status.set_timestamp(ec->timestamp);
+	    ax=&(ec->status[chid]);
+    }
+    //TODO: convert here for Marlin
+    status.set_qei_period(ax->quadrature_1);
+    status.set_qei_on(ax->quadrature_2);
+    status.set_qei_rollover(ax->qei_rollover);
+    status.set_debug(ax->debug);
+    status.set_adc_torque(ax->adc_torque);
+    status.set_adc_ext_temp(ax->adc_motor_temp); //Post RBL version renamed PDO motor_temp to ext_temp
+    status.set_adc_ext_a(ax->adc_ext_a);
+    status.set_adc_ext_b(ax->adc_ext_b);
+    status.set_adc_amp_temp(ax->adc_amp_temp);
+    status.set_adc_current_a(ax->adc_current_a);
+    status.set_adc_current_b(ax->adc_current_b);
+    status.set_pwm_cmd(ax->pwm_cmd);	
+    status.set_flags(ax->flags);
+}
+
 	
 void M3ActuatorEc::SetStatusFromPdoV2(unsigned char * data)
 {
@@ -395,6 +420,9 @@ void M3ActuatorEc::SetStatusFromPdo(unsigned char * data)
 	
 	if (IsPdoVersion(ACTX1_PDO_V4))
 		SetStatusFromPdoV4(data);
+
+	if (IsPdoVersion(ACTX1_PDO_VM))
+		SetStatusFromPdoVM(data);
 	
 }
 
@@ -446,6 +474,15 @@ void M3ActuatorEc::SetPdoV0FromPdoV1Command(unsigned char * data)
   ec->t_desire=acc.t_desire;
   ec->t_max=acc.t_max;
   ec->t_min=acc.t_min;
+  ec->mode=acc.mode;
+  ec->pwm_max=acc.pwm_max;
+}
+
+void M3ActuatorEc::SetPdoVMFromPdoV1Command(unsigned char * data)
+{
+  M3SeaPdoVMCmd* ec = (M3SeaPdoVMCmd *) data;
+  ec->config=acc.config;
+  ec->rt_control_command=acc.t_desire; //TODO: convert to marlin
   ec->mode=acc.mode;
   ec->pwm_max=acc.pwm_max;
 }
@@ -737,14 +774,18 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	    IsPdoVersion(ACTX3_PDO_V2) || 
 	    IsPdoVersion(ACTX4_PDO_V2))
 		SetPdoV2FromPdoV1Command(data);
-		
+			
 	if (IsPdoVersion(SEA_PDO_V0))
 		SetPdoV0FromPdoV1Command(data);
-	
+
 	if (IsPdoVersion(ACTX1_PDO_V4) || 
 	    IsPdoVersion(ACTX2_PDO_V4) || 
 	    IsPdoVersion(ACTX3_PDO_V4))
 		SetPdoV4FromPdoV1Command(data);
+
+	if (IsPdoVersion(ACTX1_PDO_VM))
+		SetPdoVMFromPdoV1Command(data);
+	
 static int cnt;
 
 	/*if (tmp_cnt++ == 200)

@@ -32,6 +32,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/hardware/m3ec_pdo_v2_def.h"
 #include "m3/hardware/m3ec_pdo_v3_def.h"
 #include "m3/hardware/m3ec_pdo_v4_def.h"
+#include "m3/hardware/m3ec_pdo_vm_def.h"
 
 namespace m3{
 using namespace std;
@@ -53,6 +54,7 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 			RegisterVersion("iss",ISS);			//ISS. No change from DEFAULT
 			RegisterVersion("esp",ESP);			//ESP. Moved torque feedforward from DSP to Component 
 			RegisterVersion("iq",IQ);
+			RegisterVersion("m",M);
 			RegisterPdo("actx1_pdo_v3", ACTX1_PDO_V3);	//CRL
 			RegisterPdo("actx1_pdo_v1", ACTX1_PDO_V1);	//RBL 
 			RegisterPdo("actx2_pdo_v1", ACTX2_PDO_V1);	//RBL 
@@ -104,9 +106,11 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		void SetStatusFromPdoV2(unsigned char * data);
 		void SetStatusFromPdoV3(unsigned char * data);
 		void SetStatusFromPdoV4(unsigned char * data);
+		void SetStatusFromPdoVM(unsigned char * data);
 		void SetPdoFromCommand(unsigned char * data);
 		bool LinkDependentComponents();
 		void ResetCommandPdo(unsigned char * pdo);
+		void SetPdoVMFromPdoV1Command(unsigned char * data);
 		void SetPdoV4FromPdoV1Command(unsigned char * data);
 		void SetPdoV2FromPdoV1Command(unsigned char * data);
 		void SetPdoV0FromPdoV1Command(unsigned char * data);
@@ -115,8 +119,8 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		enum {GMB_PDO_V0,ACTX1_PDO_V1, ACTX2_PDO_V1, ACTX3_PDO_V1, ACTX4_PDO_V1, TACTX2_PDO_V1,
 		      ACTX1_PDO_V2, ACTX2_PDO_V2, ACTX3_PDO_V2, ACTX4_PDO_V2,SEA_PDO_V0,
 		      ACTX1_PDO_V3,
-		      ACTX1_PDO_V4, ACTX2_PDO_V4, ACTX3_PDO_V4,};
-		enum {DEFAULT,ISS, ESP, IQ};
+		      ACTX1_PDO_V4, ACTX2_PDO_V4, ACTX3_PDO_V4,ACTX1_PDO_VM};
+		enum {DEFAULT,ISS, ESP, IQ,M};
 		M3BaseStatus * GetBaseStatus();
 		M3ActuatorEcStatus status;
 		M3ActuatorEcCommand command;
