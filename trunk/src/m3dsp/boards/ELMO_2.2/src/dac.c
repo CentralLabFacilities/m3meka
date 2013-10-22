@@ -66,7 +66,7 @@ void set_dac(int val)
         
 	dval=val;
 
-	if (val!=0)
+	/*if (val!=0)
 	{
 		if (ec_cmd.command[0].pwm_db<0)
 		{
@@ -89,8 +89,9 @@ void set_dac(int val)
         
 	dac_buffer[dac_idx]=dval;
 	dac_idx=INC_MOD(dac_idx,DAC_NUM_SMOOTH);
-	dac_cmd_val=get_dac_smooth();//This goes back up as for current computations.
+	dac_cmd_val=get_dac_smooth();//This goes back up as for current computations.*/
         //dac_cmd_val=dval;//This goes back up as for current computations.
+        dac_cmd_val = val;
 
 	sval=convert_val_to_unsigned_dac(dac_cmd_val);
         //sval=convert_val_to_unsigned_dac(dval);
