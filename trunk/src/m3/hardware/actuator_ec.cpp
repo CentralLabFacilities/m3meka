@@ -200,7 +200,7 @@ void M3ActuatorEc::SetStatusFromPdoV1(unsigned char * data)
     status.set_flags(ax->flags);
 }
 
-void M3ActuatorEc::SetStatusFromPdoVM(unsigned char * data)
+/*void M3ActuatorEc::SetStatusFromPdoVM(unsigned char * data)
 {
     M3ActPdoVMStatus * ax;
     if (IsPdoVersion(ACTX1_PDO_VM))
@@ -223,7 +223,7 @@ void M3ActuatorEc::SetStatusFromPdoVM(unsigned char * data)
     status.set_adc_current_b(ax->adc_current_b);
     status.set_pwm_cmd(ax->pwm_cmd);	
     status.set_flags(ax->flags);
-}
+}*/
 
 	
 void M3ActuatorEc::SetStatusFromPdoV2(unsigned char * data)
@@ -421,8 +421,8 @@ void M3ActuatorEc::SetStatusFromPdo(unsigned char * data)
 	if (IsPdoVersion(ACTX1_PDO_V4))
 		SetStatusFromPdoV4(data);
 
-	if (IsPdoVersion(ACTX1_PDO_VM))
-		SetStatusFromPdoVM(data);
+	/*if (IsPdoVersion(ACTX1_PDO_VM))
+		SetStatusFromPdoVM(data);*/
 	
 }
 
@@ -478,14 +478,14 @@ void M3ActuatorEc::SetPdoV0FromPdoV1Command(unsigned char * data)
   ec->pwm_max=acc.pwm_max;
 }
 
-void M3ActuatorEc::SetPdoVMFromPdoV1Command(unsigned char * data)
+/*void M3ActuatorEc::SetPdoVMFromPdoV1Command(unsigned char * data)
 {
   M3SeaPdoVMCmd* ec = (M3SeaPdoVMCmd *) data;
   ec->config=acc.config;
   ec->rt_control_command=acc.t_desire; //TODO: convert to marlin
   ec->mode=acc.mode;
   ec->pwm_max=acc.pwm_max;
-}
+}*/
 
 void M3ActuatorEc::SetPdoV4FromPdoV1Command(unsigned char * data)
 {
@@ -783,8 +783,8 @@ void M3ActuatorEc::SetPdoFromCommand(unsigned char * data)
 	    IsPdoVersion(ACTX3_PDO_V4))
 		SetPdoV4FromPdoV1Command(data);
 
-	if (IsPdoVersion(ACTX1_PDO_VM))
-		SetPdoVMFromPdoV1Command(data);
+	/*if (IsPdoVersion(ACTX1_PDO_VM))
+		SetPdoVMFromPdoV1Command(data);*/
 	
 static int cnt;
 

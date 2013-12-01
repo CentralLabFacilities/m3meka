@@ -32,7 +32,7 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3/hardware/m3ec_pdo_v2_def.h"
 #include "m3/hardware/m3ec_pdo_v3_def.h"
 #include "m3/hardware/m3ec_pdo_v4_def.h"
-#include "m3/hardware/m3ec_pdo_vm_def.h"
+//#include "m3/hardware/m3ec_pdo_vm_def.h"
 
 namespace m3{
 using namespace std;
@@ -106,11 +106,11 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		void SetStatusFromPdoV2(unsigned char * data);
 		void SetStatusFromPdoV3(unsigned char * data);
 		void SetStatusFromPdoV4(unsigned char * data);
-		void SetStatusFromPdoVM(unsigned char * data);
+		//void SetStatusFromPdoVM(unsigned char * data);
 		void SetPdoFromCommand(unsigned char * data);
 		bool LinkDependentComponents();
 		void ResetCommandPdo(unsigned char * pdo);
-		void SetPdoVMFromPdoV1Command(unsigned char * data);
+		//void SetPdoVMFromPdoV1Command(unsigned char * data);
 		void SetPdoV4FromPdoV1Command(unsigned char * data);
 		void SetPdoV2FromPdoV1Command(unsigned char * data);
 		void SetPdoV0FromPdoV1Command(unsigned char * data);
