@@ -173,7 +173,7 @@ class M3OmniBase(M3Vehicle):
 		caster_names=['FrontRight','RearRight','RearLeft','FrontLeft']
 		self.set_mode_caster_off(range(4))
 		self.set_mode_caster_theta(idx)						
-		self.set_mode_caster_theta(idx_wiggle)	
+		#self.set_mode_caster_theta(idx_wiggle)	
 		self.set_roll_torques(0.0, idx)
                 self.enable_breakbeam(idx)                
                 start_theta = self.get_steer_theta()[idx]
@@ -188,14 +188,14 @@ class M3OmniBase(M3Vehicle):
 			self.set_steer_theta(theta_des, idx )
 			theta_wig = start_theta_wiggle + 30.0 * math.cos(deg2rad(4.0 * theta_cnt))
 			torque_roll = 2.0 * math.cos(deg2rad(6.0 * theta_cnt))
-			self.set_steer_theta(theta_wig, idx_wiggle )
+			#self.set_steer_theta(theta_wig, idx_wiggle )
 			self.set_roll_torques(torque_roll, idx)
 			proxy.step()
                         str_tqs = self.get_steer_torques()
 			rol_tqs = self.get_roll_torques()
                         print 'Steer Joint Tq at idx', idx, ':', str_tqs[idx]
 			print 'Roll Joint Tq at idx', idx, ':', rol_tqs[idx]
-			print 'Steer Tq at idx', idx_wiggle, ':', str_tqs[idx_wiggle]
+			#print 'Steer Tq at idx', idx_wiggle, ':', str_tqs[idx_wiggle]
 			print '.'                        
 			theta_step = 2.0
 			theta_cnt += theta_step
@@ -206,14 +206,14 @@ class M3OmniBase(M3Vehicle):
 			if time.time() - ts > time_out:
 				self.disable_breakbeam(idx)
 				self.set_mode_caster_off(idx)	
-				self.set_mode_caster_off(idx_wiggle)
+				#self.set_mode_caster_off(idx_wiggle)
 				self.set_roll_torques(0.0, idx)
 				proxy.step()
 				return
 			time.sleep(0.1)
 		self.set_roll_torques(0.0, idx)
 		self.set_mode_caster_off(idx)
-		self.set_mode_caster_off(idx_wiggle)
+		#self.set_mode_caster_off(idx_wiggle)
 		self.disable_breakbeam(idx)                                
 		proxy.step()
 		print "Caster: ", caster_names[idx], " Calibrated."
