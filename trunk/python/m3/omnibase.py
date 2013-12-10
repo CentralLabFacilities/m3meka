@@ -172,45 +172,49 @@ class M3OmniBase(M3Vehicle):
 		time_out = 20.0
 		caster_names=['FrontRight','RearRight','RearLeft','FrontLeft']
 		self.set_mode_caster_off(range(4))
-		self.set_mode_caster_theta(idx)						
+		#self.set_mode_caster_theta(idx)						
 		#self.set_mode_caster_theta(idx_wiggle)	
 		self.set_roll_torques(0.0, idx)
                 self.enable_breakbeam(idx)                
-                start_theta = self.get_steer_theta()[idx]
+                #start_theta = self.get_steer_theta()[idx]
 		#print 'Start theta:', idx, start_theta
-		start_theta_wiggle = self.get_steer_theta()[idx_wiggle]
-		theta = 0
-		theta_cnt = 0
+		#start_theta_wiggle = self.get_steer_theta()[idx_wiggle]
+		#theta = 0
+		#theta_cnt = 0\
+		self.set_mode_caster_torque(idx)
 		ts = time.time()
 		proxy.step()
 		while (not self.is_calibrated(idx)):
-			theta_des = start_theta + theta
-			self.set_steer_theta(theta_des, idx )
-			theta_wig = start_theta_wiggle + 30.0 * math.cos(deg2rad(4.0 * theta_cnt))
-			torque_roll = 2.0 * math.cos(deg2rad(6.0 * theta_cnt))
+			#theta_des = start_theta + theta
+			#self.set_steer_theta(theta_des, idx )
+			#theta_wig = start_theta_wiggle + 30.0 * math.cos(deg2rad(4.0 * theta_cnt))
+			#torque_roll = 2.0 * math.cos(deg2rad(6.0 * theta_cnt))
 			#self.set_steer_theta(theta_wig, idx_wiggle )
-			self.set_roll_torques(torque_roll, idx)
+			#self.set_roll_torques(torque_roll, idx)
 			proxy.step()
-                        str_tqs = self.get_steer_torques()
-			rol_tqs = self.get_roll_torques()
+                        #str_tqs = self.get_steer_torques()
+			#rol_tqs = self.get_roll_torques()
                         #print 'Steer Joint Tq at idx', idx, ':', str_tqs[idx]
 			#print 'Roll Joint Tq at idx', idx, ':', rol_tqs[idx]
 			#print 'Steer Tq at idx', idx_wiggle, ':', str_tqs[idx_wiggle]
-			#print '.'                        
-			theta_step = 2.0
-			theta_cnt += theta_step
-			theta_err = theta_des - self.get_steer_theta()[idx]
+			#print '.'   
+			self.set_steer_torques(10.0, idx)
+			#theta_step = 2.0
+			#theta_cnt += theta_step
+			#theta_err = theta_des - self.get_steer_theta()[idx]
 			#print 'theta err:', theta_err
-			if theta_err < 40.0:
-				theta += theta_step			
+			#if theta_err < 40.0:
+			#	theta += theta_step			
 			if time.time() - ts > time_out:
 				self.disable_breakbeam(idx)
 				self.set_mode_caster_off(idx)	
 				#self.set_mode_caster_off(idx_wiggle)
 				self.set_roll_torques(0.0, idx)
+				self.set_steer_torques(0.0, idx)
 				proxy.step()
 				return
 			time.sleep(0.1)
+		self.set_steer_torques(0.0, idx)
 		self.set_roll_torques(0.0, idx)
 		self.set_mode_caster_off(idx)
 		#self.set_mode_caster_off(idx_wiggle)
