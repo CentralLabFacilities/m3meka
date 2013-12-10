@@ -150,6 +150,8 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		bool override_ext_temp;
 		M3ActuatorEc * override_ext_temp_act_ec;
 		string override_ext_temp_act_ec_name;
+		bool dont_check_tq_vertx_err;
+		bool dont_check_qei_vertx_err;
 };
 
 

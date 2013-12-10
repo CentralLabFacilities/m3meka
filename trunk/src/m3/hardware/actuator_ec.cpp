@@ -334,36 +334,46 @@ void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
     //tq_old = status.adc_torque();
     int tq_diff = ABS(ax->adc_torque - status.adc_torque());
     
-    if (tq_diff > 40)
-    {
-      tq_err_cnt++;
-    }
-    else
+    if (dont_check_tq_vertx_err)
     {
       status.set_adc_torque(ax->adc_torque);
-      tq_err_cnt = 0;
+    } else {
+	if (tq_diff > 40)
+	{
+	  tq_err_cnt++;
+	}
+	else
+	{
+	  status.set_adc_torque(ax->adc_torque);
+	  tq_err_cnt = 0;
+	}	
+	if (tq_err_cnt > 2)
+	{
+	  tq_err_cnt = 0;
+	  status.set_adc_torque(ax->adc_torque);
+	}
     }
     
-    if (tq_err_cnt > 2)
+    int qei_diff = ABS(ax->qei_on - status.qei_on());
+    if (dont_check_qei_vertx_err)
     {
-      tq_err_cnt = 0;
-      status.set_adc_torque(ax->adc_torque);
-    }
-    
-    if (ABS(ax->qei_on - status.qei_on()) > 50)
-    {
-      qei_err_cnt++;
-    }
-    else
-    {
-      status.set_qei_on(ax->qei_on);
-      qei_err_cnt = 0;
-    }
-    
-    if (qei_err_cnt > 2)
-    {
-      qei_err_cnt = 0;
-      status.set_qei_on(ax->qei_on);
+        status.set_qei_on(ax->qei_on);
+    } else {
+	if (qei_diff > 50)
+	{
+	  qei_err_cnt++;
+	}
+	else
+	{
+	  status.set_qei_on(ax->qei_on);
+	  qei_err_cnt = 0;
+	}
+	
+	if (qei_err_cnt > 2)
+	{
+	  qei_err_cnt = 0;
+	  status.set_qei_on(ax->qei_on);
+	}
     }
     
     //status.set_adc_torque(ax->adc_torque);
@@ -917,6 +927,22 @@ bool M3ActuatorEc::ReadConfig(const char * filename)
 		  override_ext_temp = false;		  		  
 		}
 		//M3_DEBUG("%s has_brake: %d\n", filename, has_brake);
+		
+		try
+		{
+			doc["config"]["dont_check_qei_vertx_err"] >> dont_check_qei_vertx_err;						
+		} catch(YAML::TypedKeyNotFound<string> e) 
+		{
+			dont_check_qei_vertx_err=false;
+		}
+		
+		try
+		{
+			doc["config"]["dont_check_tq_vertx_err"] >> dont_check_tq_vertx_err;						
+		} catch(YAML::TypedKeyNotFound<string> e) 
+		{
+			dont_check_tq_vertx_err=false;
+		}
 	}
 	return true;
 }
