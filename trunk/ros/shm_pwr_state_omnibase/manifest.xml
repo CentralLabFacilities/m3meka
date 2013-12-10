@@ -1,0 +1,17 @@
+<package>
+  <description brief="shm_pwr_state_omnibase">
+
+     shm_pwr_state_omnibase
+
+  </description>
+  <author>meka</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/shm_pwr_state_omnibase</url>
+  <depend package="roscpp"/>
+  <depend package="rosconsole"/>
+  <depend package="nav_msgs"/>
+  <depend package="tf"/>
+</package>
+
+

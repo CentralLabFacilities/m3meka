@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -O2 -g   -shared -Wl,-soname,libgtest.so -o ../lib/libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o -L/opt/ros/groovy/lib -L/home/meka/mekabot/m3meka/ros/shm_led_x2xn/gtest/src -lpthread -Wl,-rpath,/opt/ros/groovy/lib:/home/meka/mekabot/m3meka/ros/shm_led_x2xn/gtest/src 

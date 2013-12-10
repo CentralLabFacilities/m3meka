@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/meka/mekabot/m3meka/ros/meka_ik/build/devel/setup.sh
