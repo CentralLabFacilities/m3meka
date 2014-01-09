@@ -38,7 +38,9 @@ class M3Proc:
         self.gui = m3g.M3Gui()
 
     def stop(self):
-        self.proxy.stop()
+	pass
+        #self.proxy.stop()
+        
     def start(self):
         self.proxy.start()
         self.proxy.make_operational_all()
@@ -48,13 +50,13 @@ class M3Proc:
             hand_name=m3t.user_select_components_interactive(chain_names,single=True)
         else:
             hand_name=chain_names
-        pwr_name=self.proxy.get_available_components('m3pwr')
-	if len(pwr_name)>1:
-            pwr_name=m3t.user_select_components_interactive(pwr_name,single=True)
+        #pwr_name=self.proxy.get_available_components('m3pwr')
+	#if len(pwr_name)>1:
+        #    pwr_name=m3t.user_select_components_interactive(pwr_name,single=True)
 
 
-	arm_names=self.proxy.get_available_components('m3arm')
-	if len(arm_names)>0:
+	#arm_names=self.proxy.get_available_components('m3arm')
+	'''if len(arm_names)>0:
 	  	print 'Position arm [y]?'
 		if m3t.get_yes_no('y'):
 		  if len(arm_names)>1:
@@ -71,20 +73,20 @@ class M3Proc:
 
 	humanoid_shm_names=self.proxy.get_available_components('m3humanoid_shm')
 	if len(humanoid_shm_names) > 0:
-	  self.proxy.make_safe_operational(humanoid_shm_names[0])
+	  self.proxy.make_safe_operational(humanoid_shm_names[0])'''
 		
         self.chain=m3f.create_component(hand_name[0])
         self.proxy.publish_command(self.chain)
         self.proxy.subscribe_status(self.chain)
 
-        self.pwr=m3f.create_component(pwr_name[0])
-        self.proxy.publish_command(self.pwr)
-        self.pwr.set_motor_power_on()
+        #self.pwr=m3f.create_component(pwr_name[0])
+        #self.proxy.publish_command(self.pwr)
+        #self.pwr.set_motor_power_on()
 
  	#Force safe-op of robot if present
-        hum=self.proxy.get_available_components('m3humanoid')
-        if len(hum)>0:
-            self.proxy.make_safe_operational(hum[0])
+        #hum=self.proxy.get_available_components('m3humanoid')
+        #if len(hum)>0:
+        #    self.proxy.make_safe_operational(hum[0])
 	
         #Setup postures
 	self.posture_filename=m3t.get_m3_animation_path()+self.chain.name+'_postures.yml'

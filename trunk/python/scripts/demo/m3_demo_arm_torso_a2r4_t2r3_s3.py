@@ -30,6 +30,9 @@ import m3.gui as m3g
 import m3.trajectory as m3jt
 import numpy as nu
 import yaml
+from m3.unit_conversion import *
+import numpy as nu
+import math
 
 class M3Proc:
 	def __init__(self):
@@ -90,6 +93,12 @@ class M3Proc:
 		self.via_traj_2={}
 		self.via_traj_torso={}
 		self.via_traj_first=True
+		
+		humanoid_shm_names=self.proxy.get_available_components('m3humanoid_shm')
+		if len(humanoid_shm_names) > 0:
+		  self.proxy.make_safe_operational(humanoid_shm_names[0])
+
+
 
 		# ######## Square/Circle stuff #########################
 		if self.arm_name == 'right_arm':
@@ -253,7 +262,7 @@ class M3Proc:
 			if self.get_hand_mode_name()!='Animation':
 				self.hand_traj_first=True
 			apply(self.hand_mode_methods[self.hand_mode[0]])
-			
+		self.proxy.step()
 
 	def step_hand_off(self):
 		self.hand.set_mode_off()
@@ -286,6 +295,19 @@ class M3Proc:
 			self.bot.set_stiffness(self.arm_name_2, self.get_stiffness())
 			self.bot.set_slew_rate_proportion(self.arm_name_2,[1.0]*self.ndof)
 			  
+		self.bot.set_mode_theta('head')
+		self.bot.set_slew_rate_proportion('head',[1.0, 1.0])
+		tool_pos = self.bot.get_tool_position(self.arm_name)
+		tool_pos[2] -= 0.2
+		#head_pos = bot.get_tool_position('head')
+		#print 'pos:', tool_pos
+		#print 'head:', head_pos
+		yaw = rad2deg(math.atan2(tool_pos[1], tool_pos[0]))
+		pitch = rad2deg(math.atan2(tool_pos[2], tool_pos[0]))
+		#print 'yaw angle:',  yaw
+		#print 'pitch angle:', pitch
+		self.bot.set_theta_deg('head', [pitch, yaw])
+		
 		if self.have_torso_follow_traj:
 			self.bot.set_mode_splined_traj_gc('torso')
 			self.bot.set_stiffness('torso', [0.75,0.75,0.75])

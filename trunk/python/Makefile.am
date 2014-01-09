@@ -135,6 +135,7 @@ dist_bin_SCRIPTS = \
 	scripts/demo/m3_demo_hand_h2r3.py\
 	scripts/demo/m3_demo_hand_h2r4.py\
 	scripts/demo/m3_demo_hand_h2r5.py\
+	scripts/demo/m3_demo_hand_h2r5_no_pwr.py\
 	scripts/demo/m3_demo_hand_viz_h2r3.py\
 	scripts/demo/m3_demo_gripper_g1r1.py\
 	scripts/demo/m3_demo_ik_delta.py\
@@ -145,6 +146,7 @@ dist_bin_SCRIPTS = \
 	scripts/demo/m3_demo_arm_korg.py\
 	scripts/demo/m3_demo_bimanual_torso_a2r2_t2r2.py\
 	scripts/demo/m3_demo_arm_torso_a2r4_t2r3.py\
+	scripts/demo/m3_demo_arm_torso_a2r4_t2r3_s3.py\
 	scripts/demo/m3_demo_face_detect.py\
 	scripts/demo/m3_demo_hold_pose.py\
 	scripts/demo/m3_demo_mirror.py\
