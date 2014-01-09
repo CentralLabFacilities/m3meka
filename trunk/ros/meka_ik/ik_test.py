@@ -35,7 +35,8 @@ def ik_test_client():
     try:
 	tmp = MekaIK()
         ik = rospy.ServiceProxy('meka_ik', MekaIK)
-        resp1 = ik('right_arm',[0]*3,[0]*3,[0]*7)
+        #resp1 = ik('right_arm',[0]*3,[0]*3,[0]*7) 
+        resp1 = ik('right_arm',[0.005, -0.2163, -0.058],[3.141, 0.0, 1.5707],[0]*7)
         print resp1.success, resp1.angles_solution
         #return resp1.sum
     except rospy.ServiceException, e:
