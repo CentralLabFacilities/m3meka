@@ -1,2 +1,0 @@
-Header header
-float32 bus_voltage

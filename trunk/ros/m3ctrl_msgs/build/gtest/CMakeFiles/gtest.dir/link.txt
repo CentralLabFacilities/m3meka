@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC -O2 -g   -shared -Wl,-soname,libgtest.so -o /home/meka/mekabot/m3meka/ros/m3ctrl_msgs/lib/libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o -L/opt/ros/hydro/lib -L/home/meka/mekabot/m3meka/ros/m3ctrl_msgs/build/gtest/src -lpthread -Wl,-rpath,/opt/ros/hydro/lib:/home/meka/mekabot/m3meka/ros/m3ctrl_msgs/build/gtest/src 
