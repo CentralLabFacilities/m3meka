@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC -O2 -g   -shared -Wl,-soname,libgtest.so -o ../lib/libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o -L/home/meka/mekabot/m3meka/ros/m3meka_msgs/gtest/src -lpthread -Wl,-rpath,/home/meka/mekabot/m3meka/ros/m3meka_msgs/gtest/src 
