@@ -1,6 +1,0 @@
-<launch>
-  <!-- start gazebo with an empty plane -->
-  <param name="/use_sim_time" value="true" />
-  <node name="gazebo" pkg="gazebo" type="gazebo" args="$(find meka_gazebo)/launch/empty_nograv.world" respawn="false" />
-  <!--<node name="gazebo" pkg="gazebo" type="gazebo" args="$(find gazebo_worlds)/worlds/empty_nograv.world" respawn="false" />-->
-</launch>
