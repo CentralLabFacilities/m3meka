@@ -74,7 +74,7 @@ static int64_t last_cmd_ts;
 nav_msgs::Odometry odom_g;
 ros::Publisher odom_publisher_g;
 ros::Subscriber cmd_sub_g;
-//tf::TransformBroadcaster odom_broadcaster;
+boost::shared_ptr<tf::TransformBroadcaster> odom_broadcaster_ptr;
 ////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -136,7 +136,7 @@ void StepShm(int cntr)
     odom_trans.transform.rotation = odom_quat;
 
     //send the transform
-    //odom_broadcaster.sendTransform(odom_trans);
+    odom_broadcaster_ptr->sendTransform(odom_trans);
     
     odom_g.header.frame_id = "odom";
 
@@ -290,7 +290,7 @@ static void* rt_system_thread(void * arg)
 		dt=end_time-start_time;
         if(step_cnt % 50 == 0)
         {
-            printf("sta[%f,%f,%f   ]\n",(float)status.timestamp,status.x,status.y,status.yaw);
+            printf("sta[%f,%f,%f,%f]\n",(float)status.timestamp,status.x,status.y,status.yaw);
             printf("cmd[%f,%f,%f,%f]\n",(float)cmd.timestamp,cmd.x_velocity,cmd.y_velocity,cmd.yaw_velocity);
         }
 		/*
@@ -326,17 +326,19 @@ int main (int argc, char **argv)
 	
 	rt_allow_nonroot_hrt();
 	
-	/*ros::init(argc, argv, "base_controller"); // initialize ROS node
+	/* ros::init(argc, argv, "base_controller"); // initialize ROS node
   	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
   	spinner.start();
         ros::NodeHandle root_handle;*/
 	
 	ros::init(argc, argv, "base_controller", ros::init_options::NoSigintHandler); // initialize ROS node
-	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
-	spinner.start();
+//	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
+//	spinner.start();
         ros::NodeHandle root_handle;
 	ros::NodeHandle p_nh("~");
-	
+
+	odom_broadcaster_ptr.reset(new tf::TransformBroadcaster);
+
 	cmd_sub_g = root_handle.subscribe<geometry_msgs::Twist>("omnibase_command", 1, &commandCallback);
 		
 	odom_publisher_g = root_handle.advertise<nav_msgs::Odometry>("omnibase_odom", 1, true);
