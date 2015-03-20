@@ -215,9 +215,9 @@ void commandCallback(const geometry_msgs::TwistConstPtr& msg)
   cmd.y_velocity = msg->linear.y;
   cmd.yaw_velocity = msg->angular.z;
   
-     /*   printf("x: %f\n", cmd.x_velocity);
+        printf("x: %f\n", cmd.x_velocity);
 	    printf("y: %f\n", cmd.y_velocity);
-        printf("a: %f\n", cmd.yaw_velocity);*/
+        printf("a: %f\n", cmd.yaw_velocity);
 	    
   last_cmd_ts = status.timestamp;
   
@@ -320,7 +320,10 @@ static void* rt_system_thread(void * arg)
 ////////////////////////////////////////////////////////////////////////////////////
 int main (int argc, char **argv)
 {	
-    //RT_TASK *task;
+	printf("running omnibase stuff.\n");
+    
+
+//RT_TASK *task;
 	M3Sds * sys;
 	int cntr=0;
 	
@@ -332,14 +335,14 @@ int main (int argc, char **argv)
         ros::NodeHandle root_handle;*/
 	
 	ros::init(argc, argv, "base_controller", ros::init_options::NoSigintHandler); // initialize ROS node
-//	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
-//	spinner.start();
+	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
+	spinner.start();
         ros::NodeHandle root_handle;
 	ros::NodeHandle p_nh("~");
 
 	odom_broadcaster_ptr.reset(new tf::TransformBroadcaster);
 
-	cmd_sub_g = root_handle.subscribe<geometry_msgs::Twist>("omnibase_command", 1, &commandCallback);
+	cmd_sub_g = root_handle.subscribe("omnibase_command", 1, commandCallback);
 		
 	odom_publisher_g = root_handle.advertise<nav_msgs::Odometry>("omnibase_odom", 1, true);
 
