@@ -74,21 +74,21 @@ class M3JointZLift(M3Joint):
             raw_input()
             if self.get_limitswitch_neg(): 
                 print 'Already at limit, moving up first...'
-                self.set_mode_pwm()
                 self.set_pwm(self.config['pwm_calibration_up'])
+                self.set_mode_pwm()
                 proxy.step()
                 time.sleep(4.0)
             print 'Moving down to limit'
             print 'Manual assist may be required'
-            self.set_mode_pwm()
             self.set_pwm(self.config['pwm_calibration_down'])
+            self.set_mode_pwm()
             proxy.step()
-            for i in range(20):
+            for i in range(200):
                 if self.get_encoder_calibrated():
                     print 'Z-Lift encoder calibrated. Currently at position: ',self.get_pos_mm(),'(mm)'
                     return True
-                print i,' : ', self.get_theta_deg()
-                time.sleep(1.0)
+                print i,' : ', self.get_theta_deg(),'pwm: ',self.status.pwm_cmd
+                time.sleep(.1)
                 proxy.step()
             self.set_mode_off()
             proxy.step()

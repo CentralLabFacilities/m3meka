@@ -158,7 +158,14 @@ bool M3Joint::ReadConfig(const char * filename)
 	{
 		param.set_kq_d_pose(param.kq_d());
 	} 	
-	
+        try 
+        {
+        doc["disable_pwm_ramp"] >> val;
+	disable_pwm_ramp = (int) val;
+	} catch(...) 
+        {
+                disable_pwm_ramp=0;
+        }
 	string t;
 	try 
 	{
@@ -170,7 +177,6 @@ bool M3Joint::ReadConfig(const char * filename)
 	{
 		brake_type=BRAKE_NONE;
 	} 
-	
 	try 
 	{
 		doc["control_component"] >> ctrl_simple_name;		
