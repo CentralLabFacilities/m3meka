@@ -85,6 +85,8 @@ class M3JointZLift(M3Joint):
             proxy.step()
             for i in range(200):
                 if self.get_encoder_calibrated():
+                    self.set_pwm(self.config['pwm_calibration_hold'])
+                    proxy.step()
                     print 'Z-Lift encoder calibrated. Currently at position: ',self.get_pos_mm(),'(mm)'
                     return True
                 print i,' : ', self.get_theta_deg(),'pwm: ',self.status.pwm_cmd
