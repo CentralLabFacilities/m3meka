@@ -80,7 +80,7 @@ void M3OmnibaseShm::SetCommandFromSds(unsigned char * data)
   }
   
     
-  if (omnibase != NULL)
+  if (omnibase != NULL || !pwr->IsMotorPowerOn())
   {
     if (shm_timeout)
     {
