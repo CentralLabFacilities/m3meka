@@ -124,7 +124,7 @@ class M3Proc:
                 if hand.mode[4]:
                     self.bot.set_mode_torque_gc(hand.name,[4])
                 self.bot.set_theta_deg(hand.name,self.bot.get_theta_deg(hand.name))
-                self.bot.set_torque_mNm(hand.name,hand.param['grasp_torque'])
+                self.bot.set_torque(hand.name,hand.param['grasp_torque'])
             hand.grasp_last=hand.grasp
 
             #Do joint theta control
