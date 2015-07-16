@@ -945,8 +945,8 @@ void M3Humanoid::StepStatus()
 		Frame T_left;
 		Frame T_right;
 
-		T_right = Frame(Rotation::RotZ(head->GetThetaRad(5)), Vector());
-		T_left = Frame(Rotation::RotZ(head->GetThetaRad(6)),Vector());
+		T_right = Frame(Rotation::RotZ(0), Vector());
+		T_left = Frame(Rotation::RotZ(0),Vector());
 		// right_eye = head_T6								
 		right_eye_2_world_frame = head_end_frame * right_eye_offset * T_right;
 		
