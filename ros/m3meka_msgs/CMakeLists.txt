@@ -14,6 +14,9 @@ add_message_files(
   FILES
   M3JointStatus.msg
   M3OmnibaseJoy.msg
+  M3ControlState.msg
+  M3ControlStates.msg
+  M3ControlStateErrorCodes.msg
 )
 
 add_service_files(
@@ -27,7 +30,7 @@ add_service_files(
   M3LoadX6Cmd.srv
   M3LoadX6Param.srv
   M3LoadX6Status.srv
-
+  M3ControlStateChange.srv
 )
 
 generate_messages(   

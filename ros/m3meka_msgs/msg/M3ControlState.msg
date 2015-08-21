@@ -1,0 +1,7 @@
+int8  UNKNOWN=-1
+int8  ESTOP=0
+int8  STOP=1
+int8  FREEZE=2
+int8  START=3
+
+int8 val
