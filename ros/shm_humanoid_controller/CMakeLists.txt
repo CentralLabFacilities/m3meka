@@ -18,10 +18,11 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(PkgConfig REQUIRED)
 #find_package(YamlCpp  REQUIRED)
 pkg_check_modules(YAMLCPP REQUIRED yaml-cpp)
-if(${YAMLCPP_VERSION} VERSION_GREATER "0.5")
+message("yaml-cpp version:" ${YAMLCPP_VERSION})
+if(${YAMLCPP_VERSION} VERSION_LESS "0.5")
 set_property(DIRECTORY
                 PROPERTY COMPILE_DEFINITIONS "YAMLCPP_03")
-endif(${YAMLCPP_VERSION} VERSION_GREATER "0.5")
+endif(${YAMLCPP_VERSION} VERSION_LESS "0.5")
 
 
 find_package(M3rt REQUIRED)
