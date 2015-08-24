@@ -1,12 +1,13 @@
 
 SET(SUBS
-chains
+toolbox
 hardware
+chains
 inverse_kine
 robot_ctrl
 robots
 shared_mem
-toolbox
+
 vehicles
 )
 

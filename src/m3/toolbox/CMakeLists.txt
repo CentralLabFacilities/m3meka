@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(toolbox)
 set(LIBNAME "m3toolbox")
 
-find_package(M3 COMPONENTS HARDWARE ROBOTS CHAINS TOOLBOX SHARED_MEM)
+#find_package(M3 COMPONENTS HARDWARE ROBOTS CHAINS TOOLBOX SHARED_MEM)
 find_package(M3rt)
 include_directories(${M3RT_INCLUDE_DIR} ${M3_INCLUDE_DIR} ${M3RT_SRC})
 
@@ -48,7 +48,7 @@ add_custom_target(${LIBNAME}_protobuf_tmp  ALL DEPENDS ${ProtoSources}) # Force 
 find_package(orocos_kdl REQUIRED)
 include_directories(${orocos_kdl_INCLUDE_DIRS})
 
-SET(LIBS ${RTAI_LIBRARIES} pthread ${Boost_LIBRARIES} ${EIGEN3_LIBRARIES} ${PROTOBUF_LIBRARIES} m3base ${orocos_kdl_LIBRARIES})
+SET(LIBS ${RTAI_LIBRARIES} pthread ${Boost_LIBRARIES} ${EIGEN3_LIBRARIES} ${PROTOBUF_LIBRARIES} ${M3RT_LIBRARIES} ${orocos_kdl_LIBRARIES})
 
 
 

@@ -72,7 +72,7 @@ include_directories(${orocos_kdl_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${orocos_kdl_LIBRARIES})
 
 
-set(LIBS ${LIBS} ${RTAI_LIBRARIES}  pthread ${Boost_LIBRARIES} ${EIGEN3_LIBRARIES} ${PROTOBUF_LIBRARIES} m3chains m3toolbox m3hardware m3base)
+set(LIBS ${LIBS} ${RTAI_LIBRARIES}  pthread ${Boost_LIBRARIES} ${EIGEN3_LIBRARIES} ${PROTOBUF_LIBRARIES} m3chains m3toolbox m3hardware ${M3RT_LIBRARIES})
 
 
 set( ALL_SRCS 

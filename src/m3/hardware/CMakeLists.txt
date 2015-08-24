@@ -55,7 +55,7 @@ set_source_files_properties(${ProtoSources} ${ProtoHeaders} PROPERTIES
                             GENERATED TRUE)
 add_custom_target(${LIBNAME}_protobuf_tmp  ALL DEPENDS ${ProtoSources}) # Force the re-generation
 
-SET(LIBS ${RTAI_LIBRARIES}  pthread ${Boost_LIBRARIES} ${EIGEN3_LIBRARIES} m3toolbox ${orocos_kdl_LIBRARIES} m3base)
+SET(LIBS ${RTAI_LIBRARIES}  pthread ${Boost_LIBRARIES} ${EIGEN3_LIBRARIES} ${M3RT_LIBRARIES} m3toolbox ${orocos_kdl_LIBRARIES})
 
 
 set( ALL_SRCS 
@@ -144,6 +144,7 @@ ${ProtoFiles}
 
 ## Building
 add_library(${LIBNAME} SHARED ${ALL_SRCS})
+add_dependencies(${LIBNAME} m3toolbox)
 target_link_libraries(${LIBNAME} ${LIBS})
 #set_target_properties(${LIBNAME} PROPERTIES COMPILE_FLAGS "-I${CMAKE_BINARY_DIR}/src")
 
