@@ -7,6 +7,7 @@ project(shm_omnibase_controller)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/Modules/")
 
 find_package(catkin REQUIRED COMPONENTS
+  message_generation
   nav_msgs
   rosconsole
   roscpp
@@ -97,7 +98,7 @@ find_package(RTAI REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES shm_generic
-  CATKIN_DEPENDS nav_msgs rosconsole roscpp rospy tf
+  CATKIN_DEPENDS nav_msgs rosconsole roscpp rospy tf message_runtime
 #  DEPENDS system_lib
 )
 
@@ -137,7 +138,8 @@ target_link_libraries(drive_base ${LIBS})
 target_link_libraries(shm_omnibase_controller ${LIBS})
 target_link_libraries(shm_truss_vels ${LIBS})
 
-add_dependencies(shm_truss_vels M3TrussVel.h)
+add_dependencies(shm_omnibase_controller ${PROJECT_NAME}_gencpp)
+add_dependencies(shm_truss_vels M3TrussVel.h ${PROJECT_NAME}_gencpp)
 ## Declare a cpp library
 # add_library(shm_generic
 #   src/${PROJECT_NAME}/shm_generic.cpp

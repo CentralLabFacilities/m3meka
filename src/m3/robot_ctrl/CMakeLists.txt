@@ -61,7 +61,7 @@ add_custom_target(${LIBNAME}_protobuf_tmp  ALL DEPENDS ${ProtoSources}) # Force 
 
 
 
-SET(LIBS ${RTAI_LIBRARIES}  pthread ${Boost_LIBRARIES} ${EIGEN3_LIBRARIES} ${PROTOBUF_LIBRARY} m3robots m3chains m3hardware m3toolbox m3base)
+SET(LIBS ${RTAI_LIBRARIES}  pthread ${Boost_LIBRARIES} ${EIGEN3_LIBRARIES} ${PROTOBUF_LIBRARY} m3hardware m3robots m3chains m3toolbox  ${M3RT_LIBRARIES})
 
 
 set( ALL_SRCS 

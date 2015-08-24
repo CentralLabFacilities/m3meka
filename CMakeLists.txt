@@ -6,6 +6,11 @@ SET(PATCH_VERSION "9")
 set(M3CORE_VERSION
   ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
 
+# paths to the FindXXX.cmake
+set(CMAKE_MODULE_PATH
+    "${MEKABOT}/meka-cmake-modules/Modules/"
+    $ENV{M3_CMAKE_MODULES}
+    ${CMAKE_MODULE_PATH})
 
 OPTION(RTAI "Enable/Disable RTAI (used for python proxy users only)" ON)
 if(RTAI)
@@ -16,15 +21,31 @@ if(RTAI AND NOT RTAI_FOUND)
   message(WARNING "Rtai not present, only generating python")
 endif()
 
-# Tmp solution for the FindXXX.cmake 
-set(CMAKE_MODULE_PATH 
-    "${MEKABOT_SRC}/meka-cmake-modules/Modules/"
-    ${CMAKE_MODULE_PATH}
-)
+
+#set(MEKABOT ${CMAKE_SOURCE_DIR})
+#set(M3RT_SRC ${MEKABOT}/m3core/src )
+#set(M3_SRC ${MEKABOT}/m3meka/src)
 
 if(NOT MEKABOT)
 message(WARNING "m3meka is not in mekabot, so the FindXXX.cmake might not be found, if so, please run:\n git clone https://github.com/ahoarau/meka-cmake-modules\n To get the FindXXX.cmake")
 endif()
+
+# Find M3RT
+find_package(M3rt REQUIRED)
+set(LIBRARIES ${LIBRARIES} ${M3RT_LIBRARIES})
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${M3RT_INCLUDE_DIR})
+
+# Compile in c++11
+OPTION(C++11 "Use c++11 " 1)
+
+if(C++11)
+	set(CMAKE_CXX_FLAGS "-std=c++0x")
+	message("-- Using c++11")
+endif(C++11)
+
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
 
 set(M3_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src 
 )
@@ -39,6 +60,15 @@ include_directories(
 add_subdirectory(src)
 add_subdirectory(python)
 add_subdirectory(scripts)
+
+find_package(catkin QUIET COMPONENTS std_msgs m3_msgs)
+if(catkin_FOUND)
+  add_subdirectory(ros/m3ctrl_msgs)
+  add_subdirectory(ros/m3meka_msgs)
+  add_subdirectory(ros/meka_trajectory)
+ #seems broken due to yaml upgrade ? add_subdirectory(ros/shm_humanoid_controller)
+  add_subdirectory(ros/shm_omnibase_controller)
+endif(catkin_FOUND)
 
 
 if(NOT MEKABOT)
