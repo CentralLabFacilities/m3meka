@@ -24,6 +24,7 @@ endif(${YAMLCPP_VERSION} VERSION_GREATER "0.5")
 
 
 find_package(M3rt REQUIRED)
+find_package(M3 REQUIRED COMPONENTS VEHICLES)
 find_package(RTAI REQUIRED)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -105,7 +106,7 @@ catkin_package(
 ## Build ##
 ###########
 
-SET(LIBS ${catkin_LIBRARIES} ${YAMLCPP_LIBRARIES} ${CMAKE_DL_LIBS} ${RTAI_LIBRARY} ${M3_LIBRARIES} ${M3RT_LIBRARIES})
+SET(LIBS ${catkin_LIBRARIES} ${YAMLCPP_LIBRARIES} ${CMAKE_DL_LIBS} ${RTAI_LIBRARY} m3vehicles ${M3_LIBRARIES} ${M3RT_LIBRARIES})
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)

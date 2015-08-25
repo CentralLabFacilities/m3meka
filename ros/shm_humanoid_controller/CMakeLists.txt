@@ -5,7 +5,7 @@ project(shm_humanoid_controller)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/Modules/")
-
+message("cmake module path:" ${CMAKE_MODULE_PATH})
 find_package(catkin REQUIRED COMPONENTS
   m3ctrl_msgs
   nav_msgs
@@ -26,6 +26,7 @@ endif(${YAMLCPP_VERSION} VERSION_LESS "0.5")
 
 
 find_package(M3rt REQUIRED)
+find_package(M3 REQUIRED COMPONENTS HARDWARE) # for protobuf messages
 find_package(RTAI REQUIRED)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
