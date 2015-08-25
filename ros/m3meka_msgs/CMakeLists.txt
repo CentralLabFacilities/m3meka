@@ -5,6 +5,8 @@ find_package(catkin REQUIRED COMPONENTS
    roscpp
    rospy
    std_msgs
+   actionlib
+   actionlib_msgs
    message_generation
    m3_msgs
 )
@@ -33,10 +35,13 @@ add_service_files(
   M3ControlStateChange.srv
 )
 
+add_action_files(FILES M3StateChange.action)
+
 generate_messages(   
   DEPENDENCIES  
   std_msgs 
   m3_msgs
+  actionlib_msgs
 )  
 
 catkin_package(
