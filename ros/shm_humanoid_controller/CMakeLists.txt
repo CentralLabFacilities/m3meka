@@ -25,6 +25,7 @@ set_property(DIRECTORY
 endif(${YAMLCPP_VERSION} VERSION_LESS "0.5")
 
 
+find_package(M3 REQUIRED COMPONENT HARDWARE) # for protobuf messages
 find_package(M3rt REQUIRED)
 find_package(M3 REQUIRED COMPONENTS HARDWARE) # for protobuf messages
 find_package(RTAI REQUIRED)
