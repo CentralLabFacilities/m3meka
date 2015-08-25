@@ -61,16 +61,6 @@ add_subdirectory(src)
 add_subdirectory(python)
 add_subdirectory(scripts)
 
-find_package(catkin QUIET COMPONENTS std_msgs m3_msgs)
-if(catkin_FOUND)
-  add_subdirectory(ros/m3ctrl_msgs)
-  add_subdirectory(ros/m3meka_msgs)
-  add_subdirectory(ros/meka_trajectory)
- #seems broken due to yaml upgrade ? add_subdirectory(ros/shm_humanoid_controller)
-  add_subdirectory(ros/shm_omnibase_controller)
-endif(catkin_FOUND)
-
-
 if(NOT MEKABOT)
 configure_file(setup.bash.in ${CMAKE_CURRENT_BINARY_DIR}/setup.bash)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/setup.bash DESTINATION share)
