@@ -78,11 +78,10 @@ void M3OmnibaseShm::SetCommandFromSds(unsigned char * data)
     if (startup_motor_pwr_on)
 	pwr->SetMotorEnable(true);      
   }
-  
-    
-  if (omnibase != NULL || !pwr->IsMotorPowerOn())
+
+  if (omnibase != NULL)
   {
-    if (shm_timeout)
+    if (shm_timeout || !pwr->IsMotorPowerOn())
     {
       ((M3OmnibaseCommand*)omnibase->GetCommand())->set_ctrl_mode(OMNIBASE_CTRL_OFF);
     } else {
