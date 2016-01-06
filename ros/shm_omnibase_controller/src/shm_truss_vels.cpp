@@ -175,7 +175,7 @@ static void* rt_system_thread(void * arg)
 	rt_allow_nonroot_hrt();
 	if (task==NULL)
 	{
-		printf("Failed to create RT-TASK TSHMP\n");
+		printf("Failed to create RT-TASK TVELP\n");
 		return 0;
 	}
 	status_sem=(SEM*)rt_get_adr(nam2num(MEKA_ODOM_STATUS_SEM));
