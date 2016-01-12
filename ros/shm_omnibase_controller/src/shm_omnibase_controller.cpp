@@ -97,7 +97,7 @@ int64_t GetTimestamp()
 
 ////////////////////////// MAIN COMPUTATION METHOD /////////////////////////////
 
-void StepShm(int cntr)
+void StepShm(int cntr, ros::Time rtai_to_ros_offset)
 {   
     SetTimestamp(GetTimestamp()); //Pass back timestamp as a heartbeat
     
@@ -107,8 +107,11 @@ void StepShm(int cntr)
         endme(1);
     }
 
-    odom_g.header.stamp = ros::Time::now();
-
+    //reconstruct/guess wall time based on stored offsets on system start:
+    ros::Duration rtai_now;
+    rtai_now.fromNSec(GetTimestamp() * 1000L);
+    ros::Time ros_now = rtai_to_ros_offset + rtai_now;
+    odom_g.header.stamp = ros_now;
     
     // get from status
     double x = status.x;
@@ -126,7 +129,10 @@ void StepShm(int cntr)
     
     //first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
-    odom_trans.header.stamp = ros::Time::now();
+
+    //Time::now() not realtime safe
+    odom_trans.header.stamp = ros_now;
+
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
 
@@ -241,7 +247,7 @@ static void* rt_system_thread(void * arg)
 
     memset(&cmd, 0, sds_cmd_size);
 
-    task = rt_task_init_schmod(nam2num("OSHMP"), 1, 0, 0, SCHED_FIFO, 0xF);
+    task = rt_task_init_schmod(nam2num("OSHMP"), 3, 0, 0, SCHED_FIFO, 0xF);
     rt_allow_nonroot_hrt();
     if (task==NULL)
     {
@@ -266,6 +272,42 @@ static void* rt_system_thread(void * arg)
 
     RTIME tick_period = nano2count(RT_TIMER_TICKS_NS_MEKA_OMNI_SHM);
     RTIME now = rt_get_time();
+
+
+    /*
+     * Explanations why and how we do the following time magic:
+     *
+     * Calling ros::Time::now() is not RT safe (and seems to cause crashes sometimes)
+     *
+     * Unfortuantely there seems to be no way to fetch a wall clock time in rtai.
+     * Therefore we store the wall clock time (ros::Time::now()) on startup
+     * together with the rtai time (which starts on m3_rt_server sys thread startup)
+     * this leads to offset #1
+     *
+     * Unfortuantely the incoming time from the shm struct (which is in us by the way)
+     * is not equal to this rtai time. There is an offset that correlates between system
+     * bootup (or board calibration) and start of this thread. This leads to offset #2
+     *
+     * WARNING: This might drift after some time and a better way would be a rt safe/synched
+     *          user thread that does this magic regularly (or better uses ntp like magic
+     *          to slowly readjust this value)
+     */
+
+    //NOTE: this call is not RT safe BUT as we enter hard rt after this call
+    //      we are fine (at least we think so)
+    //
+    //here we store the offset described as #1
+    ros::Time ros_start_time = ros::Time::now();
+    RTIME now_ns = rt_get_time_ns();
+
+    ros::Duration rtai_start_time;
+    rtai_start_time.fromNSec(now_ns);
+
+    ros::Time rtai_to_ros_offset = ros_start_time - rtai_start_time;
+
+
+    ros::Duration rtai_to_shm_offset;
+
     rt_task_make_periodic(task, now + tick_period, tick_period);
     mlockall(MCL_CURRENT | MCL_FUTURE);
     rt_make_hard_real_time();
@@ -275,12 +317,26 @@ static void* rt_system_thread(void * arg)
 
     while(!sys_thread_end)
     {
+        //on system startup this shm timestamp is not initialized
+        if ((rtai_to_shm_offset.sec == 0) && (rtai_to_shm_offset.nsec == 0)){
+            //wait until shm time has a value
+            int64_t shm_time = GetTimestamp();
+            if (shm_time != 0.0){
+                //fetch offset between rtai time and shm timestamp as described as offset #2 above
+                int64_t rt_time = rt_get_time_ns();
+                rtai_to_shm_offset.fromNSec(rt_time - (shm_time * 1000));
+
+                //now handle this offset as well:
+                rtai_to_ros_offset += rtai_to_shm_offset;
+            }
+        }
+
         start_time = nano2count(rt_get_cpu_time_ns());
         rt_sem_wait(status_sem);
         memcpy(&status, sds->status, sds_status_size);
         rt_sem_signal(status_sem);
 
-        StepShm(cntr);
+        StepShm(cntr, rtai_to_ros_offset);
 
         rt_sem_wait(command_sem);
         memcpy(sds->cmd, &cmd, sds_cmd_size);
@@ -290,8 +346,17 @@ static void* rt_system_thread(void * arg)
         dt=end_time-start_time;
         if(step_cnt % 50 == 0)
         {
-            printf("sta[%f,%f,%f,%f]\n",(float)status.timestamp,status.x,status.y,status.yaw);
-            printf("cmd[%f,%f,%f,%f]\n",(float)cmd.timestamp,cmd.x_velocity,cmd.y_velocity,cmd.yaw_velocity);
+            //WARNING: we are not sure if this printing is rt safe... seems to work but we do not know...
+            #if 0
+                printf("rt time ns = %lld ns\n", rt_get_time_ns());
+                printf("get timestamp = %ld us\n", GetTimestamp());
+                printf("ros time on start %f s\n", ros_start_time.toSec());
+                printf("rtai time on start = %f s\n", rtai_start_time.toSec());
+                printf("rtai_to_shm_offset %f s\n", rtai_to_shm_offset.toSec());
+                printf("rtai_to_ros offset %f s\n", rtai_to_ros_offset.toSec());
+                printf("sta[%ld us,%f,%f,%f]\n",status.timestamp,status.x,status.y,status.yaw);
+                printf("cmd[%ld us,%f,%f,%f]\n",cmd.timestamp,cmd.x_velocity,cmd.y_velocity,cmd.yaw_velocity);
+            #endif
         }
         /*
         Check the time it takes to run components, and if it takes longer
@@ -299,17 +364,20 @@ static void* rt_system_thread(void * arg)
         up the CPU.*/
         if (dt > tick_period && step_cnt>10)
         {
+            //WARNING: we are not sure if this printing is rt safe... seems to work but we do not know...
             printf("Step %lld: Computation time of components is too long. Forcing all components to state SafeOp.\n",step_cnt);
             printf("Previous period: %f. New period: %f\n", (double)count2nano(tick_period),(double)count2nano(dt));
+
             tick_period=dt;
             //rt_task_make_periodic(task, end + tick_period,tick_period);
         }
         step_cnt++;
-        if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_OMNI_SHM)
+        if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_OMNI_SHM){
             cntr = 0;
+        }
         rt_task_wait_period();
     }
-    printf("Exiting RealTime Thread...\n",0);
+    printf("Exiting RealTime Thread...\n");
     rt_make_soft_real_time();
     rt_task_delete(task);
     sys_thread_active=0;
@@ -369,7 +437,7 @@ int main (int argc, char **argv)
     {
         //rt_task_delete(task);
         rt_shm_free(nam2num(MEKA_ODOM_SHM));
-        printf("Startup of thread failed.\n",0);
+        printf("Startup of thread failed.\n");
         return 0;
     }
     while(!end)
@@ -377,7 +445,7 @@ int main (int argc, char **argv)
         usleep(250000);
 
     }
-    printf("Removing RT thread...\n",0);
+    printf("Removing RT thread...\n");
     sys_thread_end=1;
     //rt_thread_join(hst);
     usleep(1250000);
