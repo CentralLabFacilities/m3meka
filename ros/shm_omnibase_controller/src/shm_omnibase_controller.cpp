@@ -1,12 +1,12 @@
- /*************************************************************************
- * 
+/*************************************************************************
+ *
  * REDWOOD CONFIDENTIAL
  * Author: Aaron Edsinger
  * __________________
- * 
- *  [2012] - [+] Redwood Robotics Incorporated 
+ *
+ *  [2012] - [+] Redwood Robotics Incorporated
  *  All Rights Reserved.
- * 
+ *
  * All information contained herein is, and remains
  * the property of Redwood Robotics Incorporated and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -17,7 +17,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Redwood Robotics Incorporated.
  */
- 
+
 #include <stdio.h>
 #include <signal.h>
 #include "m3rt/base/m3ec_def.h"
@@ -86,13 +86,13 @@ void commandCallback(const geometry_msgs::TwistConstPtr& msg);
 
 void SetTimestamp(int64_t  timestamp)
 {
-  cmd.timestamp = timestamp;
-    return; 
+    cmd.timestamp = timestamp;
+    return;
 }
 
 int64_t GetTimestamp()
 {  
-    return status.timestamp; 
+    return status.timestamp;
 }
 
 ////////////////////////// MAIN COMPUTATION METHOD /////////////////////////////
@@ -103,30 +103,30 @@ void StepShm(int cntr)
     
     if (!status.calibrated)
     {
-	printf("Omnibase is not calibrated.  Please calibrate and run again.  Exiting.\n");
-	endme(1);
+        printf("Omnibase is not calibrated.  Please calibrate and run again.  Exiting.\n");
+        endme(1);
     }
 
-    odom_g.header.stamp = ros::Time::now();  
+    odom_g.header.stamp = ros::Time::now();
 
     
-  // get from status
-  double x = status.x;
-  double y = status.y;
-  double th = status.yaw;
-  
-  double vx = status.x_dot;
-  double vy = status.y_dot;
-  double vth = status.yaw_dot;
-  //ROS_INFO("[STATUS] x,y,th:[%f,%f,%f]",x,y,th);
-  // get from status
-  
-  //since all odometry is 6DOF we'll need a quaternion created from yaw
+    // get from status
+    double x = status.x;
+    double y = status.y;
+    double th = status.yaw;
+
+    double vx = status.x_dot;
+    double vy = status.y_dot;
+    double vth = status.yaw_dot;
+    //ROS_INFO("[STATUS] x,y,th:[%f,%f,%f]",x,y,th);
+    // get from status
+
+    //since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
     
     //first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
-    odom_trans.header.stamp = ros::Time::now();  
+    odom_trans.header.stamp = ros::Time::now();
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
 
@@ -156,71 +156,71 @@ void StepShm(int cntr)
     
     if (status.timestamp - last_cmd_ts > VEL_TIMEOUT_SEC * 1000000.0)
     {
-      cmd.x_velocity = 0.;
-      cmd.y_velocity = 0.;
-      cmd.yaw_velocity = 0.;
+        cmd.x_velocity = 0.;
+        cmd.y_velocity = 0.;
+        cmd.yaw_velocity = 0.;
     }
     
-   /* if (cntr % 100 == 0)
-      {	
-	if (1)
-	{
-	  printf("********************************\n");
-	  printf("timestamp: %ld\n", (status.timestamp - last_cmd_ts)/1000000);
-	  //printf("to: %ld\n", VEL_TIMEOUT_NS);	  
-	  {	    
-	    //printf("JOINT %d\n", i);
-	    printf("------------------------------\n");
-	    printf("X: %f\n",status.x);
-	    printf("Y: %f\n", status.y);
-	    printf("YAW: %f\n", status.yaw);
-	    printf("Vx: %f\n", odom_g.twist.twist.linear.x);	  
-	    printf("Vy: %f\n", odom_g.twist.twist.linear.y);
-	    printf("Va: %f\n", odom_g.twist.twist.angular.z);
-	     printf("------------------------------\n");
-	    printf("\n");
-	  }
-	}
+    /* if (cntr % 100 == 0)
+      {
+    if (1)
+    {
+      printf("********************************\n");
+      printf("timestamp: %ld\n", (status.timestamp - last_cmd_ts)/1000000);
+      //printf("to: %ld\n", VEL_TIMEOUT_NS);
+      {
+        //printf("JOINT %d\n", i);
+        printf("------------------------------\n");
+        printf("X: %f\n",status.x);
+        printf("Y: %f\n", status.y);
+        printf("YAW: %f\n", status.yaw);
+        printf("Vx: %f\n", odom_g.twist.twist.linear.x);
+        printf("Vy: %f\n", odom_g.twist.twist.linear.y);
+        printf("Va: %f\n", odom_g.twist.twist.angular.z);
+         printf("------------------------------\n");
+        printf("\n");
       }
-    
+    }
+      }
+
       if (cntr % 100 == 0)
-      {	
-	if (1)
-	{
-	  printf("********************************\n");
-	  printf("timestamp: %ld\n", status.timestamp);	  
-	  {	    
-	    //printf("JOINT %d\n", i);
-	    printf("------------------------------\n");
-	    printf("X: %f\n", odom_g.pose.pose.position.x);
-	    printf("Y: %f\n", odom_g.pose.pose.position.y);
-	    printf("YAW: %f\n", th);
-	    printf("Vx: %f\n", odom_g.twist.twist.linear.x);	  
-	    printf("Vy: %f\n", odom_g.twist.twist.linear.y);
-	    printf("Va: %f\n", odom_g.twist.twist.angular.z);
-	     printf("------------------------------\n");
-	    printf("\n");
-	  }
-	}
+      {
+    if (1)
+    {
+      printf("********************************\n");
+      printf("timestamp: %ld\n", status.timestamp);
+      {
+        //printf("JOINT %d\n", i);
+        printf("------------------------------\n");
+        printf("X: %f\n", odom_g.pose.pose.position.x);
+        printf("Y: %f\n", odom_g.pose.pose.position.y);
+        printf("YAW: %f\n", th);
+        printf("Vx: %f\n", odom_g.twist.twist.linear.x);
+        printf("Vy: %f\n", odom_g.twist.twist.linear.y);
+        printf("Va: %f\n", odom_g.twist.twist.angular.z);
+         printf("------------------------------\n");
+        printf("\n");
+      }
+    }
       }*/
     
-  
+
 }
 
 void commandCallback(const geometry_msgs::TwistConstPtr& msg)
 {
-  
-  
-  cmd.x_velocity = msg->linear.x;
-  cmd.y_velocity = msg->linear.y;
-  cmd.yaw_velocity = msg->angular.z;
-  
-        printf("x: %f\n", cmd.x_velocity);
-	    printf("y: %f\n", cmd.y_velocity);
-        printf("a: %f\n", cmd.yaw_velocity);
-	    
-  last_cmd_ts = status.timestamp;
-  
+
+
+    cmd.x_velocity = msg->linear.x;
+    cmd.y_velocity = msg->linear.y;
+    cmd.yaw_velocity = msg->angular.z;
+
+    printf("x: %f\n", cmd.x_velocity);
+    printf("y: %f\n", cmd.y_velocity);
+    printf("a: %f\n", cmd.yaw_velocity);
+
+    last_cmd_ts = status.timestamp;
+
 }
 
 
@@ -228,164 +228,164 @@ void commandCallback(const geometry_msgs::TwistConstPtr& msg)
 
 static void* rt_system_thread(void * arg)
 {	
-	SEM * status_sem;
-	SEM * command_sem;
-	RT_TASK *task;
-	int cntr=0;
-	M3Sds * sds = (M3Sds *)arg;
-	printf("Starting real-time thread\n");
-		
-	
-	sds_status_size = sizeof(M3OmnibaseShmSdsStatus);
-	sds_cmd_size = sizeof(M3OmnibaseShmSdsCommand);
-	
-	memset(&cmd, 0, sds_cmd_size);
-	
-	task = rt_task_init_schmod(nam2num("OSHMP"), 1, 0, 0, SCHED_FIFO, 0xF);
-	rt_allow_nonroot_hrt();
-	if (task==NULL)
-	{
-		printf("Failed to create RT-TASK OSHMP\n");
-		return 0;
-	}
-	status_sem=(SEM*)rt_get_adr(nam2num(MEKA_ODOM_STATUS_SEM));
-	command_sem=(SEM*)rt_get_adr(nam2num(MEKA_ODOM_CMD_SEM));
-	if (!status_sem)
-	{
-		printf("Unable to find the %s semaphore.\n",MEKA_ODOM_STATUS_SEM);
-		rt_task_delete(task);
-		return 0;
-	}
-	if (!command_sem)
-	{
-		printf("Unable to find the %s semaphore.\n",MEKA_ODOM_CMD_SEM);
-		rt_task_delete(task);
-		return 0;
-	}
-	
-	
-	RTIME tick_period = nano2count(RT_TIMER_TICKS_NS_MEKA_OMNI_SHM); 
-	RTIME now = rt_get_time();
-	rt_task_make_periodic(task, now + tick_period, tick_period); 
-	mlockall(MCL_CURRENT | MCL_FUTURE);
-	rt_make_hard_real_time();
-	long long start_time, end_time, dt;
-	long long step_cnt = 0;
-	sys_thread_active=1;
-	
-	while(!sys_thread_end)
-	{
-		start_time = nano2count(rt_get_cpu_time_ns());
-		rt_sem_wait(status_sem);
-		memcpy(&status, sds->status, sds_status_size);		
-		rt_sem_signal(status_sem);
-		
-		StepShm(cntr);		
-		
-		rt_sem_wait(command_sem);
-		memcpy(sds->cmd, &cmd, sds_cmd_size);		
-		rt_sem_signal(command_sem);
-				
-		end_time = nano2count(rt_get_cpu_time_ns());
-		dt=end_time-start_time;
+    SEM * status_sem;
+    SEM * command_sem;
+    RT_TASK *task;
+    int cntr=0;
+    M3Sds * sds = (M3Sds *)arg;
+    printf("Starting real-time thread\n");
+
+
+    sds_status_size = sizeof(M3OmnibaseShmSdsStatus);
+    sds_cmd_size = sizeof(M3OmnibaseShmSdsCommand);
+
+    memset(&cmd, 0, sds_cmd_size);
+
+    task = rt_task_init_schmod(nam2num("OSHMP"), 1, 0, 0, SCHED_FIFO, 0xF);
+    rt_allow_nonroot_hrt();
+    if (task==NULL)
+    {
+        printf("Failed to create RT-TASK OSHMP\n");
+        return 0;
+    }
+    status_sem=(SEM*)rt_get_adr(nam2num(MEKA_ODOM_STATUS_SEM));
+    command_sem=(SEM*)rt_get_adr(nam2num(MEKA_ODOM_CMD_SEM));
+    if (!status_sem)
+    {
+        printf("Unable to find the %s semaphore.\n",MEKA_ODOM_STATUS_SEM);
+        rt_task_delete(task);
+        return 0;
+    }
+    if (!command_sem)
+    {
+        printf("Unable to find the %s semaphore.\n",MEKA_ODOM_CMD_SEM);
+        rt_task_delete(task);
+        return 0;
+    }
+
+
+    RTIME tick_period = nano2count(RT_TIMER_TICKS_NS_MEKA_OMNI_SHM);
+    RTIME now = rt_get_time();
+    rt_task_make_periodic(task, now + tick_period, tick_period);
+    mlockall(MCL_CURRENT | MCL_FUTURE);
+    rt_make_hard_real_time();
+    long long start_time, end_time, dt;
+    long long step_cnt = 0;
+    sys_thread_active=1;
+
+    while(!sys_thread_end)
+    {
+        start_time = nano2count(rt_get_cpu_time_ns());
+        rt_sem_wait(status_sem);
+        memcpy(&status, sds->status, sds_status_size);
+        rt_sem_signal(status_sem);
+
+        StepShm(cntr);
+
+        rt_sem_wait(command_sem);
+        memcpy(sds->cmd, &cmd, sds_cmd_size);
+        rt_sem_signal(command_sem);
+
+        end_time = nano2count(rt_get_cpu_time_ns());
+        dt=end_time-start_time;
         if(step_cnt % 50 == 0)
         {
             printf("sta[%f,%f,%f,%f]\n",(float)status.timestamp,status.x,status.y,status.yaw);
             printf("cmd[%f,%f,%f,%f]\n",(float)cmd.timestamp,cmd.x_velocity,cmd.y_velocity,cmd.yaw_velocity);
         }
-		/*
-		Check the time it takes to run components, and if it takes longer
-		than our period, make us run slower. Otherwise this task locks
-		up the CPU.*/
-		if (dt > tick_period && step_cnt>10) 
-		{
-			printf("Step %lld: Computation time of components is too long. Forcing all components to state SafeOp.\n",step_cnt);
-			printf("Previous period: %f. New period: %f\n", (double)count2nano(tick_period),(double)count2nano(dt));
- 			tick_period=dt;
-			//rt_task_make_periodic(task, end + tick_period,tick_period);			
-		}
-		step_cnt++;
-		if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_OMNI_SHM)
-		  cntr = 0;
-		rt_task_wait_period();
-	}	
-	printf("Exiting RealTime Thread...\n",0);	
-	rt_make_soft_real_time();	
-	rt_task_delete(task);	
-	sys_thread_active=0;
-	return 0;
+        /*
+        Check the time it takes to run components, and if it takes longer
+        than our period, make us run slower. Otherwise this task locks
+        up the CPU.*/
+        if (dt > tick_period && step_cnt>10)
+        {
+            printf("Step %lld: Computation time of components is too long. Forcing all components to state SafeOp.\n",step_cnt);
+            printf("Previous period: %f. New period: %f\n", (double)count2nano(tick_period),(double)count2nano(dt));
+            tick_period=dt;
+            //rt_task_make_periodic(task, end + tick_period,tick_period);
+        }
+        step_cnt++;
+        if (cntr++ == CYCLE_TIME_SEC * 2 * RT_TIMER_TICKS_NS_MEKA_OMNI_SHM)
+            cntr = 0;
+        rt_task_wait_period();
+    }
+    printf("Exiting RealTime Thread...\n",0);
+    rt_make_soft_real_time();
+    rt_task_delete(task);
+    sys_thread_active=0;
+    return 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////
 int main (int argc, char **argv)
 {	
-	printf("running omnibase stuff.\n");
+    printf("running omnibase stuff.\n");
     
 
-//RT_TASK *task;
-	M3Sds * sys;
-	int cntr=0;
-	
-	rt_allow_nonroot_hrt();
-	
-	/* ros::init(argc, argv, "base_controller"); // initialize ROS node
-  	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
-  	spinner.start();
+    //RT_TASK *task;
+    M3Sds * sys;
+    int cntr=0;
+
+    rt_allow_nonroot_hrt();
+
+    /* ros::init(argc, argv, "base_controller"); // initialize ROS node
+    ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
+    spinner.start();
         ros::NodeHandle root_handle;*/
-	
-	ros::init(argc, argv, "base_controller", ros::init_options::NoSigintHandler); // initialize ROS node
-	ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
-	spinner.start();
-        ros::NodeHandle root_handle;
-	ros::NodeHandle p_nh("~");
 
-	odom_broadcaster_ptr.reset(new tf::TransformBroadcaster);
+    ros::init(argc, argv, "base_controller", ros::init_options::NoSigintHandler); // initialize ROS node
+    ros::AsyncSpinner spinner(1); // Use 1 thread - check if you actually need this for only publishing
+    spinner.start();
+    ros::NodeHandle root_handle;
+    ros::NodeHandle p_nh("~");
 
-	cmd_sub_g = root_handle.subscribe("omnibase_command", 1, commandCallback);
-		
-	odom_publisher_g = root_handle.advertise<nav_msgs::Odometry>("omnibase_odom", 1, true);
+    odom_broadcaster_ptr.reset(new tf::TransformBroadcaster);
 
-	signal(SIGINT, endme);
+    cmd_sub_g = root_handle.subscribe("omnibase_command", 1, commandCallback);
 
-	if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_ODOM_SHM),sizeof(M3Sds),USE_VMALLOC))
-		printf("Found shared memory starting shm_omnibase_controller.");
-	else
-	{
-		printf("Rtai_malloc failure for %s\n",MEKA_ODOM_SHM);
-		return 0;
-	}
+    odom_publisher_g = root_handle.advertise<nav_msgs::Odometry>("omnibase_odom", 1, true);
 
-	rt_allow_nonroot_hrt();
-	/*if (!(task = rt_task_init_schmod(nam2num("TSHM"), RT_TASK_PRIORITY, 0, 0, SCHED_FIFO, 0xF)))
-	{
-		rt_shm_free(nam2num(TORQUE_SHM));
-		printf("Cannot init the RTAI task %s\n","TSHM");
-		return 0;
-	}*/
-	hst=rt_thread_create((void*)rt_system_thread, sys, 10000);
-	usleep(100000); //Let start up
-	if (!sys_thread_active)
-	{
+    signal(SIGINT, endme);
+
+    if (sys = (M3Sds*)rt_shm_alloc(nam2num(MEKA_ODOM_SHM),sizeof(M3Sds),USE_VMALLOC))
+        printf("Found shared memory starting shm_omnibase_controller.");
+    else
+    {
+        printf("Rtai_malloc failure for %s\n",MEKA_ODOM_SHM);
+        return 0;
+    }
+
+    rt_allow_nonroot_hrt();
+    /*if (!(task = rt_task_init_schmod(nam2num("TSHM"), RT_TASK_PRIORITY, 0, 0, SCHED_FIFO, 0xF)))
+    {
+        rt_shm_free(nam2num(TORQUE_SHM));
+        printf("Cannot init the RTAI task %s\n","TSHM");
+        return 0;
+    }*/
+    hst=rt_thread_create((void*)rt_system_thread, sys, 10000);
+    usleep(100000); //Let start up
+    if (!sys_thread_active)
+    {
         //rt_task_delete(task);
-		rt_shm_free(nam2num(MEKA_ODOM_SHM));
-		printf("Startup of thread failed.\n",0);
-		return 0;
-	}
-	while(!end)
-	{		
-		usleep(250000);
-		
-	}
-	printf("Removing RT thread...\n",0);
-	sys_thread_end=1;
-	//rt_thread_join(hst);	
-	usleep(1250000);	
-	if (sys_thread_active)printf("Real-time thread did not shutdown correctly\n");	
-	//rt_task_delete(task);	
-	rt_shm_free(nam2num(MEKA_ODOM_SHM));	
-	ros::shutdown();	
-	return 0;
+        rt_shm_free(nam2num(MEKA_ODOM_SHM));
+        printf("Startup of thread failed.\n",0);
+        return 0;
+    }
+    while(!end)
+    {
+        usleep(250000);
+
+    }
+    printf("Removing RT thread...\n",0);
+    sys_thread_end=1;
+    //rt_thread_join(hst);
+    usleep(1250000);
+    if (sys_thread_active)printf("Real-time thread did not shutdown correctly\n");
+    //rt_task_delete(task);
+    rt_shm_free(nam2num(MEKA_ODOM_SHM));
+    ros::shutdown();
+    return 0;
 }
 
 
