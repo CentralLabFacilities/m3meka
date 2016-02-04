@@ -20,6 +20,10 @@
 
 #include <stdio.h>
 #include <signal.h>
+
+#include <thread>
+#include <mutex>
+
 #include "m3rt/base/m3ec_def.h"
 #include "m3rt/base/m3rt_def.h"
 #include "m3/vehicles/omnibase_shm_sds.h"
@@ -75,11 +79,14 @@ nav_msgs::Odometry odom_g;
 ros::Publisher odom_publisher_g;
 ros::Subscriber cmd_sub_g;
 boost::shared_ptr<tf::TransformBroadcaster> odom_broadcaster_ptr;
-////////////////////////////////////////////////////////////////////////////////////
+std::mutex rtai_to_ros_offset_mutex;
+std::mutex rtai_to_shm_offset_mutex;
+////////////////////////////////////////////////////////////////////////////////
 
 
 ///////  Periodic Control Loop:
-void StepShm();
+void 
+StepShm();
 void commandCallback(const geometry_msgs::TwistConstPtr& msg);
 
 ///////////////////////////////
@@ -97,7 +104,7 @@ int64_t GetTimestamp()
 
 ////////////////////////// MAIN COMPUTATION METHOD /////////////////////////////
 
-void StepShm(int cntr, ros::Time rtai_to_ros_offset)
+void StepShm(int cntr, ros::Duration & rtai_to_ros_offset)
 {   
     SetTimestamp(GetTimestamp()); //Pass back timestamp as a heartbeat
     
@@ -106,11 +113,21 @@ void StepShm(int cntr, ros::Time rtai_to_ros_offset)
         printf("Omnibase is not calibrated.  Please calibrate and run again.  Exiting.\n");
         endme(1);
     }
+    if (rtai_to_ros_offset.toSec() == 0.0)
+    {
+//        printf("Time not in sync yet. Waiting to publish for next call.\n");
+        return;
+    }
 
-    //reconstruct/guess wall time based on stored offsets on system start:
-    ros::Duration rtai_now;
+
+
+    //reconstruct/guess wall time based on offsets calculated in the non-rt thread
+    ros::Time rtai_now;
+    rtai_to_ros_offset_mutex.lock();
     rtai_now.fromNSec(GetTimestamp() * 1000L);
-    ros::Time ros_now = rtai_to_ros_offset + rtai_now;
+    ros::Time ros_now = rtai_now + rtai_to_ros_offset;
+    rtai_to_ros_offset_mutex.unlock();
+
     odom_g.header.stamp = ros_now;
     
     // get from status
@@ -229,6 +246,57 @@ void commandCallback(const geometry_msgs::TwistConstPtr& msg)
 
 }
 
+/**
+* 
+* This function is run in a non rt thread to sync time with the rt system.
+* 
+*/
+void update_rtai_to_ros_offset(ros::Duration & rtai_to_ros_offset, ros::Duration & rtai_to_shm_offset)
+{
+   ros::Duration result, result_old;
+   double smoothing = 0.95;
+   ros::Duration rtai_to_shm_offset_copy;
+
+    while(true) {
+
+        // ~2Hz update rate 
+	usleep(500000);
+	
+	// Work with a copy to hold the mutex to access the offset only for the time of reading.
+	// Sharing a mutex between rt and non rt might be bad but not holding it might be even worse.
+	rtai_to_shm_offset_mutex.lock();
+	rtai_to_shm_offset_copy = rtai_to_shm_offset;
+	rtai_to_shm_offset_mutex.unlock();
+
+	if( rtai_to_shm_offset_copy.toSec() == 0.0 ) {
+		//TODO: Error print: offset not yet available
+		sleep(1);
+		continue;
+	}
+	
+	//NOTE: this call(ros::Time::now()) is not RT safe. This is why we do it in this Thread.
+        ros::Duration ros_start_time(ros::Time::now().toSec());
+        RTIME now_ns = rt_get_time_ns();
+
+        ros::Duration rtai_start_time;
+        rtai_start_time.fromNSec(now_ns);
+
+	result_old = result;
+        result = (ros_start_time - rtai_start_time) + rtai_to_shm_offset_copy;
+
+	//apply a low pass filter on time changes to prevent bigger time jumps.
+        if(result_old.toSec() != 0.0 && smoothing != 0.0) {
+	   result = result_old * smoothing + result * (1-smoothing);
+	}
+
+	// again mutex only for writing.
+	rtai_to_ros_offset_mutex.lock();
+	rtai_to_ros_offset = result;
+	rtai_to_ros_offset_mutex.unlock();
+    }
+}
+
+
 
 ////////////////////////// RTAI PROCESS BOILERPLATE /////////////////////////////
 
@@ -280,33 +348,21 @@ static void* rt_system_thread(void * arg)
      * Calling ros::Time::now() is not RT safe (and seems to cause crashes sometimes)
      *
      * Unfortuantely there seems to be no way to fetch a wall clock time in rtai.
-     * Therefore we store the wall clock time (ros::Time::now()) on startup
-     * together with the rtai time (which starts on m3_rt_server sys thread startup)
-     * this leads to offset #1
+     * Therefore we synchronize the time outside the rt system in a none rt thread.
      *
      * Unfortuantely the incoming time from the shm struct (which is in us by the way)
      * is not equal to this rtai time. There is an offset that correlates between system
      * bootup (or board calibration) and start of this thread. This leads to offset #2
-     *
-     * WARNING: This might drift after some time and a better way would be a rt safe/synched
-     *          user thread that does this magic regularly (or better uses ntp like magic
-     *          to slowly readjust this value)
+     * 
+     * It remains the problem that we do not use the time of reading the encoder value to publish
+     * but the current time. That shifts all timestamps a little bit into the future.
      */
 
-    //NOTE: this call is not RT safe BUT as we enter hard rt after this call
-    //      we are fine (at least we think so)
-    //
+
     //here we store the offset described as #1
-    ros::Time ros_start_time = ros::Time::now();
-    RTIME now_ns = rt_get_time_ns();
-
-    ros::Duration rtai_start_time;
-    rtai_start_time.fromNSec(now_ns);
-
-    ros::Time rtai_to_ros_offset = ros_start_time - rtai_start_time;
-
-
+    ros::Duration rtai_to_ros_offset;
     ros::Duration rtai_to_shm_offset;
+    std::thread t1(update_rtai_to_ros_offset, std::ref(rtai_to_ros_offset), std::ref(rtai_to_shm_offset));
 
     rt_task_make_periodic(task, now + tick_period, tick_period);
     mlockall(MCL_CURRENT | MCL_FUTURE);
@@ -318,18 +374,18 @@ static void* rt_system_thread(void * arg)
     while(!sys_thread_end)
     {
         //on system startup this shm timestamp is not initialized
-        if ((rtai_to_shm_offset.sec == 0) && (rtai_to_shm_offset.nsec == 0)){
+        //if ((rtai_to_shm_offset.sec == 0) && (rtai_to_shm_offset.nsec == 0)){
             //wait until shm time has a value
             int64_t shm_time = GetTimestamp();
             if (shm_time != 0.0){
                 //fetch offset between rtai time and shm timestamp as described as offset #2 above
                 int64_t rt_time = rt_get_time_ns();
-                rtai_to_shm_offset.fromNSec(rt_time - (shm_time * 1000));
-
+		rtai_to_shm_offset_mutex.lock();
+      		rtai_to_shm_offset.fromNSec(rt_time - (shm_time * 1000));
+		rtai_to_shm_offset_mutex.unlock();
                 //now handle this offset as well:
-                rtai_to_ros_offset += rtai_to_shm_offset;
             }
-        }
+        //}
 
         start_time = nano2count(rt_get_cpu_time_ns());
         rt_sem_wait(status_sem);
