@@ -8,12 +8,14 @@
 
   <buildtool_depend>cmake</buildtool_depend>
   <build_depend>m3core</build_depend>
+  <build_depend>holomnni_pcv</build_depend>
   <build_depend>boost</build_depend>
   <build_depend>eigen</build_depend>
   <build_depend>libqt4-dev</build_depend>
   <build_depend>libprotobuf-dev</build_depend>
   <build_depend>libncurses5-dev</build_depend>
   <run_depend>m3core</run_depend>
+  <run_depend>holomnni_pcv</run_depend>
   <run_depend>boost</run_depend>
   <run_depend>eigen</run_depend>
   <run_depend>libqt4-dev</run_depend>
