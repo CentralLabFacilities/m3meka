@@ -20,7 +20,6 @@ import numpy as nu
 import m3.unit_conversion as m3u
 import  scipy 
 import numpy as np
-import numpy.numarray as na
 from scipy import *
 import scipy.signal
 from pylab import *
@@ -71,8 +70,8 @@ def PolyEval(poly,x):
 
 def get_polyfit_to_data(x,y,n=3,draw=True,verbose=True):
 	#Fit degree n poly to data
-	xx=np.array(x,na.Float32)
-	yy=np.array(y,na.Float32)
+	xx=np.array(x,np.Float32)
+	yy=np.array(y,np.Float32)
 	yy=yy[xx.argsort()]
 	xx.sort()
 	if verbose:

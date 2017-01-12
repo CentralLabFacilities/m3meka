@@ -35,7 +35,7 @@ void M3Omnibase::StepOpSpaceForceCtrl() {
     for ( int i = 0; i < 3; i++ )
         pcv_cmd.opspace_force_desired[i] = command.opspace_force_desired ( i );
 
-    }
+}
 
 
 void M3Omnibase::StepOpSpaceTrajCtrl() {
@@ -261,95 +261,6 @@ void M3Omnibase::StepOffCtrl() {
     pcv_cmd.accel_FF_ = false;
     }
 
-
-void M3Omnibase::StepCommand() {
-    if ( IsStateSafeOp() || IsStateError() ) {
-        //printf("ERROR\n");
-        return;
-        }
-    for ( int i=0; i<motor_array->GetNumDof() /2; i++ ) {
-        if ( ( bool ) param.enable_breakbeam ( i ) )
-            EnableBreakbeamEncoderZero ( i );
-        else
-            DisableBreakbeamEncoderZero ( i );
-        }
-
-    switch ( command.ctrl_mode() ) {
-            //printf("ctrlmode:%f\n",command.ctrl_mode());
-        case OMNIBASE_CTRL_CASTER:
-            for ( int i=0; i<motor_array->GetNumDof() /2; i++ ) {
-                if ( bool ( status.calibrated ( i ) ) && !old_calibrated[i] ) {
-                    command.set_caster_mode ( i, OMNIBASE_CASTER_OFF );
-                    }
-                old_calibrated[i] = bool ( status.calibrated ( i ) );
-
-                if ( command.caster_mode ( i ) == OMNIBASE_CASTER_OFF ) {
-                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i*2, JOINT_ARRAY_MODE_OFF );
-                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i*2+1, JOINT_ARRAY_MODE_OFF );
-                    }
-                else {
-                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i*2, JOINT_ARRAY_MODE_TORQUE );
-                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i*2, 1000*pcv_status.motor_torque_Nm[i*2] );
-                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i*2+1, JOINT_ARRAY_MODE_TORQUE );
-                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i*2+1, 1000*pcv_status.motor_torque_Nm[i*2+1] );
-                    }
-                }
-            break;
-        case OMNIBASE_CTRL_CALIBRATE:
-            for ( int i=0; i<motor_array->GetNumDof(); i++ ) {
-                /*((M3ActuatorEcCommand*)motor_array->GetJoint(i)->GetActuator()->GetActuatorEc()->GetCommand())->set_t_desire(
-                	 motor_array->GetJoint(i)->mNmToTicks(1000*pcv_status.motor_torque_Nm[i]));
-                ((M3ActuatorEcCommand*)motor_array->GetJoint(i)->GetActuator()->GetActuatorEc()->GetCommand())->set_mode(ACTUATOR_EC_MODE_PWM);*/
-                /*((M3JointArrayCommand*)motor_array->GetCommand())->set_pwm_desired(i,
-                	 motor_array->GetJoint(i)->mNmToTicks(round(1000*pcv_status.motor_torque_Nm[i])));
-                ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_PWM);*/
-                ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i, JOINT_ARRAY_MODE_TORQUE );
-                ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 1000*pcv_status.motor_torque_Nm[i] );
-                }
-            break;
-        case OMNIBASE_CTRL_OPSPACE_TRAJ:
-        case OMNIBASE_CTRL_OPSPACE_FORCE:
-        case OMNIBASE_CTRL_CART_LOCAL:
-        case OMNIBASE_CTRL_CART_GLOBAL:
-            truss_vel_products[0] = status.truss_vel ( 0 ) * status.truss_vel ( 4 ) * status.truss_vel ( 3 );
-            truss_vel_products[1] = status.truss_vel ( 4 ) * status.truss_vel ( 1 ) * status.truss_vel ( 2 );
-            truss_vel_products[2] = status.truss_vel ( 2 ) * status.truss_vel ( 3 ) * status.truss_vel ( 5 );
-            truss_vel_products[3] = status.truss_vel ( 0 ) * status.truss_vel ( 5 ) * status.truss_vel ( 1 );
-
-            for ( int i=0; i<motor_array->GetNumDof(); i++ ) {
-                ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i, JOINT_ARRAY_MODE_TORQUE );
-
-                if ( use_truss_vel_thresh ) {
-                    if ( i % 2 == 0 ) {
-                        if ( ABS ( truss_vel_products[i/2] ) > truss_vel_thresh )
-                            ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 0.0 );
-                        else
-                            ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 1000*pcv_status.motor_torque_Nm[i] );
-                        }
-                    else {
-                        if ( ABS ( truss_vel_products[ ( i-1 ) /2] ) > truss_vel_thresh )
-                            ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 0.0 );
-                        else
-                            ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 1000*pcv_status.motor_torque_Nm[i] );
-                        }
-                    }
-                else {
-                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 1000*pcv_status.motor_torque_Nm[i] );
-                    }
-
-                }
-            break;
-        case OMNIBASE_CTRL_OFF:
-        default:
-            for ( int i=0; i<motor_array->GetNumDof(); i++ )
-                ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i, JOINT_ARRAY_MODE_OFF );
-            break;
-        };
-    old_ctrl_mode = command.ctrl_mode();
-    }
-
-
-
 bool M3Omnibase::ReadConfig ( const char * filename ) {
 
     //YAML::Node doc;
@@ -400,7 +311,7 @@ bool M3Omnibase::ReadConfig ( const char * filename ) {
     //angle_df.ReadConfig( doc["calib"]["angle_df"]);
 
     return true;
-    }
+}
 
 
 void M3Omnibase::Startup() {
@@ -506,7 +417,7 @@ void M3Omnibase::Startup() {
     for ( int i=0; i<motor_array->GetNumDof(); i++ )
         motor_array->GetJoint ( i )->DisablePwmRamp();
 
-    }
+}
 
 void M3Omnibase::Shutdown() {
     if ( pcv != NULL )
@@ -515,7 +426,7 @@ void M3Omnibase::Shutdown() {
     }
 
 void M3Omnibase::StepStatus() {
-    if ( IsStateError() )
+    if ( IsStateError() || IsStateDisabled() )
         return;
 
     switch ( command.ctrl_mode() ) {
@@ -677,6 +588,92 @@ void M3Omnibase::StepStatus() {
           min_cdxx[i] = pcv_status.local_acceleration[i];
       }   */
     }
+    
+void M3Omnibase::StepCommand() {
+    if ( IsStateSafeOp() || IsStateError() || IsStateDisabled()) {
+        return;
+    }
+    
+    for ( int i=0; i<motor_array->GetNumDof() /2; i++ ) {
+        if ( ( bool ) param.enable_breakbeam ( i ) )
+            EnableBreakbeamEncoderZero ( i );
+        else
+            DisableBreakbeamEncoderZero ( i );
+        }
+
+    switch ( command.ctrl_mode() ) {
+            //printf("ctrlmode:%f\n",command.ctrl_mode());
+        case OMNIBASE_CTRL_CASTER:
+            for ( int i=0; i<motor_array->GetNumDof() /2; i++ ) {
+                if ( bool ( status.calibrated ( i ) ) && !old_calibrated[i] ) {
+                    command.set_caster_mode ( i, OMNIBASE_CASTER_OFF );
+                    }
+                old_calibrated[i] = bool ( status.calibrated ( i ) );
+
+                if ( command.caster_mode ( i ) == OMNIBASE_CASTER_OFF ) {
+                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i*2, JOINT_ARRAY_MODE_OFF );
+                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i*2+1, JOINT_ARRAY_MODE_OFF );
+                    }
+                else {
+                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i*2, JOINT_ARRAY_MODE_TORQUE );
+                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i*2, 1000*pcv_status.motor_torque_Nm[i*2] );
+                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i*2+1, JOINT_ARRAY_MODE_TORQUE );
+                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i*2+1, 1000*pcv_status.motor_torque_Nm[i*2+1] );
+                    }
+                }
+            break;
+        case OMNIBASE_CTRL_CALIBRATE:
+            for ( int i=0; i<motor_array->GetNumDof(); i++ ) {
+                /*((M3ActuatorEcCommand*)motor_array->GetJoint(i)->GetActuator()->GetActuatorEc()->GetCommand())->set_t_desire(
+                	 motor_array->GetJoint(i)->mNmToTicks(1000*pcv_status.motor_torque_Nm[i]));
+                ((M3ActuatorEcCommand*)motor_array->GetJoint(i)->GetActuator()->GetActuatorEc()->GetCommand())->set_mode(ACTUATOR_EC_MODE_PWM);*/
+                /*((M3JointArrayCommand*)motor_array->GetCommand())->set_pwm_desired(i,
+                	 motor_array->GetJoint(i)->mNmToTicks(round(1000*pcv_status.motor_torque_Nm[i])));
+                ((M3JointArrayCommand*)motor_array->GetCommand())->set_ctrl_mode(i, JOINT_ARRAY_MODE_PWM);*/
+                ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i, JOINT_ARRAY_MODE_TORQUE );
+                ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 1000*pcv_status.motor_torque_Nm[i] );
+                }
+            break;
+        case OMNIBASE_CTRL_OPSPACE_TRAJ:
+        case OMNIBASE_CTRL_OPSPACE_FORCE:
+        case OMNIBASE_CTRL_CART_LOCAL:
+        case OMNIBASE_CTRL_CART_GLOBAL:
+            truss_vel_products[0] = status.truss_vel ( 0 ) * status.truss_vel ( 4 ) * status.truss_vel ( 3 );
+            truss_vel_products[1] = status.truss_vel ( 4 ) * status.truss_vel ( 1 ) * status.truss_vel ( 2 );
+            truss_vel_products[2] = status.truss_vel ( 2 ) * status.truss_vel ( 3 ) * status.truss_vel ( 5 );
+            truss_vel_products[3] = status.truss_vel ( 0 ) * status.truss_vel ( 5 ) * status.truss_vel ( 1 );
+
+            for ( int i=0; i<motor_array->GetNumDof(); i++ ) {
+                ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i, JOINT_ARRAY_MODE_TORQUE );
+
+                if ( use_truss_vel_thresh ) {
+                    if ( i % 2 == 0 ) {
+                        if ( ABS ( truss_vel_products[i/2] ) > truss_vel_thresh )
+                            ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 0.0 );
+                        else
+                            ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 1000*pcv_status.motor_torque_Nm[i] );
+                        }
+                    else {
+                        if ( ABS ( truss_vel_products[ ( i-1 ) /2] ) > truss_vel_thresh )
+                            ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 0.0 );
+                        else
+                            ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 1000*pcv_status.motor_torque_Nm[i] );
+                        }
+                    }
+                else {
+                    ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_tq_desired ( i, 1000*pcv_status.motor_torque_Nm[i] );
+                    }
+
+                }
+            break;
+        case OMNIBASE_CTRL_OFF:
+        default:
+            for ( int i=0; i<motor_array->GetNumDof(); i++ )
+                ( ( M3JointArrayCommand* ) motor_array->GetCommand() )->set_ctrl_mode ( i, JOINT_ARRAY_MODE_OFF );
+            break;
+        };
+    old_ctrl_mode = command.ctrl_mode();
+}
 
 mReal M3Omnibase::WrapDeg ( mReal deg ) {
     while ( deg > 180 )

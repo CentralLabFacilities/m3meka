@@ -25,7 +25,6 @@ namespace m3{
 using namespace std;
 using namespace m3rt;
 
-
 void M3Monitor::Startup(){SetStateSafeOp();}
 void M3Monitor::Shutdown(){}
 

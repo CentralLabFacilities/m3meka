@@ -45,9 +45,9 @@ namespace m3
 class M3Omnibase : public M3Vehicle
 {
 	public:
-		M3Omnibase():M3Vehicle(),motor_array(NULL),pcv(NULL),tmp_cnt(0),
-		  old_ctrl_mode(OMNIBASE_CTRL_OFF),old_traj_mode(OMNIBASE_TRAJ_OFF),cnt(0),pwr(0),
-		  truss_vel_thresh(0),use_truss_vel_thresh(false)
+		M3Omnibase():M3Vehicle(),motor_array(NULL),pcv(NULL), 
+                  old_ctrl_mode(OMNIBASE_CTRL_OFF), old_traj_mode(OMNIBASE_TRAJ_OFF),
+                  use_truss_vel_thresh(false),cnt(0),tmp_cnt(0),pwr(0),truss_vel_thresh(0)
 		{
 			RegisterVersion("default",DEFAULT);	//RBL
 			RegisterVersion("iss",ISS);		//ISS. Safe as DEFAULT
