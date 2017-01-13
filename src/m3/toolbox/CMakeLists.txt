@@ -50,8 +50,6 @@ include_directories(${orocos_kdl_INCLUDE_DIRS})
 
 SET(LIBS ${RTAI_LIBRARIES} pthread ${Boost_LIBRARIES} ${EIGEN3_LIBRARIES} ${PROTOBUF_LIBRARIES} ${M3RT_LIBRARIES} ${orocos_kdl_LIBRARIES})
 
-
-
 set( ALL_SRCS 
 dfilter.cpp
 factory_proxy.cpp

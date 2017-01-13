@@ -115,13 +115,9 @@ include_directories(
   ${catkin_INCLUDE_DIRS} 
   ${YAMLCPP_INCLUDE_DIRS}
   ${RTAI_INCLUDE_DIR}
-${M3_INCLUDE_DIRS}
-${M3RT_INCLUDE_DIRS}
+  ${M3_INCLUDE_DIRS}
+  ${M3RT_INCLUDE_DIRS}
 )
-
-
-
-
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)

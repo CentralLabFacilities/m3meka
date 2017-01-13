@@ -49,7 +49,7 @@ if(catkin_FOUND)
   add_subdirectory(ros/m3ctrl_msgs)
   add_subdirectory(ros/m3meka_msgs)
   add_subdirectory(ros/meka_trajectory)
-  add_subdirectory(ros/shm_omnibase_controller)
+  #add_subdirectory(ros/shm_omnibase_controller)
 endif(catkin_FOUND)
 
 if(NOT MEKABOT)
