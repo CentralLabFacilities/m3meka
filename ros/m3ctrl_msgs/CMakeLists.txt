@@ -3,8 +3,10 @@ project(m3ctrl_msgs)
 
 find_package(catkin REQUIRED 
    COMPONENTS
-   message_generation
+   roscpp
+   rospp
    std_msgs
+   message_generation
 )
 
 add_message_files(
@@ -21,5 +23,6 @@ catkin_package(
   CATKIN_DEPENDS 
   message_runtime 
 )
+
 
 
