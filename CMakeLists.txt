@@ -43,12 +43,12 @@ include_directories(
 
 add_subdirectory(src)
 add_subdirectory(python)
-add_subdirectory(scripts)
+#add_subdirectory(scripts)
 find_package(catkin QUIET COMPONENTS std_msgs m3_msgs)
 if(catkin_FOUND)
   add_subdirectory(ros/m3ctrl_msgs)
   add_subdirectory(ros/m3meka_msgs)
-  add_subdirectory(ros/meka_trajectory)
+  #add_subdirectory(ros/meka_trajectory)
   #add_subdirectory(ros/shm_omnibase_controller)
 endif(catkin_FOUND)
 

@@ -1,13 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 project(m3ctrl_msgs)
 
-find_package(catkin REQUIRED COMPONENTS
-   roscpp
-   rospy
-   std_msgs
+find_package(catkin REQUIRED 
+   COMPONENTS
    message_generation
+   std_msgs
 )
-
 
 add_message_files(
   FILES
@@ -20,6 +18,8 @@ generate_messages(
 )  
 
 catkin_package(
-  CATKIN_DEPENDS message_runtime )
+  CATKIN_DEPENDS 
+  message_runtime 
+)
 
 
