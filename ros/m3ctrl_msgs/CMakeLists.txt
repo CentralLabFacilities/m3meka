@@ -4,7 +4,6 @@ project(m3ctrl_msgs)
 find_package(catkin REQUIRED 
    COMPONENTS
    roscpp
-   rospp
    std_msgs
    message_generation
 )
