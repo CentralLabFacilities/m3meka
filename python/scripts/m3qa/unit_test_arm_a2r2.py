@@ -21,7 +21,7 @@
 
 import m3.toolbox as m3t
 import m3.actuator_ec_pb2 as aec
-import numpy.numarray as na
+ 
 from m3qa.unit_test import *
 import math
 from calibrate_actuator_ec_r2 import dpm3_thread

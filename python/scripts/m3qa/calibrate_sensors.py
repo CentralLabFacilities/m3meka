@@ -21,7 +21,7 @@
 
 from scipy import polyval
 import time
-import numpy.numarray as na
+ 
 import numpy as nu
 import math
 import os 

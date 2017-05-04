@@ -20,7 +20,7 @@
 #POSSIBILITY OF SUCH DAMAGE.
 
 import time
-import numpy.numarray as na
+ 
 #import Numeric as nu
 import math
 import os 
