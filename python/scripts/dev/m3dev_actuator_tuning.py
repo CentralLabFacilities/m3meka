@@ -39,7 +39,7 @@ class M3Proc(M3Tuning):
 	def __init__(self):
 		M3Tuning.__init__(self)
 		self.proxy = m3p.M3RtProxy()
-		self.gui = m3g.M3Gui(stride_ms=125)
+		self.gui = m3g.M3Gui(stride_ms=10)
 		self.cnt=0
 		self.bias=[]
 		
@@ -125,7 +125,7 @@ class M3Proc(M3Tuning):
 		self.gui.add('M3GuiModes',  'Mode',			(self,'mode'),range(1),[['Off','PWM','Current'],1],m3g.M3GuiWrite)
 
 		self.gui.add('M3GuiSliders','PWM (counts)',	(self,'pwm_desired'),range(1),[-pwm_max,pwm_max],m3g.M3GuiWrite)
-		self.gui.add('M3GuiSliders','Current (A)',	(self,'current_desired'),range(1),[-current_max,current_max],m3g.M3GuiWrite)
+		self.gui.add('M3GuiSliders','Current (A)',	(self,'current_desired'),range(1),[0,current_max],m3g.M3GuiWrite)
 
 		
 		
@@ -205,7 +205,7 @@ class M3Proc(M3Tuning):
 				
 		elif self.mode[0] == 2: #Current
 			self.act.set_mode(mec.ACTUATOR_MODE_CURRENT)
-			self.act.set_i_desired(self.current_desired[0]*1000.0)
+			self.act.set_i_desired(self.current_desired[0])
 		else:
 			self.act.set_mode(mec.ACTUATOR_MODE_OFF)
 		

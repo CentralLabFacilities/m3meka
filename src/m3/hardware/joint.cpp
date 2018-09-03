@@ -232,13 +232,10 @@ void M3Joint::StepStatus()
 	if (IsStateError())
 		return;
 	status.set_flags(act->GetFlags());
-	status.set_amp_temp(act->GetAmpTemp());
-	status.set_motor_temp(act->GetMotorTemp());
-	status.set_ambient_temp(act->GetAmbientTemp());
+
 	status.set_case_temp(act->GetCaseTemp());
 	status.set_power(act->GetPower());
 	status.set_current(act->GetCurrent());
-	status.set_pwm_cmd(act->GetPwmCmd());
 	status.set_theta(trans->GetThetaJointDeg());
 	status.set_thetadot(trans->GetThetaDotJointDeg());
 	status.set_thetadotdot(trans->GetThetaDotDotJointDeg());
@@ -469,6 +466,9 @@ void M3Joint::StepCommand()
 						param.kq_i_limit(),
 						param.kq_i_range());
 				}
+				
+
+
 				/*if (pnt_cnt%200==0) {		
 					M3_DEBUG("actuator: %s\n", GetName().c_str());
 					M3_DEBUG("tq_des: %f\n",tq_des);
@@ -489,7 +489,12 @@ void M3Joint::StepCommand()
 				
 				ctrl_simple->SetDesiredControlMode(CTRL_MODE_TORQUE);
 				ctrl_simple->SetDesiredTorque(trans->GetTorqueDesActuator());
-				
+                                
+				status.set_pwm_cmd(tq_des);
+                                status.set_amp_temp(des);
+                                status.set_motor_temp(tq_out/1000.0);
+                                status.set_ambient_temp(trans->GetTorqueDesActuator()); //TODO: mzb continue here
+                                
 				break;
 			}
 			case JOINT_MODE_TORQUE_GC:			

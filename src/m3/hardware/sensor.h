@@ -36,7 +36,7 @@ using namespace KDL;
 class M3AngleSensor 
 {
 	public:
-		M3AngleSensor():tmp_cnt(0),val(0){}
+		M3AngleSensor():val(0),tmp_cnt(0){}
 		virtual void Step(int qei_on, int qei_period, int qei_rollover);
 		virtual mReal GetThetaDeg();
 		virtual mReal GetThetaDotDeg(){return velocity;}
@@ -150,7 +150,7 @@ class M3WrenchSensor
 {
 	public:
 		//M3WrenchSensor() : temp(6),ticks(6), z(6), C(6,6), b(6){}
-		M3WrenchSensor() :temp(6),C(36){}
+		M3WrenchSensor() :C(36),temp(6){}
 		virtual void Step(mReal ticks_0,mReal ticks_1,mReal ticks_2,
 				  mReal ticks_3,mReal ticks_4,mReal ticks_5);
 		Wrench * GetWrench(){return & wrench;}

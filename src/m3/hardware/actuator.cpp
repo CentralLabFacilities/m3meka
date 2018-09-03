@@ -21,6 +21,10 @@ along with M3.  If not, see <http://www.gnu.org/licenses/>.
 #include "m3rt/base/m3rt_def.h"
 #include "m3rt/base/component_factory.h"
 #include <inttypes.h>
+#include <rtai_fifos.h>
+
+#define DEBUG_FIFO_NR 33
+
 
 namespace m3{
 	
@@ -338,7 +342,20 @@ void M3Actuator::StepStatus()
 		status.set_motor_temp(motor.GetWindingTemp());
 		status.set_ambient_temp(motor.GetAmbientTemp());
 		status.set_case_temp(motor.GetCaseTemp());
-		
+                
+                //M3_INFO(" CURRENT #mode#A# B# desired# pwm_desired#pwm_cmd# , %d , %d , %d, %d, %d, %d " , ecs->adc_ext_b(),ecs->adc_current_a(),ecs->adc_current_b(), ecs->adc_amp_temp(), ecs->adc_ext_a(), ecs->pwm_cmd());
+                //M3_INFO("%d , %d , %d, %d, %d, %d\n" , ecs->adc_ext_b(),ecs->adc_current_a(),ecs->adc_current_b(), ecs->adc_amp_temp(), ecs->adc_ext_a(), ecs->pwm_cmd());
+
+                //M3_INFO("#%d\n" , ecs->adc_ext_b());
+                
+                
+                if("m3actuator_ma30_j3" == GetName()) {
+                    char buf[500];
+                    static int count = 0;
+
+                    int len = sprintf(buf, "%d %d %d %d %d %d %d %f %f %d %d\n" , count++, ecs->adc_ext_b(),ecs->adc_current_a(),ecs->adc_current_b(), ecs->adc_amp_temp(), ecs->adc_ext_a(), ecs->pwm_cmd(),angle_df.GetTheta(),tq_sense.GetTorque_mNm(), ecs->flags(),ecs->qei_on());
+                    rtf_put(DEBUG_FIFO_NR, buf, len);
+		}
 		status.set_power(motor.GetPowerElec());
 		//if (tmp_cnt%100==0)
 		 // M3_INFO("%s: %f %f\n",GetName().c_str(),ex_sense.GetTempC(),motor.GetWindingTemp());

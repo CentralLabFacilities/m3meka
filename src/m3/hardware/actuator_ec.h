@@ -39,9 +39,9 @@ using namespace std;
 
 class M3ActuatorEc : public  m3rt::M3ComponentEc{
 	public:
-		M3ActuatorEc():ignore_pwm_slew(0), pwr(NULL),pdo_status_size(0),toggle(0),pdo_cmd_size(0),
-			      pwm_ff(0),pwm_max_ext(0),error_printed(false),tmp_cnt(0),motor_power_slewed_on(false),
-			      tq_err_cnt(0),qei_err_cnt(0), override_ext_temp(false), override_ext_temp_act_ec(NULL), m3rt::M3ComponentEc()
+		M3ActuatorEc():m3rt::M3ComponentEc(), pwr(NULL),ignore_pwm_slew(0),pdo_status_size(0),toggle(0),pdo_cmd_size(0),
+			      pwm_ff(0),pwm_max_ext(0),tmp_cnt(0),error_printed(false),motor_power_slewed_on(false),
+			      tq_err_cnt(0),qei_err_cnt(0), override_ext_temp(false), override_ext_temp_act_ec(NULL)
 		{
 			memset(&exs,0,sizeof(M3ActPdoV2StatusExt));
 			memset(&exc,0,sizeof(M3ActPdoV2CmdExt));
@@ -125,13 +125,14 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		string pwr_name;
 		M3TimeSlew pwr_slew;
 		M3TimeSlew pwm_slew;
-		int pdo_status_size;
+		int ignore_pwm_slew;
+                int toggle;
+                int pdo_status_size;
 		int pdo_cmd_size;
 		int pwm_ff;
-		int tmp_cnt;
-		int chid;
-		int pwm_max_ext;
-		int ignore_pwm_slew;
+                int pwm_max_ext;
+                int tmp_cnt;
+                int chid;
 		M3ActPdoV2StatusExt exs;
 		M3ActPdoV2Cmd    axc;
 		M3ActPdoV2CmdExt exc;
@@ -139,10 +140,9 @@ class M3ActuatorEc : public  m3rt::M3ComponentEc{
 		M3SeaPdoV0Cmd  scc;
 		bool error_printed;
 		bool motor_power_slewed_on;
-		int toggle;
-		int qei_err_cnt;
 		int tq_err_cnt;
-		bool has_brake;
+		int qei_err_cnt;
+                bool has_brake;
 		bool override_ext_temp;
 		M3ActuatorEc * override_ext_temp_act_ec;
 		string override_ext_temp_act_ec_name;

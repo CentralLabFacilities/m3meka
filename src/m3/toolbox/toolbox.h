@@ -257,12 +257,11 @@ class M3PID
 
 	};
 	
-
 //Measure the peak-to-peak excursion of a cyclic signal about 0
 class M3PeakToPeak
 {
   public:
-	M3PeakToPeak():x_last(0),first(1),x_min(0),x_max(0),x_min_tmp(0),x_max_tmp(0),n_cyc(0){};
+	M3PeakToPeak():first(1),x_last(0),x_min(0),x_max(0),x_min_tmp(0),x_max_tmp(0),n_cyc(0){};
 	
 	void Step(mReal x,mReal x_zero)
 	{
@@ -297,11 +296,11 @@ class M3PeakToPeak
 	mReal GetP2P(){return x_max-x_min;}
 	mReal GetCycles(){return n_cyc;}
   private:
-    mReal x_last;
-    mReal x_min,x_min_tmp;
-    mReal x_max,x_max_tmp;
-    mReal n_cyc;
     int first;
+    mReal x_last;
+    mReal x_min,x_max;
+    mReal x_min_tmp,x_max_tmp;
+    mReal n_cyc;
 };
 
 }//namespace

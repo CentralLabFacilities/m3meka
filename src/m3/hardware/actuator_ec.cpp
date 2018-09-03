@@ -349,11 +349,16 @@ void M3ActuatorEc::SetStatusFromPdoV4(unsigned char * data)
       status.set_adc_ext_temp(((M3ActuatorEcStatus*)override_ext_temp_act_ec->GetStatus())->adc_ext_temp()); 
     else
       status.set_adc_ext_temp(ax->adc_ext_temp); 
-    status.set_adc_amp_temp(ax->adc_amp_temp);
-    status.set_adc_ext_a(0);
-    status.set_adc_ext_b(0);
+
     status.set_adc_current_a(ax->adc_current_a);
     status.set_adc_current_b(ax->adc_current_b);
+    
+    if(ax->adc_current_a > 12000 || ax->adc_current_a < -12000) M3_ERR("CURRENT A (%d)> 12000\n", ax->adc_current_a);
+    							
+    if(ax->adc_current_b > 12000 || ax->adc_current_b < -12000) M3_ERR("CURRENT B (%d)> 12000\n", ax->adc_current_b);
+
+    
+    
     status.set_pwm_cmd(ax->pwm_cmd);	
     
     status.set_qei_period(ax->qei_period);
@@ -485,8 +490,19 @@ void M3ActuatorEc::SetPdoV4FromPdoV1Command(unsigned char * data)
     ax->pwm_max=acc.pwm_max;
     
     ax->current_desired = CLAMP(command.current_desired(),-32767,32767);
-	ax->pwm_desired = CLAMP(command.pwm_desired(),-32767,32767);
+	//ax->pwm_desired = CLAMP(command.pwm_desired(),-32767,32767);
 	ax->bldc_mode = param.bldc_mode();
+        
+        
+        
+        //TODO mzb add info here
+        
+        
+        
+     status.set_adc_amp_temp(ax->current_desired);
+    status.set_adc_ext_a(ax->pwm_desired);
+    status.set_adc_ext_b(acc.config);
+        
     /*if (tmp_cnt++ == 100)
     {
       M3_DEBUG("pwm: %d\n", pwm_max_ext);

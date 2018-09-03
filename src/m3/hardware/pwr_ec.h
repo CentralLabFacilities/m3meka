@@ -33,7 +33,7 @@ using namespace std;
 
 class M3PwrEc : public  m3rt::M3ComponentEc{
 	public:
-		M3PwrEc(): toggle(0),m3rt::M3ComponentEc()
+		M3PwrEc(): m3rt::M3ComponentEc(), toggle(0)
 		{
 			RegisterVersion("default",DEFAULT);	//RBL
 			RegisterVersion("iss",ISS);		//ISS. Same as DEFAULT
